@@ -9,7 +9,7 @@
 
 第二步. 需要引用的build.gradle
 
-     implementation 'com.github.FlyJingFish:OpenImage:Tag'
+     implementation 'com.github.FlyJingFish:OpenImage:v1.1'
  
 # 点击以下链接查看详细使用说明
 
