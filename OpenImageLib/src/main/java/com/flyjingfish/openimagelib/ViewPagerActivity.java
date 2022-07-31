@@ -470,7 +470,6 @@ public class ViewPagerActivity extends AppCompatActivity {
         mHandler.removeCallbacksAndMessages(null);
         ImageLoadUtils.getInstance().clearItemLoadHelper(itemLoadKey);
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
-        ImageLoadUtils.getInstance().setOnBackView(null);
     }
 
     @Override
