@@ -13,3 +13,7 @@
  
 
 [使用说明](https://github.com/FlyJingFish/OpenImage/wiki)
+![首页](/screenshot/Screenshot_20220731_203125_com.flyjingfish.openim.jpg)
+![演示视频](/screenshot/SVID_20220731_203152_1.mp4)
+![演示视频](/screenshot/SVID_20220731_203549_1.mp4)
+![演示视频](/screenshot/SVID_20220731_203923_1.mp4)
