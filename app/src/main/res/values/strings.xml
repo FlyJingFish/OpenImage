@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">OpenImage</string>
+    <string name="pos_text">(%1$d/%2$d)</string>
+</resources>

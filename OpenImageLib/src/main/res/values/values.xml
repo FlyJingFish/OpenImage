@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr format="reference|color" name="openImage.background"/>
+    <attr format="enum" name="openImage.viewPager.orientation">
+        <enum name="horizontal" value="0" />
+        <enum name="vertical" value="1" />
+    </attr>
+    <attr format="dimension" name="openImage.indicator.marginStart"/>
+    <attr format="dimension" name="openImage.indicator.marginEnd"/>
+    <attr format="dimension" name="openImage.indicator.marginTop"/>
+    <attr format="dimension" name="openImage.indicator.marginBottom"/>
+    <attr format="dimension" name="openImage.indicator.marginLeft"/>
+    <attr format="dimension" name="openImage.indicator.marginRight"/>
+    <attr format="flags" name="openImage.indicator.gravity">
+        <flag name="top" value="0x30" />
+        <flag name="bottom" value="0x50" />
+        <flag name="left" value="0x03" />
+        <flag name="right" value="0x05" />
+        <flag name="center_vertical" value="0x10" />
+        <flag name="center_horizontal" value="0x01" />
+        <flag name="center" value="0x11" />
+        <flag name="start" value="0x00800003" />
+        <flag name="end" value="0x00800005" />
+    </attr>
+    <attr format="enum" name="openImage.indicator.type">
+        <enum name="text" value="0"/>
+        <enum name="image" value="1"/>
+    </attr>
+    <attr format="reference" name="openImage.indicator.textFormat"/>
+    <attr format="reference|color" name="openImage.indicator.textColor"/>
+    <attr format="dimension" name="openImage.indicator.textSize"/>
+    <attr format="reference|color" name="openImage.indicator.imageRes"/>
+    <attr format="dimension" name="openImage.indicator.image.interval"/>
+    <attr format="enum" name="openImage.indicator.image.orientation">
+        <enum name="horizontal" value="0" />
+        <enum name="vertical" value="1" />
+    </attr>
+    <attr format="enum" name="openImage.statusBar.fontStyle">
+        <enum name="light" value="0" />
+        <enum name="dark" value="1" />
+    </attr>
+</resources>

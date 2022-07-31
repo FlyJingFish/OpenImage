@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.flyjingfish.openimagelib">
+    <application>
+        <activity
+            android:name=".ViewPagerActivity"
+            android:exported="true"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.BasePhotosTheme">
+        </activity>
+    </application>
+</manifest>

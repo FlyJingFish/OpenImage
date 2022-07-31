@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingHorizontal="14dp">
+        <TextView
+            android:id="@+id/btn_v"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="竖向"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_title"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/btn_h"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="横向"
+            android:gravity="center"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_title"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/btn_g"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:text="Grid"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_title"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/btn_p"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:text="瀑布流"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_title"
+            android:layout_weight="1"/>
+    </LinearLayout>
+    <include android:id="@+id/rv" layout="@layout/layout_recyclerview"/>
+</LinearLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:showIn="@layout/item_friend_video">
+
+    <ImageView
+        android:id="@+id/item_avatar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@mipmap/ic_launcher_round" />
+
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/item_avatar"
+        android:text=""
+        android:textColor="#232323"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/item_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="-1dp"
+        android:layout_alignParentEnd="true"
+        android:text="6月12日"
+        android:textColor="#9e9b9b"
+        android:textSize="14sp" />
+
+
+    <TextView
+        android:id="@+id/item_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/item_avatar"
+        android:text="我们的撒大大撒多按时打算按时打算大师的阿萨德阿萨德阿萨德按时打算大师的鞍山大师的撒大师大师的鞍山大师大师的鞍山大师大师大师大师大师大撒所打打所大撒所大师鞍山大撒所所多 "
+        android:textColor="#232323" />
+</merge>
