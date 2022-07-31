@@ -55,7 +55,6 @@ public class MsgRecyclerViewFragment extends Fragment {
                     }else if (type == MessageBean.VIDEO){
                         itemData.videoUrl = jsonObject.getString("videoUrl");
                         itemData.coverUrl = jsonObject.getString("coverUrl");
-                        itemData.smallCoverUrl = jsonObject.getString("smallCoverUrl");
                     }
                     datas.add(itemData);
                 }
