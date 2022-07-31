@@ -11,9 +11,17 @@
 
      implementation 'com.github.FlyJingFish:OpenImage:Tag'
  
+# 点击以下链接查看详细使用说明
 
-[使用说明](https://github.com/FlyJingFish/OpenImage/wiki)
-![首页](/screenshot/Screenshot_20220731_203125_com.flyjingfish.openim.jpg)
-![演示视频](/screenshot/SVID_20220731_203152_1.gif)
-![演示视频](/screenshot/SVID_20220731_203549_1.gif)
-![演示视频](/screenshot/SVID_20220731_203923_1.gif)
+[点此查看使用说明](https://github.com/FlyJingFish/OpenImage/wiki)
+
+# 效果演示</br>
+
+
+
+演示  | 演示  | 演示
+ ---- | ----- | ------  
+ <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203549_1.gif" alt="show" /> | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203923_1.gif" alt="show" />  
+ 
+ 
+ <img src="/screenshot/Screenshot_20220731_203125_com.flyjingfish.openim.jpg" width="405" height="842" alt="show" />
