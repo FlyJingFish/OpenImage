@@ -15,6 +15,7 @@ import com.flyjingfish.openimage.databinding.ActivityMainBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.openImpl.BigImageHelperImpl;
 import com.flyjingfish.openimage.openImpl.VideoFragmentCreateImpl;
+import com.flyjingfish.openimagelib.ImageFragment;
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.squareup.picasso.Picasso;

@@ -61,13 +61,10 @@ public class OpenImage {
     private List<ImageView> imageViews;
     private RecyclerView recyclerView;
     private AbsListView absListView;
-    //    private int imageViewId;
     private long openPageAnimTimeMs;
     private int clickPosition;
     private int errorResId;
     private int openImageStyle;
-    private boolean disEnableTouchClose;
-    private float touchCloseScale;
     private ImageView.ScaleType srcImageViewScaleType;
     private boolean autoSetScaleType;
     private ImageDiskMode imageDiskMode = ImageDiskMode.CONTAIN_ORIGINAL;
@@ -176,16 +173,6 @@ public class OpenImage {
     }
 
     /**
-     * 关闭拖动关闭功能
-     *
-     * @return
-     */
-    public OpenImage disEnableTouchClose() {
-        this.disEnableTouchClose = true;
-        return this;
-    }
-
-    /**
      * @param srcImageViewScaleType 点击的ImageView显示模式
      * @param autoSetScaleType      如果点击的ImageView与您所设置scaleType不相同，则自动设置
      * @return
@@ -227,15 +214,6 @@ public class OpenImage {
      */
     public OpenImage setItemLoadHelper(ItemLoadHelper itemLoadHelper) {
         this.itemLoadHelper = itemLoadHelper;
-        return this;
-    }
-
-    /**
-     * @param touchCloseScale 拖动关闭百分比
-     * @return
-     */
-    public OpenImage setTouchCloseScale(@FloatRange(from = .01f, to = .99f) float touchCloseScale) {
-        this.touchCloseScale = touchCloseScale;
         return this;
     }
 
@@ -399,14 +377,14 @@ public class OpenImage {
             intent.putExtra(OpenParams.ON_SELECT_KEY, selectKey);
         }
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);
-        intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, disEnableTouchClose);
+        intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, OpenImageConfig.getInstance().isDisEnableTouchClose());
         intent.putExtra(OpenParams.SRC_SCALE_TYPE, srcImageViewScaleType);
         intent.putExtra(OpenParams.IMAGE_DISK_MODE, imageDiskMode);
         intent.putExtra(OpenParams.ERROR_RES_ID, errorResId);
         String key = UUID.randomUUID().toString();
         ImageLoadUtils.getInstance().setItemLoadHelper(key, itemLoadHelper);
         intent.putExtra(OpenParams.ITEM_LOAD_KEY, key);
-        intent.putExtra(OpenParams.TOUCH_CLOSE_SCALE, touchCloseScale);
+        intent.putExtra(OpenParams.TOUCH_CLOSE_SCALE, OpenImageConfig.getInstance().getTouchCloseScale());
         intent.putExtra(OpenParams.OPEN_IMAGE_STYLE, openImageStyle);
         intent.putExtra(OpenParams.OPEN_ANIM_TIME_MS, openPageAnimTimeMs);
 

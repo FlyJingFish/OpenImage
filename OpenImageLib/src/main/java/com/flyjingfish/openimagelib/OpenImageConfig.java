@@ -1,5 +1,7 @@
 package com.flyjingfish.openimagelib;
 
+import androidx.annotation.FloatRange;
+
 import com.flyjingfish.openimagelib.listener.BigImageHelper;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
@@ -15,6 +17,8 @@ public class OpenImageConfig {
     protected boolean isReadMode = true;
     //判定是否是长图的变量
     protected float readModeRule = DEFAULT_READ_MODE_RULE;
+    private boolean disEnableTouchClose;
+    private float touchCloseScale;
 
     private OpenImageConfig() {
     }
@@ -68,5 +72,29 @@ public class OpenImageConfig {
 
     public void setReadModeRule(float readModeRule) {
         this.readModeRule = readModeRule;
+    }
+
+    public boolean isDisEnableTouchClose() {
+        return disEnableTouchClose;
+    }
+
+    /**
+     *
+     * @param disEnableTouchClose 是否关闭拖动关闭功能
+     */
+    public void setDisEnableTouchClose(boolean disEnableTouchClose) {
+        this.disEnableTouchClose = disEnableTouchClose;
+    }
+
+    public float getTouchCloseScale() {
+        return touchCloseScale;
+    }
+
+    /**
+     * @param touchCloseScale 拖动关闭百分比
+     * @return
+     */
+    public void setTouchCloseScale(@FloatRange(from = .01f, to = .99f) float touchCloseScale) {
+        this.touchCloseScale = touchCloseScale;
     }
 }

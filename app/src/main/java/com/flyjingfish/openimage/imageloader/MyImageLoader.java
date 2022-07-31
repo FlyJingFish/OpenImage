@@ -36,7 +36,7 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 public class MyImageLoader {
     public static final int GLIDE = 1;
     public static final int PICASSO = 2;
-    public static int loader_os_type = PICASSO;
+    public static int loader_os_type = GLIDE;
     public static ImageDiskMode imageDiskMode = (loader_os_type == PICASSO) ?ImageDiskMode.CONTAIN_ORIGINAL:ImageDiskMode.RESULT;
     private MyImageLoader() {
     }
