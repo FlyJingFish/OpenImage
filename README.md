@@ -5,16 +5,11 @@
 
 第一步. 根目录build.gradle
 
-allprojects {
-    repositories {
-    maven { url 'https://jitpack.io' }
-    }
-}
+     maven { url 'https://jitpack.io' }
 
 第二步. 需要引用的build.gradle
 
-dependencies {
-    implementation 'com.github.FlyJingFish:OpenImage:Tag'
-}
+     implementation 'com.github.FlyJingFish:OpenImage:Tag'
+ 
 
 [使用说明](https://github.com/FlyJingFish/OpenImage/wiki)
