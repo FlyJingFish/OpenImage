@@ -21,7 +21,7 @@ buildscript {
 }
 ```
 
-第二步. 需要引用的build.gradle
+第二步. 需要引用的build.gradle （最新版本[![](https://jitpack.io/v/FlyJingFish/OpenImage.svg)](https://jitpack.io/#FlyJingFish/OpenImage)）
 
 ```gradle
 dependencies {
