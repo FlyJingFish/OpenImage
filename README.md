@@ -28,10 +28,39 @@ dependencies {
     implementation 'com.github.FlyJingFish:OpenImage:latest.release.here'
 }
 ```
- 
-# 点击以下链接查看详细使用说明
+第三步. 使用它
+```java
+OpenImage.with(RecyclerViewActivity.this).setClickRecyclerView(binding.rv.rv,new SourceImageViewIdGet() {
+                   @Override
+                   public int getImageViewId(OpenImageUrl data, int position) {
+                       return R.id.iv_image;
+                   }
+               })
+               .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+               .setImageUrlList(datas).setImageDiskMode(MyImageLoader.imageDiskMode)
+               .setItemLoadHelper(new ItemLoadHelper() {
+                   @Override
+                   public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
 
-[点此查看使用说明](https://github.com/FlyJingFish/OpenImage/wiki)
+                       MyImageLoader.getInstance().load(imageView, imageUrl,overrideWidth,overrideHeight, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder, new MyImageLoader.OnImageLoadListener() {
+                           @Override
+                           public void onSuccess() {
+                               onLoadCoverImageListener.onLoadImageSuccess();
+                           }
+
+                           @Override
+                           public void onFailed() {
+                               onLoadCoverImageListener.onLoadImageFailed();
+                           }
+                       });
+                   }
+               })
+               .setOpenImageStyle(R.style.DefaultPhotosTheme)
+               .setClickPosition(position).show();
+```
+# 点击以下链接查看更多使用说明
+
+[点此查看更多使用说明](https://github.com/FlyJingFish/OpenImage/wiki)
 
 # 效果演示</br>
 
