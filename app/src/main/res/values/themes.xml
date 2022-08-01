@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="DefaultPhotosTheme" >
-<!--        <item name="openImage.background">@mipmap/main_img_splash_bg</item>-->
+<!--        <item name="openImage.background">@mipmap/vp_bg</item>-->
         <item name="openImage.indicator.type">image</item>
         <item name="openImage.indicator.textFormat">@string/pos_text</item>
         <item name="openImage.viewPager.orientation">horizontal</item>
