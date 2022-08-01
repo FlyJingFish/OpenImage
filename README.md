@@ -66,7 +66,7 @@ OpenImage.with(RecyclerViewActivity.this).setClickRecyclerView(binding.rv.rv,new
 
 
 
-RecyclerView常见LayoutManager  | 聊天页面  | 打开视频
+RecyclerView场景  | 聊天页面  | 打开视频
  ---- | ----- | ------  
  <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203549_1.gif" alt="show" /> | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203923_1.gif" alt="show" />  
  
