@@ -1,8 +1,10 @@
-# OpenImage 图片浏览库
+# OpenImage 图片查看大图库
 [![](https://jitpack.io/v/FlyJingFish/OpenImage.svg)](https://jitpack.io/#FlyJingFish/OpenImage)
 
 
-## 属于你的侵入性低的图片浏览器，完美的过渡动画，同样支持视频，本库本身不带这个功能，我写出来一个视频使用Demo，详看代码，另外您可以自定义加载图片的内核，例如Glide，Picasso或其他的，滑到下边可以看使用效果。
+## 属于你的侵入性低的图片查看器，高仿微信完美的过渡动画，同样支持视频，本库本身不带这个功能，我写出来一个视频使用Demo，详看代码，另外您可以自定义加载图片的内核，例如Glide，Picasso或其他的。
+
+<img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" width="405px" height="842px" alt="show" /> 
 
 第一步. 根目录build.gradle
 
@@ -124,4 +126,4 @@ RecyclerView场景  | 聊天页面  | 打开视频
  <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203549_1.gif" alt="show" /> | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203923_1.gif" alt="show" />  
  
  
- <img src="/screenshot/Screenshot_20220731_203125_com.flyjingfish.openim.jpg" width="405" height="842" alt="show" />
+ <img src="/screenshot/Screenshot_20220731_203125_com.flyjingfish.openim.jpg" width="405px" height="842px" alt="show" />
