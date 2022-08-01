@@ -64,6 +64,7 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
         super.onViewCreated(view, savedInstanceState);
         binding.videoPlayer.findViewById(R.id.back).setOnClickListener(v -> close());
         playerKey = binding.videoPlayer.getVideoKey();
+        binding.videoPlayer.goneAllWidget();
 
     }
 
@@ -94,8 +95,20 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
 
     @Override
     protected void loadImageFinish(boolean isLoadImageSuccess) {
-        binding.videoPlayer.playUrl(openImageBean.getVideoUrl());
-        binding.videoPlayer.startPlayLogic();
+        play();
+    }
+
+    private void play(){
+        if (isTransitionEnd && isInitImage){
+            binding.videoPlayer.playUrl(openImageBean.getVideoUrl());
+            binding.videoPlayer.startPlayLogic();
+        }
+    }
+
+    @Override
+    protected void onTransitionEnd() {
+        super.onTransitionEnd();
+        play();
     }
 
     @Override

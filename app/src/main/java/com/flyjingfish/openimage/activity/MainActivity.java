@@ -45,42 +45,19 @@ public class MainActivity extends AppCompatActivity {
             binding.rbNone.setChecked(true);
         }
         binding.cbRead.setChecked(OpenImageConfig.getInstance().isReadMode());
-        binding.cbRead.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                OpenImageConfig.getInstance().setReadMode(isChecked);
-            }
-        });
-        binding.rgImageOs.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                MyImageLoader.loader_os_type = (checkedId == R.id.rb_glide?MyImageLoader.GLIDE:MyImageLoader.PICASSO);
-                if (checkedId == R.id.rb_picasso){
-                    if (binding.rbResult.isChecked()){
-                        binding.rbOriginal.setChecked(true);
-                        Toast.makeText(MainActivity.this,"Picasso不支持只保存目标大小的图",Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-        });
-        binding.rgCacheType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case R.id.rb_original:
-                        MyImageLoader.imageDiskMode = ImageDiskMode.CONTAIN_ORIGINAL;
-                        break;
-                    case R.id.rb_result:
-                        if (MyImageLoader.loader_os_type == MyImageLoader.PICASSO){
-                            binding.rbGlide.setChecked(true);
-                            Toast.makeText(MainActivity.this,"Picasso不支持只保存目标大小的图",Toast.LENGTH_LONG).show();
-                        }
-                        MyImageLoader.imageDiskMode = ImageDiskMode.RESULT;
-                        break;
-                    case R.id.rb_none:
-                        MyImageLoader.imageDiskMode = ImageDiskMode.NONE;
-                        break;
-                }
+        binding.cbRead.setOnCheckedChangeListener((buttonView, isChecked) -> OpenImageConfig.getInstance().setReadMode(isChecked));
+        binding.rgImageOs.setOnCheckedChangeListener((group, checkedId) -> MyImageLoader.loader_os_type = (checkedId == R.id.rb_glide?MyImageLoader.GLIDE:MyImageLoader.PICASSO));
+        binding.rgCacheType.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId){
+                case R.id.rb_original:
+                    MyImageLoader.imageDiskMode = ImageDiskMode.CONTAIN_ORIGINAL;
+                    break;
+                case R.id.rb_result:
+                    MyImageLoader.imageDiskMode = ImageDiskMode.RESULT;
+                    break;
+                case R.id.rb_none:
+                    MyImageLoader.imageDiskMode = ImageDiskMode.NONE;
+                    break;
             }
         });
         binding.btnClearGlideCache.setOnClickListener(v -> clearCache());
