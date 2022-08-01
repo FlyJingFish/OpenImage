@@ -9,7 +9,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -31,18 +30,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
-import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.databinding.ActivityViewpagerBinding;
 import com.flyjingfish.openimagelib.databinding.IndicatorTextBinding;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
-import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
-import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
-import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import com.flyjingfish.openimagelib.utils.AttrsUtils;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 import com.flyjingfish.openimagelib.utils.StatusBarUtils;
@@ -51,7 +46,6 @@ import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class ViewPagerActivity extends AppCompatActivity {
 
@@ -78,6 +72,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     private OnSelectMediaListener onSelectMediaListener;
     private String onSelectKey;
     private boolean isAutoScrollSelect;
+    private String openCoverKey;
     //    private ArrayList<ContentViewOriginModel> contentViewOriginModels;
 
     @Override
@@ -94,7 +89,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         photosViewModel.closeViewLiveData.observe(this, integer -> close());
         srcScaleType = (ImageView.ScaleType) getIntent().getSerializableExtra(OpenParams.SRC_SCALE_TYPE);
         openImageBeans = (List<OpenImageDetail>) getIntent().getSerializableExtra(OpenParams.IMAGES);
-        clickPosition = getIntent().getIntExtra(OpenParams.CLICk_POSITION, 0);
+        clickPosition = getIntent().getIntExtra(OpenParams.CLICK_POSITION, 0);
         boolean disEnableTouchClose = getIntent().getBooleanExtra(OpenParams.DISABLE_TOUCH_CLOSE, false);
         imageDiskMode = (ImageDiskMode) getIntent().getSerializableExtra(OpenParams.IMAGE_DISK_MODE);
         int errorResId = getIntent().getIntExtra(OpenParams.ERROR_RES_ID, 0);
@@ -150,7 +145,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                     bundle.putSerializable(OpenParams.IMAGE, openImageBean);
                     bundle.putInt(OpenParams.SHOW_POSITION, position);
                     bundle.putInt(OpenParams.ERROR_RES_ID, errorResId);
-                    bundle.putInt(OpenParams.CLICk_POSITION, selectPos);
+                    bundle.putInt(OpenParams.CLICK_POSITION, selectPos);
                     bundle.putSerializable(OpenParams.IMAGE_DISK_MODE, imageDiskMode);
                     bundle.putSerializable(OpenParams.SRC_SCALE_TYPE, srcScaleType);
                     bundle.putString(OpenParams.ITEM_LOAD_KEY, itemLoadKey);
@@ -300,8 +295,8 @@ public class ViewPagerActivity extends AppCompatActivity {
 //    }
 
     private void setViewTransition() {
-        String key = getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE);
-        Drawable drawable = ImageLoadUtils.getInstance().getCoverDrawable(key);
+        openCoverKey = getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE);
+        Drawable drawable = ImageLoadUtils.getInstance().getCoverDrawable(openCoverKey);
         OpenImageDetail openImageDetail = openImageBeans.get(selectPos);
         if (drawable != null) {
             if (openImageDetail.getType() == MediaType.IMAGE) {
@@ -314,7 +309,6 @@ public class ViewPagerActivity extends AppCompatActivity {
             coverImageView.setImageDrawable(drawable);
             binding.viewPager.setAlpha(0f);
             ViewCompat.setTransitionName(coverImageView, OpenParams.SHARE_VIEW + selectPos);
-            ImageLoadUtils.getInstance().clearCoverDrawable(key);
         } else {
             ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + selectPos);
         }
@@ -470,6 +464,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         mHandler.removeCallbacksAndMessages(null);
         ImageLoadUtils.getInstance().clearItemLoadHelper(itemLoadKey);
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
+        ImageLoadUtils.getInstance().clearCoverDrawable(openCoverKey);
     }
 
     @Override

@@ -4,7 +4,7 @@ class OpenParams {
     public static final String IMAGES = "images";
     public static final String IMAGE = "image";
     public static final String SHOW_POSITION = "show_position";
-    public static final String CLICk_POSITION = "click_position";
+    public static final String CLICK_POSITION = "click_position";
     public static final String SHARE_VIEW = "share_view";
     public static final String DISABLE_TOUCH_CLOSE = "disEnableTouchClose";
     public static final String IMAGE_DISK_MODE = "imageDiskMode";

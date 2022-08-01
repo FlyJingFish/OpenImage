@@ -46,7 +46,7 @@ public abstract class BaseFragment extends Fragment {
             imageDiskMode = ImageDiskMode.NONE;
         }
         showPosition = bundle.getInt(OpenParams.SHOW_POSITION);
-        clickPosition = bundle.getInt(OpenParams.CLICk_POSITION);
+        clickPosition = bundle.getInt(OpenParams.CLICK_POSITION);
         srcScaleType = (ImageView.ScaleType) bundle.getSerializable(OpenParams.SRC_SCALE_TYPE);
         errorResId = bundle.getInt(OpenParams.ERROR_RES_ID,0);
         String itemLoadKey = bundle.getString(OpenParams.ITEM_LOAD_KEY);

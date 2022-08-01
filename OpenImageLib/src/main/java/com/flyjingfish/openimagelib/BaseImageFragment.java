@@ -6,17 +6,22 @@ import android.animation.ObjectAnimator;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 
+import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
+import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
+import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 public abstract class BaseImageFragment<T extends View> extends BaseFragment {
@@ -58,7 +63,12 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                 smallCoverImageView.setVisibility(View.GONE);
                 photoView.setAlpha(1f);
             }else {
-                OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), openImageBean.getCoverImageUrl(), smallCoverImageView);
+                Drawable drawable = ImageLoadUtils.getInstance().getCoverDrawable(requireActivity().getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE));
+                if (clickPosition == showPosition && drawable != null) {
+                    smallCoverImageView.setImageDrawable(drawable);
+                }else {
+                    OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), openImageBean.getCoverImageUrl(), smallCoverImageView);
+                }
                 smallCoverImageView.setVisibility(View.VISIBLE);
                 smallCoverImageView.setAlpha(1f);
                 photoView.setAlpha(0f);
@@ -95,55 +105,62 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             smallCoverImageView.setVisibility(View.GONE);
             photoView.setAlpha(1f);
         }
-        OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), openImageBean.getImageUrl(), new OnLoadBigImageListener() {
-            @Override
-            public void onLoadImageSuccess(Drawable drawable) {
-                mHandler.post(() -> {
-                    photoView.setImageDrawable(drawable);
-                    int imageWidth = drawable.getIntrinsicWidth(), imageHeight = drawable.getIntrinsicHeight();
-                    if (!ImageLoadUtils.getInstance().getImageLoadSuccess(openImageBean.getImageUrl()) && imageDiskMode == ImageDiskMode.RESULT) {
-                        initCoverAnim(imageWidth, imageHeight);
-                        if (isTransitionEnd && coverAnim != null) {
-                            coverAnim.start();
-                        } else if (!isTransitionEnd) {
-                            smallCoverImageView.setVisibility(View.GONE);
-                            photoView.setAlpha(1f);
-                            isStartCoverAnim = false;
-                            loadPrivateImageFinish();
-                        } else {
-                            isStartCoverAnim = true;
+        Drawable drawable = ImageLoadUtils.getInstance().getCoverDrawable(requireActivity().getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE));
+        if (clickPosition == showPosition && TextUtils.equals(openImageBean.getImageUrl(),openImageBean.getCoverImageUrl()) && drawable != null) {
+            onImageSuccess(drawable);
+        }else {
+            OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), openImageBean.getImageUrl(), new OnLoadBigImageListener() {
+                @Override
+                public void onLoadImageSuccess(Drawable drawable) {
+                    onImageSuccess(drawable);
+                }
+
+                @Override
+                public void onLoadImageFailed() {
+                    mHandler.post(() -> {
+                        if (isTransitionEnd) {
+                            setInitImageError();
                         }
-                    } else {
-                        hideLoading(loadingView);
-                        smallCoverImageView.setVisibility(View.GONE);
-                        photoView.setAlpha(1f);
-                        loadPrivateImageFinish();
-                    }
 
-                    isLoadSuccess = true;
-                    isInitImage = true;
-                    ImageLoadUtils.getInstance().setImageLoadSuccess(openImageBean.getImageUrl());
-                });
-
-            }
-
-            @Override
-            public void onLoadImageFailed() {
-                mHandler.post(() -> {
-                    if (isTransitionEnd) {
-                        setInitImageError();
-                    }
-
-                    isLoadSuccess = false;
-                    isInitImage = true;
-                });
-            }
-        });
+                        isLoadSuccess = false;
+                        isInitImage = true;
+                    });
+                }
+            });
+        }
         photoView.setOnClickListener(view1 -> {
             close();
         });
     }
 
+    private void onImageSuccess(Drawable drawable) {
+        mHandler.post(() -> {
+            photoView.setImageDrawable(drawable);
+            int imageWidth = drawable.getIntrinsicWidth(), imageHeight = drawable.getIntrinsicHeight();
+            if (!ImageLoadUtils.getInstance().getImageLoadSuccess(openImageBean.getImageUrl()) && imageDiskMode == ImageDiskMode.RESULT) {
+                initCoverAnim(imageWidth, imageHeight);
+                if (isTransitionEnd && coverAnim != null) {
+                    coverAnim.start();
+                } else if (!isTransitionEnd) {
+                    smallCoverImageView.setVisibility(View.GONE);
+                    photoView.setAlpha(1f);
+                    isStartCoverAnim = false;
+                    loadPrivateImageFinish();
+                } else {
+                    isStartCoverAnim = true;
+                }
+            } else {
+                hideLoading(loadingView);
+                smallCoverImageView.setVisibility(View.GONE);
+                photoView.setAlpha(1f);
+                loadPrivateImageFinish();
+            }
+
+            isLoadSuccess = true;
+            isInitImage = true;
+            ImageLoadUtils.getInstance().setImageLoadSuccess(openImageBean.getImageUrl());
+        });
+    }
     @Override
     public void onResume() {
         super.onResume();

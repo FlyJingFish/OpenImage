@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -60,35 +61,7 @@ public class BigImageHelperImpl implements BigImageHelper {
                 }
             });
         }else {
-            final Object tag = new Object();
-            Picasso.get().load(imageUrl).tag(tag).into(new com.squareup.picasso.Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    onLoadBigImageListener.onLoadImageSuccess(new BitmapDrawable(context.getResources(),bitmap));
-                }
-
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-            });
-            if (context instanceof LifecycleOwner){
-                LifecycleOwner owner = (LifecycleOwner) context;
-                owner.getLifecycle().addObserver(new LifecycleEventObserver() {
-                    @Override
-                    public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
-                        if (event == Lifecycle.Event.ON_DESTROY){
-                            Picasso.get().cancelTag(tag);
-                            source.getLifecycle().removeObserver(this);
-                        }
-                    }
-                });
-            }
+            new PicassoLoader(context, imageUrl, onLoadBigImageListener).load();
         }
 
 

@@ -3,7 +3,6 @@ package com.flyjingfish.openimagelib;
 import android.app.Activity;
 import android.app.SharedElementCallback;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -11,7 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.view.ContextThemeWrapper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -22,10 +21,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.DrawableRes;
-import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.FragmentActivity;
@@ -370,7 +367,7 @@ public class OpenImage {
             clickPosition = 0;
         }
 
-        intent.putExtra(OpenParams.CLICk_POSITION, clickPosition);
+        intent.putExtra(OpenParams.CLICK_POSITION, clickPosition);
         if (onSelectMediaListener!= null){
             String selectKey = UUID.randomUUID().toString();
             ImageLoadUtils.getInstance().setOnSelectMediaListener(selectKey,onSelectMediaListener);
