@@ -2,8 +2,7 @@
 [![](https://jitpack.io/v/FlyJingFish/OpenImage.svg)](https://jitpack.io/#FlyJingFish/OpenImage)
 
 
-属于你的侵入性低的图片浏览器，完美的过渡动画，同样支持视频，我写出来一个视频使用Demo，本库本身不带这个功能，
-您可以自定义加载图片的内核，例如Glide，Picasso
+## 属于你的侵入性低的图片浏览器，完美的过渡动画，同样支持视频，本库本身不带这个功能，我写出来一个视频使用Demo，详看代码，另外您可以自定义加载图片的内核，例如Glide，Picasso或其他的，滑到下边可以看使用效果。
 
 第一步. 根目录build.gradle
 
@@ -29,7 +28,7 @@ dependencies {
 }
 ```
 
-第三步，您需要实现BigImageHelper接口并设置它，它是加载大图的关键
+第三步，您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
 
 ```java
  OpenImageConfig.getInstance().setBigImageHelper(new BigImageHelperImpl());
@@ -80,6 +79,10 @@ dependencies {
 
 第四步. 使用它
 ```java
+
+RecyclerView 适配器加载图片
+MyImageLoader.getInstance().load(holder.ivImage,datas.get(position).getCoverImageUrl(),R.mipmap.img_load_placeholder,R.mipmap.img_load_placeholder);
+
 OpenImage.with(RecyclerViewActivity.this).setClickRecyclerView(binding.rv.rv,new SourceImageViewIdGet() {
                    @Override
                    public int getImageViewId(OpenImageUrl data, int position) {
@@ -91,7 +94,7 @@ OpenImage.with(RecyclerViewActivity.this).setClickRecyclerView(binding.rv.rv,new
                .setItemLoadHelper(new ItemLoadHelper() {
                    @Override
                    public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
-
+                        //如果使用的Glide缓存模式是ImageDiskMode.RESULT(只保存目标图片大小),必须在加载图片时传入大小，详看Demo
                        MyImageLoader.getInstance().load(imageView, imageUrl,overrideWidth,overrideHeight, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder, new MyImageLoader.OnImageLoadListener() {
                            @Override
                            public void onSuccess() {
