@@ -188,7 +188,9 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                             photoView.setImageResource(errorResId);
                         } else {
                             Drawable drawable = smallCoverImageView.getDrawable();
-                            photoView.setImageDrawable(drawable);
+                            if (drawable != null){
+                                photoView.setImageDrawable(drawable);
+                            }
                         }
                         smallCoverImageView.setVisibility(View.GONE);
                         photoView.setAlpha(1f);
