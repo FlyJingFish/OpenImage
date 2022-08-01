@@ -122,9 +122,9 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                             setInitImageError();
                         }
 
-                        isLoadSuccess = false;
-                        isInitImage = true;
                     });
+                    isLoadSuccess = false;
+                    isInitImage = true;
                 }
             });
         }
@@ -156,10 +156,10 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                 loadPrivateImageFinish(true);
             }
 
-            isLoadSuccess = true;
-            isInitImage = true;
-            ImageLoadUtils.getInstance().setImageLoadSuccess(openImageBean.getImageUrl());
         });
+        isLoadSuccess = true;
+        isInitImage = true;
+        ImageLoadUtils.getInstance().setImageLoadSuccess(openImageBean.getImageUrl());
     }
     @Override
     public void onResume() {
@@ -173,10 +173,10 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                         photoView.setImageDrawable(drawable);
                         loadPrivateImageFinish(true);
                         hideLoading(loadingView);
-                        isLoadSuccess = true;
-                        isInitImage = true;
-                        ImageLoadUtils.getInstance().setImageLoadSuccess(openImageBean.getImageUrl());
                     });
+                    isLoadSuccess = true;
+                    isInitImage = true;
+                    ImageLoadUtils.getInstance().setImageLoadSuccess(openImageBean.getImageUrl());
 
                 }
 
@@ -196,9 +196,9 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                         photoView.setAlpha(1f);
                         loadPrivateImageFinish(false);
 
-                        isLoadSuccess = false;
-                        isInitImage = true;
                     });
+                    isLoadSuccess = false;
+                    isInitImage = true;
                 }
             });
         }
