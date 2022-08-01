@@ -138,14 +138,14 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             photoView.setImageDrawable(drawable);
             int imageWidth = drawable.getIntrinsicWidth(), imageHeight = drawable.getIntrinsicHeight();
             if (!ImageLoadUtils.getInstance().getImageLoadSuccess(openImageBean.getImageUrl()) && imageDiskMode == ImageDiskMode.RESULT) {
-                initCoverAnim(imageWidth, imageHeight);
+                initCoverAnim(imageWidth, imageHeight,true);
                 if (isTransitionEnd && coverAnim != null) {
                     coverAnim.start();
                 } else if (!isTransitionEnd) {
                     smallCoverImageView.setVisibility(View.GONE);
                     photoView.setAlpha(1f);
                     isStartCoverAnim = false;
-                    loadPrivateImageFinish();
+                    loadPrivateImageFinish(true);
                 } else {
                     isStartCoverAnim = true;
                 }
@@ -153,7 +153,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                 hideLoading(loadingView);
                 smallCoverImageView.setVisibility(View.GONE);
                 photoView.setAlpha(1f);
-                loadPrivateImageFinish();
+                loadPrivateImageFinish(true);
             }
 
             isLoadSuccess = true;
@@ -171,7 +171,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                 public void onLoadImageSuccess(Drawable drawable) {
                     mHandler.post(() -> {
                         photoView.setImageDrawable(drawable);
-
+                        loadPrivateImageFinish(true);
                         hideLoading(loadingView);
                         isLoadSuccess = true;
                         isInitImage = true;
@@ -192,7 +192,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                         }
                         smallCoverImageView.setVisibility(View.GONE);
                         photoView.setAlpha(1f);
-                        loadPrivateImageFinish();
+                        loadPrivateImageFinish(false);
 
                         isLoadSuccess = false;
                         isInitImage = true;
@@ -202,11 +202,10 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         }
     }
 
-    protected void loadImageFinish(){
+    protected abstract void loadImageFinish(boolean isLoadImageSuccess);
 
-    }
-    private void loadPrivateImageFinish(){
-        loadImageFinish();
+    private void loadPrivateImageFinish(boolean isLoadImageSuccess){
+        loadImageFinish(isLoadImageSuccess);
     }
 
     @Override
@@ -227,27 +226,27 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             smallCoverImageView.setVisibility(View.GONE);
             photoView.setImageResource(errorResId);
             photoView.setAlpha(1f);
-            loadPrivateImageFinish();
+            loadPrivateImageFinish(false);
         } else {
             Drawable drawable = smallCoverImageView.getDrawable();
             if (drawable != null) {
                 photoView.setImageDrawable(drawable);
-                initCoverAnim(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                initCoverAnim(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),false);
                 if (coverAnim != null) {
                     coverAnim.start();
                 }else {
-                    loadPrivateImageFinish();
+                    loadPrivateImageFinish(false);
                 }
             } else {
                 smallCoverImageView.setVisibility(View.GONE);
                 photoView.setAlpha(1f);
-                loadPrivateImageFinish();
+                loadPrivateImageFinish(false);
             }
         }
 
     }
 
-    protected void initCoverAnim(int imageWidth, int imageHeight) {
+    protected void initCoverAnim(int imageWidth, int imageHeight,final boolean isLoadImageSuccess) {
         if ((srcScaleType == ImageView.ScaleType.CENTER_CROP || srcScaleType == ImageView.ScaleType.FIT_XY) && openImageBean.srcWidth != 0 && openImageBean.srcHeight !=0) {
             float scaleHW = openImageBean.srcHeight * 1f / openImageBean.srcWidth;
             float originalScaleHW = imageHeight * 1f / imageWidth;
@@ -287,7 +286,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    loadPrivateImageFinish();
+                    loadPrivateImageFinish(isLoadImageSuccess);
                 }
 
                 @Override

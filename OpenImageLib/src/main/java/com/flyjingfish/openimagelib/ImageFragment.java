@@ -42,4 +42,9 @@ public class ImageFragment extends BaseImageFragment<LoadingView> {
     protected LoadingView getLoadingView() {
         return binding.loadingView;
     }
+
+    @Override
+    protected void loadImageFinish(boolean isLoadImageSuccess) {
+
+    }
 }

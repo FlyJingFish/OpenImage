@@ -84,19 +84,18 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
     }
 
     @Override
-    protected void loadImageFinish() {
-        super.loadImageFinish();
-        binding.videoPlayer.playUrl(openImageBean.getVideoUrl());
-        binding.videoPlayer.startPlayLogic();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT);
         if (playerKey != null) {
             GSYVideoController.resumeByKey(playerKey);
         }
+    }
+
+    @Override
+    protected void loadImageFinish(boolean isLoadImageSuccess) {
+        binding.videoPlayer.playUrl(openImageBean.getVideoUrl());
+        binding.videoPlayer.startPlayLogic();
     }
 
     @Override
