@@ -209,90 +209,7 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     private void initSrcViews() {
         ImageLoadUtils.getInstance().getOnBackView().onGetContentViewOriginModel();
-//        List<ContentViewOriginModel> contentViewOriginModels = ImageLoadUtils.getInstance().getOnBackView().onGetContentViewOriginModel();
-//        Rect rvRect = getIntent().getParcelableExtra(OpenParams.SRC_PARENT_RECT);
-//        if (rvRect != null) {
-//            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) binding.flBelowView.getLayoutParams();
-//            layoutParams.topMargin = rvRect.top;
-//            layoutParams.leftMargin = rvRect.left;
-//            layoutParams.width = rvRect.width();
-//            layoutParams.height = rvRect.height();
-//            binding.flBelowView.setLayoutParams(layoutParams);
-//        }
-//
-//        for (ContentViewOriginModel contentViewOriginModel : contentViewOriginModels) {
-//            if (contentViewOriginModel.dataPosition == clickPosition) {
-//                int index=0;
-//                for (OpenImageDetail openImageBean : openImageBeans) {
-//                    if (openImageBean.dataPosition == clickPosition) {
-//                        ImageView imageView = new ImageView(this);
-//                        imageView.setScaleType(srcScaleType);
-//                        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(contentViewOriginModel.width, contentViewOriginModel.height);
-//                        params.leftMargin = contentViewOriginModel.left;
-////            layoutParams.topMargin = ImageLoadUtils.rvRect.top-(contentViewOriginModel.top + topSub);
-//                        params.topMargin = contentViewOriginModel.top;
-////            ((ViewGroup)getWindow().getDecorView()).addView(imageView,0,layoutParams);
-//                        binding.flBelowView.addView(imageView, params);
-//                        loadSrcImage(openImageBean, imageView);
-//                        openImageBean.isAdded = true;
-//                        imageView.setTag(OpenParams.SHARE_VIEW+index);
-//                    }
-//                    index++;
-//                }
-//            }
-//            OpenImageDetail openImageDetail = openImageBeans.get(showPosition);
-//            if (openImageDetail.dataPosition == contentViewOriginModel.dataPosition && !openImageDetail.isAdded){
-//                ImageView imageView = new ImageView(this);
-//                imageView.setScaleType(srcScaleType);
-//                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(contentViewOriginModel.width, contentViewOriginModel.height);
-//                params.leftMargin = contentViewOriginModel.left;
-////            layoutParams.topMargin = ImageLoadUtils.rvRect.top-(contentViewOriginModel.top + topSub);
-//                params.topMargin = contentViewOriginModel.top;
-////            ((ViewGroup)getWindow().getDecorView()).addView(imageView,0,layoutParams);
-//                binding.flBelowView.addView(imageView, params);
-//                loadSrcImage(openImageDetail, imageView);
-//                openImageDetail.isAdded = true;
-//                imageView.setTag(OpenParams.SHARE_VIEW+showPosition);
-//            }
-//
-//            if (contentViewOriginModel.transitioned){
-//                int index=0;
-//                for (OpenImageDetail openImageBean : openImageBeans) {
-//                    if (openImageBean.dataPosition == contentViewOriginModel.dataPosition && !openImageBean.isAdded) {
-//                        ImageView imageView = new ImageView(this);
-//                        imageView.setScaleType(srcScaleType);
-//                        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(contentViewOriginModel.width, contentViewOriginModel.height);
-//                        params.leftMargin = contentViewOriginModel.left;
-////            layoutParams.topMargin = ImageLoadUtils.rvRect.top-(contentViewOriginModel.top + topSub);
-//                        params.topMargin = contentViewOriginModel.top;
-////            ((ViewGroup)getWindow().getDecorView()).addView(imageView,0,layoutParams);
-//                        binding.flBelowView.addView(imageView, params);
-//                        loadSrcImage(openImageBean, imageView);
-//                        openImageBean.isAdded = true;
-//                        imageView.setTag(OpenParams.SHARE_VIEW+showPosition);
-//                    }
-//                    index ++;
-//                }
-//            }
-//        }
     }
-
-
-//    private void loadSrcImage(OpenImageDetail openImageBean, ImageView srcImageView) {
-//        if (srcImageView != null && !openImageBean.tagViewLoadSuc) {
-//            itemLoadHelper.loadImage(ViewPagerActivity.this, openImageBean.openImageUrl, openImageBean.getCoverImageUrl(), srcImageView, openImageBean.srcWidth, openImageBean.srcHeight, new OnLoadCoverImageListener() {
-//                @Override
-//                public void onLoadImageSuccess() {
-//                    openImageBean.tagViewLoadSuc = true;
-//                }
-//
-//                @Override
-//                public void onLoadImageFailed() {
-//
-//                }
-//            });
-//        }
-//    }
 
     private void setViewTransition() {
         openCoverKey = getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE);
@@ -475,35 +392,6 @@ public class ViewPagerActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-//    private void close() {
-//        View shareView = getCoverView();
-//        if (shareView != null) {
-//            if (coverImageView != null) {
-//                ViewCompat.setTransitionName(coverImageView, "");
-//            }
-//            ViewCompat.setTransitionName(binding.viewPager, "");
-//            ViewCompat.setTransitionName(shareView, OpenParams.SHARE_VIEW + showPosition);
-//
-//        } else {
-//            if (showPosition != selectPos) {
-//                if (coverImageView != null) {
-//                    ViewCompat.setTransitionName(coverImageView, "");
-//                }
-//                ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + showPosition);
-//            } else {
-//                if (coverImageView != null) {
-//                    binding.viewPager.setVisibility(View.GONE);
-//                    coverImageView.setVisibility(View.VISIBLE);
-//                    ViewCompat.setTransitionName(coverImageView, OpenParams.SHARE_VIEW + showPosition);
-//                } else {
-//                    ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + showPosition);
-//                }
-//
-//            }
-//        }
-//        finishAfterTransition();
-//    }
 
     private void setExitView() {
         View shareView = getCoverView();
