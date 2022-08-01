@@ -93,13 +93,15 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
         }
     }
 
+    boolean isLoadImageFinish;
     @Override
     protected void loadImageFinish(boolean isLoadImageSuccess) {
+        isLoadImageFinish = true;
         play();
     }
 
     private void play(){
-        if (isTransitionEnd && isInitImage){
+        if (isTransitionEnd && isLoadImageFinish){
             binding.videoPlayer.playUrl(openImageBean.getVideoUrl());
             binding.videoPlayer.startPlayLogic();
         }
