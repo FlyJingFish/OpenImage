@@ -26,13 +26,13 @@ import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 public abstract class BaseImageFragment<T extends View> extends BaseFragment {
 
-    protected ImageView smallCoverImageView;
-    protected ImageView photoView;
+    protected PhotoView smallCoverImageView;
+    protected PhotoView photoView;
     protected T loadingView;
 
-    protected abstract ImageView getSmallCoverImageView();
+    protected abstract PhotoView getSmallCoverImageView();
 
-    protected abstract ImageView getPhotoView();
+    protected abstract PhotoView getPhotoView();
 
     protected abstract T getLoadingView();
 
@@ -52,6 +52,8 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         smallCoverImageView = getSmallCoverImageView();
         photoView = getPhotoView();
         loadingView = getLoadingView();
+        smallCoverImageView.setSrcScaleType(srcScaleType);
+        photoView.setSrcScaleType(srcScaleType);
 
         showLoading(loadingView);
         if (ImageLoadUtils.getInstance().getImageLoadSuccess(openImageBean.getImageUrl())

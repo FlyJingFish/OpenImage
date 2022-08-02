@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +12,7 @@ import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.FragmentVideoBinding;
 import com.flyjingfish.openimage.videoplayer.GSYVideoController;
 import com.flyjingfish.openimagelib.BaseImageFragment;
+import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 
 import moe.codeest.enviews.ENDownloadView;
@@ -24,12 +24,12 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
 
 
     @Override
-    protected ImageView getSmallCoverImageView() {
+    protected PhotoView getSmallCoverImageView() {
         return binding.videoPlayer.getSmallCoverImageView();
     }
 
     @Override
-    protected ImageView getPhotoView() {
+    protected PhotoView getPhotoView() {
         return binding.videoPlayer.getCoverImageView();
     }
 

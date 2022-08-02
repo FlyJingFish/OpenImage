@@ -99,6 +99,11 @@ public class PhotoView extends AppCompatImageView {
             attacher.setScaleType(scaleType);
         }
     }
+    public void setSrcScaleType(ScaleType scaleType) {
+        if (attacher != null) {
+            attacher.setSrcScaleType(scaleType);
+        }
+    }
 
     @Override
     public void setImageDrawable(Drawable drawable) {
@@ -253,4 +258,11 @@ public class PhotoView extends AppCompatImageView {
     public void setOnSingleFlingListener(OnSingleFlingListener onSingleFlingListener) {
         attacher.setOnSingleFlingListener(onSingleFlingListener);
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        attacher.release();
+    }
+
 }

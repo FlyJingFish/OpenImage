@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.flyjingfish.openimagelib.databinding.FragmentImageBinding;
+import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.widget.LoadingView;
 
 public class ImageFragment extends BaseImageFragment<LoadingView> {
@@ -29,12 +29,12 @@ public class ImageFragment extends BaseImageFragment<LoadingView> {
     }
 
     @Override
-    protected ImageView getSmallCoverImageView() {
+    protected PhotoView getSmallCoverImageView() {
         return binding.ivCoverFg;
     }
 
     @Override
-    protected ImageView getPhotoView() {
+    protected PhotoView getPhotoView() {
         return binding.photoView;
     }
 

@@ -20,6 +20,9 @@ import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +33,8 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
+
+import androidx.annotation.NonNull;
 
 import com.flyjingfish.openimagelib.OpenImageConfig;
 
@@ -96,6 +101,27 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     private boolean mZoomEnabled = true;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
+    private ScaleType mSrcScaleType = ScaleType.FIT_CENTER;
+    // TODO: 2022/8/2 设置高度
+    private static float mTargetWidth ;
+    private static float mTargetHeight ;
+    float mScrollStep = 20;
+    private static final int SCROLL_TOP = 1;
+    Handler mHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            final RectF rect = getDisplayRect(getDrawMatrix());
+            if (rect.top < 0){
+                float transY = mTargetHeight /mScrollStep;
+                mSuppMatrix.postTranslate(0, transY);
+                checkAndDisplayMatrix();
+                if (transY !=0){
+                    mHandler.sendEmptyMessageDelayed(SCROLL_TOP,10);
+                }
+            }
+        }
+    };
 
     private OnGestureListener onGestureListener = new OnGestureListener() {
         @Override
@@ -492,6 +518,13 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
     }
 
+    public void setSrcScaleType(ScaleType scaleType) {
+        if (Util.isSupportedScaleType(scaleType)) {
+            mSrcScaleType = scaleType;
+            update();
+        }
+    }
+
     public boolean isZoomable() {
         return mZoomEnabled;
     }
@@ -589,7 +622,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         setRotationBy(mBaseRotation);
         setImageViewMatrix(getDrawMatrix());
         checkMatrixBounds();
+
     }
+
 
     private void setImageViewMatrix(Matrix matrix) {
         mImageView.setImageMatrix(matrix);
@@ -662,17 +697,19 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         } else {
             float scaleImageHW = drawableHeight * 1f / drawableWidth;
-//            float scaleViewHW = viewHeight * 1f / viewHeight;
+            float scaleViewHW = viewHeight * 1f / viewWidth;
             float maxScale = Math.max(widthScale, heightScale);
 
 
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst;
-//           boolean isReadBigImaged = false;
+           boolean isReadBigImaged = false;
             if (OpenImageConfig.getInstance().isReadMode()) {
                 if (maxScale * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * viewHeight) {
 //                if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
-                    mTempDst = new RectF(0, 0, viewWidth, viewWidth * scaleImageHW);
+                    float height = viewWidth * scaleImageHW;
+                    float tansY = (height-viewHeight)/2 ;
+                    mTempDst = new RectF(0, -tansY, viewWidth, height-tansY);
 //                    isReadBigImaged = true;
                 }else {
                     if (scaleImageHW > 1) {
@@ -690,12 +727,54 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                             mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
                         }
                     }
-                    mTempDst = new RectF(0, 0, viewWidth, viewHeight);
+                    if (mSrcScaleType == ScaleType.CENTER_CROP){
+                        float tansX=0;
+                        float tansY=0;
+                        if (scaleImageHW > scaleViewHW){
+                            float height = viewWidth * scaleImageHW;
+                            if (height> mTargetHeight){
+                                height = mTargetHeight;
+                            }
+                            tansY = (height-viewHeight)/2;
+                            mTempDst = new RectF(0, -tansY, viewWidth, height-tansY);
+                        }else {
+                            float width = viewHeight/scaleImageHW;
+                            if (width> mTargetWidth){
+                                width = mTargetWidth;
+                            }
+                            tansX = (width-viewWidth)/2;
+                            mTempDst = new RectF(-tansX, 0, width-tansX, viewHeight);
+
+                        }
+                    }else {
+                        mTempDst = new RectF(0, 0, viewWidth, viewHeight);
+                    }
                 }
             } else {
-                mTempDst = new RectF(0, 0, viewWidth, viewHeight);
-            }
+                if (mSrcScaleType == ScaleType.CENTER_CROP) {
+                    float tansX = 0;
+                    float tansY = 0;
+                    if (scaleImageHW > scaleViewHW) {
+                        float height = viewWidth * scaleImageHW;
+                        if (height > mTargetHeight) {
+                            height = mTargetHeight;
+                        }
+                        tansY = (height - viewHeight) / 2;
+                        mTempDst = new RectF(0, -tansY, viewWidth, height - tansY);
+                    } else {
+                        float width = viewHeight / scaleImageHW;
+                        if (width > mTargetWidth) {
+                            width = mTargetWidth;
+                        }
+                        tansX = (width - viewWidth) / 2;
+                        mTempDst = new RectF(-tansX, 0, width - tansX, viewHeight);
 
+                    }
+                }else {
+                    mTempDst = new RectF(0, 0, viewWidth, viewHeight);
+                }
+
+            }
             if ((int) mBaseRotation % 180 != 0) {
                 mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
             }
@@ -715,6 +794,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 default:
                     break;
             }
+            mHandler.removeMessages(SCROLL_TOP);
+            mHandler.sendEmptyMessageDelayed(SCROLL_TOP,100);
         }
         resetMatrix();
 
@@ -888,5 +969,17 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 Compat.postOnAnimation(mImageView, this);
             }
         }
+    }
+
+    public void release(){
+        mHandler.removeCallbacksAndMessages(null);
+    }
+
+    public static void setTargetWidth(float targetWidth) {
+        mTargetWidth = targetWidth;
+    }
+
+    public static void setTargetHeight(float targetHeight) {
+        mTargetHeight = targetHeight;
     }
 }

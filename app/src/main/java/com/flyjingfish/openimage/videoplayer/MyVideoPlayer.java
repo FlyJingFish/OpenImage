@@ -1,24 +1,20 @@
 package com.flyjingfish.openimage.videoplayer;
 
-import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.flyjingfish.openimage.R;
+import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
-import com.shuyu.gsyvideoplayer.utils.Debuger;
 
-import moe.codeest.enviews.ENDownloadView;
 
 public class MyVideoPlayer extends GSYVideoPlayer {
 
 
-    private ImageView coverImageView;
-    private ImageView smallCoverImageView;
+    private PhotoView coverImageView;
+    private PhotoView smallCoverImageView;
 
     public MyVideoPlayer(Context context) {
         super(context);
@@ -26,7 +22,7 @@ public class MyVideoPlayer extends GSYVideoPlayer {
 
     public MyVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
-        coverImageView = new ImageView(context);
+        coverImageView = new PhotoView(context);
         coverImageView.setId(R.id.iv_video_player_cover);
         mThumbImageView = coverImageView;
         resolveThumbImage(mThumbImageView);
@@ -39,11 +35,11 @@ public class MyVideoPlayer extends GSYVideoPlayer {
         setUp(videoUrl, true, "");
     }
 
-    public ImageView getCoverImageView() {
+    public PhotoView getCoverImageView() {
         return coverImageView;
     }
 
-    public ImageView getSmallCoverImageView() {
+    public PhotoView getSmallCoverImageView() {
         return smallCoverImageView;
     }
 
