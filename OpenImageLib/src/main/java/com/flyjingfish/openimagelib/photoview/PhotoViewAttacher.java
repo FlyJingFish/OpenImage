@@ -103,22 +103,27 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
     private ScaleType mSrcScaleType = ScaleType.FIT_CENTER;
     // TODO: 2022/8/2 设置高度
-    private static float mTargetWidth ;
-    private static float mTargetHeight ;
+    private static float mTargetWidth;
+    private static float mTargetHeight;
     float mScrollStep = 20;
     private static final int SCROLL_TOP = 1;
-    Handler mHandler = new Handler(Looper.getMainLooper()){
+    Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            final RectF rect = getDisplayRect(getDrawMatrix());
-            if (rect.top < 0){
-                float transY = mTargetHeight /mScrollStep;
-                mSuppMatrix.postTranslate(0, transY);
-                checkAndDisplayMatrix();
-                if (transY !=0){
-                    mHandler.sendEmptyMessageDelayed(SCROLL_TOP,10);
+            if (mSrcScaleType == ScaleType.CENTER_CROP){
+                final RectF rect = getDisplayRect(getDrawMatrix());
+                if (rect.top < 0) {
+                    float transY = mTargetHeight / mScrollStep;
+                    mSuppMatrix.postTranslate(0, transY);
+                    checkAndDisplayMatrix();
+                    if (transY != 0) {
+                        mHandler.sendEmptyMessageDelayed(SCROLL_TOP, 10);
+                    }
                 }
+            }else {
+                mSrcScaleType = ScaleType.CENTER_CROP;
+                update();
             }
         }
     };
@@ -192,6 +197,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             }
         }
     };
+
     public PhotoViewAttacher(ImageView imageView) {
         mImageView = imageView;
         imageView.setOnTouchListener(this);
@@ -703,15 +709,32 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst;
-           boolean isReadBigImaged = false;
             if (OpenImageConfig.getInstance().isReadMode()) {
                 if (maxScale * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * viewHeight) {
-//                if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
-                    float height = viewWidth * scaleImageHW;
-                    float tansY = (height-viewHeight)/2 ;
-                    mTempDst = new RectF(0, -tansY, viewWidth, height-tansY);
-//                    isReadBigImaged = true;
-                }else {
+                    if (mSrcScaleType == ScaleType.CENTER_INSIDE) {
+                        float tansX = 0;
+                        float tansY = 0;
+                        if (scaleImageHW > scaleViewHW) {
+                            float width = viewHeight / scaleImageHW;
+                            if (width > mTargetWidth) {
+                                width = mTargetWidth;
+                            }
+                            mTempDst = new RectF(0, -tansY, width, viewHeight);
+                        } else {
+                            float height = viewWidth * scaleImageHW;
+                            if (height > mTargetHeight) {
+                                height = mTargetHeight;
+                            }
+                            mTempDst = new RectF(-tansX, 0, viewWidth, height);
+
+                        }
+
+                    }else {
+                        float height = viewWidth * scaleImageHW;
+                        float tansY = (height - viewHeight) / 2;
+                        mTempDst = new RectF(0, -tansY, viewWidth, height - tansY);
+                    }
+                } else {
                     if (scaleImageHW > 1) {
                         if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
                             mMinScale = DEFAULT_MIN_SCALE;
@@ -727,26 +750,43 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                             mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
                         }
                     }
-                    if (mSrcScaleType == ScaleType.CENTER_CROP){
-                        float tansX=0;
-                        float tansY=0;
-                        if (scaleImageHW > scaleViewHW){
+                    if (mSrcScaleType == ScaleType.CENTER_CROP) {
+                        float tansX = 0;
+                        float tansY = 0;
+                        if (scaleImageHW > scaleViewHW) {
                             float height = viewWidth * scaleImageHW;
-                            if (height> mTargetHeight){
+                            if (height > mTargetHeight) {
                                 height = mTargetHeight;
                             }
-                            tansY = (height-viewHeight)/2;
-                            mTempDst = new RectF(0, -tansY, viewWidth, height-tansY);
-                        }else {
-                            float width = viewHeight/scaleImageHW;
-                            if (width> mTargetWidth){
+                            tansY = (height - viewHeight) / 2;
+                            mTempDst = new RectF(0, -tansY, viewWidth, height - tansY);
+                        } else {
+                            float width = viewHeight / scaleImageHW;
+                            if (width > mTargetWidth) {
                                 width = mTargetWidth;
                             }
-                            tansX = (width-viewWidth)/2;
-                            mTempDst = new RectF(-tansX, 0, width-tansX, viewHeight);
+                            tansX = (width - viewWidth) / 2;
+                            mTempDst = new RectF(-tansX, 0, width - tansX, viewHeight);
 
                         }
-                    }else {
+                    } else if (mSrcScaleType == ScaleType.CENTER_INSIDE) {
+                        float tansX = 0;
+                        float tansY = 0;
+                        if (scaleImageHW > scaleViewHW) {
+                            float width = viewHeight / scaleImageHW;
+                            if (width > mTargetWidth) {
+                                width = mTargetWidth;
+                            }
+                            mTempDst = new RectF(0, -tansY, width, viewHeight);
+                        } else {
+                            float height = viewWidth * scaleImageHW;
+                            if (height > mTargetHeight) {
+                                height = mTargetHeight;
+                            }
+                            mTempDst = new RectF(-tansX, 0, viewWidth, height);
+
+                        }
+                    } else {
                         mTempDst = new RectF(0, 0, viewWidth, viewHeight);
                     }
                 }
@@ -770,7 +810,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         mTempDst = new RectF(-tansX, 0, width - tansX, viewHeight);
 
                     }
-                }else {
+                } else {
                     mTempDst = new RectF(0, 0, viewWidth, viewHeight);
                 }
 
@@ -795,7 +835,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     break;
             }
             mHandler.removeMessages(SCROLL_TOP);
-            mHandler.sendEmptyMessageDelayed(SCROLL_TOP,100);
+            mHandler.sendEmptyMessageDelayed(SCROLL_TOP, 100);
         }
         resetMatrix();
 
@@ -971,7 +1011,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
     }
 
-    public void release(){
+    public void release() {
         mHandler.removeCallbacksAndMessages(null);
     }
 
