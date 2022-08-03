@@ -54,6 +54,13 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         loadingView = getLoadingView();
         smallCoverImageView.setSrcScaleType(srcScaleType);
         photoView.setSrcScaleType(srcScaleType);
+        if (openImageBean.getType() != MediaType.IMAGE){
+            smallCoverImageView.setZoomable(false);
+            photoView.setZoomable(false);
+        }else {
+            smallCoverImageView.setZoomable(true);
+            photoView.setZoomable(true);
+        }
 
         showLoading(loadingView);
         if (ImageLoadUtils.getInstance().getImageLoadSuccess(openImageBean.getImageUrl())

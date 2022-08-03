@@ -541,15 +541,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void update() {
-        if (mZoomEnabled) {
-            // Update the base matrix using the current drawable
-            Drawable drawable = mImageView.getDrawable();
-            updateBaseMatrix(drawable);
-//            checkMinMaxValue(drawable);
-        } else {
-            // Reset the Matrix...
-            resetMatrix();
-        }
+        Drawable drawable = mImageView.getDrawable();
+        updateBaseMatrix(drawable);
     }
 
 //    private void checkMinMaxValue(Drawable drawable){

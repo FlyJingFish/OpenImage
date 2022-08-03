@@ -88,7 +88,11 @@ public class PhotoView extends AppCompatImageView {
 
     @Override
     public void setOnClickListener(OnClickListener l) {
-        attacher.setOnClickListener(l);
+        if (attacher.isZoomable()){
+            attacher.setOnClickListener(l);
+        }else {
+            super.setOnClickListener(l);
+        }
     }
 
     @Override
