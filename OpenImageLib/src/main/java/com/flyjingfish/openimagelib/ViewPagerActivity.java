@@ -217,7 +217,9 @@ public class ViewPagerActivity extends AppCompatActivity {
         OpenImageDetail openImageDetail = openImageBeans.get(selectPos);
         if (drawable != null) {
             if (openImageDetail.getType() == MediaType.IMAGE) {
-                coverImageView = new PhotoView(this);
+                PhotoView photoView = new PhotoView(this);
+                coverImageView = photoView;
+                photoView.setZoomable(false);
             } else {
                 coverImageView = new ImageView(this);
             }
