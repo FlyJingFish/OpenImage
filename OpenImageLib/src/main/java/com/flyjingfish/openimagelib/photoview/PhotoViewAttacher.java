@@ -103,8 +103,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
     private ScaleType mSrcScaleType = ScaleType.FIT_CENTER;
     // TODO: 2022/8/2 设置高度
-    private static float mTargetWidth;
-    private static float mTargetHeight;
+    private float mTargetWidth;
+    private float mTargetHeight;
     float mScrollStep = 20;
     private static final int SCROLL_TOP = 1;
     Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -706,6 +706,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             float scaleViewHW = viewHeight * 1f / viewWidth;
             float maxScale = Math.max(widthScale, heightScale);
 
+            if (viewHeight>mTargetHeight&&viewWidth>mTargetWidth){
+                mTargetHeight = viewHeight;
+                mTargetWidth = viewWidth;
+            }
 
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst;
@@ -810,11 +814,54 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         mTempDst = new RectF(-tansX, 0, width - tansX, viewHeight);
 
                     }
+                } else if (mSrcScaleType == ScaleType.CENTER_INSIDE) {
+                    float tansX = 0;
+                    float tansY = 0;
+                    if (scaleImageHW > scaleViewHW) {
+                        float width = viewHeight / scaleImageHW;
+                        if (width > mTargetWidth) {
+                            width = mTargetWidth;
+                        }
+                        mTempDst = new RectF(0, -tansY, width, viewHeight);
+                    } else {
+                        float height = viewWidth * scaleImageHW;
+                        if (height > mTargetHeight) {
+                            height = mTargetHeight;
+                        }
+                        mTempDst = new RectF(-tansX, 0, viewWidth, height);
+
+                    }
                 } else {
                     mTempDst = new RectF(0, 0, viewWidth, viewHeight);
                 }
 
             }
+//            if (OpenImageConfig.getInstance().isReadMode()) {
+//                if (maxScale * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * viewHeight) {
+////                if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
+//                    mTempDst = new RectF(0, 0, viewWidth, viewWidth * scaleImageHW);
+////                    isReadBigImaged = true;
+//                }else {
+//                    if (scaleImageHW > 1) {
+//                        if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
+//                            mMinScale = DEFAULT_MIN_SCALE;
+//                            //设置中等缩放为适宽的缩放
+//                            mMidScale = widthScale / heightScale;
+//                            mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+//                        }
+//                    } else {
+//                        if (maxScale * drawableWidth > DEFAULT_MID_SCALE * viewWidth) {
+//                            mMinScale = DEFAULT_MIN_SCALE;
+//                            //设置中等缩放为适宽的缩放
+//                            mMidScale = heightScale / widthScale;
+//                            mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+//                        }
+//                    }
+//                    mTempDst = new RectF(0, 0, viewWidth, viewHeight);
+//                }
+//            } else {
+//                mTempDst = new RectF(0, 0, viewWidth, viewHeight);
+//            }
             if ((int) mBaseRotation % 180 != 0) {
                 mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
             }
@@ -1015,11 +1062,4 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         mHandler.removeCallbacksAndMessages(null);
     }
 
-    public static void setTargetWidth(float targetWidth) {
-        mTargetWidth = targetWidth;
-    }
-
-    public static void setTargetHeight(float targetHeight) {
-        mTargetHeight = targetHeight;
-    }
 }

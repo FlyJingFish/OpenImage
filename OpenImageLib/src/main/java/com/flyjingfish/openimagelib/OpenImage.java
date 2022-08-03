@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -43,10 +42,7 @@ import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
-import com.flyjingfish.openimagelib.photoview.PhotoView;
-import com.flyjingfish.openimagelib.photoview.PhotoViewAttacher;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
-import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -955,8 +951,6 @@ public class OpenImage {
     private void open(Intent intent, Bundle newOptions) {
         OpenImageUrl openImageUrl = openImageUrls.get(clickPosition);
         Handler handler = new Handler(Looper.getMainLooper());
-        PhotoViewAttacher.setTargetWidth(ScreenUtils.getScreenWidth(context));
-        PhotoViewAttacher.setTargetHeight(ScreenUtils.getScreenHeight(context));
         OpenImageConfig.getInstance().getBigImageHelper().loadImage(context, ImageLoadUtils.getInstance().getImageLoadSuccess(openImageUrl.getImageUrl()) ? openImageUrl.getImageUrl() : openImageUrl.getCoverImageUrl(), new OnLoadBigImageListener() {
             @Override
             public void onLoadImageSuccess(Drawable drawable) {
