@@ -283,7 +283,7 @@ public class OpenImage {
                         params.leftMargin = contentViewOriginModel.left;
                         params.topMargin = contentViewOriginModel.top;
                         flBelowView.addView(imageView, params);
-                        loadSrcImage(openImageBean, imageView);
+                        loadSrcImage(openImageBean, imageView,contentViewOriginModel.width, contentViewOriginModel.height);
                         openImageBean.isAdded = true;
                     }
                 }
@@ -296,7 +296,7 @@ public class OpenImage {
                 params.leftMargin = contentViewOriginModel.left;
                 params.topMargin = contentViewOriginModel.top;
                 flBelowView.addView(imageView, params);
-                loadSrcImage(openImageDetail, imageView);
+                loadSrcImage(openImageDetail, imageView,contentViewOriginModel.width, contentViewOriginModel.height);
                 openImageDetail.isAdded = true;
             }
 
@@ -309,7 +309,7 @@ public class OpenImage {
                         params.leftMargin = contentViewOriginModel.left;
                         params.topMargin = contentViewOriginModel.top;
                         flBelowView.addView(imageView, params);
-                        loadSrcImage(openImageBean, imageView);
+                        loadSrcImage(openImageBean, imageView,contentViewOriginModel.width, contentViewOriginModel.height);
                         openImageBean.isAdded = true;
                     }
                 }
@@ -324,9 +324,9 @@ public class OpenImage {
         }
     }
 
-    private void loadSrcImage(OpenImageDetail openImageBean, ImageView srcImageView) {
+    private void loadSrcImage(OpenImageDetail openImageBean, ImageView srcImageView,int width,int height) {
         if (srcImageView != null && !openImageBean.tagViewLoadSuc) {
-            itemLoadHelper.loadImage(context, openImageBean.openImageUrl, openImageBean.getCoverImageUrl(), srcImageView, openImageBean.srcWidth, openImageBean.srcHeight, new OnLoadCoverImageListener() {
+            itemLoadHelper.loadImage(context, openImageBean.openImageUrl, openImageBean.getCoverImageUrl(), srcImageView, width, height, new OnLoadCoverImageListener() {
                 @Override
                 public void onLoadImageSuccess() {
                     openImageBean.tagViewLoadSuc = true;

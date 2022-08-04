@@ -269,4 +269,12 @@ public class PhotoView extends AppCompatImageView {
         attacher.release();
     }
 
+    public void setStartWidth(float mStartWidth) {
+        attacher.setStartWidth(mStartWidth);
+    }
+
+    public void setStartHeight(float mStartHeight) {
+        attacher.setStartHeight(mStartHeight);
+    }
+
 }

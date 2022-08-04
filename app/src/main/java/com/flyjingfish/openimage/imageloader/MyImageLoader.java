@@ -159,6 +159,7 @@ public class MyImageLoader {
                 requestCreator.resize(200, 200);
 
             } else if (w > 0 && h > 0) {
+                requestCreator.centerCrop();
                 requestCreator.resize(w, h);
             }
             if (imageDiskMode == ImageDiskMode.NONE){

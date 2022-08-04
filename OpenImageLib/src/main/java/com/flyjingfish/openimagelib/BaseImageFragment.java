@@ -55,6 +55,8 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         smallCoverImageView.setSrcScaleType(srcScaleType);
         photoView.setSrcScaleType(srcScaleType);
         smallCoverImageView.setZoomable(false);
+        photoView.setStartWidth(openImageBean.srcWidth);
+        photoView.setStartHeight(openImageBean.srcHeight);
         if (openImageBean.getType() != MediaType.IMAGE){
             photoView.setZoomable(false);
         }else {
