@@ -370,6 +370,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             oldRight, int oldBottom) {
         // Update our base matrix, as the bounds have changed
         if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+            if (right > left && mTargetWidth ==0){
+                mTargetWidth = right - left;
+                mTargetHeight = bottom - top;
+            }
             updateBaseMatrix(mImageView.getDrawable());
         }
     }
@@ -702,9 +706,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst;
-            if (viewHeight>mTargetHeight&&viewWidth>mTargetWidth){
-                float targetWidth = viewWidth;
-                float targetHeight = viewHeight;
+            if (startDstRectF == null){
+                float targetWidth = mTargetWidth;
+                float targetHeight = mTargetHeight;
                 float scaleStartViewHW = mStartHeight*1f/mStartWidth;
                 if (mSrcScaleType == ScaleType.CENTER_CROP){
                     if (scaleImageHW > scaleStartViewHW) {
