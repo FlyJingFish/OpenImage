@@ -818,7 +818,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             }
             switch (mScaleType) {
                 case FIT_CENTER:
-                    if (mSrcScaleType == ScaleType.FIT_XY){
+                    if (mSrcScaleType == ScaleType.FIT_XY &&  mStartWidth !=0 && mStartHeight!=0){
                         if (viewWidth <mTargetWidth||viewHeight <mTargetHeight){
                             mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
                         }else {
