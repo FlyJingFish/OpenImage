@@ -54,9 +54,11 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         loadingView = getLoadingView();
         smallCoverImageView.setSrcScaleType(srcScaleType);
         photoView.setSrcScaleType(srcScaleType);
-        smallCoverImageView.setZoomable(false);
         photoView.setStartWidth(openImageBean.srcWidth);
         photoView.setStartHeight(openImageBean.srcHeight);
+        smallCoverImageView.setStartWidth(openImageBean.srcWidth);
+        smallCoverImageView.setStartHeight(openImageBean.srcHeight);
+        smallCoverImageView.setZoomable(false);
         if (openImageBean.getType() != MediaType.IMAGE){
             photoView.setZoomable(false);
         }else {
@@ -79,7 +81,6 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                 }else {
                     OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), openImageBean.getCoverImageUrl(), smallCoverImageView);
                 }
-                smallCoverImageView.setVisibility(View.VISIBLE);
                 smallCoverImageView.setAlpha(1f);
                 photoView.setAlpha(0f);
             }

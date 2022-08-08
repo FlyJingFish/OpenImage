@@ -51,14 +51,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private static float DEFAULT_MIN_SCALE = 1.0f;
     private static int DEFAULT_ZOOM_DURATION = 200;
 
-    private static final int HORIZONTAL_EDGE_NONE = -1;
-    private static final int HORIZONTAL_EDGE_LEFT = 0;
-    private static final int HORIZONTAL_EDGE_RIGHT = 1;
-    private static final int HORIZONTAL_EDGE_BOTH = 2;
-    private static final int VERTICAL_EDGE_NONE = -1;
-    private static final int VERTICAL_EDGE_TOP = 0;
-    private static final int VERTICAL_EDGE_BOTTOM = 1;
-    private static final int VERTICAL_EDGE_BOTH = 2;
     private static int SINGLE_TOUCH = 1;
 
     private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
@@ -95,8 +87,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private OnViewDragListener mOnViewDragListener;
 
     private FlingRunnable mCurrentFlingRunnable;
-    private int mHorizontalScrollEdge = HORIZONTAL_EDGE_BOTH;
-    private int mVerticalScrollEdge = VERTICAL_EDGE_BOTH;
     private float mBaseRotation;
 
     private boolean mZoomEnabled = true;
@@ -736,7 +726,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     }else {
                         startDstRectF = new RectF(0, 0, mStartWidth, mStartHeight);
                     }
-                }else if (mSrcScaleType == ScaleType.FIT_XY){
+                }else{
                     startDstRectF = new RectF(0, 0, mStartWidth, mStartHeight);
                 }
 
@@ -745,7 +735,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 float maxScale1 = Math.max(widthScale1, heightScale1);
 
                 if (OpenImageConfig.getInstance().isReadMode()) {
-                    if (maxScale1 * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * targetWidth) {
+                    if (maxScale1 * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * targetHeight) {
                         mTargetWidth = targetWidth;
                         mTargetHeight = targetWidth * scaleImageHW;
                         isBigImage = true;
@@ -793,202 +783,50 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 float tansX = (currentWidth - viewWidth) / 2;
 
 
-                float scaleViewHW1 = mTargetHeight/mTargetWidth;
 
                 if (mSrcScaleType == ScaleType.FIT_XY){
-                    float maxHeight ;
-                    float maxWidth ;
-
-                    mTempDst = new RectF(0, 0, viewWidth, viewHeight);
-
-                    if (scaleImageHW > scaleViewHW1){//图比view的高长，以view高度为准
-                        maxHeight = mTargetHeight;
-                        maxWidth = mTargetHeight*(1f/scaleImageHW);
+                    float scaleEndViewHW = mTargetHeight / mTargetWidth;
+                    float targetHeight , targetWidth ;
+                    if (scaleEndViewHW > scaleImageHW){
+                        targetHeight = mTargetWidth*scaleImageHW;
+                        targetWidth = mTargetWidth;
                     }else {
-                        maxWidth = mTargetWidth;
-                        maxHeight = mTargetWidth*scaleImageHW;
+                        targetHeight = mTargetHeight;
+                        targetWidth = mTargetHeight/scaleImageHW;
                     }
 
-                    float currentImageWidth = viewWidth;
-                    float currentImageHeight = viewWidth * scaleImageHW;
-
-                    if(scaleImageHW>mStartHeight/mStartWidth){
-                        //压的是Y轴
-                        if (scaleViewHW>=scaleImageHW){
-                            mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
-                        }else {
-                            mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
-                        }
-                    }else {
-                        //压的是X轴
-                        if (currentImageHeight>=mStartHeight){
-                            mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
-                        }else {
-                            mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
-                        }
-                    }
-
-//                    if (scaleImageHW>1){
-//                        if (scaleViewHW>=scaleImageHW){
-//                            mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
-//                        }else {
-//                            mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
-//                        }
+//                    if (scaleEndViewHW > scaleImageHW){
+//                        mTempDst = new RectF(0, 0, viewWidth, viewHeight-viewHeight*addHeightScale*(1-(targetHeight *1f/ mTargetHeight)));
 //                    }else {
-//                        if (scaleViewHW>=scaleImageHW){
-//                            mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
-//                        }else {
-//                            mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
-//                        }
+//                        mTempDst = new RectF(0, 0, viewWidth-viewWidth*addWidthScale*(1-(targetWidth *1f/ mTargetWidth)), viewHeight);
 //                    }
-//                    if (currentWidth>=maxWidth||currentHeight>=maxHeight || scaleViewHW>=scaleImageHW){
-//                        mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
-//                    }else {
-//                        mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
-//                    }
-
-                }else {
+                    mTempDst = new RectF(0, 0, viewWidth-mTargetWidth*addWidthScale*(1-(targetWidth *1f/ mTargetWidth)), viewHeight-mTargetHeight*addHeightScale*(1-(targetHeight *1f/ mTargetHeight)));
+                }
+                else if (mSrcScaleType == ScaleType.FIT_START||mSrcScaleType == ScaleType.FIT_END){
+                    mTempDst = new RectF (0, 0, viewWidth , viewHeight);
+                }
+                else {
                     mTempDst = new RectF(-tansX, -tansY, currentWidth-tansX, currentHeight-tansY);
-                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
                 }
             }else {
                 mTempDst = new RectF(0, 0, viewWidth, viewHeight);
-                mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
             }
 
-
-
-
-//            if (OpenImageConfig.getInstance().isReadMode()) {
-//                if (maxScale * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * viewHeight) {
-//                    if (mSrcScaleType == ScaleType.CENTER_INSIDE) {
-//                        float tansX = 0;
-//                        float tansY = 0;
-//                        if (scaleImageHW > scaleViewHW) {
-//                            float width = viewHeight / scaleImageHW;
-//                            if (width > mTargetWidth) {
-//                                width = mTargetWidth;
-//                            }
-//                            mTempDst = new RectF(0, -tansY, width, viewHeight);
-//                        } else {
-//                            float height = viewWidth * scaleImageHW;
-//                            if (height > mTargetHeight) {
-//                                height = mTargetHeight;
-//                            }
-//                            mTempDst = new RectF(-tansX, 0, viewWidth, height);
-//
-//                        }
-//
-//                    }else {
-//                        float height = viewWidth * scaleImageHW;
-//                        float tansY = (height - viewHeight) / 2;
-//                        mTempDst = new RectF(0, -tansY, viewWidth, height - tansY);
-//                    }
-//                } else {
-//                    if (scaleImageHW > 1) {
-//                        if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
-//                            mMinScale = DEFAULT_MIN_SCALE;
-//                            //设置中等缩放为适宽的缩放
-//                            mMidScale = widthScale / heightScale;
-//                            mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
-//                        }
-//                    } else {
-//                        if (maxScale * drawableWidth > DEFAULT_MID_SCALE * viewWidth) {
-//                            mMinScale = DEFAULT_MIN_SCALE;
-//                            //设置中等缩放为适宽的缩放
-//                            mMidScale = heightScale / widthScale;
-//                            mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
-//                        }
-//                    }
-//                    if (mSrcScaleType == ScaleType.CENTER_CROP) {
-//                        float tansX = 0;
-//                        float tansY = 0;
-//                        if (scaleImageHW > scaleViewHW) {
-//                            float height = viewWidth * scaleImageHW;
-//                            if (height > mTargetHeight) {
-//                                height = mTargetHeight;
-//                            }
-//                            tansY = (height - viewHeight) / 2;
-//                            mTempDst = new RectF(0, -tansY, viewWidth, height - tansY);
-//                        } else {
-//                            float width = viewHeight / scaleImageHW;
-//                            if (width > mTargetWidth) {
-//                                width = mTargetWidth;
-//                            }
-//                            tansX = (width - viewWidth) / 2;
-//                            mTempDst = new RectF(-tansX, 0, width - tansX, viewHeight);
-//
-//                        }
-//                    } else if (mSrcScaleType == ScaleType.CENTER_INSIDE) {
-//                        float tansX = 0;
-//                        float tansY = 0;
-//                        if (scaleImageHW > scaleViewHW) {
-//                            float width = viewHeight / scaleImageHW;
-//                            if (width > mTargetWidth) {
-//                                width = mTargetWidth;
-//                            }
-//                            mTempDst = new RectF(0, -tansY, width, viewHeight);
-//                        } else {
-//                            float height = viewWidth * scaleImageHW;
-//                            if (height > mTargetHeight) {
-//                                height = mTargetHeight;
-//                            }
-//                            mTempDst = new RectF(-tansX, 0, viewWidth, height);
-//
-//                        }
-//                    } else {
-//                        mTempDst = new RectF(0, 0, viewWidth, viewHeight);
-//                    }
-//                }
-//            } else {
-//                if (mSrcScaleType == ScaleType.CENTER_CROP) {
-//                    float tansX = 0;
-//                    float tansY = 0;
-//                    if (scaleImageHW > scaleViewHW) {
-//                        float height = viewWidth * scaleImageHW;
-//                        if (height > mTargetHeight) {
-//                            height = mTargetHeight;
-//                        }
-//                        tansY = (height - viewHeight) / 2;
-//                        mTempDst = new RectF(0, -tansY, viewWidth, height - tansY);
-//                    } else {
-//                        float width = viewHeight / scaleImageHW;
-//                        if (width > mTargetWidth) {
-//                            width = mTargetWidth;
-//                        }
-//                        tansX = (width - viewWidth) / 2;
-//                        mTempDst = new RectF(-tansX, 0, width - tansX, viewHeight);
-//
-//                    }
-//                } else if (mSrcScaleType == ScaleType.CENTER_INSIDE) {
-//                    float tansX = 0;
-//                    float tansY = 0;
-//                    if (scaleImageHW > scaleViewHW) {
-//                        float width = viewHeight / scaleImageHW;
-//                        if (width > mTargetWidth) {
-//                            width = mTargetWidth;
-//                        }
-//                        mTempDst = new RectF(0, -tansY, width, viewHeight);
-//                    } else {
-//                        float height = viewWidth * scaleImageHW;
-//                        if (height > mTargetHeight) {
-//                            height = mTargetHeight;
-//                        }
-//                        mTempDst = new RectF(-tansX, 0, viewWidth, height);
-//
-//                    }
-//                } else {
-//                    mTempDst = new RectF(0, 0, viewWidth, viewHeight);
-//                }
-//
-//            }
 
             if ((int) mBaseRotation % 180 != 0) {
                 mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
             }
             switch (mScaleType) {
                 case FIT_CENTER:
-
+                    if (mSrcScaleType == ScaleType.FIT_XY){
+                        if (viewWidth <mTargetWidth||viewHeight <mTargetHeight){
+                            mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
+                        }else {
+                            mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
+                        }
+                    }else {
+                        mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
+                    }
                     break;
                 case FIT_START:
                     mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.START);
@@ -1002,13 +840,14 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 default:
                     break;
             }
+
             mHandler.removeMessages(SCROLL_TOP);
             mHandler.sendEmptyMessageDelayed(SCROLL_TOP, 100);
         }
         resetMatrix();
 
-
     }
+
 
     private RectF startDstRectF;
     private boolean isBigImage;
@@ -1019,55 +858,94 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         if (rect == null) {
             return false;
         }
+        final int viewWidth = getImageViewWidth(mImageView);
+        final int viewHeight = getImageViewHeight(mImageView);
         final float height = rect.height(), width = rect.width();
         float deltaX = 0, deltaY = 0;
-        final int viewHeight = getImageViewHeight(mImageView);
-        if (height <= viewHeight) {
-            switch (mScaleType) {
-                case FIT_START:
-                    deltaY = -rect.top;
-                    break;
-                case FIT_END:
-                    deltaY = viewHeight - height - rect.top;
-                    break;
-                default:
-                    deltaY = (viewHeight - height) / 2 - rect.top;
-                    break;
+
+        if (startDstRectF != null && (mSrcScaleType == ScaleType.FIT_START || mSrcScaleType == ScaleType.FIT_END )) {
+            float addWidthScale ;
+            float addHeightScale ;
+            addWidthScale= (viewWidth - mStartWidth)*1f/(mTargetWidth - mStartWidth);
+            if (isBigImage){
+                addHeightScale = addWidthScale;
+            }else {
+                addHeightScale = (viewHeight - mStartHeight)*1f/(mTargetHeight - mStartHeight);
             }
-            mVerticalScrollEdge = VERTICAL_EDGE_BOTH;
-        } else if (rect.top > 0) {
-            mVerticalScrollEdge = VERTICAL_EDGE_TOP;
-            deltaY = -rect.top;
-        } else if (rect.bottom < viewHeight) {
-            mVerticalScrollEdge = VERTICAL_EDGE_BOTTOM;
-            deltaY = viewHeight - rect.bottom;
-        } else {
-            mVerticalScrollEdge = VERTICAL_EDGE_NONE;
-        }
-        final int viewWidth = getImageViewWidth(mImageView);
-        if (width <= viewWidth) {
-            switch (mScaleType) {
-                case FIT_START:
-                    deltaX = -rect.left;
-                    break;
-                case FIT_END:
-                    deltaX = viewWidth - width - rect.left;
-                    break;
-                default:
-                    deltaX = (viewWidth - width) / 2 - rect.left;
-                    break;
+            float scaleImageHW = height * 1f / width;
+            float scaleEndViewHW = mTargetHeight / mTargetWidth;
+            float targetHeight , targetWidth ;
+            if (scaleEndViewHW > scaleImageHW){
+                targetHeight = mTargetWidth*scaleImageHW;
+                targetWidth = mTargetWidth;
+            }else {
+                targetHeight = mTargetHeight;
+                targetWidth = mTargetHeight/scaleImageHW;
             }
-            mHorizontalScrollEdge = HORIZONTAL_EDGE_BOTH;
-        } else if (rect.left > 0) {
-            mHorizontalScrollEdge = HORIZONTAL_EDGE_LEFT;
-            deltaX = -rect.left;
-        } else if (rect.right < viewWidth) {
-            deltaX = viewWidth - rect.right;
-            mHorizontalScrollEdge = HORIZONTAL_EDGE_RIGHT;
-        } else {
-            mHorizontalScrollEdge = HORIZONTAL_EDGE_NONE;
+            if (height <= viewHeight) {
+                switch (mSrcScaleType) {
+                    case FIT_START:
+                        deltaY = -rect.top+addHeightScale*((mTargetHeight - targetHeight) / 2);
+                        break;
+                    case FIT_END:
+                        deltaY = -addHeightScale*(mTargetHeight - targetHeight)/2+ viewHeight - height- rect.top;
+                        break;
+                    default:
+                        deltaY = (viewHeight - height) / 2 - rect.top;
+                        break;
+                }
+            }
+            if (width <= viewWidth) {
+                switch (mSrcScaleType) {
+                    case FIT_START:
+                        deltaX = -rect.left+addWidthScale*((mTargetWidth - targetWidth) / 2 );
+                        break;
+                    case FIT_END:
+                        deltaX = -addWidthScale*(mTargetWidth - targetWidth)/2 +viewWidth - width- rect.left;
+                        break;
+                    default:
+                        deltaX = (viewWidth - width) / 2 - rect.left;
+                        break;
+                }
+            }
+
+        }else {
+            if (height <= viewHeight) {
+                switch (mSrcScaleType) {
+                    case FIT_START:
+                        deltaY = -rect.top;
+                        break;
+                    case FIT_END:
+                        deltaY = viewHeight - height - rect.top;
+                        break;
+                    default:
+                        deltaY = (viewHeight - height) / 2 - rect.top;
+                        break;
+                }
+            } else if (rect.top > 0) {
+                deltaY = -rect.top;
+            } else if (rect.bottom < viewHeight) {
+                deltaY = viewHeight - rect.bottom;
+            }
+            if (width <= viewWidth) {
+                switch (mSrcScaleType) {
+                    case FIT_START:
+                        deltaX = -rect.left;
+                        break;
+                    case FIT_END:
+                        deltaX = viewWidth - width - rect.left;
+                        break;
+                    default:
+                        deltaX = (viewWidth - width) / 2 - rect.left;
+                        break;
+                }
+            } else if (rect.left > 0) {
+                deltaX = -rect.left;
+            } else if (rect.right < viewWidth) {
+                deltaX = viewWidth - rect.right;
+            }
         }
-        // Finally actually translate the matrix
+
         mSuppMatrix.postTranslate(deltaX, deltaY);
         return true;
     }
