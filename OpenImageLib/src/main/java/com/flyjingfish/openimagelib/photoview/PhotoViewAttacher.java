@@ -764,7 +764,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 }
             }
 
-            if (startDstRectF != null){
+            if (startDstRectF != null && mStartWidth !=0 && mStartHeight!=0){
                 float addWidthScale ;
                 float addHeightScale ;
                 addWidthScale= (viewWidth - mStartWidth)*1f/(mTargetWidth - mStartWidth);
