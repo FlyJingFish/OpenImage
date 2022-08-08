@@ -725,11 +725,12 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     if (drawableWidth < mStartWidth && drawableHeight< mStartHeight){
                         float left = (mStartWidth - drawableWidth)/2;
                         float top = (mStartHeight - drawableHeight)/2;
-                        isByView = false;
                         startDstRectF = new RectF(left, top, drawableWidth + left, drawableHeight+top);
                     }else {
                         startDstRectF = new RectF(0, 0, mStartWidth, mStartHeight);
                     }
+                }else if (mSrcScaleType == ScaleType.CENTER){
+                    startDstRectF = new RectF(0, 0, drawableWidth, drawableHeight);
                 }else{
                     startDstRectF = new RectF(0, 0, mStartWidth, mStartHeight);
                 }
@@ -771,11 +772,18 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             if (startDstRectF != null && mStartWidth !=0 && mStartHeight!=0){
                 float addWidthScale ;
                 float addHeightScale ;
-                addWidthScale= (viewWidth - mStartWidth)*1f/(mTargetWidth - mStartWidth);
-                if (isBigImage){
+//                addWidthScale= (viewWidth - mStartWidth)*1f/(mTargetWidth - mStartWidth);
+//                if (isBigImage){
+//                    addHeightScale = addWidthScale;
+//                }else {
+//                    addHeightScale = (viewHeight - mStartHeight)*1f/(mTargetHeight - mStartHeight);
+//                }
+                if (mStartWidth/mTargetWidth<mStartHeight/mTargetHeight){
+                    addWidthScale =  (viewWidth - mStartWidth)*1f/(mTargetWidth - mStartWidth);
                     addHeightScale = addWidthScale;
                 }else {
                     addHeightScale = (viewHeight - mStartHeight)*1f/(mTargetHeight - mStartHeight);
+                    addWidthScale = addHeightScale;
                 }
 
                 float startWidth = startDstRectF.width();
@@ -855,7 +863,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     private RectF startDstRectF;
     private boolean isBigImage;
-    private boolean isByView = true;
 
     private boolean checkMatrixBounds() {
         final RectF rect = getDisplayRect(getDrawMatrix());
