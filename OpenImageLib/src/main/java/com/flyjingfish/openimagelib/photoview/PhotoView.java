@@ -276,5 +276,8 @@ public class PhotoView extends AppCompatImageView {
     public void setStartHeight(float mStartHeight) {
         attacher.setStartHeight(mStartHeight);
     }
+    public void setExitMode(boolean mode) {
+        attacher.setExitMode(mode);
+    }
 
 }

@@ -220,6 +220,9 @@ public class ViewPagerActivity extends AppCompatActivity {
                 PhotoView photoView = new PhotoView(this);
                 coverImageView = photoView;
                 photoView.setZoomable(false);
+                photoView.setSrcScaleType(srcScaleType);
+                photoView.setStartWidth(openImageDetail.srcWidth);
+                photoView.setStartHeight(openImageDetail.srcHeight);
             } else {
                 coverImageView = new ImageView(this);
             }
@@ -231,7 +234,6 @@ public class ViewPagerActivity extends AppCompatActivity {
         } else {
             ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + selectPos);
         }
-
     }
 
 
