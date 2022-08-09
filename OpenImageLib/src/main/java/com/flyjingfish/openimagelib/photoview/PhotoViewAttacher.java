@@ -748,7 +748,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     float maxScale1 = Math.max(widthScale1, heightScale1);
 
                     if (OpenImageConfig.getInstance().isReadMode()) {
-                        if (maxScale1 * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * targetHeight) {
+                        boolean bigImageRule = maxScale1 * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * Math.max(targetWidth,targetHeight);
+                        if (bigImageRule) {
                             mTargetWidth = targetWidth;
                             mTargetHeight = targetWidth * scaleImageHW;
                             isBigImage = true;
