@@ -72,6 +72,8 @@ public class OpenImage {
     private OnSelectMediaListener onSelectMediaListener;
     private SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet;
 
+    public static boolean isCanOpen = true;
+
     public static OpenImage with(Context context) {
         return new OpenImage(context);
     }
@@ -949,6 +951,7 @@ public class OpenImage {
     }
 
     private void open(Intent intent, Bundle newOptions) {
+        isCanOpen = false;
         OpenImageUrl openImageUrl = openImageUrls.get(clickPosition);
         Handler handler = new Handler(Looper.getMainLooper());
         OpenImageConfig.getInstance().getBigImageHelper().loadImage(context, ImageLoadUtils.getInstance().getImageLoadSuccess(openImageUrl.getImageUrl()) ? openImageUrl.getImageUrl() : openImageUrl.getCoverImageUrl(), new OnLoadBigImageListener() {
@@ -975,9 +978,13 @@ public class OpenImage {
     }
 
     private void startActivity(Intent intent, Bundle newOptions,String drawableKey) {
-        if (ActivityCompatHelper.assertValidRequest(context)&&!isStartActivity) {
-            context.startActivity(intent, newOptions);
-            release();
+        if (!isStartActivity) {
+            if (ActivityCompatHelper.assertValidRequest(context)){
+                context.startActivity(intent, newOptions);
+                release();
+            }else {
+                isCanOpen = true;
+            }
         }else if (!TextUtils.isEmpty(drawableKey)){
             ImageLoadUtils.getInstance().clearCoverDrawable(drawableKey);
         }
@@ -999,9 +1006,11 @@ public class OpenImage {
     }
 
     public void show() {
-        Activity activity = getActivity(context);
-        activity.setExitSharedElementCallback(null);
-        show4ParseData();
+        if (isCanOpen){
+            Activity activity = getActivity(context);
+            activity.setExitSharedElementCallback(null);
+            show4ParseData();
+        }
     }
 
 

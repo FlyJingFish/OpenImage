@@ -380,6 +380,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        OpenImage.isCanOpen = true;
         showPosition = 0;
         fragmentHashMap.clear();
         mHandler.removeCallbacksAndMessages(null);
