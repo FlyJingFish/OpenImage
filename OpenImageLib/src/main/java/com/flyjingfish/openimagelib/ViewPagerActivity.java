@@ -66,7 +66,6 @@ public class ViewPagerActivity extends AppCompatActivity {
     private OpenImageOrientation orientation;
     private ImageDiskMode imageDiskMode;
     private ImageView.ScaleType srcScaleType;
-    private ImageView coverImageView;
     private int selectPos;
     private ItemLoadHelper itemLoadHelper;
     private OnSelectMediaListener onSelectMediaListener;
@@ -212,24 +211,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     private void setViewTransition() {
-        openCoverKey = getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE);
-        Drawable drawable = ImageLoadUtils.getInstance().getCoverDrawable(openCoverKey);
-        OpenImageDetail openImageDetail = openImageBeans.get(selectPos);
-        if (drawable != null) {
-            PhotoView photoView = new PhotoView(this);
-            coverImageView = photoView;
-            photoView.setZoomable(false);
-            photoView.setSrcScaleType(srcScaleType);
-            photoView.setStartWidth(openImageDetail.srcWidth);
-            photoView.setStartHeight(openImageDetail.srcHeight);
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            binding.getRoot().addView(coverImageView, layoutParams);
-            coverImageView.setImageDrawable(drawable);
-            binding.viewPager.setAlpha(0f);
-            ViewCompat.setTransitionName(coverImageView, OpenParams.SHARE_VIEW + selectPos);
-        } else {
-            ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + selectPos);
-        }
+        ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + selectPos);
     }
 
 
@@ -346,13 +328,6 @@ public class ViewPagerActivity extends AppCompatActivity {
                 @Override
                 public void onTransitionEnd(Transition transition) {
                     photosViewModel.transitionEndLiveData.setValue(true);
-                    mHandler.post(() -> {
-                        binding.viewPager.setAlpha(1f);
-                        if (coverImageView != null) {
-                            coverImageView.setVisibility(View.GONE);
-                        }
-                        binding.getRoot().removeView(coverImageView);
-                    });
                     transition.removeListener(this);
                 }
 
@@ -398,9 +373,6 @@ public class ViewPagerActivity extends AppCompatActivity {
         View shareView = getCoverView();
 
         if (shareView != null) {
-            if (coverImageView != null) {
-                ViewCompat.setTransitionName(coverImageView, "");
-            }
             ViewCompat.setTransitionName(binding.viewPager, "");
             ViewCompat.setTransitionName(shareView, OpenParams.SHARE_VIEW + showPosition);
 
@@ -419,65 +391,21 @@ public class ViewPagerActivity extends AppCompatActivity {
                 }
             });
         } else {
-            if (showPosition != selectPos) {
-                if (coverImageView != null) {
-                    ViewCompat.setTransitionName(coverImageView, "");
-                }
-                ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + showPosition);
-                setEnterSharedElementCallback(new SharedElementCallback() {
-                    @Override
-                    public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                        super.onMapSharedElements(names, sharedElements);
-                        if (names.size()==0){
-                            return;
-                        }
-                        if (isAutoScrollSelect){
-                            sharedElements.put(OpenParams.SHARE_VIEW + showPosition, binding.viewPager);
-                        }else if (TextUtils.equals(names.get(0),OpenParams.SHARE_VIEW + showPosition)){
-                            sharedElements.put(OpenParams.SHARE_VIEW + showPosition, binding.viewPager);
-                        }
+            ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + showPosition);
+            setEnterSharedElementCallback(new SharedElementCallback() {
+                @Override
+                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                    super.onMapSharedElements(names, sharedElements);
+                    if (names.size()==0){
+                        return;
                     }
-                });
-            } else {
-                if (coverImageView != null) {
-                    binding.viewPager.setVisibility(View.GONE);
-                    coverImageView.setVisibility(View.VISIBLE);
-                    binding.getRoot().removeView(coverImageView);
-                    binding.getRoot().addView(coverImageView);
-                    ViewCompat.setTransitionName(coverImageView, OpenParams.SHARE_VIEW + showPosition);
-                    setEnterSharedElementCallback(new SharedElementCallback() {
-                        @Override
-                        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                            super.onMapSharedElements(names, sharedElements);
-                            if (names.size()==0){
-                                return;
-                            }
-                            if (isAutoScrollSelect){
-                                sharedElements.put(OpenParams.SHARE_VIEW + showPosition, coverImageView);
-                            }else if (TextUtils.equals(names.get(0),OpenParams.SHARE_VIEW + showPosition)){
-                                sharedElements.put(OpenParams.SHARE_VIEW + showPosition, coverImageView);
-                            }
-                        }
-                    });
-                } else {
-                    ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + showPosition);
-                    setEnterSharedElementCallback(new SharedElementCallback() {
-                        @Override
-                        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                            super.onMapSharedElements(names, sharedElements);
-                            if (names.size()==0){
-                                return;
-                            }
-                            if (isAutoScrollSelect){
-                                sharedElements.put(OpenParams.SHARE_VIEW + showPosition, binding.viewPager);
-                            }else if (TextUtils.equals(names.get(0),OpenParams.SHARE_VIEW + showPosition)){
-                                sharedElements.put(OpenParams.SHARE_VIEW + showPosition, binding.viewPager);
-                            }
-                        }
-                    });
+                    if (isAutoScrollSelect){
+                        sharedElements.put(OpenParams.SHARE_VIEW + showPosition, binding.viewPager);
+                    }else if (TextUtils.equals(names.get(0),OpenParams.SHARE_VIEW + showPosition)){
+                        sharedElements.put(OpenParams.SHARE_VIEW + showPosition, binding.viewPager);
+                    }
                 }
-
-            }
+            });
         }
     }
 
