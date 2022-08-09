@@ -482,6 +482,9 @@ public class OpenImage {
                 public void onBack() {
 
                     Activity activity = getActivity(context);
+                    if (activity == null){
+                        return;
+                    }
                     activity.setExitSharedElementCallback(new SharedElementCallback() {
                         @Override
                         public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
@@ -702,6 +705,9 @@ public class OpenImage {
                 public void onBack() {
 
                     Activity activity = getActivity(context);
+                    if (activity == null){
+                        return;
+                    }
                     activity.setExitSharedElementCallback(new SharedElementCallback() {
                         @Override
                         public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
@@ -845,6 +851,9 @@ public class OpenImage {
                 public void onBack() {
 
                     Activity activity = getActivity(context);
+                    if (activity == null){
+                        return;
+                    }
                     activity.setExitSharedElementCallback(new SharedElementCallback() {
                         @Override
                         public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
