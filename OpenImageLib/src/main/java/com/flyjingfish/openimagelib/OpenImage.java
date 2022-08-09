@@ -256,6 +256,9 @@ public class OpenImage {
     private View backView;
 
     private void initSrcViews(Rect rvRect,List<OpenImageDetail> openImageDetails,List<ContentViewOriginModel> contentViewOriginModels) {
+        if (context == null){
+            return;
+        }
         ViewGroup rootView = (ViewGroup) getWindow(context).getDecorView();
         if (backView != null){
             rootView.removeView(backView);
@@ -397,7 +400,7 @@ public class OpenImage {
             }
 
             int rvLocation[] = new int[2];
-            recyclerView.getLocationOnScreen(rvLocation);
+            recyclerView.getLocationInWindow(rvLocation);
 
             int rvWidth = recyclerView.getMeasuredWidth();
             int rvHeight = recyclerView.getMeasuredHeight();
@@ -621,7 +624,7 @@ public class OpenImage {
 
                             ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
                             int location[] = new int[2];
-                            shareView.getLocationOnScreen(location);
+                            shareView.getLocationInWindow(location);
                             contentViewOriginModel.left = location[0]-rvLocation[0];
                             contentViewOriginModel.top = location[1]-rvLocation[1];
                             contentViewOriginModel.width = shareViewWidth;
@@ -651,7 +654,7 @@ public class OpenImage {
             View shareViewClick = null;
             String shareNameClick = null;
             int rvLocation[] = new int[2];
-            absListView.getLocationOnScreen(rvLocation);
+            absListView.getLocationInWindow(rvLocation);
 
             int rvWidth = absListView.getMeasuredWidth();
             int rvHeight = absListView.getMeasuredHeight();
@@ -791,7 +794,7 @@ public class OpenImage {
 
                             ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
                             int location[] = new int[2];
-                            shareView.getLocationOnScreen(location);
+                            shareView.getLocationInWindow(location);
                             contentViewOriginModel.left = location[0]-rvLocation[0];
                             contentViewOriginModel.top = location[1]-rvLocation[1];
                             contentViewOriginModel.width = shareViewWidth;
@@ -918,7 +921,7 @@ public class OpenImage {
                         int shareViewWidth = shareView.getMeasuredWidth();
                         int shareViewHeight = shareView.getMeasuredHeight();
                         int location[] = new int[2];
-                        shareView.getLocationOnScreen(location);
+                        shareView.getLocationInWindow(location);
                         ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
                         contentViewOriginModel.left = location[0];
                         contentViewOriginModel.top = location[1];

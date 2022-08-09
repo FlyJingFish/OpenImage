@@ -216,16 +216,12 @@ public class ViewPagerActivity extends AppCompatActivity {
         Drawable drawable = ImageLoadUtils.getInstance().getCoverDrawable(openCoverKey);
         OpenImageDetail openImageDetail = openImageBeans.get(selectPos);
         if (drawable != null) {
-            if (openImageDetail.getType() == MediaType.IMAGE) {
-                PhotoView photoView = new PhotoView(this);
-                coverImageView = photoView;
-                photoView.setZoomable(false);
-                photoView.setSrcScaleType(srcScaleType);
-                photoView.setStartWidth(openImageDetail.srcWidth);
-                photoView.setStartHeight(openImageDetail.srcHeight);
-            } else {
-                coverImageView = new ImageView(this);
-            }
+            PhotoView photoView = new PhotoView(this);
+            coverImageView = photoView;
+            photoView.setZoomable(false);
+            photoView.setSrcScaleType(srcScaleType);
+            photoView.setStartWidth(openImageDetail.srcWidth);
+            photoView.setStartHeight(openImageDetail.srcHeight);
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             binding.getRoot().addView(coverImageView, layoutParams);
             coverImageView.setImageDrawable(drawable);

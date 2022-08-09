@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.flyjingfish.openimagelib">
+
     <application>
         <activity
             android:name=".ViewPagerActivity"
-            android:exported="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
             android:theme="@style/Theme.BasePhotosTheme">
+            <meta-data
+                android:name="notch.config"
+                android:value="portrait|landscape" />
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
+            <meta-data
+                android:name="android.max_aspect"
+                android:value="2.2" />
         </activity>
     </application>
 </manifest>
