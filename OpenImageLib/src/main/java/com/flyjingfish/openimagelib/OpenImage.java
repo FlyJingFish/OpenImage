@@ -402,8 +402,8 @@ public class OpenImage {
             int rvLocation[] = new int[2];
             recyclerView.getLocationInWindow(rvLocation);
 
-            int rvWidth = recyclerView.getMeasuredWidth();
-            int rvHeight = recyclerView.getMeasuredHeight();
+            int rvWidth = recyclerView.getWidth();
+            int rvHeight = recyclerView.getHeight();
             Rect rect = new Rect();
             rect.left = rvLocation[0];
             rect.top = rvLocation[1];
@@ -469,8 +469,8 @@ public class OpenImage {
                             shareNameClick = shareName;
                         }
                         sharedElements.add(Pair.create(shareView, shareName));
-                        int shareViewWidth = shareView.getMeasuredWidth();
-                        int shareViewHeight = shareView.getMeasuredHeight();
+                        int shareViewWidth = shareView.getWidth();
+                        int shareViewHeight = shareView.getHeight();
                         openImageDetail.srcWidth = shareViewWidth;
                         openImageDetail.srcHeight = shareViewHeight;
                         srcWidthCache.add(shareViewWidth);
@@ -619,8 +619,8 @@ public class OpenImage {
                                 continue;
                             }
                             ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, i));
-                            int shareViewWidth = shareView.getMeasuredWidth();
-                            int shareViewHeight = shareView.getMeasuredHeight();
+                            int shareViewWidth = shareView.getWidth();
+                            int shareViewHeight = shareView.getHeight();
 
                             ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
                             int location[] = new int[2];
@@ -656,8 +656,8 @@ public class OpenImage {
             int rvLocation[] = new int[2];
             absListView.getLocationInWindow(rvLocation);
 
-            int rvWidth = absListView.getMeasuredWidth();
-            int rvHeight = absListView.getMeasuredHeight();
+            int rvWidth = absListView.getWidth();
+            int rvHeight = absListView.getHeight();
             Rect rect = new Rect();
             rect.left = rvLocation[0];
             rect.top = rvLocation[1];
@@ -685,9 +685,9 @@ public class OpenImage {
                         }
                         String shareName = OpenParams.SHARE_VIEW + openImageDetails.size();
                         sharedElements.add(Pair.create(shareView, shareName));
-                        shareView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                        int shareViewWidth = shareView.getMeasuredWidth();
-                        int shareViewHeight = shareView.getMeasuredHeight();
+//                        shareView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                        int shareViewWidth = shareView.getWidth();
+                        int shareViewHeight = shareView.getHeight();
                         openImageDetail.srcWidth = shareViewWidth;
                         openImageDetail.srcHeight = shareViewHeight;
                         srcWidthCache.add(shareViewWidth);
@@ -788,8 +788,8 @@ public class OpenImage {
                                 return list;
                             }
                             ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, i));
-                            int shareViewWidth = shareView.getMeasuredWidth();
-                            int shareViewHeight = shareView.getMeasuredHeight();
+                            int shareViewWidth = shareView.getWidth();
+                            int shareViewHeight = shareView.getHeight();
 
 
                             ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
@@ -839,8 +839,8 @@ public class OpenImage {
                 }
                 String shareName = OpenParams.SHARE_VIEW + i;
                 sharedElements[i] = Pair.create(shareView, OpenParams.SHARE_VIEW + i);
-                int shareViewWidth = shareView.getMeasuredWidth();
-                int shareViewHeight = shareView.getMeasuredHeight();
+                int shareViewWidth = shareView.getWidth();
+                int shareViewHeight = shareView.getHeight();
                 openImageDetail.srcWidth = shareViewWidth;
                 openImageDetail.srcHeight = shareViewHeight;
                 openImageDetails.add(openImageDetail);
@@ -918,8 +918,8 @@ public class OpenImage {
                     ArrayList<ContentViewOriginModel> contentViewOriginModels = new ArrayList<>();
                     for (int i = 0; i < openImageUrls.size(); i++) {
                         ImageView shareView = imageViews.get(i);
-                        int shareViewWidth = shareView.getMeasuredWidth();
-                        int shareViewHeight = shareView.getMeasuredHeight();
+                        int shareViewWidth = shareView.getWidth();
+                        int shareViewHeight = shareView.getHeight();
                         int location[] = new int[2];
                         shareView.getLocationInWindow(location);
                         ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
