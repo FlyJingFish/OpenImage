@@ -113,7 +113,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            if (isBigImage){
+            if (isBigImage && !isExitMode){
                 final RectF rect = getDisplayRect(getDrawMatrix());
                 if (rect.top < 0) {
                     float transY = mTargetViewHeight / mScrollStep;
