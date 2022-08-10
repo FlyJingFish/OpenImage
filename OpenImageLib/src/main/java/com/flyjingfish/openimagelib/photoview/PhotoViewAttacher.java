@@ -107,25 +107,25 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         this.mStartHeight = mStartHeight;
     }
 
-    float mScrollStep = 20;
-    private static final int SCROLL_TOP = 1;
-    Handler mHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            if (isBigImage && !isExitMode){
-                final RectF rect = getDisplayRect(getDrawMatrix());
-                if (rect.top < 0) {
-                    float transY = mTargetViewHeight / mScrollStep;
-                    mSuppMatrix.postTranslate(0, transY);
-                    checkAndDisplayMatrix();
-                    if (transY != 0) {
-                        mHandler.sendEmptyMessageDelayed(SCROLL_TOP, 10);
-                    }
-                }
-            }
-        }
-    };
+//    float mScrollStep = 20;
+//    private static final int SCROLL_TOP = 1;
+//    Handler mHandler = new Handler(Looper.getMainLooper()) {
+//        @Override
+//        public void handleMessage(@NonNull Message msg) {
+//            super.handleMessage(msg);
+//            if (isBigImage && !isExitMode){
+//                final RectF rect = getDisplayRect(getDrawMatrix());
+//                if (rect.top < 0) {
+//                    float transY = mTargetViewHeight / mScrollStep;
+//                    mSuppMatrix.postTranslate(0, transY);
+//                    checkAndDisplayMatrix();
+//                    if (transY != 0) {
+//                        mHandler.sendEmptyMessageDelayed(SCROLL_TOP, 10);
+//                    }
+//                }
+//            }
+//        }
+//    };
 
     private OnGestureListener onGestureListener = new OnGestureListener() {
         @Override
@@ -781,12 +781,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 if (startDstRectF != null && mStartWidth !=0 && mStartHeight!=0){
                     float addWidthScale ;
                     float addHeightScale ;
-//                addWidthScale= (viewWidth - mStartWidth)*1f/(mTargetWidth - mStartWidth);
-//                if (isBigImage){
-//                    addHeightScale = addWidthScale;
-//                }else {
-//                    addHeightScale = (viewHeight - mStartHeight)*1f/(mTargetHeight - mStartHeight);
-//                }
                     if (mStartWidth/mTargetWidth<mStartHeight/mTargetViewHeight||isBigImage){
                         addWidthScale =  (viewWidth - mStartWidth)*1f/(mTargetWidth - mStartWidth);
                         addHeightScale = addWidthScale;
@@ -800,8 +794,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
                     float currentWidth = startWidth + (mTargetWidth - startWidth)*addWidthScale;
                     float currentHeight = startHeight + (mTargetHeight - startHeight)*addHeightScale;
-                    float tansY = (currentHeight - viewHeight) / 2;
                     float tansX = (currentWidth - viewWidth) / 2;
+                    float tansY = (currentHeight - viewHeight) / 2;
+                    if (isBigImage){
+                        tansY = tansY - addHeightScale*tansY;
+                    }
 
 
 
@@ -816,11 +813,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                             targetWidth = mTargetHeight/scaleImageHW;
                         }
 
-//                    if (scaleEndViewHW > scaleImageHW){
-//                        mTempDst = new RectF(0, 0, viewWidth, viewHeight-viewHeight*addHeightScale*(1-(targetHeight *1f/ mTargetHeight)));
-//                    }else {
-//                        mTempDst = new RectF(0, 0, viewWidth-viewWidth*addWidthScale*(1-(targetWidth *1f/ mTargetWidth)), viewHeight);
-//                    }
                         float width = viewWidth-mTargetWidth*addWidthScale*(1-(targetWidth *1f/ mTargetWidth));
                         float height ;
                         if (isBigImage){
@@ -870,8 +862,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     break;
             }
 
-            mHandler.removeMessages(SCROLL_TOP);
-            mHandler.sendEmptyMessageDelayed(SCROLL_TOP, 100);
+//            mHandler.removeMessages(SCROLL_TOP);
+//            mHandler.sendEmptyMessageDelayed(SCROLL_TOP, 100);
         }
         resetMatrix();
 
@@ -1127,7 +1119,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void release() {
-        mHandler.removeCallbacksAndMessages(null);
+//        mHandler.removeCallbacksAndMessages(null);
     }
 
 }
