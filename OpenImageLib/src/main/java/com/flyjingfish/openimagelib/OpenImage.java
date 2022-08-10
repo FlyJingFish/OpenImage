@@ -608,7 +608,9 @@ public class OpenImage {
                         }
 
                     }
-
+                    if (lastPos < 0||firstPos<0){
+                        return list;
+                    }
 
                     for (int i = firstPos; i < lastPos + 1; i++) {
                         OpenImageUrl openImageUrl = openImageUrls.get(i);
@@ -780,6 +782,9 @@ public class OpenImage {
                     List<ContentViewOriginModel> list = new ArrayList<>();
                     int firstPos = absListView.getFirstVisiblePosition();
                     int lastPos = absListView.getLastVisiblePosition();
+                    if (lastPos < 0||firstPos<0){
+                        return list;
+                    }
                     for (int i = firstPos; i < lastPos + 1; i++) {
                         OpenImageUrl openImageUrl = openImageUrls.get(i);
                         if (openImageUrl.getType() == MediaType.IMAGE || openImageUrl.getType() == MediaType.VIDEO){
