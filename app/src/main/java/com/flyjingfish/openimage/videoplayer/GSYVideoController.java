@@ -91,4 +91,14 @@ public class GSYVideoController {
             }
         }
     }
+
+    public static void pauseByKey(String key) {
+        if (GSYVideoPlayerManagerMap.size() > 0) {
+            for (Map.Entry<String, GSYVideoPlayerManager> helper : GSYVideoPlayerManagerMap.entrySet()) {
+                if (TextUtils.equals(helper.getKey(),key)) {
+                    helper.getValue().pauseVideoPlayer();
+                }
+            }
+        }
+    }
 }

@@ -117,7 +117,7 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
     public void onPause() {
         super.onPause();
         if (playerKey != null) {
-            GSYVideoController.pauseByPageKey(requireActivity().toString());
+            GSYVideoController.pauseByKey(playerKey);
         }
     }
 
