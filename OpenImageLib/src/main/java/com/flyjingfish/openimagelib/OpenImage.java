@@ -612,7 +612,7 @@ public class OpenImage {
                         return list;
                     }
 
-                    for (int i = firstPos; i < lastPos + 1; i++) {
+                    for (int i = firstPos; i < lastPos + 1 && i<openImageUrls.size(); i++) {
                         OpenImageUrl openImageUrl = openImageUrls.get(i);
                         if (openImageUrl.getType() == MediaType.IMAGE || openImageUrl.getType() == MediaType.VIDEO){
 
@@ -785,7 +785,7 @@ public class OpenImage {
                     if (lastPos < 0||firstPos<0){
                         return list;
                     }
-                    for (int i = firstPos; i < lastPos + 1; i++) {
+                    for (int i = firstPos; i < lastPos + 1 && i<openImageUrls.size(); i++) {
                         OpenImageUrl openImageUrl = openImageUrls.get(i);
                         if (openImageUrl.getType() == MediaType.IMAGE || openImageUrl.getType() == MediaType.VIDEO){
                             View view = absListView.getChildAt(i - firstPos);
