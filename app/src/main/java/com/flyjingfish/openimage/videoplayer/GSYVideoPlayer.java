@@ -15,7 +15,6 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     private String pageContextKey;
     private String uUKey;
     private boolean mute;//是否需要静音
-    protected String pageKey;
 
     public GSYVideoPlayer(Context context) {
         this(context,null);
@@ -27,9 +26,6 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     }
 
     void initAttrs(Context context) {
-        if (TextUtils.isEmpty(pageKey)){
-            pageKey = "";
-        }
         pageContextKey = context.toString();
         uUKey = UUID.randomUUID().toString();
     }
@@ -43,6 +39,6 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     }
 
     public String getVideoKey() {
-        return pageKey + "$" + pageContextKey + "$" + uUKey;
+        return pageContextKey + "$" + uUKey;
     }
 }

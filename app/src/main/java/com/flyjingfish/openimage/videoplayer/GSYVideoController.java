@@ -63,6 +63,11 @@ public class GSYVideoController {
         getGSYVideoPlayerManager(key).releaseMediaPlayer();
     }
 
+    public static void cancelByKeyAndDeleteKey(String key) {
+        cancelByKey(key);
+        removeVideoHolderBykey(key);
+    }
+
     public static void resumeByKey(String key) {
         if (GSYVideoPlayerManagerMap.size() > 0 && GSYVideoPlayerManagerMap.containsKey(key)) {
             GSYVideoPlayerManager GSYVideoPlayerManager = GSYVideoPlayerManagerMap.get(key);
@@ -94,10 +99,9 @@ public class GSYVideoController {
 
     public static void pauseByKey(String key) {
         if (GSYVideoPlayerManagerMap.size() > 0) {
-            for (Map.Entry<String, GSYVideoPlayerManager> helper : GSYVideoPlayerManagerMap.entrySet()) {
-                if (TextUtils.equals(helper.getKey(),key)) {
-                    helper.getValue().pauseVideoPlayer();
-                }
+            GSYVideoPlayerManager GSYVideoPlayerManager = GSYVideoPlayerManagerMap.get(key);
+            if (GSYVideoPlayerManager != null) {
+                GSYVideoPlayerManager.pauseVideoPlayer();
             }
         }
     }

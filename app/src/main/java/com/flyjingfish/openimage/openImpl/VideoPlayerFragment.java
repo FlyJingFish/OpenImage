@@ -7,21 +7,24 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.FragmentVideoBinding;
 import com.flyjingfish.openimage.videoplayer.GSYVideoController;
 import com.flyjingfish.openimagelib.BaseImageFragment;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
-import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 
 import moe.codeest.enviews.ENDownloadView;
 
 public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
 
-    private FragmentVideoBinding binding;
-    private String playerKey;
-
+    protected FragmentVideoBinding binding;
+    protected String playerKey;
+    protected boolean isPlayed;
+    protected boolean isLoadImageFinish;
 
     @Override
     protected PhotoView getSmallCoverImageView() {
@@ -65,7 +68,7 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
         binding.videoPlayer.findViewById(R.id.back).setOnClickListener(v -> close());
         playerKey = binding.videoPlayer.getVideoKey();
         binding.videoPlayer.goneAllWidget();
-
+        isPlayed = false;
     }
 
     @Override
@@ -85,32 +88,48 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT);
-        if (playerKey != null) {
-            GSYVideoController.resumeByKey(playerKey);
-        }
-    }
-
-    boolean isLoadImageFinish;
-    @Override
     protected void loadImageFinish(boolean isLoadImageSuccess) {
         isLoadImageFinish = true;
         play();
     }
 
     private void play(){
-        if (isTransitionEnd && isLoadImageFinish){
-            binding.videoPlayer.playUrl(openImageBean.getVideoUrl());
-            binding.videoPlayer.startPlayLogic();
+        if (isTransitionEnd && isLoadImageFinish && !isPlayed){
+            if (getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+                toPlay4Resume();
+            }else {
+                getLifecycle().addObserver(new LifecycleEventObserver() {
+                    @Override
+                    public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                        if (event == Lifecycle.Event.ON_RESUME){
+                            toPlay4Resume();
+                            source.getLifecycle().removeObserver(this);
+                        }
+                    }
+                });
+            }
+
+            isPlayed = true;
         }
+    }
+
+    protected void toPlay4Resume(){
+        binding.videoPlayer.playUrl(openImageBean.getVideoUrl());
+        binding.videoPlayer.startPlayLogic();
     }
 
     @Override
     protected void onTransitionEnd() {
         super.onTransitionEnd();
         play();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (playerKey != null) {
+            GSYVideoController.resumeByKey(playerKey);
+        }
     }
 
     @Override
@@ -124,7 +143,9 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        GSYVideoController.cancelByPageKey(requireActivity().toString());
+        if (playerKey != null) {
+            GSYVideoController.cancelByKeyAndDeleteKey(playerKey);
+        }
     }
 
     @Override
