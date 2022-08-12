@@ -27,6 +27,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.CompositePageTransformer;
+import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
@@ -41,6 +43,7 @@ import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.AttrsUtils;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 import com.flyjingfish.openimagelib.utils.StatusBarUtils;
+import com.flyjingfish.openimagelib.widget.ScaleInTransformer;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 
 import java.util.HashMap;
@@ -202,6 +205,17 @@ public class ViewPagerActivity extends AppCompatActivity {
                 close();
             }
         });
+        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+        compositePageTransformer.addTransformer(new MarginPageTransformer(20));
+        compositePageTransformer.addTransformer(new ScaleInTransformer());
+        binding.viewPager.setPageTransformer(compositePageTransformer);
+        //预加载页面数量
+        binding.viewPager.setOffscreenPageLimit(2);
+        View recyclerView = binding.viewPager.getChildAt(0);
+        if(recyclerView != null && recyclerView instanceof RecyclerView){
+            recyclerView.setPadding(100, 0, 100, 0);
+            ((RecyclerView) recyclerView).setClipToPadding(false);
+        }
         setViewTransition();
         addTransitionListener();
     }
