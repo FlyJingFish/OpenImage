@@ -18,4 +18,6 @@ class OpenParams {
     public static final String SRC_PARENT_RECT = "src_parent_rect";
     public static final String ON_SELECT_KEY = "onSelectMediaListenerKey";
     public static final String AUTO_SCROLL_SELECT = "auto_scroll_select";
+    public static final String PAGE_TRANSFORMERS = "page_transformers";
+    public static final String GALLERY_EFFECT_WIDTH = "gallery_effect_width";
 }

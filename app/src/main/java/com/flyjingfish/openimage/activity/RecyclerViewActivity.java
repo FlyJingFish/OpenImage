@@ -25,6 +25,7 @@ import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
+import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 import org.json.JSONArray;
@@ -170,7 +171,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
                                     }
                                 });
                             }
-                        })
+                        }).addPageTransformer(new ScaleInTransformer())
                         .setOpenImageStyle(R.style.DefaultPhotosTheme)
                         .setClickPosition(position).show();
             });

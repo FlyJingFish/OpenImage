@@ -715,8 +715,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 mTempDst = new RectF(0, 0, viewWidth, viewHeight);
             }else {
                 if (mTargetWidth >0 || startDstRectF == null){
-                    float targetWidth = mTargetWidth;
-                    float targetHeight = mTargetViewHeight;
+                    float targetWidth = Math.max(mTargetWidth,viewWidth);
+                    float targetHeight = Math.max(mTargetViewHeight,viewHeight);
                     float scaleStartViewHW = mStartHeight*1f/mStartWidth;
                     if (mSrcScaleType == ScaleType.CENTER_CROP){
                         if (scaleImageHW > scaleStartViewHW) {

@@ -2,6 +2,8 @@ package com.flyjingfish.openimagelib;
 
 import android.graphics.drawable.Drawable;
 
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.flyjingfish.openimagelib.beans.ContentViewOriginModel;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
@@ -15,6 +17,8 @@ class ImageLoadUtils {
     private HashMap<String, ItemLoadHelper> itemLoadHelperHashMap = new HashMap<>();
     private HashMap<String, Drawable> coverDrawableHashMap = new HashMap<>();
     private HashMap<String, OnSelectMediaListener> onSelectMediaListenerHashMap = new HashMap<>();
+    private HashMap<String, List<ViewPager2.PageTransformer>> pageTransformerMap = new HashMap<>();
+
     private ImageLoadUtils() {
     }
 
@@ -53,23 +57,26 @@ class ImageLoadUtils {
         itemLoadHelperHashMap.remove(key);
     }
 
-    public void setCoverDrawable(String key, Drawable drawable){
-        coverDrawableHashMap.put(key,drawable);
+    public void setCoverDrawable(String key, Drawable drawable) {
+        coverDrawableHashMap.put(key, drawable);
     }
 
-    public Drawable getCoverDrawable(String key){
+    public Drawable getCoverDrawable(String key) {
         return coverDrawableHashMap.get(key);
     }
 
-    public void clearCoverDrawable(String key){
+    public void clearCoverDrawable(String key) {
         coverDrawableHashMap.remove(key);
     }
 
-    public interface OnBackView{
+    public interface OnBackView {
         boolean onBack(int showPosition);
+
         void onScrollPos(int pos);
+
         List<ContentViewOriginModel> onGetContentViewOriginModel(int dataPosition);
     }
+
     OnBackView onBackView;
 
     public OnBackView getOnBackView() {
@@ -84,11 +91,23 @@ class ImageLoadUtils {
         return onSelectMediaListenerHashMap.get(key);
     }
 
-    public void setOnSelectMediaListener(String key,OnSelectMediaListener onSelectMediaListener) {
-        this.onSelectMediaListenerHashMap.put(key,onSelectMediaListener);
+    public void setOnSelectMediaListener(String key, OnSelectMediaListener onSelectMediaListener) {
+        this.onSelectMediaListenerHashMap.put(key, onSelectMediaListener);
     }
+
     public void clearOnSelectMediaListener(String key) {
         this.onSelectMediaListenerHashMap.remove(key);
     }
 
+    public void setPageTransformers(String key, List<ViewPager2.PageTransformer> pageTransformers) {
+        pageTransformerMap.put(key, pageTransformers);
+    }
+
+    public List<ViewPager2.PageTransformer> getPageTransformers(String key) {
+        return pageTransformerMap.get(key);
+    }
+
+    public void clearPageTransformers(String key) {
+        pageTransformerMap.remove(key);
+    }
 }

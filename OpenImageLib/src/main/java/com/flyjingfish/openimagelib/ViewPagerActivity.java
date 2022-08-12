@@ -2,7 +2,6 @@ package com.flyjingfish.openimagelib;
 
 import android.app.SharedElementCallback;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -39,11 +38,9 @@ import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
-import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.AttrsUtils;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 import com.flyjingfish.openimagelib.utils.StatusBarUtils;
-import com.flyjingfish.openimagelib.widget.ScaleInTransformer;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 
 import java.util.HashMap;
@@ -75,6 +72,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     private String onSelectKey;
     private boolean isAutoScrollSelect;
     private String openCoverKey;
+    private String pageTransformersKey;
     //    private ArrayList<ContentViewOriginModel> contentViewOriginModels;
 
     @Override
@@ -106,7 +104,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 break;
             }
         }
-        isAutoScrollSelect = getIntent().getBooleanExtra(OpenParams.AUTO_SCROLL_SELECT,true);
+        isAutoScrollSelect = getIntent().getBooleanExtra(OpenParams.AUTO_SCROLL_SELECT, true);
         itemLoadHelper = ImageLoadUtils.getInstance().getItemLoadHelper(itemLoadKey);
         onSelectKey = getIntent().getStringExtra(OpenParams.ON_SELECT_KEY);
         onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(onSelectKey);
@@ -166,6 +164,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         });
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             boolean isFirstBacked = false;
+
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
@@ -174,10 +173,10 @@ public class ViewPagerActivity extends AppCompatActivity {
                 if (position != selectPos && binding.viewPager.getOffscreenPageLimit() != 1) {
                     binding.viewPager.setOffscreenPageLimit(1);
                 }
-                if (isFirstBacked){
+                if (isFirstBacked) {
                     ImageLoadUtils.getInstance().getOnBackView().onScrollPos(openImageBeans.get(showPosition).dataPosition);
                 }
-                if (onSelectMediaListener != null){
+                if (onSelectMediaListener != null) {
                     onSelectMediaListener.onSelect(openImageBeans.get(showPosition).dataPosition);
                 }
                 isFirstBacked = true;
@@ -205,17 +204,6 @@ public class ViewPagerActivity extends AppCompatActivity {
                 close();
             }
         });
-        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
-        compositePageTransformer.addTransformer(new MarginPageTransformer(20));
-        compositePageTransformer.addTransformer(new ScaleInTransformer());
-        binding.viewPager.setPageTransformer(compositePageTransformer);
-        //预加载页面数量
-        binding.viewPager.setOffscreenPageLimit(2);
-        View recyclerView = binding.viewPager.getChildAt(0);
-        if(recyclerView != null && recyclerView instanceof RecyclerView){
-            recyclerView.setPadding(100, 0, 100, 0);
-            ((RecyclerView) recyclerView).setClipToPadding(false);
-        }
         setViewTransition();
         addTransitionListener();
     }
@@ -242,6 +230,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     private void initStyleConfig() {
         int themeRes = getIntent().getIntExtra(OpenParams.OPEN_IMAGE_STYLE, 0);
         StatusBarUtils.setTransparent(this);
+        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         if (themeRes != 0) {
             setTheme(themeRes);
             int fontStyle = AttrsUtils.getTypeValueInt(this, R.attr.openImage_statusBar_fontStyle);
@@ -284,6 +273,10 @@ public class ViewPagerActivity extends AppCompatActivity {
                     textFormat = strFormat + "";
                 }
             }
+            int pageMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_viewPager_pageMargin);
+            if (pageMargin > 0) {
+                compositePageTransformer.addTransformer(new MarginPageTransformer(pageMargin));
+            }
         } else {
             StatusBarUtils.setLightMode(this);
             orientation = OpenImageOrientation.HORIZONTAL;
@@ -292,7 +285,27 @@ public class ViewPagerActivity extends AppCompatActivity {
             layoutParams.bottomMargin = (int) ScreenUtils.dp2px(this, 10);
             layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
             indicatorTextBinding.tvShowPos.setLayoutParams(layoutParams);
+            compositePageTransformer.addTransformer(new MarginPageTransformer((int) ScreenUtils.dp2px(this, 10)));
         }
+
+        pageTransformersKey = getIntent().getStringExtra(OpenParams.PAGE_TRANSFORMERS);
+        List<ViewPager2.PageTransformer> pageTransformers = ImageLoadUtils.getInstance().getPageTransformers(pageTransformersKey);
+        if (pageTransformers != null && pageTransformers.size() > 0) {
+            for (ViewPager2.PageTransformer pageTransformer : pageTransformers) {
+                compositePageTransformer.addTransformer(pageTransformer);
+            }
+        }
+        binding.viewPager.setPageTransformer(compositePageTransformer);
+
+        int leftRightPadding = getIntent().getIntExtra(OpenParams.GALLERY_EFFECT_WIDTH,0);
+        if (leftRightPadding > 0){
+            View recyclerView = binding.viewPager.getChildAt(0);
+            if(recyclerView instanceof RecyclerView){
+                recyclerView.setPadding((int) ScreenUtils.dp2px(this, leftRightPadding), 0, (int) ScreenUtils.dp2px(this, leftRightPadding), 0);
+                ((RecyclerView) recyclerView).setClipToPadding(false);
+            }
+        }
+
         if (orientation == OpenImageOrientation.VERTICAL) {
             binding.viewPager.setOrientation(ViewPager2.ORIENTATION_VERTICAL);
         } else {
@@ -372,6 +385,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         ImageLoadUtils.getInstance().clearItemLoadHelper(itemLoadKey);
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
         ImageLoadUtils.getInstance().clearCoverDrawable(openCoverKey);
+        ImageLoadUtils.getInstance().clearPageTransformers(pageTransformersKey);
     }
 
     @Override
@@ -385,13 +399,13 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     private void setExitView() {
         boolean isShare = ImageLoadUtils.getInstance().getOnBackView().onBack(showPosition);
-        if (!isShare){
+        if (!isShare) {
             ViewCompat.setTransitionName(binding.viewPager, "");
             setEnterSharedElementCallback(new SharedElementCallback() {
                 @Override
                 public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
                     super.onMapSharedElements(names, sharedElements);
-                    if (names.size()==0){
+                    if (names.size() == 0) {
                         return;
                     }
                     names.clear();
@@ -411,7 +425,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 @Override
                 public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
                     super.onMapSharedElements(names, sharedElements);
-                    if (names.size()==0){
+                    if (names.size() == 0) {
                         return;
                     }
                     sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);
@@ -423,7 +437,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 @Override
                 public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
                     super.onMapSharedElements(names, sharedElements);
-                    if (names.size()==0){
+                    if (names.size() == 0) {
                         return;
                     }
                     sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);

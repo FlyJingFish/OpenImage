@@ -24,6 +24,7 @@
         <item name="openImage.indicator.marginBottom">14dp</item>
 <!--        <item name="openImage.indicator.marginEnd">30dp</item>-->
         <item name="openImage.indicator.image.interval">4dp</item>
+        <item name="openImage.viewPager.pageMargin">10dp</item>
         <item name="openImage.statusBar.fontStyle">dark</item>
         <item name="openImage.indicator.imageRes">@drawable/indicator_image</item>
     </style>

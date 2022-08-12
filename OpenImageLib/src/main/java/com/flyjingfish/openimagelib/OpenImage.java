@@ -32,6 +32,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.ContentViewOriginModel;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
@@ -72,7 +73,8 @@ public class OpenImage {
     private boolean isAutoScrollScanPosition = true;
     private OnSelectMediaListener onSelectMediaListener;
     private SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet;
-
+    private final List<ViewPager2.PageTransformer> pageTransformers = new ArrayList<>();
+    private int leftRightShowWidthDp;
     public static boolean isCanOpen = true;
 
     public static OpenImage with(Context context) {
@@ -254,6 +256,26 @@ public class OpenImage {
         return this;
     }
 
+    /**
+     *
+     * @param pageTransformer ViewPager的页面切换效果
+     * @return
+     */
+    public OpenImage addPageTransformer(ViewPager2.PageTransformer... pageTransformer) {
+        pageTransformers.addAll(Arrays.asList(pageTransformer));
+        return this;
+    }
+
+    /**
+     *
+     * @param leftRightShowWidthDp 可设置画廊效果，左右漏出的宽度，单位dp
+     * @return
+     */
+    public OpenImage setGalleryEffect(int leftRightShowWidthDp){
+        this.leftRightShowWidthDp = leftRightShowWidthDp;
+        return this;
+    }
+
     private View backView;
 
     private ImageView initSrcViews(Rect rvRect,List<OpenImageDetail> openImageDetails,List<ContentViewOriginModel> contentViewOriginModels) {
@@ -384,6 +406,11 @@ public class OpenImage {
             ImageLoadUtils.getInstance().setOnSelectMediaListener(selectKey,onSelectMediaListener);
             intent.putExtra(OpenParams.ON_SELECT_KEY, selectKey);
         }
+        if (pageTransformers.size() > 0){
+            String pageTransformersKey = UUID.randomUUID().toString();
+            ImageLoadUtils.getInstance().setPageTransformers(pageTransformersKey,pageTransformers);
+            intent.putExtra(OpenParams.PAGE_TRANSFORMERS, pageTransformersKey);
+        }
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);
         intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, OpenImageConfig.getInstance().isDisEnableTouchClose());
         intent.putExtra(OpenParams.SRC_SCALE_TYPE, srcImageViewScaleType);
@@ -395,6 +422,7 @@ public class OpenImage {
         intent.putExtra(OpenParams.TOUCH_CLOSE_SCALE, OpenImageConfig.getInstance().getTouchCloseScale());
         intent.putExtra(OpenParams.OPEN_IMAGE_STYLE, openImageStyle);
         intent.putExtra(OpenParams.OPEN_ANIM_TIME_MS, openPageAnimTimeMs);
+        intent.putExtra(OpenParams.GALLERY_EFFECT_WIDTH, leftRightShowWidthDp);
 
         if (recyclerView != null) {
             if (sourceImageViewIdGet == null) {
