@@ -256,9 +256,9 @@ public class OpenImage {
 
     private View backView;
 
-    private void initSrcViews(Rect rvRect,List<OpenImageDetail> openImageDetails,List<ContentViewOriginModel> contentViewOriginModels) {
+    private ImageView initSrcViews(Rect rvRect,List<OpenImageDetail> openImageDetails,List<ContentViewOriginModel> contentViewOriginModels) {
         if (context == null){
-            return;
+            return null;
         }
         ViewGroup rootView = (ViewGroup) getWindow(context).getDecorView();
         if (backView != null){
@@ -278,6 +278,7 @@ public class OpenImage {
             oDetail.isAdded = false;
             oDetail.tagViewLoadSuc = false;
         }
+        ImageView exitView = null;
         for (ContentViewOriginModel contentViewOriginModel : contentViewOriginModels) {
 
             if (contentViewOriginModel.dataPosition == clickPosition) {
@@ -291,6 +292,7 @@ public class OpenImage {
                         flBelowView.addView(imageView, params);
                         loadSrcImage(openImageBean, imageView,contentViewOriginModel.width, contentViewOriginModel.height);
                         openImageBean.isAdded = true;
+                        exitView = imageView;
                     }
                 }
             }
@@ -304,6 +306,7 @@ public class OpenImage {
                 flBelowView.addView(imageView, params);
                 loadSrcImage(openImageDetail, imageView,contentViewOriginModel.width, contentViewOriginModel.height);
                 openImageDetail.isAdded = true;
+                exitView = imageView;
             }
 
             if (contentViewOriginModel.transitioned){
@@ -317,10 +320,12 @@ public class OpenImage {
                         flBelowView.addView(imageView, params);
                         loadSrcImage(openImageBean, imageView,contentViewOriginModel.width, contentViewOriginModel.height);
                         openImageBean.isAdded = true;
+                        exitView = imageView;
                     }
                 }
             }
         }
+        return exitView;
     }
 
     private void removeBackView(){
@@ -343,6 +348,7 @@ public class OpenImage {
 
                 }
             });
+            srcImageView.setAlpha(0f);
         }
     }
 
@@ -482,6 +488,7 @@ public class OpenImage {
             }
             final View transitionView = shareViewClick;
             ImageLoadUtils.getInstance().setOnBackView(new ImageLoadUtils.OnBackView() {
+                ImageView exitView;
                 @Override
                 public boolean onBack(int showPosition) {
                     Activity activity = getActivity(context);
@@ -554,6 +561,9 @@ public class OpenImage {
                         @Override
                         public void onMapSharedElements(List<String> names, Map<String, View> sharedEls) {
                             super.onMapSharedElements(names, sharedEls);
+                            if (exitView != null){
+                                exitView.setAlpha(1f);
+                            }
                             if (names.size() == 0){
                                 removeBackView();
                                 return;
@@ -647,7 +657,7 @@ public class OpenImage {
                         }
                     }
 
-                    initSrcViews(rect,openImageDetails,list);
+                    exitView = initSrcViews(rect,openImageDetails,list);
                     return list;
                 }
 
@@ -714,6 +724,7 @@ public class OpenImage {
             }
             final View transitionView = shareViewClick;
             ImageLoadUtils.getInstance().setOnBackView(new ImageLoadUtils.OnBackView() {
+                ImageView exitView;
                 @Override
                 public boolean onBack(int showPosition) {
                     Activity activity = getActivity(context);
@@ -754,6 +765,9 @@ public class OpenImage {
                         @Override
                         public void onMapSharedElements(List<String> names, Map<String, View> sharedEls) {
                             super.onMapSharedElements(names, sharedEls);
+                            if (exitView != null){
+                                exitView.setAlpha(1f);
+                            }
                             if (names.size() == 0){
                                 removeBackView();
                                 return;
@@ -822,7 +836,7 @@ public class OpenImage {
                     }
 
 
-                    initSrcViews(rect,openImageDetails,list);
+                    exitView = initSrcViews(rect,openImageDetails,list);
                     return list;
                 }
 
@@ -863,6 +877,7 @@ public class OpenImage {
                 }
             }
             ImageLoadUtils.getInstance().setOnBackView(new ImageLoadUtils.OnBackView() {
+                ImageView exitView;
                 @Override
                 public boolean onBack(int showPosition) {
                     Activity activity = getActivity(context);
@@ -878,6 +893,9 @@ public class OpenImage {
                         @Override
                         public void onMapSharedElements(List<String> names, Map<String, View> sharedEls) {
                             super.onMapSharedElements(names, sharedEls);
+                            if (exitView != null){
+                                exitView.setAlpha(1f);
+                            }
                             if (names.size() == 0){
                                 removeBackView();
                                 return;
@@ -924,7 +942,7 @@ public class OpenImage {
                         }
 
                     }
-                    initSrcViews(null,openImageDetails,contentViewOriginModels);
+                    exitView = initSrcViews(null,openImageDetails,contentViewOriginModels);
                     return contentViewOriginModels;
                 }
 
