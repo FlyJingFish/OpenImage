@@ -66,9 +66,9 @@ class ImageLoadUtils {
     }
 
     public interface OnBackView{
-        void onBack();
+        boolean onBack(int showPosition);
         void onScrollPos(int pos);
-        List<ContentViewOriginModel> onGetContentViewOriginModel();
+        List<ContentViewOriginModel> onGetContentViewOriginModel(int dataPosition);
     }
     OnBackView onBackView;
 

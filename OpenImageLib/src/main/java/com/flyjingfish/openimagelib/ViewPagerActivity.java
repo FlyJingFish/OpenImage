@@ -207,7 +207,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     private void initSrcViews() {
-        ImageLoadUtils.getInstance().getOnBackView().onGetContentViewOriginModel();
+        ImageLoadUtils.getInstance().getOnBackView().onGetContentViewOriginModel(openImageBeans.get(showPosition).dataPosition);
     }
 
     private void setViewTransition() {
@@ -370,6 +370,23 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     private void setExitView() {
+        boolean isShare = ImageLoadUtils.getInstance().getOnBackView().onBack(showPosition);
+        if (!isShare){
+            ViewCompat.setTransitionName(binding.viewPager, "");
+            setEnterSharedElementCallback(new SharedElementCallback() {
+                @Override
+                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                    super.onMapSharedElements(names, sharedElements);
+                    if (names.size()==0){
+                        return;
+                    }
+                    names.clear();
+                    sharedElements.clear();
+                }
+            });
+            return;
+        }
+
         View shareView = getCoverView();
 
         if (shareView != null) {
@@ -383,11 +400,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                     if (names.size()==0){
                         return;
                     }
-                    if (isAutoScrollSelect){
-                        sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);
-                    }else if (TextUtils.equals(names.get(0),OpenParams.SHARE_VIEW + showPosition)){
-                        sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);
-                    }
+                    sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);
                 }
             });
         } else {
@@ -399,18 +412,13 @@ public class ViewPagerActivity extends AppCompatActivity {
                     if (names.size()==0){
                         return;
                     }
-                    if (isAutoScrollSelect){
-                        sharedElements.put(OpenParams.SHARE_VIEW + showPosition, binding.viewPager);
-                    }else if (TextUtils.equals(names.get(0),OpenParams.SHARE_VIEW + showPosition)){
-                        sharedElements.put(OpenParams.SHARE_VIEW + showPosition, binding.viewPager);
-                    }
+                    sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);
                 }
             });
         }
     }
 
     private void close() {
-        ImageLoadUtils.getInstance().getOnBackView().onBack();
         setExitView();
         finishAfterTransition();
     }
