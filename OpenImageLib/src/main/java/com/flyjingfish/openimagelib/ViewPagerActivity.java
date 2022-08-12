@@ -248,6 +248,12 @@ public class ViewPagerActivity extends AppCompatActivity {
             if (indicatorType == INDICATOR_IMAGE) {//图片样式
                 float interval = AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_image_interval);
                 int imageRes = AttrsUtils.getTypeValueResourceId(this, R.attr.openImage_indicator_imageRes);
+                if (interval == 0){
+                    interval = ScreenUtils.dp2px(this, 4);
+                }
+                if (imageRes == 0){
+                    imageRes = R.drawable.open_image_indicator_image;
+                }
                 RecyclerView recyclerView = new RecyclerView(this);
                 FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 setIndicatorLayoutParams(layoutParams);
@@ -276,6 +282,8 @@ public class ViewPagerActivity extends AppCompatActivity {
             int pageMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_viewPager_pageMargin);
             if (pageMargin > 0) {
                 compositePageTransformer.addTransformer(new MarginPageTransformer(pageMargin));
+            }else {
+                compositePageTransformer.addTransformer(new MarginPageTransformer((int) ScreenUtils.dp2px(this, 10)));
             }
         } else {
             StatusBarUtils.setLightMode(this);

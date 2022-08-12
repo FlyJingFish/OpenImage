@@ -38,7 +38,7 @@
     <!--文本大小-->
     <attr name="openImage.indicator.textSize" format="dimension" />
     <!--图片指示器资源-->
-    <attr name="openImage.indicator.imageRes" format="reference|color" />
+    <attr name="openImage.indicator.imageRes" format="reference" />
     <!--图片指示器每个之间的间隔-->
     <attr name="openImage.indicator.image.interval" format="dimension" />
     <!--图片指示器排列方向-->
