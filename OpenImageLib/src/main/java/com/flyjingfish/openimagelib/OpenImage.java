@@ -565,7 +565,7 @@ public class OpenImage {
 
                     OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
                     View shareExitView = null;
-                    for (int i = firstPos; i < lastPos + 1; i++) {
+                    for (int i = firstPos; i < lastPos + 1 && i < openImageUrls.size(); i++) {
                         OpenImageUrl openImageUrl = openImageUrls.get(i);
                         if (openImageDetail.dataPosition == i && (openImageUrl.getType() == MediaType.IMAGE || openImageUrl.getType() == MediaType.VIDEO)){
                             View view = layoutManager.findViewByPosition(i);
@@ -769,7 +769,7 @@ public class OpenImage {
 
                     OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
                     View shareExitView = null;
-                    for (int i = firstPos; i < lastPos + 1; i++) {
+                    for (int i = firstPos; i < lastPos + 1 && i < openImageUrls.size(); i++) {
                         OpenImageUrl openImageUrl = openImageUrls.get(i);
                         if (openImageDetail.dataPosition == i && (openImageUrl.getType() == MediaType.IMAGE || openImageUrl.getType() == MediaType.VIDEO)){
                             View view = absListView.getChildAt(i - firstPos);
