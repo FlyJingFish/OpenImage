@@ -260,7 +260,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
     }
 
     protected void initCoverAnim(int imageWidth, int imageHeight,final boolean isLoadImageSuccess) {
-        if ((srcScaleType == ImageView.ScaleType.CENTER_CROP || srcScaleType == ImageView.ScaleType.FIT_XY) && openImageBean.srcWidth != 0 && openImageBean.srcHeight !=0) {
+        if (imageDiskMode == ImageDiskMode.RESULT && (srcScaleType == ImageView.ScaleType.CENTER_CROP || srcScaleType == ImageView.ScaleType.FIT_XY) && openImageBean.srcWidth != 0 && openImageBean.srcHeight !=0) {
             float scaleHW = openImageBean.srcHeight * 1f / openImageBean.srcWidth;
             float originalScaleHW = imageHeight * 1f / imageWidth;
             float coverWidth;
