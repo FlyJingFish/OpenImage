@@ -574,7 +574,10 @@ public class OpenImage {
                                 if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
                                     shareView.setScaleType(srcImageViewScaleType);
                                 }
-                                shareExitView = shareView;
+                                boolean isAttachedToWindow = shareView.isAttachedToWindow();
+                                if (isAttachedToWindow){
+                                    shareExitView = shareView;
+                                }
                             }
                         }
                     }
@@ -664,8 +667,9 @@ public class OpenImage {
                             ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, i));
                             shareView.setVisibility(View.VISIBLE);
                             shareView.setAlpha(1f);
+                            boolean isAttachedToWindow = shareView.isAttachedToWindow();
 
-                            if (dataPosition == i){
+                            if (dataPosition == i && isAttachedToWindow){
                                 int shareViewWidth = shareView.getWidth();
                                 int shareViewHeight = shareView.getHeight();
                                 ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
@@ -778,7 +782,10 @@ public class OpenImage {
                                 if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
                                     shareView.setScaleType(srcImageViewScaleType);
                                 }
-                                shareExitView = shareView;
+                                boolean isAttachedToWindow = shareView.isAttachedToWindow();
+                                if (isAttachedToWindow){
+                                    shareExitView = shareView;
+                                }
                             }
                         }
                     }
@@ -841,7 +848,8 @@ public class OpenImage {
                             ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, i));
                             shareView.setAlpha(1f);
                             shareView.setVisibility(View.VISIBLE);
-                            if (dataPosition == i){
+                            boolean isAttachedToWindow = shareView.isAttachedToWindow();
+                            if (dataPosition == i && isAttachedToWindow){
                                 int shareViewWidth = shareView.getWidth();
                                 int shareViewHeight = shareView.getHeight();
                                 ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
@@ -912,6 +920,17 @@ public class OpenImage {
                     if (activity == null){
                         return false;
                     }
+                    OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
+                    View shareExitView = null;
+                    for (int i = 0; i < openImageUrls.size() && i < imageViews.size(); i++) {
+                        ImageView shareView = imageViews.get(i);
+                        boolean isAttachedToWindow = shareView.isAttachedToWindow();
+                        OpenImageUrl openImageUrl = openImageUrls.get(i);
+                        if (isAttachedToWindow && openImageDetail.dataPosition == i && (openImageUrl.getType() == MediaType.IMAGE || openImageUrl.getType() == MediaType.VIDEO)){
+                            shareExitView = shareView;
+                        }
+                    }
+                    final View shareExitMapView = shareExitView;
                     activity.setExitSharedElementCallback(new SharedElementCallback() {
                         @Override
                         public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
@@ -929,11 +948,11 @@ public class OpenImage {
                                 return;
                             }
                             String name = names.get(0);
-                            for (Pair<View, String> element : sharedElements) {
-                                if (TextUtils.equals(element.second,name)){
-                                    sharedEls.put(name,element.first);
-                                    break;
-                                }
+                            if (shareExitMapView != null){
+                                sharedEls.put(name,shareExitMapView);
+                            }else {
+                                sharedEls.clear();
+                                names.clear();
                             }
                         }
                     });
@@ -954,8 +973,9 @@ public class OpenImage {
                         ImageView shareView = imageViews.get(i);
                         shareView.setVisibility(View.VISIBLE);
                         shareView.setAlpha(1f);
+                        boolean isAttachedToWindow = shareView.isAttachedToWindow();
 
-                        if (dataPosition == i){
+                        if (dataPosition == i && isAttachedToWindow){
                             int shareViewWidth = shareView.getWidth();
                             int shareViewHeight = shareView.getHeight();
                             int location[] = new int[2];
