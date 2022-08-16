@@ -246,9 +246,9 @@ public class ViewPagerActivity extends AppCompatActivity {
             indicatorType = AttrsUtils.getTypeValueInt(this, R.attr.openImage_indicator_type);
             orientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, R.attr.openImage_viewPager_orientation));
             if (indicatorType == INDICATOR_IMAGE) {//图片样式
-                float interval = AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_image_interval);
+                float interval = AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_image_interval,-1);
                 int imageRes = AttrsUtils.getTypeValueResourceId(this, R.attr.openImage_indicator_imageRes);
-                if (interval == 0){
+                if (interval == -1){
                     interval = ScreenUtils.dp2px(this, 4);
                 }
                 if (imageRes == 0){
@@ -279,8 +279,8 @@ public class ViewPagerActivity extends AppCompatActivity {
                     textFormat = strFormat + "";
                 }
             }
-            int pageMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_viewPager_pageMargin);
-            if (pageMargin > 0) {
+            int pageMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_viewPager_pageMargin,-1);
+            if (pageMargin >= 0) {
                 compositePageTransformer.addTransformer(new MarginPageTransformer(pageMargin));
             }else {
                 compositePageTransformer.addTransformer(new MarginPageTransformer((int) ScreenUtils.dp2px(this, 10)));
