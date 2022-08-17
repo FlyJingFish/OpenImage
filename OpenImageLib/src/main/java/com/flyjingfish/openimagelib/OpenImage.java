@@ -600,9 +600,6 @@ public class OpenImage {
                         @Override
                         public void onMapSharedElements(List<String> names, Map<String, View> sharedEls) {
                             super.onMapSharedElements(names, sharedEls);
-                            if (exitView != null) {
-                                exitView.setAlpha(1f);
-                            }
                             if (names.size() == 0) {
                                 removeBackView();
                                 return;
@@ -610,6 +607,18 @@ public class OpenImage {
                             String name = names.get(0);
 
                             if (shareExitMapView != null) {
+                                if (exitView != null) {
+                                    int location[] = new int[2];
+                                    shareExitMapView.getLocationInWindow(location);
+                                    int left = location[0] - rvLocation[0];
+                                    int top = location[1] - rvLocation[1];
+                                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) exitView.getLayoutParams();
+                                    params.leftMargin = left;
+                                    params.topMargin = top;
+                                    exitView.setLayoutParams(params);
+
+                                    exitView.setAlpha(1f);
+                                }
                                 sharedEls.put(name, shareExitMapView);
                             } else {
                                 sharedEls.clear();
@@ -814,15 +823,23 @@ public class OpenImage {
                         @Override
                         public void onMapSharedElements(List<String> names, Map<String, View> sharedEls) {
                             super.onMapSharedElements(names, sharedEls);
-                            if (exitView != null) {
-                                exitView.setAlpha(1f);
-                            }
                             if (names.size() == 0) {
                                 removeBackView();
                                 return;
                             }
                             String name = names.get(0);
                             if (shareExitMapView != null) {
+                                if (exitView != null) {
+                                    int location[] = new int[2];
+                                    shareExitMapView.getLocationInWindow(location);
+                                    int left = location[0] - rvLocation[0];
+                                    int top = location[1] - rvLocation[1];
+                                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) exitView.getLayoutParams();
+                                    params.leftMargin = left;
+                                    params.topMargin = top;
+                                    exitView.setLayoutParams(params);
+                                    exitView.setAlpha(1f);
+                                }
                                 sharedEls.put(name, shareExitMapView);
                             } else {
                                 sharedEls.clear();
@@ -959,15 +976,23 @@ public class OpenImage {
                         @Override
                         public void onMapSharedElements(List<String> names, Map<String, View> sharedEls) {
                             super.onMapSharedElements(names, sharedEls);
-                            if (exitView != null) {
-                                exitView.setAlpha(1f);
-                            }
                             if (names.size() == 0) {
                                 removeBackView();
                                 return;
                             }
                             String name = names.get(0);
                             if (shareExitMapView != null) {
+                                if (exitView != null) {
+                                    int location[] = new int[2];
+                                    shareExitMapView.getLocationInWindow(location);
+                                    int left = location[0];
+                                    int top = location[1];
+                                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) exitView.getLayoutParams();
+                                    params.leftMargin = left;
+                                    params.topMargin = top;
+                                    exitView.setLayoutParams(params);
+                                    exitView.setAlpha(1f);
+                                }
                                 sharedEls.put(name, shareExitMapView);
                             } else {
                                 sharedEls.clear();
