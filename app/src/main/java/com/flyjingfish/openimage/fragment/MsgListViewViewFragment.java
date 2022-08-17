@@ -50,6 +50,7 @@ public class MsgListViewViewFragment extends Fragment {
                         itemData.text = jsonObject.getString("text");
                     }else if (type == MessageBean.IMAGE){
                         itemData.imageUrl = jsonObject.getString("imageUrl");
+                        itemData.coverUrl = jsonObject.getString("coverUrl");
                     }else if (type == MessageBean.VIDEO){
                         itemData.videoUrl = jsonObject.getString("videoUrl");
                         itemData.coverUrl = jsonObject.getString("coverUrl");

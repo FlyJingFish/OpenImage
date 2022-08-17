@@ -174,7 +174,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                     binding.viewPager.setOffscreenPageLimit(1);
                 }
                 if (isFirstBacked) {
-                    ImageLoadUtils.getInstance().getOnBackView().onScrollPos(openImageBeans.get(showPosition).dataPosition);
+                    ImageLoadUtils.getInstance().getOnBackView().onScrollPos(openImageBeans.get(showPosition).viewPosition);
                 }
                 if (onSelectMediaListener != null) {
                     onSelectMediaListener.onSelect(openImageBeans.get(showPosition).dataPosition);
@@ -209,7 +209,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     private void initSrcViews() {
-        ImageLoadUtils.getInstance().getOnBackView().onGetContentViewOriginModel(openImageBeans.get(showPosition).dataPosition);
+        ImageLoadUtils.getInstance().getOnBackView().onGetContentViewOriginModel(showPosition);
     }
 
     private void setViewTransition() {

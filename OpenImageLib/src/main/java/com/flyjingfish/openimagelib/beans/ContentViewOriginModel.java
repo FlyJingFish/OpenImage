@@ -10,6 +10,7 @@ public class ContentViewOriginModel implements Parcelable {
     public int height;
     public int dataPosition;
     public boolean transitioned;
+    public int viewPosition;
 
     public int getLeft() {
         return left;
@@ -72,6 +73,7 @@ public class ContentViewOriginModel implements Parcelable {
         dest.writeInt(this.height);
         dest.writeInt(this.dataPosition);
         dest.writeInt(this.transitioned ? 1 : 0);
+        dest.writeInt(this.viewPosition);
     }
 
     public ContentViewOriginModel() {
@@ -84,6 +86,7 @@ public class ContentViewOriginModel implements Parcelable {
         this.height = in.readInt();
         this.dataPosition = in.readInt();
         this.transitioned = in.readInt() == 1;
+        this.viewPosition = in.readInt();
     }
 
     public static final Creator<ContentViewOriginModel> CREATOR = new Creator<ContentViewOriginModel>() {
