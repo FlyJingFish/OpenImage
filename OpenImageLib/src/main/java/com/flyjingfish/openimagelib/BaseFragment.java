@@ -13,12 +13,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
+import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 
 public abstract class BaseFragment extends Fragment {
 
     protected OpenImageDetail openImageBean;
+    protected OpenImageUrl openImageUrl;
     protected int showPosition,clickPosition;
     protected PhotosViewModel photosViewModel;
     protected Handler mHandler = new Handler(Looper.getMainLooper());
@@ -41,6 +43,7 @@ public abstract class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         openImageBean = (OpenImageDetail) bundle.getSerializable(OpenParams.IMAGE);
+        openImageUrl = openImageBean.openImageUrl;
         imageDiskMode = (ImageDiskMode) bundle.getSerializable(OpenParams.IMAGE_DISK_MODE);
         if (imageDiskMode == null){
             imageDiskMode = ImageDiskMode.NONE;

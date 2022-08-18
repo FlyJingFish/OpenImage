@@ -177,7 +177,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                     ImageLoadUtils.getInstance().getOnBackView().onScrollPos(openImageBeans.get(showPosition).viewPosition);
                 }
                 if (onSelectMediaListener != null) {
-                    onSelectMediaListener.onSelect(openImageBeans.get(showPosition).dataPosition);
+                    onSelectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl,openImageBeans.get(showPosition).dataPosition);
                 }
                 isFirstBacked = true;
             }

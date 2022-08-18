@@ -130,7 +130,7 @@ public class ImagesActivity extends AppCompatActivity {
                             .setOnSelectMediaListener(new OnSelectMediaListener() {
                                 boolean isFirstBacked = false;
                                 @Override
-                                public void onSelect(int position) {
+                                public void onSelect(OpenImageUrl openImageUrl,int position) {
                                     if (isFirstBacked){
                                         binding.scrollView.post(() -> binding.scrollView.scrollTo(0,imageViews.get(position).getTop()));
                                     }
