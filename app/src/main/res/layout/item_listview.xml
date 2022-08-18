@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.flyjingfish.openimage.openImpl.MyImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/iv_image"
     android:layout_width="match_parent"
     android:layout_height="220dp"
     android:scaleType="centerCrop"
     android:layout_margin="2dp">
-</com.flyjingfish.openimage.openImpl.MyImageView>
+</ImageView>

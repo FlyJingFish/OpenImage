@@ -16,6 +16,7 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
@@ -80,6 +81,11 @@ public class OpenImage {
     private final List<ViewPager2.PageTransformer> pageTransformers = new ArrayList<>();
     private int leftRightShowWidthDp;
     public static boolean isCanOpen = true;
+
+    private Float startAlpha;
+    private Integer startVisibility;
+    private Drawable startDrawable;
+    private boolean isTouchClose;
 
     public static OpenImage with(Context context) {
         return new OpenImage(context);
@@ -291,6 +297,41 @@ public class OpenImage {
         return this;
     }
 
+    private View backView;
+    private ImageView exitView;
+
+    private void initSrcViews(Rect rvRect, ContentViewOriginModel contentViewOriginModel) {
+        if (context == null) {
+            return ;
+        }
+        ViewGroup rootView = (ViewGroup) getWindow(context).getDecorView();
+        if (backView != null) {
+            rootView.removeView(backView);
+        }
+        FrameLayout flBelowView = new FrameLayout(context);
+        backView = flBelowView;
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        if (rvRect != null) {
+            layoutParams.topMargin = rvRect.top;
+            layoutParams.leftMargin = rvRect.left;
+            layoutParams.width = rvRect.width();
+            layoutParams.height = rvRect.height();
+        }
+        rootView.addView(flBelowView, layoutParams);
+        exitView = new ImageView(context);
+        exitView.setScaleType(srcImageViewScaleType);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(contentViewOriginModel.width, contentViewOriginModel.height);
+        params.leftMargin = contentViewOriginModel.left;
+        params.topMargin = contentViewOriginModel.top;
+        flBelowView.addView(exitView, params);
+    }
+
+    private void removeBackView() {
+        if (backView != null) {
+            ViewGroup rootView = (ViewGroup) getWindow(context).getDecorView();
+            rootView.removeView(backView);
+        }
+    }
 
     private void scrollRecyclerView(int pos) {
         if (!isAutoScrollScanPosition) {
@@ -305,6 +346,7 @@ public class OpenImage {
             recyclerView.post(() -> layoutManager.scrollToPosition(pos));
         }
     }
+
 
     private void show4ParseData() {
         if (openImageUrls.size() == 0) {
@@ -436,7 +478,6 @@ public class OpenImage {
             final float transitionViewStartAlpha = transitionView.getAlpha();
             final int transitionViewStartVisibility = transitionView.getVisibility();
             ImageLoadUtils.getInstance().setOnBackView(new ImageLoadUtils.OnBackView() {
-                private boolean isTouchClose;
 
                 @Override
                 public boolean onBack(int showPosition) {
@@ -483,7 +524,7 @@ public class OpenImage {
 
                     OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
                     int viewPosition = openImageDetail.viewPosition;
-                    View shareExitView = null;
+                    ImageView shareExitView = null;
                     View view = layoutManager.findViewByPosition(viewPosition);
                     if (view != null) {
                         ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageDetail.openImageUrl, openImageDetail.dataPosition));
@@ -497,17 +538,25 @@ public class OpenImage {
                             }
                         }
                     }
-                    final View shareExitMapView = shareExitView;
+                    final ImageView shareExitMapView = shareExitView;
                     activity.setExitSharedElementCallback(new SharedElementCallback() {
-                        private Float startAlpha;
-                        private Integer startVisibility;
+
+                        @Override
+                        public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
+                            super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+                            removeBackView();
+                        }
 
                         @Override
                         public Parcelable onCaptureSharedElementSnapshot(View sharedElement, Matrix viewToGlobalMatrix, RectF screenBounds) {
                             Parcelable parcelable = super.onCaptureSharedElementSnapshot(sharedElement, viewToGlobalMatrix, screenBounds);
-                            if (isTouchClose && sharedElement != null && startAlpha != null) {
-                                sharedElement.setAlpha(startAlpha);
-                                sharedElement.setVisibility(startVisibility);
+                            if (exitView != null && startDrawable != null){
+                                exitView.setImageDrawable(startDrawable);
+                            }else {
+                                if (sharedElement != null && startAlpha != null) {
+                                    sharedElement.setAlpha(startAlpha);
+                                    sharedElement.setVisibility(startVisibility);
+                                }
                             }
                             return parcelable;
                         }
@@ -523,6 +572,18 @@ public class OpenImage {
                             if (shareExitMapView != null) {
                                 startAlpha = shareExitMapView.getAlpha();
                                 startVisibility = shareExitMapView.getVisibility();
+                                startDrawable = shareExitMapView.getDrawable();
+                                if (exitView != null){
+                                    int location[] = new int[2];
+                                    shareExitMapView.getLocationInWindow(location);
+                                    int left = location[0] - rvLocation[0];
+                                    int top = location[1] - rvLocation[1];
+                                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) exitView.getLayoutParams();
+                                    params.leftMargin = left;
+                                    params.topMargin = top;
+                                    exitView.setLayoutParams(params);
+                                }
+
                                 sharedEls.put(name, shareExitMapView);
                             } else {
                                 sharedEls.clear();
@@ -535,7 +596,7 @@ public class OpenImage {
 
                 @Override
                 public void onTouchClose(boolean isTouchClose) {
-                    this.isTouchClose = isTouchClose;
+                    OpenImage.this.isTouchClose = isTouchClose;
                 }
 
                 @Override
@@ -544,10 +605,34 @@ public class OpenImage {
                 }
 
                 @Override
-                public List<ContentViewOriginModel> onGetContentViewOriginModel(int showPosition) {
+                public ContentViewOriginModel onGetContentViewOriginModel(int showPosition) {
                     transitionView.setVisibility(transitionViewStartVisibility);
                     transitionView.setAlpha(transitionViewStartAlpha);
-                    return null;
+
+                    ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
+                    OpenImageDetail openImageUrl = openImageDetails.get(showPosition);
+                    View view = layoutManager.findViewByPosition(openImageUrl.viewPosition);
+                    if (view != null) {
+                        ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl.openImageUrl, openImageUrl.dataPosition));
+                        if (shareView != null){
+                            boolean isAttachedToWindow = shareView.isAttachedToWindow();
+                            if (isAttachedToWindow) {
+                                int shareViewWidth = shareView.getWidth();
+                                int shareViewHeight = shareView.getHeight();
+                                int location[] = new int[2];
+                                shareView.getLocationInWindow(location);
+                                contentViewOriginModel.left = location[0] - rvLocation[0];
+                                contentViewOriginModel.top = location[1] - rvLocation[1];
+                                contentViewOriginModel.width = shareViewWidth;
+                                contentViewOriginModel.height = shareViewHeight;
+                                contentViewOriginModel.dataPosition = openImageUrl.dataPosition;
+                                contentViewOriginModel.viewPosition = openImageUrl.viewPosition;
+                                initSrcViews(rect,contentViewOriginModel);
+                            }
+                        }
+                    }
+
+                    return contentViewOriginModel;
                 }
 
             });
@@ -620,7 +705,6 @@ public class OpenImage {
             final float transitionViewStartAlpha = transitionView.getAlpha();
             final int transitionViewStartVisibility = transitionView.getVisibility();
             ImageLoadUtils.getInstance().setOnBackView(new ImageLoadUtils.OnBackView() {
-                private boolean isTouchClose;
 
                 @Override
                 public boolean onBack(int showPosition) {
@@ -637,7 +721,7 @@ public class OpenImage {
 
                     OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
                     int viewPosition = openImageDetail.viewPosition;
-                    View shareExitView = null;
+                    ImageView shareExitView = null;
                     View view = absListView.getChildAt(viewPosition - firstPos);
                     if (view != null) {
                         ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageDetail.openImageUrl, openImageDetail.dataPosition));
@@ -652,17 +736,25 @@ public class OpenImage {
                         }
                     }
 
-                    final View shareExitMapView = shareExitView;
+                    final ImageView shareExitMapView = shareExitView;
                     activity.setExitSharedElementCallback(new SharedElementCallback() {
-                        private Float startAlpha;
-                        private Integer startVisibility;
+
+                        @Override
+                        public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
+                            super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+                            removeBackView();
+                        }
 
                         @Override
                         public Parcelable onCaptureSharedElementSnapshot(View sharedElement, Matrix viewToGlobalMatrix, RectF screenBounds) {
                             Parcelable parcelable = super.onCaptureSharedElementSnapshot(sharedElement, viewToGlobalMatrix, screenBounds);
-                            if (isTouchClose && sharedElement != null && startAlpha != null) {
-                                sharedElement.setAlpha(startAlpha);
-                                sharedElement.setVisibility(startVisibility);
+                            if (exitView != null && startDrawable != null){
+                                exitView.setImageDrawable(startDrawable);
+                            }else {
+                                if (sharedElement != null && startAlpha != null) {
+                                    sharedElement.setAlpha(startAlpha);
+                                    sharedElement.setVisibility(startVisibility);
+                                }
                             }
                             return parcelable;
                         }
@@ -677,6 +769,17 @@ public class OpenImage {
                             if (shareExitMapView != null) {
                                 startAlpha = shareExitMapView.getAlpha();
                                 startVisibility = shareExitMapView.getVisibility();
+                                startDrawable = shareExitMapView.getDrawable();
+                                if (exitView != null){
+                                    int location[] = new int[2];
+                                    shareExitMapView.getLocationInWindow(location);
+                                    int left = location[0] - rvLocation[0];
+                                    int top = location[1] - rvLocation[1];
+                                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) exitView.getLayoutParams();
+                                    params.leftMargin = left;
+                                    params.topMargin = top;
+                                    exitView.setLayoutParams(params);
+                                }
                                 sharedEls.put(name, shareExitMapView);
                             } else {
                                 sharedEls.clear();
@@ -690,7 +793,7 @@ public class OpenImage {
 
                 @Override
                 public void onTouchClose(boolean isTouchClose) {
-                    this.isTouchClose = isTouchClose;
+                    OpenImage.this.isTouchClose = isTouchClose;
                 }
 
                 @Override
@@ -705,10 +808,37 @@ public class OpenImage {
                 }
 
                 @Override
-                public List<ContentViewOriginModel> onGetContentViewOriginModel(int showPosition) {
+                public ContentViewOriginModel onGetContentViewOriginModel(int showPosition) {
                     transitionView.setVisibility(transitionViewStartVisibility);
                     transitionView.setAlpha(transitionViewStartAlpha);
-                    return null;
+
+                    ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
+                    int firstPos = absListView.getFirstVisiblePosition();
+                    if (firstPos >= 0) {
+                        OpenImageDetail openImageUrl = openImageDetails.get(showPosition);
+                        View view = absListView.getChildAt(openImageUrl.viewPosition - firstPos);
+                        if (view != null) {
+                            ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl.openImageUrl, openImageUrl.dataPosition));
+                            if (shareView != null){
+                                boolean isAttachedToWindow = shareView.isAttachedToWindow();
+                                if (isAttachedToWindow) {
+                                    int shareViewWidth = shareView.getWidth();
+                                    int shareViewHeight = shareView.getHeight();
+                                    int location[] = new int[2];
+                                    shareView.getLocationInWindow(location);
+                                    contentViewOriginModel.left = location[0] - rvLocation[0];
+                                    contentViewOriginModel.top = location[1] - rvLocation[1];
+                                    contentViewOriginModel.width = shareViewWidth;
+                                    contentViewOriginModel.height = shareViewHeight;
+                                    contentViewOriginModel.dataPosition = openImageUrl.dataPosition;
+                                    contentViewOriginModel.viewPosition = openImageUrl.viewPosition;
+                                    initSrcViews(rect,contentViewOriginModel);
+                                }
+                            }
+                        }
+                    }
+
+                    return contentViewOriginModel;
                 }
 
             });
@@ -751,7 +881,6 @@ public class OpenImage {
             final float transitionViewStartAlpha = transitionView.getAlpha();
             final int transitionViewStartVisibility = transitionView.getVisibility();
             ImageLoadUtils.getInstance().setOnBackView(new ImageLoadUtils.OnBackView() {
-                private boolean isTouchClose;
 
                 @Override
                 public boolean onBack(int showPosition) {
@@ -760,7 +889,7 @@ public class OpenImage {
                         return false;
                     }
                     OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
-                    View shareExitView = null;
+                    ImageView shareExitView = null;
                     for (int i = 0; i < openImageUrls.size() && i < imageViews.size(); i++) {
                         ImageView shareView = imageViews.get(i);
                         boolean isAttachedToWindow = shareView.isAttachedToWindow();
@@ -769,15 +898,13 @@ public class OpenImage {
                             shareExitView = shareView;
                         }
                     }
-                    final View shareExitMapView = shareExitView;
+                    final ImageView shareExitMapView = shareExitView;
                     activity.setExitSharedElementCallback(new SharedElementCallback() {
-                        private Float startAlpha;
-                        private Integer startVisibility;
 
                         @Override
                         public Parcelable onCaptureSharedElementSnapshot(View sharedElement, Matrix viewToGlobalMatrix, RectF screenBounds) {
                             Parcelable parcelable = super.onCaptureSharedElementSnapshot(sharedElement, viewToGlobalMatrix, screenBounds);
-                            if (isTouchClose && sharedElement != null && startAlpha != null) {
+                            if (sharedElement != null && startAlpha != null) {
                                 sharedElement.setAlpha(startAlpha);
                                 sharedElement.setVisibility(startVisibility);
                             }
@@ -806,7 +933,7 @@ public class OpenImage {
 
                 @Override
                 public void onTouchClose(boolean isTouchClose) {
-                    this.isTouchClose = isTouchClose;
+                    OpenImage.this.isTouchClose = isTouchClose;
                 }
 
                 @Override
@@ -817,10 +944,29 @@ public class OpenImage {
                 }
 
                 @Override
-                public List<ContentViewOriginModel> onGetContentViewOriginModel(int showPosition) {
+                public ContentViewOriginModel onGetContentViewOriginModel(int showPosition) {
                     transitionView.setVisibility(transitionViewStartVisibility);
                     transitionView.setAlpha(transitionViewStartAlpha);
-                    return null;
+
+                    ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
+                    OpenImageDetail openImageUrl = openImageDetails.get(showPosition);
+                    View shareView = imageViews.get(showPosition);
+                    if (shareView != null){
+                        boolean isAttachedToWindow = shareView.isAttachedToWindow();
+                        if (isAttachedToWindow) {
+                            int shareViewWidth = shareView.getWidth();
+                            int shareViewHeight = shareView.getHeight();
+                            int location[] = new int[2];
+                            shareView.getLocationInWindow(location);
+                            contentViewOriginModel.left = location[0];
+                            contentViewOriginModel.top = location[1];
+                            contentViewOriginModel.width = shareViewWidth;
+                            contentViewOriginModel.height = shareViewHeight;
+                            contentViewOriginModel.dataPosition = openImageUrl.dataPosition;
+                            contentViewOriginModel.viewPosition = openImageUrl.viewPosition;
+                        }
+                    }
+                    return contentViewOriginModel;
                 }
 
             });
