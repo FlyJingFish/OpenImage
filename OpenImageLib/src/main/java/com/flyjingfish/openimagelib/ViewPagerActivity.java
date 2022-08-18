@@ -177,7 +177,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                     ImageLoadUtils.getInstance().getOnBackView().onScrollPos(openImageBeans.get(showPosition).viewPosition);
                 }
                 if (onSelectMediaListener != null) {
-                    onSelectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl,openImageBeans.get(showPosition).dataPosition);
+                    onSelectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl, openImageBeans.get(showPosition).dataPosition);
                 }
                 isFirstBacked = true;
             }
@@ -220,9 +220,13 @@ public class ViewPagerActivity extends AppCompatActivity {
     private void setIndicatorPosition() {
         mHandler.post(() -> {
             if (indicatorType == INDICATOR_IMAGE) {//图片样式
-                imageIndicatorAdapter.setSelectPosition(showPosition);
+                if (imageIndicatorAdapter != null) {
+                    imageIndicatorAdapter.setSelectPosition(showPosition);
+                }
             } else {
-                indicatorTextBinding.tvShowPos.setText(String.format(textFormat, showPosition + 1, openImageBeans.size()));
+                if (indicatorTextBinding != null) {
+                    indicatorTextBinding.tvShowPos.setText(String.format(textFormat, showPosition + 1, openImageBeans.size()));
+                }
             }
         });
     }
@@ -245,54 +249,59 @@ public class ViewPagerActivity extends AppCompatActivity {
             }
             indicatorType = AttrsUtils.getTypeValueInt(this, R.attr.openImage_indicator_type);
             orientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, R.attr.openImage_viewPager_orientation));
-            if (indicatorType == INDICATOR_IMAGE) {//图片样式
-                float interval = AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_image_interval,-1);
-                int imageRes = AttrsUtils.getTypeValueResourceId(this, R.attr.openImage_indicator_imageRes);
-                if (interval == -1){
-                    interval = ScreenUtils.dp2px(this, 4);
-                }
-                if (imageRes == 0){
-                    imageRes = R.drawable.open_image_indicator_image;
-                }
-                RecyclerView recyclerView = new RecyclerView(this);
-                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                setIndicatorLayoutParams(layoutParams);
-                binding.getRoot().addView(recyclerView, layoutParams);
+            if (openImageBeans.size() > 1) {
+                if (indicatorType == INDICATOR_IMAGE) {//图片样式
+                    float interval = AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_image_interval, -1);
+                    int imageRes = AttrsUtils.getTypeValueResourceId(this, R.attr.openImage_indicator_imageRes);
+                    if (interval == -1) {
+                        interval = ScreenUtils.dp2px(this, 4);
+                    }
+                    if (imageRes == 0) {
+                        imageRes = R.drawable.open_image_indicator_image;
+                    }
+                    RecyclerView recyclerView = new RecyclerView(this);
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    setIndicatorLayoutParams(layoutParams);
+                    binding.getRoot().addView(recyclerView, layoutParams);
 
-                OpenImageOrientation realOrientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, R.attr.openImage_indicator_image_orientation));
-                recyclerView.setLayoutManager(new LinearLayoutManager(this, realOrientation == OpenImageOrientation.HORIZONTAL ? LinearLayoutManager.HORIZONTAL : LinearLayoutManager.VERTICAL, false));
-                imageIndicatorAdapter = new ImageIndicatorAdapter(openImageBeans.size(), interval, imageRes, realOrientation);
-                recyclerView.setAdapter(imageIndicatorAdapter);
-            } else {
-                int textColor = AttrsUtils.getTypeValueColor(this, R.attr.openImage_indicator_textColor, Color.WHITE);
-                float textSize = AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_textSize);
-                indicatorTextBinding = IndicatorTextBinding.inflate(getLayoutInflater(), binding.getRoot(), true);
-                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
-                setIndicatorLayoutParams(layoutParams);
-                indicatorTextBinding.tvShowPos.setLayoutParams(layoutParams);
-                indicatorTextBinding.tvShowPos.setTextColor(textColor);
-                if (textSize != 0) {
-                    indicatorTextBinding.tvShowPos.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-                }
-                CharSequence strFormat = AttrsUtils.getTypeValueText(this, R.attr.openImage_indicator_textFormat);
-                if (!TextUtils.isEmpty(strFormat)) {
-                    textFormat = strFormat + "";
+                    OpenImageOrientation realOrientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, R.attr.openImage_indicator_image_orientation));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(this, realOrientation == OpenImageOrientation.HORIZONTAL ? LinearLayoutManager.HORIZONTAL : LinearLayoutManager.VERTICAL, false));
+                    imageIndicatorAdapter = new ImageIndicatorAdapter(openImageBeans.size(), interval, imageRes, realOrientation);
+                    recyclerView.setAdapter(imageIndicatorAdapter);
+
+                } else {
+                    int textColor = AttrsUtils.getTypeValueColor(this, R.attr.openImage_indicator_textColor, Color.WHITE);
+                    float textSize = AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_textSize);
+                    indicatorTextBinding = IndicatorTextBinding.inflate(getLayoutInflater(), binding.getRoot(), true);
+                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
+                    setIndicatorLayoutParams(layoutParams);
+                    indicatorTextBinding.tvShowPos.setLayoutParams(layoutParams);
+                    indicatorTextBinding.tvShowPos.setTextColor(textColor);
+                    if (textSize != 0) {
+                        indicatorTextBinding.tvShowPos.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+                    }
+                    CharSequence strFormat = AttrsUtils.getTypeValueText(this, R.attr.openImage_indicator_textFormat);
+                    if (!TextUtils.isEmpty(strFormat)) {
+                        textFormat = strFormat + "";
+                    }
                 }
             }
-            int pageMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_viewPager_pageMargin,-1);
+            int pageMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_viewPager_pageMargin, -1);
             if (pageMargin >= 0) {
                 compositePageTransformer.addTransformer(new MarginPageTransformer(pageMargin));
-            }else {
+            } else {
                 compositePageTransformer.addTransformer(new MarginPageTransformer((int) ScreenUtils.dp2px(this, 10)));
             }
         } else {
             StatusBarUtils.setLightMode(this);
             orientation = OpenImageOrientation.HORIZONTAL;
-            indicatorTextBinding = IndicatorTextBinding.inflate(getLayoutInflater(), binding.getRoot(), true);
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
-            layoutParams.bottomMargin = (int) ScreenUtils.dp2px(this, 10);
-            layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
-            indicatorTextBinding.tvShowPos.setLayoutParams(layoutParams);
+            if (openImageBeans.size() > 1) {
+                indicatorTextBinding = IndicatorTextBinding.inflate(getLayoutInflater(), binding.getRoot(), true);
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
+                layoutParams.bottomMargin = (int) ScreenUtils.dp2px(this, 10);
+                layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+                indicatorTextBinding.tvShowPos.setLayoutParams(layoutParams);
+            }
             compositePageTransformer.addTransformer(new MarginPageTransformer((int) ScreenUtils.dp2px(this, 10)));
         }
 
@@ -305,10 +314,10 @@ public class ViewPagerActivity extends AppCompatActivity {
         }
         binding.viewPager.setPageTransformer(compositePageTransformer);
 
-        int leftRightPadding = getIntent().getIntExtra(OpenParams.GALLERY_EFFECT_WIDTH,0);
-        if (leftRightPadding > 0){
+        int leftRightPadding = getIntent().getIntExtra(OpenParams.GALLERY_EFFECT_WIDTH, 0);
+        if (leftRightPadding > 0) {
             View recyclerView = binding.viewPager.getChildAt(0);
-            if(recyclerView instanceof RecyclerView){
+            if (recyclerView instanceof RecyclerView) {
                 recyclerView.setPadding((int) ScreenUtils.dp2px(this, leftRightPadding), 0, (int) ScreenUtils.dp2px(this, leftRightPadding), 0);
                 ((RecyclerView) recyclerView).setClipToPadding(false);
             }
@@ -319,6 +328,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         } else {
             binding.viewPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         }
+
     }
 
     private void setIndicatorLayoutParams(FrameLayout.LayoutParams layoutParams) {

@@ -92,7 +92,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RvBaseHolder> {
                 })
                 .setAutoScrollScanPosition(true)
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
-                .setClickPosition(position).show();
+                .setClickPosition(0).show();
         binding.ivImage.setOnClickListener(onClickListener);
         MyImageLoader.getInstance().loadRoundCorner(binding.ivImage, data.getCoverImageUrl(), 10, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
 
