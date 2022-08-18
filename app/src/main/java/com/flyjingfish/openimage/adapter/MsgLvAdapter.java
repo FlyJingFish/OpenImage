@@ -113,7 +113,7 @@ public class MsgLvAdapter extends BaseAdapter {
                     return R.id.iv_video;
                 }
             }
-        })
+        }) .setAutoScrollScanPosition(true)
                 .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
                 .setImageUrlList(messageBeans).setImageDiskMode(MyImageLoader.imageDiskMode)
                 .setItemLoadHelper(new ItemLoadHelper() {

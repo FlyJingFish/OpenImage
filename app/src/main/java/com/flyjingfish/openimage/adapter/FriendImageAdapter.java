@@ -63,6 +63,7 @@ public class FriendImageAdapter extends RecyclerView.Adapter<RvBaseHolder> {
             }
         }).setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
                 .setImageUrlList(data).setImageDiskMode(MyImageLoader.imageDiskMode)
+                .setAutoScrollScanPosition(true)
                 .setItemLoadHelper(new ItemLoadHelper() {
                     @Override
                     public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {

@@ -59,6 +59,7 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                         }
                     }
                 })
+                .setAutoScrollScanPosition(true)
                 .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
                 .setImageUrlList(messageBeans).setImageDiskMode(MyImageLoader.imageDiskMode)
                 .setItemLoadHelper(new ItemLoadHelper() {

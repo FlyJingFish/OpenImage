@@ -126,6 +126,7 @@ public class ImagesActivity extends AppCompatActivity {
                                     });
                                 }
                             })
+                            .setAutoScrollScanPosition(true)
                             .setOnSelectMediaListener(new OnSelectMediaListener() {
                                 boolean isFirstBacked = false;
                                 @Override

@@ -90,6 +90,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RvBaseHolder> {
                         });
                     }
                 })
+                .setAutoScrollScanPosition(true)
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
                 .setClickPosition(position).show();
         binding.ivImage.setOnClickListener(onClickListener);

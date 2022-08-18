@@ -392,7 +392,7 @@ public class OpenImage {
         View viewAtPosition =
                 layoutManager.findViewByPosition(pos);
         if (viewAtPosition == null
-                || layoutManager.isViewPartiallyVisible(viewAtPosition, false, true)) {
+                || layoutManager.isViewPartiallyVisible(viewAtPosition, true, true)) {
             recyclerView.post(() -> layoutManager.scrollToPosition(pos));
         }
     }

@@ -109,6 +109,7 @@ public class GridViewActivity extends AppCompatActivity {
                                 return R.id.iv_image;
                             }
                         })
+                        .setAutoScrollScanPosition(true)
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
                         .setImageUrlList(datas).setImageDiskMode(MyImageLoader.imageDiskMode)
                         .setItemLoadHelper(new ItemLoadHelper() {
