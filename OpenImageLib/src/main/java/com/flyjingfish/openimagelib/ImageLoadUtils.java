@@ -72,6 +72,8 @@ class ImageLoadUtils {
     public interface OnBackView {
         boolean onBack(int showPosition);
 
+        void onTouchClose(boolean isTouchClose);
+
         void onScrollPos(int pos);
 
         List<ContentViewOriginModel> onGetContentViewOriginModel(int showPosition);

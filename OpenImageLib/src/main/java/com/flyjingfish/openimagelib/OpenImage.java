@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.app.SharedElementCallback;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -166,6 +170,7 @@ public class OpenImage {
 
     /**
      * 如果数据下标 和 RecyclerView或ListView或GridView 的所在位置一致 可调用这个
+     *
      * @param clickPosition 点击的图片和View所在的位置
      * @return
      */
@@ -176,6 +181,7 @@ public class OpenImage {
 
     /**
      * 如果数据下标 和 RecyclerView或ListView或GridView 的所在位置不一致 调用这个
+     *
      * @param clickDataPosition 点击的图片所在数据的位置
      * @param clickViewPosition 点击的图片View在RecyclerView或ListView或GridView的位置
      * @return
@@ -285,103 +291,6 @@ public class OpenImage {
         return this;
     }
 
-    private View backView;
-
-    private ImageView initSrcViews(Rect rvRect, List<OpenImageDetail> openImageDetails, List<ContentViewOriginModel> contentViewOriginModels) {
-        if (context == null) {
-            return null;
-        }
-        ViewGroup rootView = (ViewGroup) getWindow(context).getDecorView();
-        if (backView != null) {
-            rootView.removeView(backView);
-        }
-        FrameLayout flBelowView = new FrameLayout(context);
-        backView = flBelowView;
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        if (rvRect != null) {
-            layoutParams.topMargin = rvRect.top;
-            layoutParams.leftMargin = rvRect.left;
-            layoutParams.width = rvRect.width();
-            layoutParams.height = rvRect.height();
-        }
-        rootView.addView(flBelowView, layoutParams);
-        for (OpenImageDetail oDetail : openImageDetails) {
-            oDetail.isAdded = false;
-            oDetail.tagViewLoadSuc = false;
-        }
-        ImageView exitView = null;
-        for (ContentViewOriginModel contentViewOriginModel : contentViewOriginModels) {
-
-            if (contentViewOriginModel.viewPosition == clickViewPosition) {
-                for (OpenImageDetail openImageBean : openImageDetails) {
-                    if (openImageBean.viewPosition == clickViewPosition) {
-                        ImageView imageView = new ImageView(context);
-                        imageView.setScaleType(srcImageViewScaleType);
-                        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(contentViewOriginModel.width, contentViewOriginModel.height);
-                        params.leftMargin = contentViewOriginModel.left;
-                        params.topMargin = contentViewOriginModel.top;
-                        flBelowView.addView(imageView, params);
-                        loadSrcImage(openImageBean, imageView, contentViewOriginModel.width, contentViewOriginModel.height);
-                        openImageBean.isAdded = true;
-                        exitView = imageView;
-                    }
-                }
-            }
-            OpenImageDetail openImageDetail = openImageDetails.get(ViewPagerActivity.showPosition);
-            if (openImageDetail.viewPosition == contentViewOriginModel.viewPosition && !openImageDetail.isAdded) {
-                ImageView imageView = new ImageView(context);
-                imageView.setScaleType(srcImageViewScaleType);
-                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(contentViewOriginModel.width, contentViewOriginModel.height);
-                params.leftMargin = contentViewOriginModel.left;
-                params.topMargin = contentViewOriginModel.top;
-                flBelowView.addView(imageView, params);
-                loadSrcImage(openImageDetail, imageView, contentViewOriginModel.width, contentViewOriginModel.height);
-                openImageDetail.isAdded = true;
-                exitView = imageView;
-            }
-
-            if (contentViewOriginModel.transitioned) {
-                for (OpenImageDetail openImageBean : openImageDetails) {
-                    if (openImageBean.viewPosition == contentViewOriginModel.viewPosition && !openImageBean.isAdded) {
-                        ImageView imageView = new ImageView(context);
-                        imageView.setScaleType(srcImageViewScaleType);
-                        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(contentViewOriginModel.width, contentViewOriginModel.height);
-                        params.leftMargin = contentViewOriginModel.left;
-                        params.topMargin = contentViewOriginModel.top;
-                        flBelowView.addView(imageView, params);
-                        loadSrcImage(openImageBean, imageView, contentViewOriginModel.width, contentViewOriginModel.height);
-                        openImageBean.isAdded = true;
-                        exitView = imageView;
-                    }
-                }
-            }
-        }
-        return exitView;
-    }
-
-    private void removeBackView() {
-        if (backView != null) {
-            ViewGroup rootView = (ViewGroup) getWindow(context).getDecorView();
-            rootView.removeView(backView);
-        }
-    }
-
-    private void loadSrcImage(OpenImageDetail openImageBean, ImageView srcImageView, int width, int height) {
-        if (srcImageView != null && !openImageBean.tagViewLoadSuc) {
-            itemLoadHelper.loadImage(context, openImageBean.openImageUrl, openImageBean.getCoverImageUrl(), srcImageView, width, height, new OnLoadCoverImageListener() {
-                @Override
-                public void onLoadImageSuccess() {
-                    openImageBean.tagViewLoadSuc = true;
-                }
-
-                @Override
-                public void onLoadImageFailed() {
-
-                }
-            });
-            srcImageView.setAlpha(0f);
-        }
-    }
 
     private void scrollRecyclerView(int pos) {
         if (!isAutoScrollScanPosition) {
@@ -518,14 +427,16 @@ public class OpenImage {
                     openImageDetail.viewPosition = viewIndex;
                     openImageDetails.add(openImageDetail);
                 }
-                viewIndex ++;
+                viewIndex++;
             }
             if (shareViewClick == null) {
                 throw new IllegalArgumentException("请确保是否调用了setClickPosition并且参数设置正确");
             }
             final View transitionView = shareViewClick;
+            final float transitionViewStartAlpha = transitionView.getAlpha();
+            final int transitionViewStartVisibility = transitionView.getVisibility();
             ImageLoadUtils.getInstance().setOnBackView(new ImageLoadUtils.OnBackView() {
-                ImageView exitView;
+                private boolean isTouchClose;
 
                 @Override
                 public boolean onBack(int showPosition) {
@@ -547,7 +458,6 @@ public class OpenImage {
                         int[] lastVisibleItems = null;
                         lastVisibleItems = staggeredGridLayoutManager.findLastVisibleItemPositions(lastVisibleItems);
                         if (firstVisibleItems == null || lastVisibleItems == null || firstVisibleItems.length == 0 || lastVisibleItems.length == 0) {
-                            removeBackView();
                             return false;
                         }
                         firstPos = Integer.MAX_VALUE;
@@ -563,13 +473,11 @@ public class OpenImage {
                             }
                         }
                         if (lastPos < firstPos) {
-                            removeBackView();
                             return false;
                         }
 
                     }
                     if (lastPos < 0 || firstPos < 0) {
-                        removeBackView();
                         return false;
                     }
 
@@ -579,7 +487,7 @@ public class OpenImage {
                     View view = layoutManager.findViewByPosition(viewPosition);
                     if (view != null) {
                         ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageDetail.openImageUrl, openImageDetail.dataPosition));
-                        if (shareView != null){
+                        if (shareView != null) {
                             if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
                                 shareView.setScaleType(srcImageViewScaleType);
                             }
@@ -591,34 +499,30 @@ public class OpenImage {
                     }
                     final View shareExitMapView = shareExitView;
                     activity.setExitSharedElementCallback(new SharedElementCallback() {
+                        private Float startAlpha;
+                        private Integer startVisibility;
+
                         @Override
-                        public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
-                            super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
-                            removeBackView();
+                        public Parcelable onCaptureSharedElementSnapshot(View sharedElement, Matrix viewToGlobalMatrix, RectF screenBounds) {
+                            Parcelable parcelable = super.onCaptureSharedElementSnapshot(sharedElement, viewToGlobalMatrix, screenBounds);
+                            if (isTouchClose && sharedElement != null && startAlpha != null) {
+                                sharedElement.setAlpha(startAlpha);
+                                sharedElement.setVisibility(startVisibility);
+                            }
+                            return parcelable;
                         }
 
                         @Override
                         public void onMapSharedElements(List<String> names, Map<String, View> sharedEls) {
                             super.onMapSharedElements(names, sharedEls);
                             if (names.size() == 0) {
-                                removeBackView();
                                 return;
                             }
                             String name = names.get(0);
 
                             if (shareExitMapView != null) {
-                                if (exitView != null) {
-                                    int location[] = new int[2];
-                                    shareExitMapView.getLocationInWindow(location);
-                                    int left = location[0] - rvLocation[0];
-                                    int top = location[1] - rvLocation[1];
-                                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) exitView.getLayoutParams();
-                                    params.leftMargin = left;
-                                    params.topMargin = top;
-                                    exitView.setLayoutParams(params);
-
-                                    exitView.setAlpha(1f);
-                                }
+                                startAlpha = shareExitMapView.getAlpha();
+                                startVisibility = shareExitMapView.getVisibility();
                                 sharedEls.put(name, shareExitMapView);
                             } else {
                                 sharedEls.clear();
@@ -630,85 +534,20 @@ public class OpenImage {
                 }
 
                 @Override
+                public void onTouchClose(boolean isTouchClose) {
+                    this.isTouchClose = isTouchClose;
+                }
+
+                @Override
                 public void onScrollPos(int pos) {
                     scrollRecyclerView(pos);
                 }
 
                 @Override
                 public List<ContentViewOriginModel> onGetContentViewOriginModel(int showPosition) {
-                    List<ContentViewOriginModel> list = new ArrayList<>();
-                    int firstPos = 0;
-                    int lastPos = 0;
-                    if (layoutManager instanceof LinearLayoutManager) {
-                        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-                        firstPos = linearLayoutManager.findFirstVisibleItemPosition();
-                        lastPos = linearLayoutManager.findLastVisibleItemPosition();
-                    } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-                        StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
-                        int[] firstVisibleItems = null;
-                        firstVisibleItems = staggeredGridLayoutManager.findFirstVisibleItemPositions(firstVisibleItems);
-                        int[] lastVisibleItems = null;
-                        lastVisibleItems = staggeredGridLayoutManager.findLastVisibleItemPositions(lastVisibleItems);
-                        if (firstVisibleItems == null || lastVisibleItems == null || firstVisibleItems.length == 0 || lastVisibleItems.length == 0) {
-                            return list;
-                        }
-                        firstPos = Integer.MAX_VALUE;
-                        lastPos = 0;
-                        for (int firstVisibleItem : firstVisibleItems) {
-                            if (firstVisibleItem < firstPos && firstVisibleItem >= 0) {
-                                firstPos = firstVisibleItem;
-                            }
-                        }
-                        for (int lastVisibleItem : lastVisibleItems) {
-                            if (lastVisibleItem > lastPos) {
-                                lastPos = lastVisibleItem;
-                            }
-                        }
-                        if (lastPos < firstPos) {
-                            return list;
-                        }
-
-                    }
-                    if (lastPos < 0 || firstPos < 0) {
-                        return list;
-                    }
-                    int viewPosition = openImageDetails.get(showPosition).viewPosition;
-                    for (int i = 0; i < openImageDetails.size(); i++) {
-                        OpenImageDetail openImageUrl = openImageDetails.get(i);
-                        if (openImageUrl.viewPosition >= firstPos && openImageUrl.viewPosition <= lastPos) {
-                            View view = layoutManager.findViewByPosition(openImageUrl.viewPosition);
-                            if (view == null) {
-                                continue;
-                            }
-                            ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl.openImageUrl, openImageUrl.dataPosition));
-                            if (shareView != null){
-                                shareView.setVisibility(View.VISIBLE);
-                                shareView.setAlpha(1f);
-
-                                boolean isAttachedToWindow = shareView.isAttachedToWindow();
-                                if (viewPosition == openImageUrl.viewPosition && isAttachedToWindow) {
-                                    int shareViewWidth = shareView.getWidth();
-                                    int shareViewHeight = shareView.getHeight();
-                                    ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
-                                    int location[] = new int[2];
-                                    shareView.getLocationInWindow(location);
-                                    contentViewOriginModel.left = location[0] - rvLocation[0];
-                                    contentViewOriginModel.top = location[1] - rvLocation[1];
-                                    contentViewOriginModel.width = shareViewWidth;
-                                    contentViewOriginModel.height = shareViewHeight;
-                                    contentViewOriginModel.dataPosition = openImageUrl.dataPosition;
-                                    contentViewOriginModel.viewPosition = openImageUrl.viewPosition;
-                                    if (transitionView == shareView) {
-                                        contentViewOriginModel.transitioned = true;
-                                    }
-                                    list.add(contentViewOriginModel);
-                                }
-                            }
-                        }
-                    }
-
-                    exitView = initSrcViews(rect, openImageDetails, list);
-                    return list;
+                    transitionView.setVisibility(transitionViewStartVisibility);
+                    transitionView.setAlpha(transitionViewStartAlpha);
+                    return null;
                 }
 
             });
@@ -772,14 +611,16 @@ public class OpenImage {
                     openImageDetail.viewPosition = viewIndex;
                     openImageDetails.add(openImageDetail);
                 }
-                viewIndex ++;
+                viewIndex++;
             }
             if (shareViewClick == null) {
                 throw new IllegalArgumentException("请确保是否调用了setClickPosition并且参数设置正确");
             }
             final View transitionView = shareViewClick;
+            final float transitionViewStartAlpha = transitionView.getAlpha();
+            final int transitionViewStartVisibility = transitionView.getVisibility();
             ImageLoadUtils.getInstance().setOnBackView(new ImageLoadUtils.OnBackView() {
-                ImageView exitView;
+                private boolean isTouchClose;
 
                 @Override
                 public boolean onBack(int showPosition) {
@@ -791,7 +632,6 @@ public class OpenImage {
                     int lastPos = absListView.getLastVisiblePosition();
 
                     if (lastPos < 0 || firstPos < 0) {
-                        removeBackView();
                         return false;
                     }
 
@@ -801,7 +641,7 @@ public class OpenImage {
                     View view = absListView.getChildAt(viewPosition - firstPos);
                     if (view != null) {
                         ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageDetail.openImageUrl, openImageDetail.dataPosition));
-                        if (shareView != null){
+                        if (shareView != null) {
                             if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
                                 shareView.setScaleType(srcImageViewScaleType);
                             }
@@ -814,32 +654,29 @@ public class OpenImage {
 
                     final View shareExitMapView = shareExitView;
                     activity.setExitSharedElementCallback(new SharedElementCallback() {
+                        private Float startAlpha;
+                        private Integer startVisibility;
+
                         @Override
-                        public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
-                            super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
-                            removeBackView();
+                        public Parcelable onCaptureSharedElementSnapshot(View sharedElement, Matrix viewToGlobalMatrix, RectF screenBounds) {
+                            Parcelable parcelable = super.onCaptureSharedElementSnapshot(sharedElement, viewToGlobalMatrix, screenBounds);
+                            if (isTouchClose && sharedElement != null && startAlpha != null) {
+                                sharedElement.setAlpha(startAlpha);
+                                sharedElement.setVisibility(startVisibility);
+                            }
+                            return parcelable;
                         }
 
                         @Override
                         public void onMapSharedElements(List<String> names, Map<String, View> sharedEls) {
                             super.onMapSharedElements(names, sharedEls);
                             if (names.size() == 0) {
-                                removeBackView();
                                 return;
                             }
                             String name = names.get(0);
                             if (shareExitMapView != null) {
-                                if (exitView != null) {
-                                    int location[] = new int[2];
-                                    shareExitMapView.getLocationInWindow(location);
-                                    int left = location[0] - rvLocation[0];
-                                    int top = location[1] - rvLocation[1];
-                                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) exitView.getLayoutParams();
-                                    params.leftMargin = left;
-                                    params.topMargin = top;
-                                    exitView.setLayoutParams(params);
-                                    exitView.setAlpha(1f);
-                                }
+                                startAlpha = shareExitMapView.getAlpha();
+                                startVisibility = shareExitMapView.getVisibility();
                                 sharedEls.put(name, shareExitMapView);
                             } else {
                                 sharedEls.clear();
@@ -849,6 +686,11 @@ public class OpenImage {
                         }
                     });
                     return shareExitMapView != null;
+                }
+
+                @Override
+                public void onTouchClose(boolean isTouchClose) {
+                    this.isTouchClose = isTouchClose;
                 }
 
                 @Override
@@ -864,55 +706,14 @@ public class OpenImage {
 
                 @Override
                 public List<ContentViewOriginModel> onGetContentViewOriginModel(int showPosition) {
-                    List<ContentViewOriginModel> list = new ArrayList<>();
-                    int firstPos = absListView.getFirstVisiblePosition();
-                    int lastPos = absListView.getLastVisiblePosition();
-                    if (lastPos < 0 || firstPos < 0) {
-                        return list;
-                    }
-                    int viewPosition = openImageDetails.get(showPosition).viewPosition;
-                    for (int i = 0; i < openImageDetails.size(); i++) {
-                        OpenImageDetail openImageUrl = openImageDetails.get(i);
-                        if (openImageUrl.viewPosition >= firstPos && openImageUrl.viewPosition <= lastPos) {
-                            View view = absListView.getChildAt(openImageUrl.viewPosition - firstPos);
-                            if (view == null) {
-                                continue;
-                            }
-                            ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl.openImageUrl, openImageUrl.dataPosition));
-                            if (shareView != null){
-                                shareView.setVisibility(View.VISIBLE);
-                                shareView.setAlpha(1f);
-
-                                boolean isAttachedToWindow = shareView.isAttachedToWindow();
-                                if (viewPosition == openImageUrl.viewPosition && isAttachedToWindow) {
-                                    int shareViewWidth = shareView.getWidth();
-                                    int shareViewHeight = shareView.getHeight();
-                                    ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
-                                    int location[] = new int[2];
-                                    shareView.getLocationInWindow(location);
-                                    contentViewOriginModel.left = location[0] - rvLocation[0];
-                                    contentViewOriginModel.top = location[1] - rvLocation[1];
-                                    contentViewOriginModel.width = shareViewWidth;
-                                    contentViewOriginModel.height = shareViewHeight;
-                                    contentViewOriginModel.dataPosition = openImageUrl.dataPosition;
-                                    contentViewOriginModel.viewPosition = openImageUrl.viewPosition;
-                                    if (transitionView == shareView) {
-                                        contentViewOriginModel.transitioned = true;
-                                    }
-                                    list.add(contentViewOriginModel);
-                                }
-                            }
-                        }
-                    }
-
-                    exitView = initSrcViews(rect, openImageDetails, list);
-                    return list;
+                    transitionView.setVisibility(transitionViewStartVisibility);
+                    transitionView.setAlpha(transitionViewStartAlpha);
+                    return null;
                 }
 
             });
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
             replenishImageUrl(openImageDetails);
-//            Bundle newOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, sharedEls).toBundle();
             Bundle newOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareViewClick, shareNameClick).toBundle();
             open(intent, newOptions);
         } else if (imageViews != null && imageViews.size() > 0) {
@@ -946,8 +747,11 @@ public class OpenImage {
                     shareNameClick = shareName;
                 }
             }
+            final View transitionView = shareViewClick;
+            final float transitionViewStartAlpha = transitionView.getAlpha();
+            final int transitionViewStartVisibility = transitionView.getVisibility();
             ImageLoadUtils.getInstance().setOnBackView(new ImageLoadUtils.OnBackView() {
-                ImageView exitView;
+                private boolean isTouchClose;
 
                 @Override
                 public boolean onBack(int showPosition) {
@@ -967,32 +771,29 @@ public class OpenImage {
                     }
                     final View shareExitMapView = shareExitView;
                     activity.setExitSharedElementCallback(new SharedElementCallback() {
+                        private Float startAlpha;
+                        private Integer startVisibility;
+
                         @Override
-                        public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
-                            super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
-                            removeBackView();
+                        public Parcelable onCaptureSharedElementSnapshot(View sharedElement, Matrix viewToGlobalMatrix, RectF screenBounds) {
+                            Parcelable parcelable = super.onCaptureSharedElementSnapshot(sharedElement, viewToGlobalMatrix, screenBounds);
+                            if (isTouchClose && sharedElement != null && startAlpha != null) {
+                                sharedElement.setAlpha(startAlpha);
+                                sharedElement.setVisibility(startVisibility);
+                            }
+                            return parcelable;
                         }
 
                         @Override
                         public void onMapSharedElements(List<String> names, Map<String, View> sharedEls) {
                             super.onMapSharedElements(names, sharedEls);
                             if (names.size() == 0) {
-                                removeBackView();
                                 return;
                             }
                             String name = names.get(0);
                             if (shareExitMapView != null) {
-                                if (exitView != null) {
-                                    int location[] = new int[2];
-                                    shareExitMapView.getLocationInWindow(location);
-                                    int left = location[0];
-                                    int top = location[1];
-                                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) exitView.getLayoutParams();
-                                    params.leftMargin = left;
-                                    params.topMargin = top;
-                                    exitView.setLayoutParams(params);
-                                    exitView.setAlpha(1f);
-                                }
+                                startAlpha = shareExitMapView.getAlpha();
+                                startVisibility = shareExitMapView.getVisibility();
                                 sharedEls.put(name, shareExitMapView);
                             } else {
                                 sharedEls.clear();
@@ -1004,6 +805,11 @@ public class OpenImage {
                 }
 
                 @Override
+                public void onTouchClose(boolean isTouchClose) {
+                    this.isTouchClose = isTouchClose;
+                }
+
+                @Override
                 public void onScrollPos(int pos) {
                     if (!isAutoScrollScanPosition) {
                         return;
@@ -1012,36 +818,14 @@ public class OpenImage {
 
                 @Override
                 public List<ContentViewOriginModel> onGetContentViewOriginModel(int showPosition) {
-                    ArrayList<ContentViewOriginModel> contentViewOriginModels = new ArrayList<>();
-                    for (int i = 0; i < openImageUrls.size(); i++) {
-                        ImageView shareView = imageViews.get(i);
-                        shareView.setVisibility(View.VISIBLE);
-                        shareView.setAlpha(1f);
-                        boolean isAttachedToWindow = shareView.isAttachedToWindow();
-
-                        if (showPosition == i && isAttachedToWindow) {
-                            int shareViewWidth = shareView.getWidth();
-                            int shareViewHeight = shareView.getHeight();
-                            int location[] = new int[2];
-                            shareView.getLocationInWindow(location);
-                            ContentViewOriginModel contentViewOriginModel = new ContentViewOriginModel();
-                            contentViewOriginModel.left = location[0];
-                            contentViewOriginModel.top = location[1];
-                            contentViewOriginModel.width = shareViewWidth;
-                            contentViewOriginModel.height = shareViewHeight;
-                            contentViewOriginModel.dataPosition = i;
-                            contentViewOriginModels.add(contentViewOriginModel);
-                        }
-
-                    }
-                    exitView = initSrcViews(null, openImageDetails, contentViewOriginModels);
-                    return contentViewOriginModels;
+                    transitionView.setVisibility(transitionViewStartVisibility);
+                    transitionView.setAlpha(transitionViewStartAlpha);
+                    return null;
                 }
 
             });
             replenishImageUrl(openImageDetails);
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
-//            Bundle newOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, sharedElements).toBundle();
             Bundle newOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareViewClick, shareNameClick).toBundle();
             open(intent, newOptions);
         } else {

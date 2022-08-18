@@ -86,7 +86,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         binding = ActivityViewpagerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         photosViewModel = new ViewModelProvider(this).get(PhotosViewModel.class);
-        photosViewModel.closeViewLiveData.observe(this, integer -> close());
+        photosViewModel.closeViewLiveData.observe(this, integer -> close(false));
         srcScaleType = (ImageView.ScaleType) getIntent().getSerializableExtra(OpenParams.SRC_SCALE_TYPE);
         openImageBeans = (List<OpenImageDetail>) getIntent().getSerializableExtra(OpenParams.IMAGES);
         clickPosition = getIntent().getIntExtra(OpenParams.CLICK_POSITION, 0);
@@ -201,7 +201,7 @@ public class ViewPagerActivity extends AppCompatActivity {
             @Override
             public void onTouchClose(float scale) {
                 photosViewModel.onTouchCloseLiveData.setValue(scale);
-                close();
+                close(true);
             }
         });
         setViewTransition();
@@ -399,7 +399,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            close();
+            close(false);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -454,7 +454,8 @@ public class ViewPagerActivity extends AppCompatActivity {
         }
     }
 
-    private void close() {
+    private void close(boolean isTouchClose) {
+        ImageLoadUtils.getInstance().getOnBackView().onTouchClose(isTouchClose);
         setExitView();
         finishAfterTransition();
     }
