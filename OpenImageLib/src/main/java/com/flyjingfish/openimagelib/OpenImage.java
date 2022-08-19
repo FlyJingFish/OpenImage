@@ -285,7 +285,7 @@ public class OpenImage {
      *
      * 设置微信补位效果，设置后当退出大图页面时，如果前一页面没有当前图片，则自动回到点击进来的那张图的位置
      * 开启后自动自动滚动效果关闭
-     * (只对传入RecyclerView, ListView, GridView 有效)
+     * (只对父容器是RecyclerView, ListView, GridView 时有效)
      * @param wechatExitFillInEffect 是否设置微信补位效果
      * @return
      */
@@ -701,6 +701,15 @@ public class OpenImage {
                         shareExitView = shareView;
                         backViewType = BackViewType.SHARE_NORMAL;
                     }
+
+                    if (shareExitView == null && wechatExitFillInEffect){
+                        ImageView wechatView = imageViews.get(clickViewPosition);
+                        if (wechatView != null && wechatView.isAttachedToWindow()) {
+                            shareExitView = wechatView;
+                            backViewType = BackViewType.SHARE_WECHAT;
+                        }
+                    }
+
                     activity.setExitSharedElementCallback(new ExitSharedElementCallback(context, srcImageViewScaleType, shareExitView));
                     return backViewType;
                 }
