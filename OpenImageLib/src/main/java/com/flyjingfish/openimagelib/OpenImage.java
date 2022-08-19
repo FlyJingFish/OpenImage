@@ -1,25 +1,15 @@
 package com.flyjingfish.openimagelib;
 
 import android.app.Activity;
-import android.app.SharedElementCallback;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Matrix;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.view.Window;
 import android.widget.AbsListView;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -28,7 +18,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.util.Pair;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
@@ -38,14 +27,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.flyjingfish.openimagelib.beans.ContentViewOriginModel;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
-import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
@@ -54,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class OpenImage {
