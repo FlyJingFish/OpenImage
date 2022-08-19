@@ -10,6 +10,16 @@
 
 <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" width="405px" height="842px" alt="show" /> 
 
+## 特色功能
+
+1，支持自定义图片加载引擎
+2，支持多种图片缓存模式
+3，支持聊天界面的查看大图功能
+4，支持微信聊天页面大图不在聊天页面时回到点击位置的效果
+5，支持全部 ImageView.ScaleType 显示模式的图片打开大图效果
+6，支持图片和视频混合数据
+7，支持传入包含图片的 RecyclerView ListView GridView 和 多个ImageView 的调用方式，傻瓜式调用，无需关心图片切换后该返回到哪个位置
+
 第一步. 根目录build.gradle
 
 ```gradle
