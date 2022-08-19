@@ -4,7 +4,7 @@
 
 ## 属于你的侵入性低的大图查看器，高仿微信完美的过渡动画，同样支持视频，本库本身不带这个功能，我写出来一个视频使用Demo，详看代码，另外您可以自定义加载图片的内核，例如Glide，Picasso或其他的
 
-### 强烈建议使用Glide效果更好，另外建议开启原图缓存 diskCacheStrategy(DiskCacheStrategy.ALL或DiskCacheStrategy.DATA) 本库设置为ImageDiskMode.CONTAIN_ORIGINAL
+### 建议使用Glide效果更好，另外建议开启原图缓存 diskCacheStrategy(DiskCacheStrategy.ALL或DiskCacheStrategy.DATA) 本库设置为ImageDiskMode.CONTAIN_ORIGINAL
 
 [点此下载apk](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk)
 
@@ -25,6 +25,10 @@
 6，支持图片和视频混合数据
 
 7，支持传入包含图片的 RecyclerView ListView GridView 和 多个ImageView 的调用方式，傻瓜式调用，无需关心图片切换后该返回到哪个位置
+
+8，支持大图和大图阅读模式
+
+9，支持自定义大图切换效果（PageTransformer）
 
 ## 使用步骤
 
