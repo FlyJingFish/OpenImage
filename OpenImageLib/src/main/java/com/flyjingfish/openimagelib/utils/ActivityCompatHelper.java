@@ -4,6 +4,7 @@ package com.flyjingfish.openimagelib.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.view.Window;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -64,5 +65,20 @@ public class ActivityCompatHelper {
             return false;
         }
         return activity.getSupportFragmentManager().getBackStackEntryCount() == MIN_FRAGMENT_COUNT;
+    }
+
+    public static Window getWindow(Context context) {
+        return getActivity(context).getWindow();
+    }
+
+    public static Activity getActivity(Context context) {
+        return (Activity) context;
+    }
+
+    public static FragmentActivity getFragmentActivity(Context context) {
+        if (context instanceof FragmentActivity) {
+            return (FragmentActivity) context;
+        }
+        return null;
     }
 }

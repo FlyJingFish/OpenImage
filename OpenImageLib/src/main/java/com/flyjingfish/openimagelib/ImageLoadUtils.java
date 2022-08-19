@@ -76,7 +76,7 @@ class ImageLoadUtils {
 
         void onScrollPos(int pos);
 
-        ContentViewOriginModel onGetContentViewOriginModel(int showPosition);
+        void onStartTouchScale(int showPosition);
     }
 
     OnBackView onBackView;

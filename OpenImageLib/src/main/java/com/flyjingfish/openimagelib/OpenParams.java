@@ -15,7 +15,6 @@ class OpenParams {
     public static final String OPEN_IMAGE_STYLE = "open_image_style";
     public static final String OPEN_COVER_DRAWABLE = "open_cover_drawable";
     public static final String OPEN_ANIM_TIME_MS = "open_anim_time_ms";
-    public static final String SRC_PARENT_RECT = "src_parent_rect";
     public static final String ON_SELECT_KEY = "onSelectMediaListenerKey";
     public static final String AUTO_SCROLL_SELECT = "auto_scroll_select";
     public static final String PAGE_TRANSFORMERS = "page_transformers";

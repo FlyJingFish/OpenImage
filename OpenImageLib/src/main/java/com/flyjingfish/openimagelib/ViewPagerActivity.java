@@ -209,7 +209,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     private void initSrcViews() {
-        ImageLoadUtils.getInstance().getOnBackView().onGetContentViewOriginModel(showPosition);
+        ImageLoadUtils.getInstance().getOnBackView().onStartTouchScale(showPosition);
     }
 
     private void setViewTransition() {

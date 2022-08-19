@@ -66,6 +66,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         }
 
         showLoading(loadingView);
+        loadingView.setVisibility(View.GONE);
         if (ImageLoadUtils.getInstance().getImageLoadSuccess(openImageBean.getImageUrl())
                 || imageDiskMode == ImageDiskMode.NONE) {
             smallCoverImageView.setVisibility(View.GONE);
@@ -212,6 +213,8 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                     });
                 }
             });
+        }else if (isLoading && isTransitionEnd){
+            loadingView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -228,6 +231,9 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             coverAnim.start();
         } else if (isInitImage && !isLoadSuccess) {
             setInitImageError();
+        }
+        if (isLoading){
+            loadingView.setVisibility(View.VISIBLE);
         }
         ViewCompat.setTransitionName(photoView, "");
         ViewCompat.setTransitionName(smallCoverImageView, "");
