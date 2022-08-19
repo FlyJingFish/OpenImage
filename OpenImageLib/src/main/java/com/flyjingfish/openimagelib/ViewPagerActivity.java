@@ -1,5 +1,6 @@
 package com.flyjingfish.openimagelib;
 
+import android.animation.ObjectAnimator;
 import android.app.SharedElementCallback;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.databinding.ActivityViewpagerBinding;
 import com.flyjingfish.openimagelib.databinding.IndicatorTextBinding;
+import com.flyjingfish.openimagelib.enums.BackViewType;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
@@ -62,6 +64,8 @@ public class ViewPagerActivity extends AppCompatActivity {
     private String textFormat = "%1$d/%2$d";
     private static final int INDICATOR_TEXT = 0;
     private static final int INDICATOR_IMAGE = 1;
+    private static final long WECHAT_DURATION = 250;
+    private static final long WECHAT_DURATION_END_ALPHA = 50;
     private ImageIndicatorAdapter imageIndicatorAdapter;
     private OpenImageOrientation orientation;
     private ImageDiskMode imageDiskMode;
@@ -73,6 +77,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     private boolean isAutoScrollSelect;
     private String openCoverKey;
     private String pageTransformersKey;
+    private ObjectAnimator wechatEffectAnim;
     //    private ArrayList<ContentViewOriginModel> contentViewOriginModels;
 
     @Override
@@ -378,6 +383,7 @@ public class ViewPagerActivity extends AppCompatActivity {
 
                 @Override
                 public void onTransitionCancel(Transition transition) {
+                    transition.removeListener(this);
                 }
 
                 @Override
@@ -404,6 +410,9 @@ public class ViewPagerActivity extends AppCompatActivity {
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
         ImageLoadUtils.getInstance().clearCoverDrawable(openCoverKey);
         ImageLoadUtils.getInstance().clearPageTransformers(pageTransformersKey);
+        if (wechatEffectAnim != null){
+            wechatEffectAnim.cancel();
+        }
     }
 
     @Override
@@ -416,8 +425,8 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     private void setExitView() {
-        boolean isShare = ImageLoadUtils.getInstance().getOnBackView().onBack(showPosition);
-        if (!isShare) {
+        BackViewType backViewType = ImageLoadUtils.getInstance().getOnBackView().onBack(showPosition);
+        if (backViewType == BackViewType.NO_SHARE) {
             ViewCompat.setTransitionName(binding.viewPager, "");
             setEnterSharedElementCallback(new SharedElementCallback() {
                 @Override
@@ -438,7 +447,9 @@ public class ViewPagerActivity extends AppCompatActivity {
         if (shareView != null) {
             ViewCompat.setTransitionName(binding.viewPager, "");
             ViewCompat.setTransitionName(shareView, OpenParams.SHARE_VIEW + showPosition);
-
+            if (backViewType == BackViewType.SHARE_WECHAT){
+                addWechatEffect(shareView);
+            }
             setEnterSharedElementCallback(new SharedElementCallback() {
                 @Override
                 public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
@@ -450,6 +461,9 @@ public class ViewPagerActivity extends AppCompatActivity {
                 }
             });
         } else {
+            if (backViewType == BackViewType.SHARE_WECHAT){
+                addWechatEffect(binding.viewPager);
+            }
             ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + showPosition);
             setEnterSharedElementCallback(new SharedElementCallback() {
                 @Override
@@ -458,7 +472,47 @@ public class ViewPagerActivity extends AppCompatActivity {
                     if (names.size() == 0) {
                         return;
                     }
-                    sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);
+                    sharedElements.put(OpenParams.SHARE_VIEW + showPosition, binding.viewPager);
+                }
+            });
+        }
+
+
+    }
+
+    private void addWechatEffect(View shareView){
+        Transition transition = getWindow().getSharedElementEnterTransition();
+        if (transition != null) {
+            wechatEffectAnim = ObjectAnimator.ofFloat(shareView,"alpha",1f,0f);
+            wechatEffectAnim.setStartDelay(WECHAT_DURATION - WECHAT_DURATION_END_ALPHA);
+            wechatEffectAnim.setDuration(WECHAT_DURATION_END_ALPHA);
+            transition.setDuration(WECHAT_DURATION);
+            transition.addListener(new Transition.TransitionListener() {
+                @Override
+                public void onTransitionStart(Transition transition) {
+                    wechatEffectAnim.start();
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                    transition.removeListener(this);
+                    wechatEffectAnim.cancel();
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+                    transition.removeListener(this);
+                    wechatEffectAnim.cancel();
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+                    wechatEffectAnim.pause();
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
+                    wechatEffectAnim.resume();
                 }
             });
         }

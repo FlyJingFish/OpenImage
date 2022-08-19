@@ -2,6 +2,8 @@ package com.flyjingfish.openimagelib;
 
 import android.view.View;
 
+import com.flyjingfish.openimagelib.enums.BackViewType;
+
 class ExitOnBackView implements ImageLoadUtils.OnBackView {
     private final View transitionView;
     private final float transitionViewStartAlpha;
@@ -20,8 +22,8 @@ class ExitOnBackView implements ImageLoadUtils.OnBackView {
     }
 
     @Override
-    public boolean onBack(int showPosition) {
-        return false;
+    public BackViewType onBack(int showPosition) {
+        return BackViewType.NO_SHARE;
     }
 
     @Override

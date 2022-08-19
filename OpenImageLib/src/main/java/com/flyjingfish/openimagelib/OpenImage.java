@@ -29,6 +29,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
+import com.flyjingfish.openimagelib.enums.BackViewType;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
@@ -62,6 +63,7 @@ public class OpenImage {
     private final HashSet<Integer> srcHeightCache = new HashSet<>();
     private boolean isStartActivity;
     private boolean isAutoScrollScanPosition = false;
+    private boolean wechatExitFillInEffect = false;
     private OnSelectMediaListener onSelectMediaListener;
     private SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet;
     private final List<ViewPager2.PageTransformer> pageTransformers = new ArrayList<>();
@@ -252,6 +254,7 @@ public class OpenImage {
     }
 
     /**
+     * 只对传入RecyclerView, ListView, GridView 有效
      * @param autoScrollScanPosition 自动滑向最后看的图片的位置
      * @return
      */
@@ -278,6 +281,19 @@ public class OpenImage {
         return this;
     }
 
+    /**
+     *
+     * 设置微信补位效果，设置后当退出大图页面时，如果前一页面没有当前图片，则自动回到点击进来的那张图的位置
+     * 开启后自动自动滚动效果关闭
+     * (只对传入RecyclerView, ListView, GridView 有效)
+     * @param wechatExitFillInEffect 是否设置微信补位效果
+     * @return
+     */
+    public OpenImage setWechatExitFillInEffect(boolean wechatExitFillInEffect) {
+        this.wechatExitFillInEffect = wechatExitFillInEffect;
+        return this;
+    }
+
     private void show4ParseData() {
         if (openImageUrls.size() == 0) {
             throw new IllegalArgumentException("请设置数据");
@@ -287,6 +303,9 @@ public class OpenImage {
         }
         if (clickDataPosition >= openImageUrls.size()) {
             throw new IllegalArgumentException("clickDataPosition不能 >= OpenImageUrl 的个数");
+        }
+        if (wechatExitFillInEffect){
+            isAutoScrollScanPosition = false;
         }
         Intent intent = new Intent(context, ViewPagerActivity.class);
 
@@ -398,12 +417,12 @@ public class OpenImage {
             ImageLoadUtils.getInstance().setOnBackView(new ExitOnBackView(shareViewClick) {
 
                 @Override
-                public boolean onBack(int showPosition) {
+                public BackViewType onBack(int showPosition) {
+                    BackViewType backViewType = BackViewType.NO_SHARE;
                     Activity activity = ActivityCompatHelper.getActivity(context);
                     if (activity == null) {
-                        return false;
+                        return BackViewType.NO_SHARE;
                     }
-
                     int firstPos = 0;
                     int lastPos = 0;
                     if (layoutManager instanceof LinearLayoutManager) {
@@ -417,7 +436,7 @@ public class OpenImage {
                         int[] lastVisibleItems = null;
                         lastVisibleItems = staggeredGridLayoutManager.findLastVisibleItemPositions(lastVisibleItems);
                         if (firstVisibleItems == null || lastVisibleItems == null || firstVisibleItems.length == 0 || lastVisibleItems.length == 0) {
-                            return false;
+                            return backViewType;
                         }
                         firstPos = Integer.MAX_VALUE;
                         lastPos = 0;
@@ -432,20 +451,23 @@ public class OpenImage {
                             }
                         }
                         if (lastPos < firstPos) {
-                            return false;
+                            return backViewType;
                         }
 
                     }
                     if (lastPos < 0 || firstPos < 0) {
-                        return false;
+                        return backViewType;
                     }
-
-                    OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
-                    int viewPosition = openImageDetail.viewPosition;
                     ImageView shareExitView = null;
+                    OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
+                    OpenImageUrl openImageUrl = openImageDetail.openImageUrl;
+                    int viewPosition = openImageDetail.viewPosition;
+                    int dataPosition = openImageDetail.dataPosition;
+
                     View view = layoutManager.findViewByPosition(viewPosition);
+
                     if (view != null) {
-                        ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageDetail.openImageUrl, openImageDetail.dataPosition));
+                        ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
                         if (shareView != null) {
                             if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
                                 shareView.setScaleType(srcImageViewScaleType);
@@ -453,11 +475,33 @@ public class OpenImage {
                             boolean isAttachedToWindow = shareView.isAttachedToWindow();
                             if (isAttachedToWindow) {
                                 shareExitView = shareView;
+                                backViewType = BackViewType.SHARE_NORMAL;
                             }
                         }
                     }
+
+                    if (shareExitView == null && wechatExitFillInEffect){
+                        openImageUrl = openImageUrls.get(clickDataPosition);
+                        viewPosition = clickViewPosition;
+                        dataPosition = clickDataPosition;
+                        View wechatView = layoutManager.findViewByPosition(viewPosition);
+                        if (wechatView != null) {
+                            ImageView shareView = wechatView.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
+                            if (shareView != null) {
+                                if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
+                                    shareView.setScaleType(srcImageViewScaleType);
+                                }
+                                boolean isAttachedToWindow = shareView.isAttachedToWindow();
+                                if (isAttachedToWindow) {
+                                    shareExitView = shareView;
+                                    backViewType = BackViewType.SHARE_WECHAT;
+                                }
+                            }
+                        }
+                    }
+
                     activity.setExitSharedElementCallback(new ExitSharedElementCallback(context, srcImageViewScaleType, shareExitView));
-                    return shareExitView != null;
+                    return backViewType;
                 }
 
                 @Override
@@ -532,24 +576,29 @@ public class OpenImage {
             ImageLoadUtils.getInstance().setOnBackView(new ExitOnBackView(shareViewClick) {
 
                 @Override
-                public boolean onBack(int showPosition) {
+                public BackViewType onBack(int showPosition) {
+                    BackViewType backViewType = BackViewType.NO_SHARE;
                     Activity activity = ActivityCompatHelper.getActivity(context);
                     if (activity == null) {
-                        return false;
+                        return backViewType;
                     }
                     int firstPos = absListView.getFirstVisiblePosition();
                     int lastPos = absListView.getLastVisiblePosition();
 
                     if (lastPos < 0 || firstPos < 0) {
-                        return false;
+                        return backViewType;
                     }
 
-                    OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
-                    int viewPosition = openImageDetail.viewPosition;
                     ImageView shareExitView = null;
+
+                    OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
+                    OpenImageUrl openImageUrl = openImageDetail.openImageUrl;
+                    int viewPosition = openImageDetail.viewPosition;
+                    int dataPosition = openImageDetail.dataPosition;
+
                     View view = absListView.getChildAt(viewPosition - firstPos);
                     if (view != null) {
-                        ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageDetail.openImageUrl, openImageDetail.dataPosition));
+                        ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
                         if (shareView != null) {
                             if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
                                 shareView.setScaleType(srcImageViewScaleType);
@@ -557,12 +606,34 @@ public class OpenImage {
                             boolean isAttachedToWindow = shareView.isAttachedToWindow();
                             if (isAttachedToWindow) {
                                 shareExitView = shareView;
+                                backViewType = BackViewType.SHARE_NORMAL;
+                            }
+                        }
+                    }
+
+                    if (shareExitView == null && wechatExitFillInEffect){
+                        openImageUrl = openImageUrls.get(clickDataPosition);
+                        viewPosition = clickViewPosition;
+                        dataPosition = clickDataPosition;
+
+                        View wechatView = absListView.getChildAt(viewPosition - firstPos);
+                        if (wechatView != null) {
+                            ImageView shareView = wechatView.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
+                            if (shareView != null) {
+                                if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
+                                    shareView.setScaleType(srcImageViewScaleType);
+                                }
+                                boolean isAttachedToWindow = shareView.isAttachedToWindow();
+                                if (isAttachedToWindow) {
+                                    shareExitView = shareView;
+                                    backViewType = BackViewType.SHARE_WECHAT;
+                                }
                             }
                         }
                     }
 
                     activity.setExitSharedElementCallback(new ExitSharedElementCallback(context, srcImageViewScaleType, shareExitView));
-                    return shareExitView != null;
+                    return backViewType;
                 }
 
                 @Override
@@ -618,18 +689,20 @@ public class OpenImage {
             ImageLoadUtils.getInstance().setOnBackView(new ExitOnBackView(shareViewClick) {
 
                 @Override
-                public boolean onBack(int showPosition) {
+                public BackViewType onBack(int showPosition) {
+                    BackViewType backViewType = BackViewType.NO_SHARE;
                     Activity activity = ActivityCompatHelper.getActivity(context);
                     if (activity == null) {
-                        return false;
+                        return backViewType;
                     }
                     ImageView shareExitView = null;
                     ImageView shareView = imageViews.get(showPosition);
                     if (shareView != null && shareView.isAttachedToWindow()) {
                         shareExitView = shareView;
+                        backViewType = BackViewType.SHARE_NORMAL;
                     }
                     activity.setExitSharedElementCallback(new ExitSharedElementCallback(context, srcImageViewScaleType, shareExitView));
-                    return shareExitView != null;
+                    return backViewType;
                 }
 
             });

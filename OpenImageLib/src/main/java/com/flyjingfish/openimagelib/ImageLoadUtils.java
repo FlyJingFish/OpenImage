@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.openimagelib.enums.BackViewType;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 
@@ -69,7 +70,7 @@ class ImageLoadUtils {
     }
 
     public interface OnBackView {
-        boolean onBack(int showPosition);
+        BackViewType onBack(int showPosition);
 
         void onTouchClose(boolean isTouchClose);
 
