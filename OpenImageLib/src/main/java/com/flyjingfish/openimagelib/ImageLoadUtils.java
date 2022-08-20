@@ -4,8 +4,11 @@ import android.graphics.drawable.Drawable;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.openimagelib.beans.MoreViewOption;
 import com.flyjingfish.openimagelib.enums.BackViewType;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
+import com.flyjingfish.openimagelib.listener.OnItemClickListener;
+import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 
 import java.util.HashMap;
@@ -18,6 +21,9 @@ class ImageLoadUtils {
     private HashMap<String, Drawable> coverDrawableHashMap = new HashMap<>();
     private HashMap<String, OnSelectMediaListener> onSelectMediaListenerHashMap = new HashMap<>();
     private HashMap<String, List<ViewPager2.PageTransformer>> pageTransformerMap = new HashMap<>();
+    private HashMap<String, OnItemClickListener> onItemClickListenerHashMap = new HashMap<>();
+    private HashMap<String, OnItemLongClickListener> onItemLongClickListenerHashMap = new HashMap<>();
+    private HashMap<String, List<MoreViewOption>> moreViewOptionHashMap = new HashMap<>();
 
     private ImageLoadUtils() {
     }
@@ -111,5 +117,41 @@ class ImageLoadUtils {
 
     public void clearPageTransformers(String key) {
         pageTransformerMap.remove(key);
+    }
+
+    public OnItemClickListener getOnItemClickListener(String key) {
+        return onItemClickListenerHashMap.get(key);
+    }
+
+    public void setOnItemClickListener(String key, OnItemClickListener onItemClickListener) {
+        this.onItemClickListenerHashMap.put(key, onItemClickListener);
+    }
+
+    public void clearOnItemClickListener(String key) {
+        onItemClickListenerHashMap.remove(key);
+    }
+
+    public OnItemLongClickListener getOnItemLongClickListener(String key) {
+        return onItemLongClickListenerHashMap.get(key);
+    }
+
+    public void setOnItemLongClickListener(String key, OnItemLongClickListener onItemLongClickListener) {
+        this.onItemLongClickListenerHashMap.put(key, onItemLongClickListener);
+    }
+
+    public void clearOnItemLongClickListener(String key) {
+        this.onItemLongClickListenerHashMap.remove(key);
+    }
+
+    public List<MoreViewOption> getMoreViewOption(String key) {
+        return moreViewOptionHashMap.get(key);
+    }
+
+    public void setMoreViewOption(String key, List<MoreViewOption> moreViewOptions) {
+        this.moreViewOptionHashMap.put(key, moreViewOptions);
+    }
+
+    public void clearMoreViewOption(String key) {
+        this.moreViewOptionHashMap.remove(key);
     }
 }

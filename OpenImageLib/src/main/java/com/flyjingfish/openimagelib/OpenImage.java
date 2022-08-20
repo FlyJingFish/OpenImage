@@ -10,11 +10,13 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 import androidx.core.app.ActivityOptionsCompat;
@@ -27,13 +29,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.openimagelib.beans.MoreViewOption;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.enums.BackViewType;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
+import com.flyjingfish.openimagelib.listener.OnItemClickListener;
+import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
+import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
@@ -58,17 +64,21 @@ public class OpenImage {
     private ImageView.ScaleType srcImageViewScaleType;
     private boolean autoSetScaleType;
     private ImageDiskMode imageDiskMode = ImageDiskMode.CONTAIN_ORIGINAL;
-    private ItemLoadHelper itemLoadHelper;
     private final HashSet<Integer> srcWidthCache = new HashSet<>();
     private final HashSet<Integer> srcHeightCache = new HashSet<>();
     private boolean isStartActivity;
     private boolean isAutoScrollScanPosition = false;
     private boolean wechatExitFillInEffect = false;
-    private OnSelectMediaListener onSelectMediaListener;
     private SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet;
-    private final List<ViewPager2.PageTransformer> pageTransformers = new ArrayList<>();
     private int leftRightShowWidthDp;
     public static boolean isCanOpen = true;
+    private String selectKey;
+    private String pageTransformersKey;
+    private String onItemClickListenerKey;
+    private String onItemLongClickListenerKey;
+    private String itemLoadHelperKey;
+    private boolean disableClickClose;
+    private List<MoreViewOption> moreViewOptions = new ArrayList<>();
 
     public static OpenImage with(Context context) {
         return new OpenImage(context);
@@ -222,7 +232,8 @@ public class OpenImage {
      * @return
      */
     public OpenImage setItemLoadHelper(ItemLoadHelper itemLoadHelper) {
-        this.itemLoadHelper = itemLoadHelper;
+        itemLoadHelperKey = UUID.randomUUID().toString();
+        ImageLoadUtils.getInstance().setItemLoadHelper(itemLoadHelperKey, itemLoadHelper);
         return this;
     }
 
@@ -249,12 +260,14 @@ public class OpenImage {
      * @return
      */
     public OpenImage setOnSelectMediaListener(OnSelectMediaListener onSelectMediaListener) {
-        this.onSelectMediaListener = onSelectMediaListener;
+        selectKey = UUID.randomUUID().toString();
+        ImageLoadUtils.getInstance().setOnSelectMediaListener(selectKey, onSelectMediaListener);
         return this;
     }
 
     /**
      * 只对传入RecyclerView, ListView, GridView 有效
+     *
      * @param autoScrollScanPosition 自动滑向最后看的图片的位置
      * @return
      */
@@ -268,7 +281,8 @@ public class OpenImage {
      * @return
      */
     public OpenImage addPageTransformer(ViewPager2.PageTransformer... pageTransformer) {
-        pageTransformers.addAll(Arrays.asList(pageTransformer));
+        pageTransformersKey = UUID.randomUUID().toString();
+        ImageLoadUtils.getInstance().setPageTransformers(pageTransformersKey, new ArrayList<>(Arrays.asList(pageTransformer)));
         return this;
     }
 
@@ -282,10 +296,10 @@ public class OpenImage {
     }
 
     /**
-     *
      * 设置微信补位效果，设置后当退出大图页面时，如果前一页面没有当前图片，则自动回到点击进来的那张图的位置
      * 开启后自动自动滚动效果关闭
      * (只对父容器是RecyclerView, ListView, GridView 时有效)
+     *
      * @param wechatExitFillInEffect 是否设置微信补位效果
      * @return
      */
@@ -294,40 +308,93 @@ public class OpenImage {
         return this;
     }
 
+    /**
+     * 设置点击图片监听
+     *
+     * @param onItemClickListener
+     * @return
+     */
+    public OpenImage setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        onItemClickListenerKey = UUID.randomUUID().toString();
+        ImageLoadUtils.getInstance().setOnItemClickListener(onItemClickListenerKey, onItemClickListener);
+        return this;
+    }
+
+    /**
+     * 设置长按图片监听
+     *
+     * @param onItemLongClickListener
+     * @return
+     */
+    public OpenImage setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        onItemLongClickListenerKey = UUID.randomUUID().toString();
+        ImageLoadUtils.getInstance().setOnItemLongClickListener(onItemLongClickListenerKey, onItemLongClickListener);
+        return this;
+    }
+
+    /**
+     * 禁用点击图片关闭页面功能
+     *
+     * @return
+     */
+    public OpenImage disableClickClose() {
+        disableClickClose = true;
+        return this;
+    }
+
+    /**
+     * 添加View 到大图页面，此方法可多次调用，添加多个View
+     * @param layoutRes                添加的图片xml id
+     * @param layoutParams             要添加到页面布局的参数
+     * @param onLoadViewFinishListener 加载完毕View后回调
+     * @return
+     */
+    public OpenImage addMoreView(@LayoutRes int layoutRes, @NonNull FrameLayout.LayoutParams layoutParams, OnLoadViewFinishListener onLoadViewFinishListener) {
+        MoreViewOption moreViewOption = new MoreViewOption(layoutRes, layoutParams, onLoadViewFinishListener);
+        moreViewOptions.add(moreViewOption);
+        return this;
+    }
+
     private void show4ParseData() {
         if (openImageUrls.size() == 0) {
             throw new IllegalArgumentException("请设置数据");
         }
-        if (itemLoadHelper == null) {
+        if (itemLoadHelperKey == null) {
             throw new IllegalArgumentException("请设置ItemLoadHelper");
         }
         if (clickDataPosition >= openImageUrls.size()) {
             throw new IllegalArgumentException("clickDataPosition不能 >= OpenImageUrl 的个数");
         }
-        if (wechatExitFillInEffect){
+        if (wechatExitFillInEffect) {
             isAutoScrollScanPosition = false;
         }
         Intent intent = new Intent(context, ViewPagerActivity.class);
 
         intent.putExtra(OpenParams.CLICK_POSITION, clickDataPosition);
-        if (onSelectMediaListener != null) {
-            String selectKey = UUID.randomUUID().toString();
-            ImageLoadUtils.getInstance().setOnSelectMediaListener(selectKey, onSelectMediaListener);
+        if (selectKey != null) {
             intent.putExtra(OpenParams.ON_SELECT_KEY, selectKey);
         }
-        if (pageTransformers.size() > 0) {
-            String pageTransformersKey = UUID.randomUUID().toString();
-            ImageLoadUtils.getInstance().setPageTransformers(pageTransformersKey, pageTransformers);
+        if (pageTransformersKey != null) {
             intent.putExtra(OpenParams.PAGE_TRANSFORMERS, pageTransformersKey);
         }
+        if (onItemClickListenerKey != null) {
+            intent.putExtra(OpenParams.ON_ITEM_CLICK_KEY, onItemClickListenerKey);
+        }
+        if (onItemLongClickListenerKey != null) {
+            intent.putExtra(OpenParams.ON_ITEM_LONG_CLICK_KEY, onItemLongClickListenerKey);
+        }
+        if (moreViewOptions.size() > 0) {
+            String moreViewOptionKey = UUID.randomUUID().toString();
+            intent.putExtra(OpenParams.MORE_VIEW_KEY, moreViewOptionKey);
+            ImageLoadUtils.getInstance().setMoreViewOption(moreViewOptionKey,moreViewOptions);
+        }
+        intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);
         intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, OpenImageConfig.getInstance().isDisEnableTouchClose());
         intent.putExtra(OpenParams.SRC_SCALE_TYPE, srcImageViewScaleType);
         intent.putExtra(OpenParams.IMAGE_DISK_MODE, imageDiskMode);
         intent.putExtra(OpenParams.ERROR_RES_ID, errorResId);
-        String key = UUID.randomUUID().toString();
-        ImageLoadUtils.getInstance().setItemLoadHelper(key, itemLoadHelper);
-        intent.putExtra(OpenParams.ITEM_LOAD_KEY, key);
+        intent.putExtra(OpenParams.ITEM_LOAD_KEY, itemLoadHelperKey);
         intent.putExtra(OpenParams.TOUCH_CLOSE_SCALE, OpenImageConfig.getInstance().getTouchCloseScale());
         intent.putExtra(OpenParams.OPEN_IMAGE_STYLE, openImageStyle);
         intent.putExtra(OpenParams.OPEN_ANIM_TIME_MS, openPageAnimTimeMs);
@@ -480,7 +547,7 @@ public class OpenImage {
                         }
                     }
 
-                    if (shareExitView == null && wechatExitFillInEffect){
+                    if (shareExitView == null && wechatExitFillInEffect) {
                         openImageUrl = openImageUrls.get(clickDataPosition);
                         viewPosition = clickViewPosition;
                         dataPosition = clickDataPosition;
@@ -611,7 +678,7 @@ public class OpenImage {
                         }
                     }
 
-                    if (shareExitView == null && wechatExitFillInEffect){
+                    if (shareExitView == null && wechatExitFillInEffect) {
                         openImageUrl = openImageUrls.get(clickDataPosition);
                         viewPosition = clickViewPosition;
                         dataPosition = clickDataPosition;
@@ -702,7 +769,7 @@ public class OpenImage {
                         backViewType = BackViewType.SHARE_NORMAL;
                     }
 
-                    if (shareExitView == null && wechatExitFillInEffect){
+                    if (shareExitView == null && wechatExitFillInEffect) {
                         ImageView wechatView = imageViews.get(clickViewPosition);
                         if (wechatView != null && wechatView.isAttachedToWindow()) {
                             shareExitView = wechatView;

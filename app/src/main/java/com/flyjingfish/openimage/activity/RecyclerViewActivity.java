@@ -2,10 +2,12 @@ package com.flyjingfish.openimage.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.flyjingfish.openimage.DataUtils;
+import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimage.bean.ImageEntity;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.R;
@@ -33,12 +36,9 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class RecyclerViewActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
-    public static ExecutorService cThreadPool = Executors.newFixedThreadPool(5);;
+    ;
     private ActivityRecyclerviewBinding binding;
 
     @Override
@@ -61,12 +61,12 @@ public class RecyclerViewActivity extends AppCompatActivity {
         });
         binding.btnH.setOnClickListener(v -> {
             setSelect(1);
-            binding.rv.rv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+            binding.rv.rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
             loadData();
         });
         binding.btnG.setOnClickListener(v -> {
             setSelect(2);
-            binding.rv.rv.setLayoutManager(new GridLayoutManager(this,2));
+            binding.rv.rv.setLayoutManager(new GridLayoutManager(this, 2));
             loadData();
         });
         binding.btnP.setOnClickListener(v -> {
@@ -78,7 +78,8 @@ public class RecyclerViewActivity extends AppCompatActivity {
     }
 
     private int layoutType;
-    private void setSelect(int pos){
+
+    private void setSelect(int pos) {
         layoutType = pos;
         binding.btnV.setSelected(pos == 0);
         binding.btnH.setSelected(pos == 1);
@@ -87,7 +88,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        cThreadPool.submit(() -> {
+        MyApplication.cThreadPool.submit(() -> {
             List<ImageEntity> datas = new ArrayList<>();
 
             String response1 = DataUtils.getFromAssets(this, "listview_data.json");
@@ -111,55 +112,60 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
     }
 
-    private class RvAdapter extends RecyclerView.Adapter<RvAdapter.MyHolder>{
+    private class RvAdapter extends RecyclerView.Adapter<RvAdapter.MyHolder> {
         List<ImageEntity> datas;
 
         public RvAdapter(List<ImageEntity> datas) {
             this.datas = datas;
         }
+
         @NonNull
         @Override
         public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view;
-            if (layoutType == 3){
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_staggered,parent,false);
-            }else {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listview,parent,false);
+            if (layoutType == 3) {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_staggered, parent, false);
+            } else {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listview, parent, false);
             }
             return new RvAdapter.MyHolder(view);
         }
 
         @Override
         public void onBindViewHolder(@NonNull MyHolder holder, int position) {
-            if (layoutType == 1){
+            if (layoutType == 1) {
                 ViewGroup.LayoutParams layoutParams = holder.ivImage.getLayoutParams();
-                layoutParams.width = (int) ScreenUtils.dp2px(RecyclerViewActivity.this,100);
-                layoutParams.height = (int) ScreenUtils.dp2px(RecyclerViewActivity.this,100);
-            }else if (layoutType == 0 || layoutType == 2){
+                layoutParams.width = (int) ScreenUtils.dp2px(RecyclerViewActivity.this, 100);
+                layoutParams.height = (int) ScreenUtils.dp2px(RecyclerViewActivity.this, 100);
+            } else if (layoutType == 0 || layoutType == 2) {
                 ViewGroup.LayoutParams layoutParams = holder.ivImage.getLayoutParams();
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                layoutParams.height = (int) ScreenUtils.dp2px(RecyclerViewActivity.this,220);
+                layoutParams.height = (int) ScreenUtils.dp2px(RecyclerViewActivity.this, 220);
             }
-            if (layoutType == 3){
-                MyImageLoader.getInstance().load(holder.ivImage,datas.get(position).getCoverImageUrl(),R.mipmap.img_load_placeholder,R.mipmap.img_load_placeholder);
-            }else {
-                MyImageLoader.getInstance().load(holder.ivImage,datas.get(position).getCoverImageUrl(),R.mipmap.img_load_placeholder,R.mipmap.img_load_placeholder);
+            if (layoutType == 3) {
+                MyImageLoader.getInstance().load(holder.ivImage, datas.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+            } else {
+                MyImageLoader.getInstance().load(holder.ivImage, datas.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
 
             }
             holder.ivImage.setOnClickListener(v -> {
-                OpenImage.with(RecyclerViewActivity.this).setClickRecyclerView(binding.rv.rv,new SourceImageViewIdGet() {
+                FrameLayout.LayoutParams layoutParams1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams1.gravity = Gravity.END;
+                FrameLayout.LayoutParams layoutParams2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams2.gravity = Gravity.START|Gravity.BOTTOM;
+                OpenImage.with(RecyclerViewActivity.this).setClickRecyclerView(binding.rv.rv, new SourceImageViewIdGet() {
                     @Override
                     public int getImageViewId(OpenImageUrl data, int position) {
                         return R.id.iv_image;
                     }
-                }) .setAutoScrollScanPosition(true)
-                        .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+                }).setAutoScrollScanPosition(true)
+                        .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
                         .setImageUrlList(datas).setImageDiskMode(MyImageLoader.imageDiskMode)
                         .setItemLoadHelper(new ItemLoadHelper() {
                             @Override
                             public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
 
-                                MyImageLoader.getInstance().load(imageView, imageUrl,overrideWidth,overrideHeight, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder, new MyImageLoader.OnImageLoadListener() {
+                                MyImageLoader.getInstance().load(imageView, imageUrl, overrideWidth, overrideHeight, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder, new MyImageLoader.OnImageLoadListener() {
                                     @Override
                                     public void onSuccess() {
                                         onLoadCoverImageListener.onLoadImageSuccess();
@@ -182,8 +188,9 @@ public class RecyclerViewActivity extends AppCompatActivity {
             return datas.size();
         }
 
-        class MyHolder extends RecyclerView.ViewHolder{
+        class MyHolder extends RecyclerView.ViewHolder {
             ImageView ivImage;
+
             public MyHolder(@NonNull View itemView) {
                 super(itemView);
                 ivImage = itemView.findViewById(R.id.iv_image);

@@ -29,9 +29,6 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setAllowEnterTransitionOverlap(true);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        //初始化
-        OpenImageConfig.getInstance().setBigImageHelper(new BigImageHelperImpl());
-        OpenImageConfig.getInstance().setVideoFragmentCreate(new VideoFragmentCreateImpl());
         if (MyImageLoader.loader_os_type == MyImageLoader.GLIDE){
             binding.rbGlide.setChecked(true);
         }else {

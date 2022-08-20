@@ -114,7 +114,7 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
     }
 
     protected void toPlay4Resume(){
-        binding.videoPlayer.playUrl(openImageBean.getVideoUrl());
+        binding.videoPlayer.playUrl(openImageUrl.getVideoUrl());
         binding.videoPlayer.startPlayLogic();
     }
 

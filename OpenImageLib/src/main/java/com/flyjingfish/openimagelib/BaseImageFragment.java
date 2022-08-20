@@ -6,17 +6,15 @@ import android.animation.ObjectAnimator;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 
-import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
@@ -54,42 +52,41 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         loadingView = getLoadingView();
         smallCoverImageView.setSrcScaleType(srcScaleType);
         photoView.setSrcScaleType(srcScaleType);
-        photoView.setStartWidth(openImageBean.srcWidth);
-        photoView.setStartHeight(openImageBean.srcHeight);
-        smallCoverImageView.setStartWidth(openImageBean.srcWidth);
-        smallCoverImageView.setStartHeight(openImageBean.srcHeight);
+        photoView.setStartWidth(imageDetail.srcWidth);
+        photoView.setStartHeight(imageDetail.srcHeight);
+        smallCoverImageView.setStartWidth(imageDetail.srcWidth);
+        smallCoverImageView.setStartHeight(imageDetail.srcHeight);
         smallCoverImageView.setZoomable(false);
-        if (openImageBean.getType() != MediaType.IMAGE){
+        if (imageDetail.getType() != MediaType.IMAGE) {
             photoView.setZoomable(false);
-        }else {
+        } else {
             photoView.setZoomable(true);
         }
 
         showLoading(loadingView);
         loadingView.setVisibility(View.GONE);
-        if (ImageLoadUtils.getInstance().getImageLoadSuccess(openImageBean.getImageUrl())
+        if (ImageLoadUtils.getInstance().getImageLoadSuccess(imageDetail.getImageUrl())
                 || imageDiskMode == ImageDiskMode.NONE) {
             smallCoverImageView.setVisibility(View.GONE);
             photoView.setAlpha(1f);
-        } else if (imageDiskMode == ImageDiskMode.CONTAIN_ORIGINAL){
-            if (TextUtils.equals(openImageBean.getImageUrl(),openImageBean.getCoverImageUrl())){
+        } else if (imageDiskMode == ImageDiskMode.CONTAIN_ORIGINAL) {
+            if (TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl())) {
                 smallCoverImageView.setVisibility(View.GONE);
                 photoView.setAlpha(1f);
-            }else {
-                Drawable drawable = ImageLoadUtils.getInstance().getCoverDrawable(requireActivity().getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE));
-                if (clickPosition == showPosition && drawable != null) {
-                    smallCoverImageView.setImageDrawable(drawable);
-                }else {
-                    OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), openImageBean.getCoverImageUrl(), smallCoverImageView);
+            } else {
+                if (clickPosition == showPosition && coverDrawable != null) {
+                    smallCoverImageView.setImageDrawable(coverDrawable);
+                } else {
+                    OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), imageDetail.getCoverImageUrl(), smallCoverImageView);
                 }
                 smallCoverImageView.setAlpha(1f);
                 photoView.setAlpha(0f);
             }
-        } else if (imageDiskMode == ImageDiskMode.RESULT && openImageBean.srcWidth != 0 && openImageBean.srcHeight != 0) {
+        } else if (imageDiskMode == ImageDiskMode.RESULT && imageDetail.srcWidth != 0 && imageDetail.srcHeight != 0) {
             ViewGroup.LayoutParams layoutParams = smallCoverImageView.getLayoutParams();
             if (srcScaleType == ImageView.ScaleType.CENTER_CROP || srcScaleType == ImageView.ScaleType.FIT_XY) {
-                layoutParams.width = openImageBean.srcWidth;
-                layoutParams.height = openImageBean.srcHeight;
+                layoutParams.width = imageDetail.srcWidth;
+                layoutParams.height = imageDetail.srcHeight;
                 smallCoverImageView.setLayoutParams(layoutParams);
                 smallCoverImageView.setScaleType(srcScaleType);
             } else if (srcScaleType == ImageView.ScaleType.CENTER) {
@@ -100,28 +97,29 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             smallCoverImageView.setVisibility(View.VISIBLE);
             smallCoverImageView.setAlpha(1f);
             photoView.setAlpha(0f);
-            itemLoadHelper.loadImage(requireContext(), openImageBean.openImageUrl, openImageBean.getCoverImageUrl(), smallCoverImageView, openImageBean.srcWidth, openImageBean.srcHeight, new OnLoadCoverImageListener() {
-                @Override
-                public void onLoadImageSuccess() {
-                }
-
-                @Override
-                public void onLoadImageFailed() {
-                    Drawable drawable = smallCoverImageView.getDrawable();
-                    if (photoView.getDrawable() == null && drawable != null){
-                        photoView.setImageDrawable(drawable);
+            if (itemLoadHelper != null) {
+                itemLoadHelper.loadImage(requireContext(), imageDetail.openImageUrl, imageDetail.getCoverImageUrl(), smallCoverImageView, imageDetail.srcWidth, imageDetail.srcHeight, new OnLoadCoverImageListener() {
+                    @Override
+                    public void onLoadImageSuccess() {
                     }
-                }
-            });
-        }else {
+
+                    @Override
+                    public void onLoadImageFailed() {
+                        Drawable drawable = smallCoverImageView.getDrawable();
+                        if (photoView.getDrawable() == null && drawable != null) {
+                            photoView.setImageDrawable(drawable);
+                        }
+                    }
+                });
+            }
+        } else {
             smallCoverImageView.setVisibility(View.GONE);
             photoView.setAlpha(1f);
         }
-        Drawable drawable = ImageLoadUtils.getInstance().getCoverDrawable(requireActivity().getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE));
-        if (clickPosition == showPosition && TextUtils.equals(openImageBean.getImageUrl(),openImageBean.getCoverImageUrl()) && drawable != null) {
-            onImageSuccess(drawable);
-        }else {
-            OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), openImageBean.getImageUrl(), new OnLoadBigImageListener() {
+        if (clickPosition == showPosition && TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl()) && coverDrawable != null) {
+            onImageSuccess(coverDrawable);
+        } else {
+            OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), imageDetail.getImageUrl(), new OnLoadBigImageListener() {
                 @Override
                 public void onLoadImageSuccess(Drawable drawable) {
                     onImageSuccess(drawable);
@@ -140,17 +138,26 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                 }
             });
         }
-        photoView.setOnClickListener(view1 -> {
-            close();
-        });
+        if (!disableClickClose) {
+            photoView.setOnClickListener(view1 -> close());
+        }
+        if (onItemClickListener != null) {
+            photoView.setOnClickListener(v -> onItemClickListener.onItemClick(this, openImageUrl, showPosition));
+        }
+        if (onItemLongClickListener != null) {
+            photoView.setOnLongClickListener(v -> {
+                onItemLongClickListener.onItemLongClick(this, openImageUrl, showPosition);
+                return true;
+            });
+        }
     }
 
     private void onImageSuccess(Drawable drawable) {
         mHandler.post(() -> {
             photoView.setImageDrawable(drawable);
             int imageWidth = drawable.getIntrinsicWidth(), imageHeight = drawable.getIntrinsicHeight();
-            if (!ImageLoadUtils.getInstance().getImageLoadSuccess(openImageBean.getImageUrl()) && imageDiskMode == ImageDiskMode.RESULT) {
-                initCoverAnim(imageWidth, imageHeight,true);
+            if (!ImageLoadUtils.getInstance().getImageLoadSuccess(imageDetail.getImageUrl()) && imageDiskMode == ImageDiskMode.RESULT) {
+                initCoverAnim(imageWidth, imageHeight, true);
                 if (isTransitionEnd && coverAnim != null) {
                     coverAnim.start();
                 } else if (!isTransitionEnd) {
@@ -170,15 +177,16 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
 
             isLoadSuccess = true;
             isInitImage = true;
-            ImageLoadUtils.getInstance().setImageLoadSuccess(openImageBean.getImageUrl());
+            ImageLoadUtils.getInstance().setImageLoadSuccess(imageDetail.getImageUrl());
         });
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        if (!isLoading && !isLoadSuccess && isInitImage){
+        if (!isLoading && !isLoadSuccess && isInitImage) {
             showLoading(loadingView);
-            OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), openImageBean.getImageUrl(), new OnLoadBigImageListener() {
+            OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), imageDetail.getImageUrl(), new OnLoadBigImageListener() {
                 @Override
                 public void onLoadImageSuccess(Drawable drawable) {
                     mHandler.post(() -> {
@@ -187,7 +195,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                         hideLoading(loadingView);
                         isLoadSuccess = true;
                         isInitImage = true;
-                        ImageLoadUtils.getInstance().setImageLoadSuccess(openImageBean.getImageUrl());
+                        ImageLoadUtils.getInstance().setImageLoadSuccess(imageDetail.getImageUrl());
                     });
 
                 }
@@ -200,7 +208,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                             photoView.setImageResource(errorResId);
                         } else {
                             Drawable drawable = smallCoverImageView.getDrawable();
-                            if (drawable != null){
+                            if (drawable != null) {
                                 photoView.setImageDrawable(drawable);
                             }
                         }
@@ -213,14 +221,14 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                     });
                 }
             });
-        }else if (isLoading && isTransitionEnd){
+        } else if (isLoading && isTransitionEnd) {
             loadingView.setVisibility(View.VISIBLE);
         }
     }
 
     protected abstract void loadImageFinish(boolean isLoadImageSuccess);
 
-    private void loadPrivateImageFinish(boolean isLoadImageSuccess){
+    private void loadPrivateImageFinish(boolean isLoadImageSuccess) {
         loadImageFinish(isLoadImageSuccess);
     }
 
@@ -232,7 +240,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         } else if (isInitImage && !isLoadSuccess) {
             setInitImageError();
         }
-        if (isLoading){
+        if (isLoading) {
             loadingView.setVisibility(View.VISIBLE);
         }
         ViewCompat.setTransitionName(photoView, "");
@@ -250,10 +258,10 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             Drawable drawable = smallCoverImageView.getDrawable();
             if (drawable != null) {
                 photoView.setImageDrawable(drawable);
-                initCoverAnim(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),false);
+                initCoverAnim(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), false);
                 if (coverAnim != null) {
                     coverAnim.start();
-                }else {
+                } else {
                     loadPrivateImageFinish(false);
                 }
             } else {
@@ -265,9 +273,9 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
 
     }
 
-    protected void initCoverAnim(int imageWidth, int imageHeight,final boolean isLoadImageSuccess) {
-        if (imageDiskMode == ImageDiskMode.RESULT && (srcScaleType == ImageView.ScaleType.CENTER_CROP || srcScaleType == ImageView.ScaleType.FIT_XY) && openImageBean.srcWidth != 0 && openImageBean.srcHeight !=0) {
-            float scaleHW = openImageBean.srcHeight * 1f / openImageBean.srcWidth;
+    protected void initCoverAnim(int imageWidth, int imageHeight, final boolean isLoadImageSuccess) {
+        if (imageDiskMode == ImageDiskMode.RESULT && (srcScaleType == ImageView.ScaleType.CENTER_CROP || srcScaleType == ImageView.ScaleType.FIT_XY) && imageDetail.srcWidth != 0 && imageDetail.srcHeight != 0) {
+            float scaleHW = imageDetail.srcHeight * 1f / imageDetail.srcWidth;
             float originalScaleHW = imageHeight * 1f / imageWidth;
             float coverWidth;
             float coverHeight;
@@ -285,8 +293,8 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                 coverWidth = ScreenUtils.getScreenWidth(requireContext());
                 coverHeight = coverWidth * originalScaleHW;
             }
-            ObjectAnimator coverAnim1 = ObjectAnimator.ofFloat(smallCoverImageView, "scaleX", 1f, coverWidth *1f/ openImageBean.srcWidth);
-            ObjectAnimator coverAnim2 = ObjectAnimator.ofFloat(smallCoverImageView, "scaleY", 1f, coverHeight *1f/ openImageBean.srcHeight);
+            ObjectAnimator coverAnim1 = ObjectAnimator.ofFloat(smallCoverImageView, "scaleX", 1f, coverWidth * 1f / imageDetail.srcWidth);
+            ObjectAnimator coverAnim2 = ObjectAnimator.ofFloat(smallCoverImageView, "scaleY", 1f, coverHeight * 1f / imageDetail.srcHeight);
             ObjectAnimator coverAnim3 = ObjectAnimator.ofFloat(smallCoverImageView, "alpha", 1f, 0f);
             ObjectAnimator vpPhotoAnim1 = ObjectAnimator.ofFloat(photoView, "alpha", 1f, 1f);
             AnimatorSet animatorSet = new AnimatorSet();
@@ -336,9 +344,9 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             photoView.setAlpha(1f);
             return photoView;
         } else {
-            if (smallCoverImageView.getVisibility() == View.VISIBLE && smallCoverImageView.getAlpha() == 1f){
+            if (smallCoverImageView.getVisibility() == View.VISIBLE && smallCoverImageView.getAlpha() == 1f) {
                 return smallCoverImageView;
-            }else {
+            } else {
                 return photoView;
             }
         }

@@ -12,6 +12,7 @@ import android.transition.TransitionInflater;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -31,6 +32,7 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.openimagelib.beans.MoreViewOption;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.databinding.ActivityViewpagerBinding;
 import com.flyjingfish.openimagelib.databinding.IndicatorTextBinding;
@@ -39,6 +41,7 @@ import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
+import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.utils.AttrsUtils;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
@@ -76,6 +79,9 @@ public class ViewPagerActivity extends AppCompatActivity {
     private String openCoverKey;
     private String pageTransformersKey;
     private ObjectAnimator wechatEffectAnim;
+    private String onItemCLickKey;
+    private String onItemLongCLickKey;
+    private String moreViewKey;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,7 +103,6 @@ public class ViewPagerActivity extends AppCompatActivity {
         int errorResId = getIntent().getIntExtra(OpenParams.ERROR_RES_ID, 0);
         itemLoadKey = getIntent().getStringExtra(OpenParams.ITEM_LOAD_KEY);
         float touchScaleClose = getIntent().getFloatExtra(OpenParams.TOUCH_CLOSE_SCALE, .76f);
-        initStyleConfig();
         selectPos = 0;
         for (int i = 0; i < openImageBeans.size(); i++) {
             OpenImageDetail openImageBean = openImageBeans.get(i);
@@ -109,6 +114,11 @@ public class ViewPagerActivity extends AppCompatActivity {
         onSelectKey = getIntent().getStringExtra(OpenParams.ON_SELECT_KEY);
         openCoverKey = getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE);
         onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(onSelectKey);
+        boolean disableClickClose = getIntent().getBooleanExtra(OpenParams.DISABLE_CLICK_CLOSE,false);
+        onItemCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_CLICK_KEY);
+        onItemLongCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_LONG_CLICK_KEY);
+        moreViewKey = getIntent().getStringExtra(OpenParams.MORE_VIEW_KEY);
+        initStyleConfig();
         binding.viewPager.setAdapter(new FragmentStateAdapter(this) {
             @NonNull
             @Override
@@ -149,6 +159,10 @@ public class ViewPagerActivity extends AppCompatActivity {
                     bundle.putSerializable(OpenParams.IMAGE_DISK_MODE, imageDiskMode);
                     bundle.putSerializable(OpenParams.SRC_SCALE_TYPE, srcScaleType);
                     bundle.putString(OpenParams.ITEM_LOAD_KEY, itemLoadKey);
+                    bundle.putBoolean(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
+                    bundle.putString(OpenParams.ON_ITEM_CLICK_KEY, onItemCLickKey);
+                    bundle.putString(OpenParams.ON_ITEM_LONG_CLICK_KEY, onItemLongCLickKey);
+                    bundle.putString(OpenParams.OPEN_COVER_DRAWABLE, openCoverKey);
                     fragment.setArguments(bundle);
                     fragmentHashMap.put(position, fragment);
                     baseFragment = fragment;
@@ -206,6 +220,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         });
         setViewTransition();
         addTransitionListener();
+        initMoreView();
     }
 
     private void initSrcViews() {
@@ -214,6 +229,22 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     private void setViewTransition() {
         ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + selectPos);
+    }
+
+    private void initMoreView(){
+        if (moreViewKey != null){
+            List<MoreViewOption> moreViewOptions = ImageLoadUtils.getInstance().getMoreViewOption(moreViewKey);
+            for (MoreViewOption moreViewOption : moreViewOptions) {
+                if (moreViewOption != null){
+                    View view = LayoutInflater.from(this).inflate(moreViewOption.getLayoutRes(),null,false);
+                    binding.getRoot().addView(view,moreViewOption.getLayoutParams());
+                    OnLoadViewFinishListener onLoadViewFinishListener = moreViewOption.getOnLoadViewFinishListener();
+                    if (onLoadViewFinishListener != null){
+                        onLoadViewFinishListener.onLoadViewFinish(view);
+                    }
+                }
+            }
+        }
     }
 
 
@@ -405,6 +436,9 @@ public class ViewPagerActivity extends AppCompatActivity {
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
         ImageLoadUtils.getInstance().clearCoverDrawable(openCoverKey);
         ImageLoadUtils.getInstance().clearPageTransformers(pageTransformersKey);
+        ImageLoadUtils.getInstance().clearOnItemClickListener(onItemCLickKey);
+        ImageLoadUtils.getInstance().clearOnItemLongClickListener(onItemLongCLickKey);
+        ImageLoadUtils.getInstance().clearMoreViewOption(moreViewKey);
         if (wechatEffectAnim != null){
             wechatEffectAnim.cancel();
         }
