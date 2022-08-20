@@ -7,14 +7,18 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
+import android.util.LayoutDirection;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import androidx.core.text.TextUtilsCompat;
+
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 class ExitSharedElementCallback extends SharedElementCallback {
@@ -26,11 +30,14 @@ class ExitSharedElementCallback extends SharedElementCallback {
     protected Drawable startDrawable;
     private ImageView.ScaleType srcImageViewScaleType;
     private ImageView shareExitMapView;
+    private Rect paddingRect;
+    private final boolean isRtl;
 
     public ExitSharedElementCallback(Context context, ImageView.ScaleType srcImageViewScaleType, ImageView shareExitMapView) {
         this.context = context;
         this.srcImageViewScaleType = srcImageViewScaleType;
         this.shareExitMapView = shareExitMapView;
+        isRtl = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL;
     }
 
     @Override
@@ -48,7 +55,11 @@ class ExitSharedElementCallback extends SharedElementCallback {
             initSrcViews(screenBounds, showRect);
         }
         if (exitView != null && startDrawable != null) {
+            exitView.setPadding(paddingRect.left,paddingRect.top,paddingRect.right,paddingRect.bottom);
             exitView.setImageDrawable(startDrawable);
+            if (startAlpha != null){
+                exitView.setAlpha(startAlpha);
+            }
         } else if (sharedElement != null && startAlpha != null){
             sharedElement.setAlpha(startAlpha);
             sharedElement.setVisibility(startVisibility);
@@ -68,6 +79,11 @@ class ExitSharedElementCallback extends SharedElementCallback {
             startAlpha = shareExitMapView.getAlpha();
             startVisibility = shareExitMapView.getVisibility();
             startDrawable = shareExitMapView.getDrawable();
+            paddingRect = new Rect();
+            paddingRect.left = isRtl ?Math.max(shareExitMapView.getPaddingLeft(),shareExitMapView.getPaddingEnd()):Math.max(shareExitMapView.getPaddingLeft(),shareExitMapView.getPaddingStart());
+            paddingRect.right = isRtl ?Math.max(shareExitMapView.getPaddingRight(),shareExitMapView.getPaddingStart()):Math.max(shareExitMapView.getPaddingRight(),shareExitMapView.getPaddingEnd());
+            paddingRect.top = shareExitMapView.getPaddingTop();
+            paddingRect.bottom = shareExitMapView.getPaddingBottom();
             sharedEls.put(name, shareExitMapView);
         } else {
             sharedEls.clear();
@@ -83,8 +99,14 @@ class ExitSharedElementCallback extends SharedElementCallback {
         if (backView != null) {
             rootView.removeView(backView);
         }
+        FrameLayout rootInView = new FrameLayout(context);
+        rootInView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        backView = rootInView;
+        FrameLayout.LayoutParams rootInLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        rootView.addView(rootInView, rootInLayoutParams);
+
         FrameLayout flBelowView = new FrameLayout(context);
-        backView = flBelowView;
+        flBelowView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         if (screenBounds != null) {
             layoutParams.topMargin = (int) screenBounds.top + showRect.top;
@@ -92,7 +114,7 @@ class ExitSharedElementCallback extends SharedElementCallback {
             layoutParams.width = showRect.width();
             layoutParams.height = showRect.height();
         }
-        rootView.addView(flBelowView, layoutParams);
+        rootInView.addView(flBelowView, layoutParams);
         exitView = new ImageView(context);
         exitView.setScaleType(srcImageViewScaleType);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams((int) screenBounds.width(), (int) screenBounds.height());
