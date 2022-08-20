@@ -71,20 +71,17 @@ public class ViewPagerActivity extends AppCompatActivity {
     private ImageDiskMode imageDiskMode;
     private ImageView.ScaleType srcScaleType;
     private int selectPos;
-    private ItemLoadHelper itemLoadHelper;
     private OnSelectMediaListener onSelectMediaListener;
     private String onSelectKey;
-    private boolean isAutoScrollSelect;
     private String openCoverKey;
     private String pageTransformersKey;
     private ObjectAnimator wechatEffectAnim;
-    //    private ArrayList<ContentViewOriginModel> contentViewOriginModels;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
-//        getWindow().setAllowEnterTransitionOverlap(false);
+        getWindow().setAllowEnterTransitionOverlap(true);
         getWindow().setExitTransition(TransitionInflater.from(this)
                 .inflateTransition(R.transition.grid_exit_transition));
         super.onCreate(savedInstanceState);
@@ -109,11 +106,9 @@ public class ViewPagerActivity extends AppCompatActivity {
                 break;
             }
         }
-        isAutoScrollSelect = getIntent().getBooleanExtra(OpenParams.AUTO_SCROLL_SELECT, true);
-        itemLoadHelper = ImageLoadUtils.getInstance().getItemLoadHelper(itemLoadKey);
         onSelectKey = getIntent().getStringExtra(OpenParams.ON_SELECT_KEY);
+        openCoverKey = getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE);
         onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(onSelectKey);
-//        initSrcViews();
         binding.viewPager.setAdapter(new FragmentStateAdapter(this) {
             @NonNull
             @Override

@@ -9,8 +9,6 @@ public class OpenImageDetail implements OpenImageUrl {
     public int srcHeight;
     public int dataPosition;
     public int viewPosition;
-    public boolean isAdded;
-    public boolean tagViewLoadSuc;
 
     @Override
     public String getImageUrl() {

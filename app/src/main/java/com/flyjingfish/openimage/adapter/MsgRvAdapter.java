@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.flyjingfish.openimage.activity.MessageActivity;
 import com.flyjingfish.openimage.bean.MessageBean;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.R;
@@ -59,7 +60,7 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                         }
                     }
                 })
-                .setAutoScrollScanPosition(true)
+                .setAutoScrollScanPosition(MessageActivity.openAutoScroll)
                 .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
                 .setImageUrlList(messageBeans).setImageDiskMode(MyImageLoader.imageDiskMode)
                 .setItemLoadHelper(new ItemLoadHelper() {
@@ -77,7 +78,7 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                             }
                         });
                     }
-                })
+                }).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
                 .setClickPosition(position).show();
         if (viewType == MessageBean.IMAGE){

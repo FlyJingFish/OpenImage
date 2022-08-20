@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.flyjingfish.openimage.activity.MessageActivity;
 import com.flyjingfish.openimage.bean.MessageBean;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.R;
@@ -113,7 +114,7 @@ public class MsgLvAdapter extends BaseAdapter {
                     return R.id.iv_video;
                 }
             }
-        }) .setAutoScrollScanPosition(true)
+        }) .setAutoScrollScanPosition(MessageActivity.openAutoScroll)
                 .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
                 .setImageUrlList(messageBeans).setImageDiskMode(MyImageLoader.imageDiskMode)
                 .setItemLoadHelper(new ItemLoadHelper() {
@@ -131,7 +132,7 @@ public class MsgLvAdapter extends BaseAdapter {
                             }
                         });
                     }
-                })
+                }).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
                 .setClickPosition(position).show();
         if (viewType == MessageBean.IMAGE){
