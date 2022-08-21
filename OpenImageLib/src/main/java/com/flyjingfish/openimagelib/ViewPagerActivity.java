@@ -92,9 +92,8 @@ public class ViewPagerActivity extends AppCompatActivity {
         getWindow().setAllowEnterTransitionOverlap(true);
         getWindow().setExitTransition(TransitionInflater.from(this)
                 .inflateTransition(R.transition.grid_exit_transition));
-        super.onCreate(savedInstanceState);
         binding = ActivityViewpagerBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+
         photosViewModel = new ViewModelProvider(this).get(PhotosViewModel.class);
         photosViewModel.closeViewLiveData.observe(this, integer -> close(false));
         srcScaleType = (ImageView.ScaleType) getIntent().getSerializableExtra(OpenParams.SRC_SCALE_TYPE);
@@ -121,6 +120,9 @@ public class ViewPagerActivity extends AppCompatActivity {
         onItemLongCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_LONG_CLICK_KEY);
         moreViewKey = getIntent().getStringExtra(OpenParams.MORE_VIEW_KEY);
         initStyleConfig();
+
+        super.onCreate(savedInstanceState);
+        setContentView(binding.getRoot());
         initMoreView();
         binding.viewPager.setAdapter(new FragmentStateAdapter(this) {
             @NonNull
