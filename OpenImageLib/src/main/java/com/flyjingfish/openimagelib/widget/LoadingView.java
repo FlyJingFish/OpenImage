@@ -24,7 +24,7 @@ public class LoadingView extends AppCompatImageView {
 
     public LoadingView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        setImageResource(R.mipmap.icon_loading);
+        setImageResource(R.drawable.ic_loading);
         initLoadingAnim();
     }
     private void initLoadingAnim(){
@@ -33,13 +33,13 @@ public class LoadingView extends AppCompatImageView {
         loadingAnim1.setRepeatCount(2);
         loadingAnim1.setRepeatMode(ValueAnimator.RESTART);
         loadingAnim1.setInterpolator(new LinearInterpolator());
-        loadingAnim1.setDuration(500);
+        loadingAnim1.setDuration(700);
 
         ObjectAnimator loadingAnim2 = ObjectAnimator.ofFloat(this,"rotation",0,360);
         loadingAnim2.setRepeatCount(ValueAnimator.INFINITE);
         loadingAnim2.setRepeatMode(ValueAnimator.RESTART);
         loadingAnim2.setInterpolator(new LinearInterpolator());
-        loadingAnim2.setDuration(800);
+        loadingAnim2.setDuration(900);
 
         loadingAnim = new AnimatorSet();
         loadingAnim.playSequentially(loadingAnim1,loadingAnim2);
