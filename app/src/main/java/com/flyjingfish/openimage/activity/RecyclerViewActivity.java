@@ -43,12 +43,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
-        getWindow().setAllowEnterTransitionOverlap(false);
         super.onCreate(savedInstanceState);
-
-        getWindow().setAllowEnterTransitionOverlap(false);
         binding = ActivityRecyclerviewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.rv.rv.setLayoutManager(new LinearLayoutManager(this));
@@ -149,10 +144,6 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
             }
             holder.ivImage.setOnClickListener(v -> {
-                FrameLayout.LayoutParams layoutParams1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                layoutParams1.gravity = Gravity.END;
-                FrameLayout.LayoutParams layoutParams2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                layoutParams2.gravity = Gravity.START|Gravity.BOTTOM;
                 OpenImage.with(RecyclerViewActivity.this).setClickRecyclerView(binding.rv.rv, new SourceImageViewIdGet() {
                     @Override
                     public int getImageViewId(OpenImageUrl data, int position) {

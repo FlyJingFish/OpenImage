@@ -29,12 +29,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.flyjingfish.openimagelib.beans.MoreViewOption;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.enums.BackViewType;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
+import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
@@ -344,13 +344,15 @@ public class OpenImage {
 
     /**
      * 添加View 到大图页面，此方法可多次调用，添加多个View
+     *
      * @param layoutRes                添加的图片xml id
      * @param layoutParams             要添加到页面布局的参数
+     * @param moreViewShowType         展示类型
      * @param onLoadViewFinishListener 加载完毕View后回调
      * @return
      */
-    public OpenImage addMoreView(@LayoutRes int layoutRes, @NonNull FrameLayout.LayoutParams layoutParams, OnLoadViewFinishListener onLoadViewFinishListener) {
-        MoreViewOption moreViewOption = new MoreViewOption(layoutRes, layoutParams, onLoadViewFinishListener);
+    public OpenImage addMoreView(@LayoutRes int layoutRes, @NonNull FrameLayout.LayoutParams layoutParams, MoreViewShowType moreViewShowType, OnLoadViewFinishListener onLoadViewFinishListener) {
+        MoreViewOption moreViewOption = new MoreViewOption(layoutRes, layoutParams, moreViewShowType, onLoadViewFinishListener);
         moreViewOptions.add(moreViewOption);
         return this;
     }
@@ -386,7 +388,7 @@ public class OpenImage {
         if (moreViewOptions.size() > 0) {
             String moreViewOptionKey = UUID.randomUUID().toString();
             intent.putExtra(OpenParams.MORE_VIEW_KEY, moreViewOptionKey);
-            ImageLoadUtils.getInstance().setMoreViewOption(moreViewOptionKey,moreViewOptions);
+            ImageLoadUtils.getInstance().setMoreViewOption(moreViewOptionKey, moreViewOptions);
         }
         intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);

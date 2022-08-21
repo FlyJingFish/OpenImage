@@ -30,6 +30,7 @@
     <attr name="openImage.indicator.type" format="enum">
         <enum name="text" value="0" />
         <enum name="image" value="1" />
+        <enum name="none" value="2" />
     </attr>
     <!--如果指示器是文本可以设置例如(%1$d/%2$d) &ndash;&gt; (1/10)-->
     <attr name="openImage.indicator.textFormat" format="reference" />
@@ -48,8 +49,9 @@
     </attr>
     <!--页面状态栏字体颜色-->
     <attr name="openImage.statusBar.fontStyle" format="enum">
-        <enum name="light" value="0" />
-        <enum name="dark" value="1" />
+        <enum name="light" value="1" />
+        <enum name="dark" value="2" />
+        <enum name="full_screen" value="3" />
     </attr>
     <!--卡片之间的距离-->
     <attr name="openImage.viewPager.pageMargin" format="dimension" />

@@ -32,22 +32,22 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.flyjingfish.openimagelib.beans.MoreViewOption;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.databinding.ActivityViewpagerBinding;
 import com.flyjingfish.openimagelib.databinding.IndicatorTextBinding;
 import com.flyjingfish.openimagelib.enums.BackViewType;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
+import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
-import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.utils.AttrsUtils;
+import com.flyjingfish.openimagelib.utils.StatusBarHelper;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
-import com.flyjingfish.openimagelib.utils.StatusBarUtils;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +82,8 @@ public class ViewPagerActivity extends AppCompatActivity {
     private String onItemCLickKey;
     private String onItemLongCLickKey;
     private String moreViewKey;
+    private List<MoreViewOption> moreViewOptions = new ArrayList<>();
+    private LinearLayoutManager imageIndicatorLayoutManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,11 +116,12 @@ public class ViewPagerActivity extends AppCompatActivity {
         onSelectKey = getIntent().getStringExtra(OpenParams.ON_SELECT_KEY);
         openCoverKey = getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE);
         onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(onSelectKey);
-        boolean disableClickClose = getIntent().getBooleanExtra(OpenParams.DISABLE_CLICK_CLOSE,false);
+        boolean disableClickClose = getIntent().getBooleanExtra(OpenParams.DISABLE_CLICK_CLOSE, false);
         onItemCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_CLICK_KEY);
         onItemLongCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_LONG_CLICK_KEY);
         moreViewKey = getIntent().getStringExtra(OpenParams.MORE_VIEW_KEY);
         initStyleConfig();
+        initMoreView();
         binding.viewPager.setAdapter(new FragmentStateAdapter(this) {
             @NonNull
             @Override
@@ -184,6 +187,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 super.onPageSelected(position);
                 showPosition = position;
                 setIndicatorPosition();
+                showMoreView();
                 if (position != selectPos && binding.viewPager.getOffscreenPageLimit() != 1) {
                     binding.viewPager.setOffscreenPageLimit(1);
                 }
@@ -220,7 +224,6 @@ public class ViewPagerActivity extends AppCompatActivity {
         });
         setViewTransition();
         addTransitionListener();
-        initMoreView();
     }
 
     private void initSrcViews() {
@@ -231,17 +234,37 @@ public class ViewPagerActivity extends AppCompatActivity {
         ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + selectPos);
     }
 
-    private void initMoreView(){
-        if (moreViewKey != null){
-            List<MoreViewOption> moreViewOptions = ImageLoadUtils.getInstance().getMoreViewOption(moreViewKey);
-            for (MoreViewOption moreViewOption : moreViewOptions) {
-                if (moreViewOption != null){
-                    View view = LayoutInflater.from(this).inflate(moreViewOption.getLayoutRes(),null,false);
-                    binding.getRoot().addView(view,moreViewOption.getLayoutParams());
+    private void initMoreView() {
+        if (moreViewKey != null) {
+            List<MoreViewOption> viewOptions = ImageLoadUtils.getInstance().getMoreViewOption(moreViewKey);
+            for (MoreViewOption moreViewOption : viewOptions) {
+                if (moreViewOption != null) {
+                    View view = LayoutInflater.from(this).inflate(moreViewOption.getLayoutRes(), null, false);
+                    binding.getRoot().addView(view, moreViewOption.getLayoutParams());
                     OnLoadViewFinishListener onLoadViewFinishListener = moreViewOption.getOnLoadViewFinishListener();
-                    if (onLoadViewFinishListener != null){
+                    if (onLoadViewFinishListener != null) {
                         onLoadViewFinishListener.onLoadViewFinish(view);
                     }
+                    moreViewOption.setView(view);
+                    view.setVisibility(View.GONE);
+                }
+            }
+            moreViewOptions.addAll(viewOptions);
+        }
+    }
+
+    private void showMoreView() {
+        if (moreViewOptions.size() > 0) {
+            OpenImageDetail openImageDetail = openImageBeans.get(showPosition);
+            MediaType mediaType = openImageDetail.getType();
+            for (MoreViewOption moreViewOption : moreViewOptions) {
+                MoreViewShowType showType = moreViewOption.getMoreViewShowType();
+                if (mediaType == MediaType.IMAGE && (showType == MoreViewShowType.IMAGE || showType == MoreViewShowType.BOTH)){
+                    moreViewOption.getView().setVisibility(View.VISIBLE);
+                }else if (mediaType == MediaType.VIDEO && (showType == MoreViewShowType.VIDEO || showType == MoreViewShowType.BOTH)){
+                    moreViewOption.getView().setVisibility(View.VISIBLE);
+                }else {
+                    moreViewOption.getView().setVisibility(View.GONE);
                 }
             }
         }
@@ -253,8 +276,9 @@ public class ViewPagerActivity extends AppCompatActivity {
             if (indicatorType == INDICATOR_IMAGE) {//图片样式
                 if (imageIndicatorAdapter != null) {
                     imageIndicatorAdapter.setSelectPosition(showPosition);
+                    imageIndicatorLayoutManager.scrollToPosition(showPosition);
                 }
-            } else {
+            } else if (indicatorType == INDICATOR_TEXT) {
                 if (indicatorTextBinding != null) {
                     indicatorTextBinding.tvShowPos.setText(String.format(textFormat, showPosition + 1, openImageBeans.size()));
                 }
@@ -264,15 +288,16 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     private void initStyleConfig() {
         int themeRes = getIntent().getIntExtra(OpenParams.OPEN_IMAGE_STYLE, 0);
-        StatusBarUtils.setTransparent(this);
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         if (themeRes != 0) {
             setTheme(themeRes);
             int fontStyle = AttrsUtils.getTypeValueInt(this, R.attr.openImage_statusBar_fontStyle);
             if (fontStyle == 1) {
-                StatusBarUtils.setDarkMode(this);
+                StatusBarHelper.setStatusBarLightMode(this);
+            } else if (fontStyle == 3) {
+                StatusBarHelper.setFullScreen(this);
             } else {
-                StatusBarUtils.setLightMode(this);
+                StatusBarHelper.setStatusBarDarkMode(this);
             }
             int bgColor = AttrsUtils.getTypeValueResourceId(this, R.attr.openImage_background);
             if (bgColor != 0) {
@@ -280,7 +305,7 @@ public class ViewPagerActivity extends AppCompatActivity {
             }
             indicatorType = AttrsUtils.getTypeValueInt(this, R.attr.openImage_indicator_type);
             orientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, R.attr.openImage_viewPager_orientation));
-            if (openImageBeans.size() > 1) {
+            if (indicatorType < 2 && openImageBeans.size() > 1) {
                 if (indicatorType == INDICATOR_IMAGE) {//图片样式
                     float interval = AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_image_interval, -1);
                     int imageRes = AttrsUtils.getTypeValueResourceId(this, R.attr.openImage_indicator_imageRes);
@@ -296,7 +321,8 @@ public class ViewPagerActivity extends AppCompatActivity {
                     binding.getRoot().addView(recyclerView, layoutParams);
 
                     OpenImageOrientation realOrientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, R.attr.openImage_indicator_image_orientation));
-                    recyclerView.setLayoutManager(new LinearLayoutManager(this, realOrientation == OpenImageOrientation.HORIZONTAL ? LinearLayoutManager.HORIZONTAL : LinearLayoutManager.VERTICAL, false));
+                    imageIndicatorLayoutManager = new LinearLayoutManager(this, realOrientation == OpenImageOrientation.HORIZONTAL ? LinearLayoutManager.HORIZONTAL : LinearLayoutManager.VERTICAL, false);
+                    recyclerView.setLayoutManager(imageIndicatorLayoutManager);
                     imageIndicatorAdapter = new ImageIndicatorAdapter(openImageBeans.size(), interval, imageRes, realOrientation);
                     recyclerView.setAdapter(imageIndicatorAdapter);
 
@@ -324,7 +350,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 compositePageTransformer.addTransformer(new MarginPageTransformer((int) ScreenUtils.dp2px(this, 10)));
             }
         } else {
-            StatusBarUtils.setLightMode(this);
+            StatusBarHelper.setStatusBarDarkMode(this);
             orientation = OpenImageOrientation.HORIZONTAL;
             if (openImageBeans.size() > 1) {
                 indicatorTextBinding = IndicatorTextBinding.inflate(getLayoutInflater(), binding.getRoot(), true);
@@ -439,7 +465,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         ImageLoadUtils.getInstance().clearOnItemClickListener(onItemCLickKey);
         ImageLoadUtils.getInstance().clearOnItemLongClickListener(onItemLongCLickKey);
         ImageLoadUtils.getInstance().clearMoreViewOption(moreViewKey);
-        if (wechatEffectAnim != null){
+        if (wechatEffectAnim != null) {
             wechatEffectAnim.cancel();
         }
     }
@@ -476,7 +502,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         if (shareView != null) {
             ViewCompat.setTransitionName(binding.viewPager, "");
             ViewCompat.setTransitionName(shareView, OpenParams.SHARE_VIEW + showPosition);
-            if (backViewType == BackViewType.SHARE_WECHAT){
+            if (backViewType == BackViewType.SHARE_WECHAT) {
                 addWechatEffect(shareView);
             }
             setEnterSharedElementCallback(new SharedElementCallback() {
@@ -490,7 +516,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 }
             });
         } else {
-            if (backViewType == BackViewType.SHARE_WECHAT){
+            if (backViewType == BackViewType.SHARE_WECHAT) {
                 addWechatEffect(binding.viewPager);
             }
             ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + showPosition);
@@ -509,10 +535,10 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     }
 
-    private void addWechatEffect(View shareView){
+    private void addWechatEffect(View shareView) {
         Transition transition = getWindow().getSharedElementEnterTransition();
         if (transition != null) {
-            wechatEffectAnim = ObjectAnimator.ofFloat(shareView,"alpha",1f,0f);
+            wechatEffectAnim = ObjectAnimator.ofFloat(shareView, "alpha", 1f, 0f);
             wechatEffectAnim.setStartDelay(WECHAT_DURATION - WECHAT_DURATION_END_ALPHA);
             wechatEffectAnim.setDuration(WECHAT_DURATION_END_ALPHA);
             transition.setDuration(WECHAT_DURATION);
