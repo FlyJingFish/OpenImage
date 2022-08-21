@@ -57,9 +57,9 @@ public class ViewPagerActivity extends AppCompatActivity {
     private ActivityViewpagerBinding binding;
     private List<OpenImageDetail> openImageBeans;
     private int clickPosition;
-    public static int showPosition;
+    private int showPosition;
     private final HashMap<Integer, BaseFragment> fragmentHashMap = new HashMap<>();
-    protected Handler mHandler = new Handler(Looper.getMainLooper());
+    private Handler mHandler = new Handler(Looper.getMainLooper());
     private PhotosViewModel photosViewModel;
     private String itemLoadKey;
     private IndicatorTextBinding indicatorTextBinding;

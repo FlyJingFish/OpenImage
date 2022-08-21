@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewActivity extends AppCompatActivity {
-    ;
+
     private ActivityRecyclerviewBinding binding;
 
     @Override

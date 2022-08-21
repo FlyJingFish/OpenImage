@@ -64,8 +64,10 @@ public class OpenImage {
     private ImageView.ScaleType srcImageViewScaleType;
     private boolean autoSetScaleType;
     private ImageDiskMode imageDiskMode = ImageDiskMode.CONTAIN_ORIGINAL;
-    private final HashSet<Integer> srcWidthCache = new HashSet<>();
-    private final HashSet<Integer> srcHeightCache = new HashSet<>();
+    private final HashSet<Integer> srcImageWidthCache = new HashSet<>();
+    private final HashSet<Integer> srcImageHeightCache = new HashSet<>();
+    private final HashSet<Integer> srcVideoWidthCache = new HashSet<>();
+    private final HashSet<Integer> srcVideoHeightCache = new HashSet<>();
     private boolean isStartActivity;
     private boolean isAutoScrollScanPosition = false;
     private boolean wechatExitFillInEffect = false;
@@ -472,8 +474,14 @@ public class OpenImage {
                         int shareViewHeight = shareView.getHeight();
                         openImageDetail.srcWidth = shareViewWidth;
                         openImageDetail.srcHeight = shareViewHeight;
-                        srcWidthCache.add(shareViewWidth);
-                        srcHeightCache.add(shareViewHeight);
+                        if (imageBean.getType() == MediaType.IMAGE){
+                            srcImageWidthCache.add(shareViewWidth);
+                            srcImageHeightCache.add(shareViewHeight);
+                        }
+                        if (imageBean.getType() == MediaType.VIDEO){
+                            srcVideoWidthCache.add(shareViewWidth);
+                            srcVideoHeightCache.add(shareViewHeight);
+                        }
                     }
                     openImageDetail.viewPosition = viewIndex;
                     openImageDetails.add(openImageDetail);
@@ -625,9 +633,14 @@ public class OpenImage {
                         int shareViewHeight = shareView.getHeight();
                         openImageDetail.srcWidth = shareViewWidth;
                         openImageDetail.srcHeight = shareViewHeight;
-                        srcWidthCache.add(shareViewWidth);
-                        srcHeightCache.add(shareViewHeight);
-
+                        if (imageBean.getType() == MediaType.IMAGE){
+                            srcImageWidthCache.add(shareViewWidth);
+                            srcImageHeightCache.add(shareViewHeight);
+                        }
+                        if (imageBean.getType() == MediaType.VIDEO){
+                            srcVideoWidthCache.add(shareViewWidth);
+                            srcVideoHeightCache.add(shareViewHeight);
+                        }
                         if (clickViewPosition == viewIndex) {
                             shareViewClick = shareView;
                             shareNameClick = shareName;
@@ -784,7 +797,6 @@ public class OpenImage {
                 }
 
             });
-            replenishImageUrl(openImageDetails);
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
             Bundle newOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareViewClick, shareNameClick).toBundle();
             open(intent, newOptions);
@@ -836,11 +848,21 @@ public class OpenImage {
     }
 
     private void replenishImageUrl(ArrayList<OpenImageDetail> openImageDetails) {
-        if (srcWidthCache.size() == 1 || srcHeightCache.size() == 1) {
-            int srcWidth = srcWidthCache.iterator().next();
-            int srcHeight = srcHeightCache.iterator().next();
+        if (srcImageWidthCache.size() == 1 || srcImageHeightCache.size() == 1) {
+            int srcWidth = srcImageWidthCache.iterator().next();
+            int srcHeight = srcImageHeightCache.iterator().next();
             for (OpenImageDetail openImageDetail : openImageDetails) {
-                if (openImageDetail.srcWidth == 0 || openImageDetail.srcHeight == 0) {
+                if (openImageDetail.getType() ==MediaType.IMAGE && (openImageDetail.srcWidth == 0 || openImageDetail.srcHeight == 0)) {
+                    openImageDetail.srcWidth = srcWidth;
+                    openImageDetail.srcHeight = srcHeight;
+                }
+            }
+        }
+        if (srcVideoWidthCache.size() == 1 || srcVideoHeightCache.size() == 1) {
+            int srcWidth = srcVideoWidthCache.iterator().next();
+            int srcHeight = srcVideoHeightCache.iterator().next();
+            for (OpenImageDetail openImageDetail : openImageDetails) {
+                if (openImageDetail.getType() ==MediaType.VIDEO && (openImageDetail.srcWidth == 0 || openImageDetail.srcHeight == 0)) {
                     openImageDetail.srcWidth = srcWidth;
                     openImageDetail.srcHeight = srcHeight;
                 }
