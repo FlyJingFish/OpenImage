@@ -104,13 +104,15 @@ class ExitSharedElementCallback extends SharedElementCallback {
         backView = rootInView;
         FrameLayout.LayoutParams rootInLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         rootView.addView(rootInView, rootInLayoutParams);
+        int[] location = new int[2];
+        rootInView.getLocationOnScreen(location);
 
         FrameLayout flBelowView = new FrameLayout(context);
         flBelowView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         if (screenBounds != null) {
-            layoutParams.topMargin = (int) screenBounds.top + showRect.top;
-            layoutParams.leftMargin = (int) screenBounds.left + showRect.left;
+            layoutParams.topMargin = (int) screenBounds.top + showRect.top - location[1];
+            layoutParams.leftMargin = (int) screenBounds.left + showRect.left - location[0];
             layoutParams.width = showRect.width();
             layoutParams.height = showRect.height();
         }
