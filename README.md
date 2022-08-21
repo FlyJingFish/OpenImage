@@ -37,14 +37,9 @@
 ```gradle
 allprojects {
     repositories {
+        ...
         maven { url "https://www.jitpack.io" }
     }
-}
-
-buildscript {
-    repositories {
-        maven { url "https://www.jitpack.io" }
-    }	
 }
 ```
 
