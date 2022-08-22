@@ -8,7 +8,7 @@ class ExitOnBackView implements ImageLoadUtils.OnBackView {
     private final View transitionView;
     private final float transitionViewStartAlpha;
     private final int transitionViewStartVisibility;
-    private boolean isTouchClose;
+    protected boolean isTouchClose;
 
     public ExitOnBackView(View transitionView) {
         this.transitionView = transitionView;

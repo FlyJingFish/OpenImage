@@ -32,6 +32,8 @@ class ExitSharedElementCallback extends SharedElementCallback {
     private ImageView shareExitMapView;
     private Rect paddingRect;
     private final boolean isRtl;
+    private float startSrcAlpha;
+    private boolean showSrcImageView;
 
     public ExitSharedElementCallback(Context context, ImageView.ScaleType srcImageViewScaleType, ImageView shareExitMapView) {
         this.context = context;
@@ -40,29 +42,48 @@ class ExitSharedElementCallback extends SharedElementCallback {
         isRtl = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL;
     }
 
+    public ExitSharedElementCallback(Context context, ImageView.ScaleType srcImageViewScaleType, ImageView shareExitMapView, boolean showSrcImageView) {
+        this.context = context;
+        this.srcImageViewScaleType = srcImageViewScaleType;
+        this.shareExitMapView = shareExitMapView;
+        this.showSrcImageView = showSrcImageView;
+        isRtl = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL;
+        if (!showSrcImageView && shareExitMapView != null){
+            startSrcAlpha = shareExitMapView.getAlpha();
+            shareExitMapView.setAlpha(0f);
+        }
+    }
+
     @Override
     public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
         super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
         removeBackView();
+        if (!showSrcImageView && shareExitMapView != null){
+            shareExitMapView.setAlpha(Math.max(startAlpha,startSrcAlpha));
+        }
     }
 
     @Override
     public Parcelable onCaptureSharedElementSnapshot(View sharedElement, Matrix viewToGlobalMatrix, RectF screenBounds) {
         Parcelable parcelable = super.onCaptureSharedElementSnapshot(sharedElement, viewToGlobalMatrix, screenBounds);
-        if (screenBounds != null && sharedElement != null) {
-            Rect showRect = new Rect();
-            sharedElement.getLocalVisibleRect(showRect);
-            initSrcViews(screenBounds, showRect);
-        }
-        if (exitView != null && startDrawable != null) {
-            exitView.setPadding(paddingRect.left,paddingRect.top,paddingRect.right,paddingRect.bottom);
-            exitView.setImageDrawable(startDrawable);
-            if (startAlpha != null){
-                exitView.setAlpha(startAlpha);
+        if (showSrcImageView){
+            if (screenBounds != null && sharedElement != null) {
+                Rect showRect = new Rect();
+                sharedElement.getLocalVisibleRect(showRect);
+                initSrcViews(screenBounds, showRect);
             }
-        } else if (sharedElement != null && startAlpha != null){
-            sharedElement.setAlpha(startAlpha);
-            sharedElement.setVisibility(startVisibility);
+            if (exitView != null && startDrawable != null) {
+                exitView.setPadding(paddingRect.left,paddingRect.top,paddingRect.right,paddingRect.bottom);
+                exitView.setImageDrawable(startDrawable);
+                if (startAlpha != null){
+                    exitView.setAlpha(startAlpha);
+                }
+            } else if (sharedElement != null && startAlpha != null){
+                sharedElement.setAlpha(startAlpha);
+                sharedElement.setVisibility(startVisibility);
+            }
+        }else {
+            sharedElement.setAlpha(0f);
         }
         return parcelable;
     }
