@@ -43,4 +43,9 @@ class ExitOnBackView implements ImageLoadUtils.OnBackView {
             transitionView.setAlpha(transitionViewStartAlpha);
         }
     }
+
+    @Override
+    public void onEndTouchScale(int showPosition) {
+
+    }
 }

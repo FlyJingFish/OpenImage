@@ -20,6 +20,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
@@ -81,6 +82,10 @@ public class OpenImage {
     private String itemLoadHelperKey;
     private boolean disableClickClose;
     private List<MoreViewOption> moreViewOptions = new ArrayList<>();
+    private int srcViewType;
+    private static final int RV = 1;
+    private static final int AB_LIST = 2;
+    private static final int IV = 3;
 
     public static OpenImage with(Context context) {
         return new OpenImage(context);
@@ -413,174 +418,18 @@ public class OpenImage {
             if (!(layoutManager instanceof LinearLayoutManager || layoutManager instanceof StaggeredGridLayoutManager)) {
                 throw new IllegalArgumentException("只支持使用继承自LinearLayoutManager和StaggeredGridLayoutManager的RecyclerView");
             }
+            srcViewType = RV;
 
-            View shareViewClick = null;
-            String shareNameClick = null;
-            int firstPos = 0;
-            int lastPos = 0;
             ArrayList<OpenImageDetail> openImageDetails = new ArrayList<>();
-            if (layoutManager instanceof LinearLayoutManager) {
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-                firstPos = linearLayoutManager.findFirstVisibleItemPosition();
-                lastPos = linearLayoutManager.findLastVisibleItemPosition();
-            } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-                StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
-                int[] firstVisibleItems = null;
-                firstVisibleItems = staggeredGridLayoutManager.findFirstVisibleItemPositions(firstVisibleItems);
-                int[] lastVisibleItems = null;
-                lastVisibleItems = staggeredGridLayoutManager.findLastVisibleItemPositions(lastVisibleItems);
-                if (firstVisibleItems == null || lastVisibleItems == null || firstVisibleItems.length == 0 || lastVisibleItems.length == 0) {
-                    return;
-                }
-                firstPos = Integer.MAX_VALUE;
-                lastPos = 0;
-                for (int firstVisibleItem : firstVisibleItems) {
-                    if (firstVisibleItem < firstPos && firstVisibleItem >= 0) {
-                        firstPos = firstVisibleItem;
-                    }
-                }
-                for (int lastVisibleItem : lastVisibleItems) {
-                    if (lastVisibleItem > lastPos) {
-                        lastPos = lastVisibleItem;
-                    }
-                }
-                if (lastPos < firstPos) {
-                    return;
-                }
-
-            }
-            int viewIndex = clickViewPosition - clickDataPosition;
-            for (int i = 0; i < openImageUrls.size(); i++) {
-                OpenImageUrl imageBean = openImageUrls.get(i);
-                if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
-                    OpenImageDetail openImageDetail = new OpenImageDetail();
-                    openImageDetail.openImageUrl = imageBean;
-                    openImageDetail.dataPosition = i;
-                    if (viewIndex >= firstPos && viewIndex <= lastPos) {
-                        View view = layoutManager.findViewByPosition(viewIndex);
-                        if (view == null) {
-                            continue;
-                        }
-                        ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(imageBean, i));
-                        if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                            shareView.setScaleType(srcImageViewScaleType);
-                        }
-                        String shareName = OpenParams.SHARE_VIEW + openImageDetails.size();
-                        if (clickViewPosition == viewIndex) {
-                            shareViewClick = shareView;
-                            shareNameClick = shareName;
-                        }
-                        int shareViewWidth = shareView.getWidth();
-                        int shareViewHeight = shareView.getHeight();
-                        openImageDetail.srcWidth = shareViewWidth;
-                        openImageDetail.srcHeight = shareViewHeight;
-                        if (imageBean.getType() == MediaType.IMAGE){
-                            srcImageWidthCache.add(shareViewWidth);
-                            srcImageHeightCache.add(shareViewHeight);
-                        }
-                        if (imageBean.getType() == MediaType.VIDEO){
-                            srcVideoWidthCache.add(shareViewWidth);
-                            srcVideoHeightCache.add(shareViewHeight);
-                        }
-                    }
-                    openImageDetail.viewPosition = viewIndex;
-                    openImageDetails.add(openImageDetail);
-                }
-                viewIndex++;
-            }
-            if (shareViewClick == null) {
+            Pair<View, String> viewPair = initShareView(openImageDetails);
+            if (viewPair == null) {
                 throw new IllegalArgumentException("请确保是否调用了setClickPosition并且参数设置正确");
             }
-            ImageLoadUtils.getInstance().setOnBackView(new ExitOnBackView(shareViewClick) {
-
-                @Override
-                public BackViewType onBack(int showPosition) {
-                    BackViewType backViewType = BackViewType.NO_SHARE;
-                    Activity activity = ActivityCompatHelper.getActivity(context);
-                    if (activity == null) {
-                        return BackViewType.NO_SHARE;
-                    }
-                    int firstPos = 0;
-                    int lastPos = 0;
-                    if (layoutManager instanceof LinearLayoutManager) {
-                        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-                        firstPos = linearLayoutManager.findFirstVisibleItemPosition();
-                        lastPos = linearLayoutManager.findLastVisibleItemPosition();
-                    } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-                        StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
-                        int[] firstVisibleItems = null;
-                        firstVisibleItems = staggeredGridLayoutManager.findFirstVisibleItemPositions(firstVisibleItems);
-                        int[] lastVisibleItems = null;
-                        lastVisibleItems = staggeredGridLayoutManager.findLastVisibleItemPositions(lastVisibleItems);
-                        if (firstVisibleItems == null || lastVisibleItems == null || firstVisibleItems.length == 0 || lastVisibleItems.length == 0) {
-                            return backViewType;
-                        }
-                        firstPos = Integer.MAX_VALUE;
-                        lastPos = 0;
-                        for (int firstVisibleItem : firstVisibleItems) {
-                            if (firstVisibleItem < firstPos && firstVisibleItem >= 0) {
-                                firstPos = firstVisibleItem;
-                            }
-                        }
-                        for (int lastVisibleItem : lastVisibleItems) {
-                            if (lastVisibleItem > lastPos) {
-                                lastPos = lastVisibleItem;
-                            }
-                        }
-                        if (lastPos < firstPos) {
-                            return backViewType;
-                        }
-
-                    }
-                    if (lastPos < 0 || firstPos < 0) {
-                        return backViewType;
-                    }
-                    ImageView shareExitView = null;
-                    OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
-                    OpenImageUrl openImageUrl = openImageDetail.openImageUrl;
-                    int viewPosition = openImageDetail.viewPosition;
-                    int dataPosition = openImageDetail.dataPosition;
-
-                    View view = layoutManager.findViewByPosition(viewPosition);
-
-                    if (view != null) {
-                        ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
-                        if (shareView != null) {
-                            if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                                shareView.setScaleType(srcImageViewScaleType);
-                            }
-                            boolean isAttachedToWindow = shareView.isAttachedToWindow();
-                            if (isAttachedToWindow) {
-                                shareExitView = shareView;
-                                backViewType = BackViewType.SHARE_NORMAL;
-                            }
-                        }
-                    }
-
-                    if (shareExitView == null && wechatExitFillInEffect) {
-                        openImageUrl = openImageUrls.get(clickDataPosition);
-                        viewPosition = clickViewPosition;
-                        dataPosition = clickDataPosition;
-                        View wechatView = layoutManager.findViewByPosition(viewPosition);
-                        if (wechatView != null) {
-                            ImageView shareView = wechatView.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
-                            if (shareView != null) {
-                                if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                                    shareView.setScaleType(srcImageViewScaleType);
-                                }
-                                boolean isAttachedToWindow = shareView.isAttachedToWindow();
-                                if (isAttachedToWindow) {
-                                    shareExitView = shareView;
-                                    backViewType = BackViewType.SHARE_WECHAT;
-                                }
-                            }
-                        }
-                    }
-
-                    activity.setExitSharedElementCallback(new ExitSharedElementCallback(context, srcImageViewScaleType, shareExitView));
-                    return backViewType;
-                }
-
+            View shareViewClick = viewPair.first;
+            String shareNameClick = viewPair.second;
+            String backViewKey = OpenImage.this.toString();
+            intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
+            ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
                 public void onScrollPos(int pos) {
                     if (!isAutoScrollScanPosition) {
@@ -605,118 +454,17 @@ public class OpenImage {
             if (sourceImageViewIdGet == null) {
                 throw new IllegalArgumentException("sourceImageViewIdGet 不能为null");
             }
-            View shareViewClick = null;
-            String shareNameClick = null;
-            int firstListItemPosition = absListView.getFirstVisiblePosition();
-            int lastListItemPosition = absListView.getLastVisiblePosition();
+            srcViewType = AB_LIST;
             ArrayList<OpenImageDetail> openImageDetails = new ArrayList<>();
-
-            int viewIndex = clickViewPosition - clickDataPosition;
-            for (int i = 0; i < openImageUrls.size(); i++) {
-                OpenImageUrl imageBean = openImageUrls.get(i);
-                if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
-                    OpenImageDetail openImageDetail = new OpenImageDetail();
-                    openImageDetail.openImageUrl = imageBean;
-                    openImageDetail.dataPosition = i;
-
-                    if (viewIndex >= firstListItemPosition && viewIndex <= lastListItemPosition) {
-                        View view = absListView.getChildAt(viewIndex - firstListItemPosition);
-                        if (view == null) {
-                            continue;
-                        }
-                        ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(imageBean, i));
-                        if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                            shareView.setScaleType(srcImageViewScaleType);
-                        }
-                        String shareName = OpenParams.SHARE_VIEW + openImageDetails.size();
-                        int shareViewWidth = shareView.getWidth();
-                        int shareViewHeight = shareView.getHeight();
-                        openImageDetail.srcWidth = shareViewWidth;
-                        openImageDetail.srcHeight = shareViewHeight;
-                        if (imageBean.getType() == MediaType.IMAGE){
-                            srcImageWidthCache.add(shareViewWidth);
-                            srcImageHeightCache.add(shareViewHeight);
-                        }
-                        if (imageBean.getType() == MediaType.VIDEO){
-                            srcVideoWidthCache.add(shareViewWidth);
-                            srcVideoHeightCache.add(shareViewHeight);
-                        }
-                        if (clickViewPosition == viewIndex) {
-                            shareViewClick = shareView;
-                            shareNameClick = shareName;
-                        }
-
-                    }
-                    openImageDetail.viewPosition = viewIndex;
-                    openImageDetails.add(openImageDetail);
-                }
-                viewIndex++;
-            }
-            if (shareViewClick == null) {
+            Pair<View, String> viewPair = initShareView(openImageDetails);
+            if (viewPair == null) {
                 throw new IllegalArgumentException("请确保是否调用了setClickPosition并且参数设置正确");
             }
-            ImageLoadUtils.getInstance().setOnBackView(new ExitOnBackView(shareViewClick) {
-
-                @Override
-                public BackViewType onBack(int showPosition) {
-                    BackViewType backViewType = BackViewType.NO_SHARE;
-                    Activity activity = ActivityCompatHelper.getActivity(context);
-                    if (activity == null) {
-                        return backViewType;
-                    }
-                    int firstPos = absListView.getFirstVisiblePosition();
-                    int lastPos = absListView.getLastVisiblePosition();
-
-                    if (lastPos < 0 || firstPos < 0) {
-                        return backViewType;
-                    }
-
-                    ImageView shareExitView = null;
-
-                    OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
-                    OpenImageUrl openImageUrl = openImageDetail.openImageUrl;
-                    int viewPosition = openImageDetail.viewPosition;
-                    int dataPosition = openImageDetail.dataPosition;
-
-                    View view = absListView.getChildAt(viewPosition - firstPos);
-                    if (view != null) {
-                        ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
-                        if (shareView != null) {
-                            if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                                shareView.setScaleType(srcImageViewScaleType);
-                            }
-                            boolean isAttachedToWindow = shareView.isAttachedToWindow();
-                            if (isAttachedToWindow) {
-                                shareExitView = shareView;
-                                backViewType = BackViewType.SHARE_NORMAL;
-                            }
-                        }
-                    }
-
-                    if (shareExitView == null && wechatExitFillInEffect) {
-                        openImageUrl = openImageUrls.get(clickDataPosition);
-                        viewPosition = clickViewPosition;
-                        dataPosition = clickDataPosition;
-
-                        View wechatView = absListView.getChildAt(viewPosition - firstPos);
-                        if (wechatView != null) {
-                            ImageView shareView = wechatView.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
-                            if (shareView != null) {
-                                if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                                    shareView.setScaleType(srcImageViewScaleType);
-                                }
-                                boolean isAttachedToWindow = shareView.isAttachedToWindow();
-                                if (isAttachedToWindow) {
-                                    shareExitView = shareView;
-                                    backViewType = BackViewType.SHARE_WECHAT;
-                                }
-                            }
-                        }
-                    }
-
-                    activity.setExitSharedElementCallback(new ExitSharedElementCallback(context, srcImageViewScaleType, shareExitView));
-                    return backViewType;
-                }
+            View shareViewClick = viewPair.first;
+            String shareNameClick = viewPair.second;
+            String backViewKey = OpenImage.this.toString();
+            intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
+            ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
 
                 @Override
                 public void onScrollPos(int pos) {
@@ -730,6 +478,7 @@ public class OpenImage {
 
             });
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
+
             replenishImageUrl(openImageDetails);
             Bundle newOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareViewClick, shareNameClick).toBundle();
             open(intent, newOptions);
@@ -743,6 +492,7 @@ public class OpenImage {
             if (clickViewPosition >= imageViews.size()) {
                 throw new IllegalArgumentException("clickViewPosition不能 >= ImageView 的个数");
             }
+            srcViewType = IV;
             View shareViewClick = null;
             String shareNameClick = null;
             ArrayList<OpenImageDetail> openImageDetails = new ArrayList<>();
@@ -768,7 +518,10 @@ public class OpenImage {
                     shareNameClick = shareName;
                 }
             }
-            ImageLoadUtils.getInstance().setOnBackView(new ExitOnBackView(shareViewClick) {
+
+            String backViewKey = OpenImage.this.toString();
+            intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
+            ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView(shareViewClick) {
 
                 @Override
                 public BackViewType onBack(int showPosition) {
@@ -804,6 +557,123 @@ public class OpenImage {
             throw new IllegalArgumentException("请设置至少一个点击的ImageView");
         }
 
+    }
+
+    private Pair<View, String> initShareView(ArrayList<OpenImageDetail> openImageDetails) {
+        Pair<View, String> pair = null;
+        int[] position = getVisiblePosition();
+        int firstPos = position[0];
+        int lastPos = position[1];
+        if (lastPos < 0 || firstPos < 0) {
+            return pair;
+        }
+        int viewIndex = clickViewPosition - clickDataPosition;
+        for (int i = 0; i < openImageUrls.size(); i++) {
+            OpenImageUrl imageBean = openImageUrls.get(i);
+            if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
+                OpenImageDetail openImageDetail = new OpenImageDetail();
+                openImageDetail.openImageUrl = imageBean;
+                openImageDetail.dataPosition = i;
+                if (viewIndex >= firstPos && viewIndex <= lastPos) {
+                    View view = getItemView(viewIndex);
+                    if (view == null) {
+                        continue;
+                    }
+                    ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(imageBean, i));
+                    if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
+                        shareView.setScaleType(srcImageViewScaleType);
+                    }
+                    String shareName = OpenParams.SHARE_VIEW + openImageDetails.size();
+                    if (clickViewPosition == viewIndex) {
+                        pair = Pair.create(shareView, shareName);
+                    }
+                    int shareViewWidth = shareView.getWidth();
+                    int shareViewHeight = shareView.getHeight();
+                    openImageDetail.srcWidth = shareViewWidth;
+                    openImageDetail.srcHeight = shareViewHeight;
+                    if (imageBean.getType() == MediaType.IMAGE) {
+                        srcImageWidthCache.add(shareViewWidth);
+                        srcImageHeightCache.add(shareViewHeight);
+                    }
+                    if (imageBean.getType() == MediaType.VIDEO) {
+                        srcVideoWidthCache.add(shareViewWidth);
+                        srcVideoHeightCache.add(shareViewHeight);
+                    }
+                }
+                openImageDetail.viewPosition = viewIndex;
+                openImageDetails.add(openImageDetail);
+            }
+            viewIndex++;
+        }
+
+        return pair;
+    }
+
+    protected int[] getVisiblePosition() {
+        int[] position = new int[]{-1, -1};
+        if (srcViewType == RV) {
+            int firstPos = 0;
+            int lastPos = 0;
+            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+            if (layoutManager instanceof LinearLayoutManager) {
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+                firstPos = linearLayoutManager.findFirstVisibleItemPosition();
+                lastPos = linearLayoutManager.findLastVisibleItemPosition();
+            } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+                StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
+                int[] firstVisibleItems = null;
+                firstVisibleItems = staggeredGridLayoutManager.findFirstVisibleItemPositions(firstVisibleItems);
+                int[] lastVisibleItems = null;
+                lastVisibleItems = staggeredGridLayoutManager.findLastVisibleItemPositions(lastVisibleItems);
+                if (firstVisibleItems == null || lastVisibleItems == null || firstVisibleItems.length == 0 || lastVisibleItems.length == 0) {
+                    return position;
+                }
+                firstPos = Integer.MAX_VALUE;
+                lastPos = 0;
+                for (int firstVisibleItem : firstVisibleItems) {
+                    if (firstVisibleItem < firstPos && firstVisibleItem >= 0) {
+                        firstPos = firstVisibleItem;
+                    }
+                }
+                for (int lastVisibleItem : lastVisibleItems) {
+                    if (lastVisibleItem > lastPos) {
+                        lastPos = lastVisibleItem;
+                    }
+                }
+                if (lastPos < firstPos) {
+                    return position;
+                }
+            }
+
+            position[0] = firstPos;
+            position[1] = lastPos;
+        } else if (srcViewType == AB_LIST) {
+            int firstPos = absListView.getFirstVisiblePosition();
+            int lastPos = absListView.getLastVisiblePosition();
+            position[0] = firstPos;
+            position[1] = lastPos;
+        }
+        return position;
+    }
+
+    protected View getItemView(int position) {
+        View view = null;
+        if (srcViewType == RV) {
+            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+            if (layoutManager != null) {
+                view = layoutManager.findViewByPosition(position);
+            }
+        } else if (srcViewType == AB_LIST) {
+            if (absListView != null) {
+                int firstPos = absListView.getFirstVisiblePosition();
+                view = absListView.getChildAt(position - firstPos);
+            }
+        } else {
+            if (imageViews != null) {
+                view = imageViews.get(position);
+            }
+        }
+        return view;
     }
 
     private void open(Intent intent, Bundle newOptions) {
@@ -852,7 +722,7 @@ public class OpenImage {
             int srcWidth = srcImageWidthCache.iterator().next();
             int srcHeight = srcImageHeightCache.iterator().next();
             for (OpenImageDetail openImageDetail : openImageDetails) {
-                if (openImageDetail.getType() ==MediaType.IMAGE && (openImageDetail.srcWidth == 0 || openImageDetail.srcHeight == 0)) {
+                if (openImageDetail.getType() == MediaType.IMAGE && (openImageDetail.srcWidth == 0 || openImageDetail.srcHeight == 0)) {
                     openImageDetail.srcWidth = srcWidth;
                     openImageDetail.srcHeight = srcHeight;
                 }
@@ -862,7 +732,7 @@ public class OpenImage {
             int srcWidth = srcVideoWidthCache.iterator().next();
             int srcHeight = srcVideoHeightCache.iterator().next();
             for (OpenImageDetail openImageDetail : openImageDetails) {
-                if (openImageDetail.getType() ==MediaType.VIDEO && (openImageDetail.srcWidth == 0 || openImageDetail.srcHeight == 0)) {
+                if (openImageDetail.getType() == MediaType.VIDEO && (openImageDetail.srcWidth == 0 || openImageDetail.srcHeight == 0)) {
                     openImageDetail.srcWidth = srcWidth;
                     openImageDetail.srcHeight = srcHeight;
                 }
@@ -898,5 +768,74 @@ public class OpenImage {
             });
         }
 
+    }
+
+    private class ExitOnBackView4ListView extends ExitOnBackView {
+        private final ArrayList<OpenImageDetail> openImageDetails;
+
+        public ExitOnBackView4ListView(View transitionView, ArrayList<OpenImageDetail> openImageDetails) {
+            super(transitionView);
+            this.openImageDetails = openImageDetails;
+        }
+
+        @Override
+        public BackViewType onBack(int showPosition) {
+            BackViewType backViewType = BackViewType.NO_SHARE;
+            Activity activity = ActivityCompatHelper.getActivity(context);
+            if (activity == null) {
+                return BackViewType.NO_SHARE;
+            }
+            int[] position = getVisiblePosition();
+            int firstPos = position[0];
+            int lastPos = position[1];
+            if (lastPos < 0 || firstPos < 0) {
+                return backViewType;
+            }
+
+            ImageView shareExitView = null;
+            OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
+            OpenImageUrl openImageUrl = openImageDetail.openImageUrl;
+            int viewPosition = openImageDetail.viewPosition;
+            int dataPosition = openImageDetail.dataPosition;
+
+            View view = getItemView(viewPosition);
+
+            if (view != null) {
+                ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
+                if (shareView != null) {
+                    if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
+                        shareView.setScaleType(srcImageViewScaleType);
+                    }
+                    boolean isAttachedToWindow = shareView.isAttachedToWindow();
+                    if (isAttachedToWindow) {
+                        shareExitView = shareView;
+                        backViewType = BackViewType.SHARE_NORMAL;
+                    }
+                }
+            }
+
+            if (shareExitView == null && wechatExitFillInEffect) {
+                openImageUrl = openImageUrls.get(clickDataPosition);
+                viewPosition = clickViewPosition;
+                dataPosition = clickDataPosition;
+                View wechatView = getItemView(viewPosition);
+                if (wechatView != null) {
+                    ImageView shareView = wechatView.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
+                    if (shareView != null) {
+                        if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
+                            shareView.setScaleType(srcImageViewScaleType);
+                        }
+                        boolean isAttachedToWindow = shareView.isAttachedToWindow();
+                        if (isAttachedToWindow) {
+                            shareExitView = shareView;
+                            backViewType = BackViewType.SHARE_WECHAT;
+                        }
+                    }
+                }
+            }
+
+            activity.setExitSharedElementCallback(new ExitSharedElementCallback(context, srcImageViewScaleType, shareExitView));
+            return backViewType;
+        }
     }
 }

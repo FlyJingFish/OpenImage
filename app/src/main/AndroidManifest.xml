@@ -17,7 +17,8 @@
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,32 +28,38 @@
         <activity
             android:name=".activity.GridViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activity.ListViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activity.FriendsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activity.MessageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activity.RecyclerViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activity.ImagesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
