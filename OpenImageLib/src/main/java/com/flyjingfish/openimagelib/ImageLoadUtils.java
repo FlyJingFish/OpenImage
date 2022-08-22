@@ -23,6 +23,7 @@ class ImageLoadUtils {
     private HashMap<String, OnItemClickListener> onItemClickListenerHashMap = new HashMap<>();
     private HashMap<String, OnItemLongClickListener> onItemLongClickListenerHashMap = new HashMap<>();
     private HashMap<String, List<MoreViewOption>> moreViewOptionHashMap = new HashMap<>();
+    private HashMap<String, OnBackView> onBackViewHashMap = new HashMap<>();
 
     private ImageLoadUtils() {
     }
@@ -82,16 +83,19 @@ class ImageLoadUtils {
         void onScrollPos(int pos);
 
         void onStartTouchScale(int showPosition);
+        void onEndTouchScale(int showPosition);
     }
 
-    OnBackView onBackView;
-
-    public OnBackView getOnBackView() {
-        return onBackView;
+    public OnBackView getOnBackView(String key) {
+        return onBackViewHashMap.get(key);
     }
 
-    public void setOnBackView(OnBackView onBackView) {
-        this.onBackView = onBackView;
+    public void setOnBackView(String key, OnBackView onBackView) {
+        onBackViewHashMap.put(key, onBackView);
+    }
+
+    public void clearOnBackView(String key) {
+        onBackViewHashMap.remove(key);
     }
 
     public OnSelectMediaListener getOnSelectMediaListener(String key) {

@@ -23,4 +23,5 @@ class OpenParams {
     public static final String ON_ITEM_LONG_CLICK_KEY = "on_item_long_click_key";
     public static final String DISABLE_CLICK_CLOSE = "disable_click_close";
     public static final String MORE_VIEW_KEY = "more_view_key";
+    public static final String ON_BACK_VIEW = "on_back_view";
 }

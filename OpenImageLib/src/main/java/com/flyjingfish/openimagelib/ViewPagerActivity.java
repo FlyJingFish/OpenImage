@@ -84,6 +84,8 @@ public class ViewPagerActivity extends AppCompatActivity {
     private String moreViewKey;
     private List<MoreViewOption> moreViewOptions = new ArrayList<>();
     private LinearLayoutManager imageIndicatorLayoutManager;
+    private String onBackViewKey;
+    private ImageLoadUtils.OnBackView onBackView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -119,6 +121,8 @@ public class ViewPagerActivity extends AppCompatActivity {
         onItemCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_CLICK_KEY);
         onItemLongCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_LONG_CLICK_KEY);
         moreViewKey = getIntent().getStringExtra(OpenParams.MORE_VIEW_KEY);
+        onBackViewKey = getIntent().getStringExtra(OpenParams.ON_BACK_VIEW);
+        onBackView = ImageLoadUtils.getInstance().getOnBackView(onBackViewKey);
         initStyleConfig();
 
         super.onCreate(savedInstanceState);
@@ -193,8 +197,8 @@ public class ViewPagerActivity extends AppCompatActivity {
                 if (position != selectPos && binding.viewPager.getOffscreenPageLimit() != 1) {
                     binding.viewPager.setOffscreenPageLimit(1);
                 }
-                if (isFirstBacked) {
-                    ImageLoadUtils.getInstance().getOnBackView().onScrollPos(openImageBeans.get(showPosition).viewPosition);
+                if (isFirstBacked && onBackView != null) {
+                    onBackView.onScrollPos(openImageBeans.get(showPosition).viewPosition);
                 }
                 if (onSelectMediaListener != null) {
                     onSelectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl, openImageBeans.get(showPosition).dataPosition);
@@ -210,7 +214,16 @@ public class ViewPagerActivity extends AppCompatActivity {
         binding.getRoot().setOnTouchCloseListener(new TouchCloseLayout.OnTouchCloseListener() {
             @Override
             public void onStartTouch() {
-                initSrcViews();
+                if (onBackView != null){
+                    onBackView.onStartTouchScale(showPosition);
+                }
+            }
+
+            @Override
+            public void onEndTouch() {
+                if (onBackView != null){
+                    onBackView.onEndTouchScale(showPosition);
+                }
             }
 
             @Override
@@ -226,10 +239,6 @@ public class ViewPagerActivity extends AppCompatActivity {
         });
         setViewTransition();
         addTransitionListener();
-    }
-
-    private void initSrcViews() {
-        ImageLoadUtils.getInstance().getOnBackView().onStartTouchScale(showPosition);
     }
 
     private void setViewTransition() {
@@ -295,10 +304,12 @@ public class ViewPagerActivity extends AppCompatActivity {
             setTheme(themeRes);
             int fontStyle = AttrsUtils.getTypeValueInt(this, R.attr.openImage_statusBar_fontStyle);
             if (fontStyle == 1) {
+                StatusBarHelper.translucent(this);
                 StatusBarHelper.setStatusBarLightMode(this);
             } else if (fontStyle == 3) {
                 StatusBarHelper.setFullScreen(this);
             } else {
+                StatusBarHelper.translucent(this);
                 StatusBarHelper.setStatusBarDarkMode(this);
             }
             int bgColor = AttrsUtils.getTypeValueResourceId(this, R.attr.openImage_background);
@@ -352,6 +363,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 compositePageTransformer.addTransformer(new MarginPageTransformer((int) ScreenUtils.dp2px(this, 10)));
             }
         } else {
+            StatusBarHelper.translucent(this);
             StatusBarHelper.setStatusBarDarkMode(this);
             orientation = OpenImageOrientation.HORIZONTAL;
             if (openImageBeans.size() > 1) {
@@ -467,6 +479,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         ImageLoadUtils.getInstance().clearOnItemClickListener(onItemCLickKey);
         ImageLoadUtils.getInstance().clearOnItemLongClickListener(onItemLongCLickKey);
         ImageLoadUtils.getInstance().clearMoreViewOption(moreViewKey);
+        ImageLoadUtils.getInstance().clearOnBackView(onBackViewKey);
         if (wechatEffectAnim != null) {
             wechatEffectAnim.cancel();
         }
@@ -482,7 +495,10 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     private void setExitView() {
-        BackViewType backViewType = ImageLoadUtils.getInstance().getOnBackView().onBack(showPosition);
+        BackViewType backViewType = BackViewType.NO_SHARE;
+        if (onBackView != null){
+            backViewType= onBackView.onBack(showPosition);
+        }
         if (backViewType == BackViewType.NO_SHARE) {
             ViewCompat.setTransitionName(binding.viewPager, "");
             setEnterSharedElementCallback(new SharedElementCallback() {
@@ -576,7 +592,9 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     private void close(boolean isTouchClose) {
-        ImageLoadUtils.getInstance().getOnBackView().onTouchClose(isTouchClose);
+        if (onBackView != null){
+            onBackView.onTouchClose(isTouchClose);
+        }
         setExitView();
         finishAfterTransition();
     }

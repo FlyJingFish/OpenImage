@@ -64,11 +64,16 @@ public class TouchCloseLayout extends FrameLayout {
                 if (onTouchCloseListener != null) {
                     onTouchCloseListener.onTouchScale(0);
                 }
+                if (onTouchCloseListener != null){
+                    onTouchCloseListener.onEndTouch();
+                }
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
-
+                if (onTouchCloseListener != null){
+                    onTouchCloseListener.onEndTouch();
+                }
             }
 
             @Override
@@ -187,6 +192,7 @@ public class TouchCloseLayout extends FrameLayout {
 
     public interface OnTouchCloseListener {
         void onStartTouch();
+        void onEndTouch();
         void onTouchScale(float scale);
 
         void onTouchClose(float scale);
