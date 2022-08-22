@@ -91,6 +91,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float mBaseRotation;
 
     private boolean mZoomEnabled = true;
+    private boolean mScreenOrientationChange = false;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
     private ScaleType mSrcScaleType = ScaleType.FIT_CENTER;
     // TODO: 2022/8/2 设置高度
@@ -293,7 +294,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         });
 
         screenOrientationEvent = new ScreenOrientationEvent(mImageView.getContext());
-        screenOrientationEvent.registerDisplayListener(() -> mTargetWidth = 0);
+        screenOrientationEvent.registerDisplayListener(() -> mScreenOrientationChange = true);
     }
 
     public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
@@ -373,6 +374,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             oldRight, int oldBottom) {
         // Update our base matrix, as the bounds have changed
         if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+            if (mScreenOrientationChange){
+                mTargetWidth = 0;
+            }
             if (right > left && mTargetWidth ==0){
                 mTargetWidth = right - left;
                 mTargetHeight = bottom - top;
@@ -380,6 +384,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             }
             updateBaseMatrix(mImageView.getDrawable());
         }
+        mScreenOrientationChange = false;
     }
 
     @Override
