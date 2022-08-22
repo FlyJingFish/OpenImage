@@ -33,8 +33,8 @@ import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
-import com.flyjingfish.openimagelib.databinding.ActivityViewpagerBinding;
-import com.flyjingfish.openimagelib.databinding.IndicatorTextBinding;
+import com.flyjingfish.openimagelib.databinding.OpenImageActivityViewpagerBinding;
+import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
 import com.flyjingfish.openimagelib.enums.BackViewType;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
@@ -54,7 +54,7 @@ import java.util.Map;
 
 public class ViewPagerActivity extends AppCompatActivity {
 
-    private ActivityViewpagerBinding binding;
+    private OpenImageActivityViewpagerBinding binding;
     private List<OpenImageDetail> openImageBeans;
     private int clickPosition;
     private int showPosition;
@@ -62,7 +62,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private PhotosViewModel photosViewModel;
     private String itemLoadKey;
-    private IndicatorTextBinding indicatorTextBinding;
+    private OpenImageIndicatorTextBinding indicatorTextBinding;
     private int indicatorType;
     private String textFormat = "%1$d/%2$d";
     private static final int INDICATOR_TEXT = 0;
@@ -94,7 +94,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         getWindow().setAllowEnterTransitionOverlap(true);
         getWindow().setExitTransition(TransitionInflater.from(this)
                 .inflateTransition(R.transition.grid_exit_transition));
-        binding = ActivityViewpagerBinding.inflate(getLayoutInflater());
+        binding = OpenImageActivityViewpagerBinding.inflate(getLayoutInflater());
 
         photosViewModel = new ViewModelProvider(this).get(PhotosViewModel.class);
         photosViewModel.closeViewLiveData.observe(this, integer -> close(false));
@@ -342,7 +342,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 } else {
                     int textColor = AttrsUtils.getTypeValueColor(this, R.attr.openImage_indicator_textColor, Color.WHITE);
                     float textSize = AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_textSize);
-                    indicatorTextBinding = IndicatorTextBinding.inflate(getLayoutInflater(), binding.getRoot(), true);
+                    indicatorTextBinding = OpenImageIndicatorTextBinding.inflate(getLayoutInflater(), binding.getRoot(), true);
                     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
                     setIndicatorLayoutParams(layoutParams);
                     indicatorTextBinding.tvShowPos.setLayoutParams(layoutParams);
@@ -367,7 +367,7 @@ public class ViewPagerActivity extends AppCompatActivity {
             StatusBarHelper.setStatusBarDarkMode(this);
             orientation = OpenImageOrientation.HORIZONTAL;
             if (openImageBeans.size() > 1) {
-                indicatorTextBinding = IndicatorTextBinding.inflate(getLayoutInflater(), binding.getRoot(), true);
+                indicatorTextBinding = OpenImageIndicatorTextBinding.inflate(getLayoutInflater(), binding.getRoot(), true);
                 FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
                 layoutParams.bottomMargin = (int) ScreenUtils.dp2px(this, 10);
                 layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;

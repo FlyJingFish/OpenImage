@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import androidx.annotation.NonNull;
@@ -24,7 +23,7 @@ public class LoadingView extends AppCompatImageView {
 
     public LoadingView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        setImageResource(R.drawable.ic_loading);
+        setImageResource(R.drawable.ic_open_image_loading);
         initLoadingAnim();
     }
     private void initLoadingAnim(){

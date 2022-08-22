@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.flyjingfish.openimagelib.databinding.IndicatorImageBinding;
+import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorImageBinding;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 
 class ImageIndicatorAdapter extends RecyclerView.Adapter<ImageIndicatorAdapter.IndicatorViewHolder> {
@@ -27,12 +27,12 @@ class ImageIndicatorAdapter extends RecyclerView.Adapter<ImageIndicatorAdapter.I
     @NonNull
     @Override
     public IndicatorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new IndicatorViewHolder(IndicatorImageBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false).getRoot());
+        return new IndicatorViewHolder(OpenImageIndicatorImageBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false).getRoot());
     }
 
     @Override
     public void onBindViewHolder(@NonNull IndicatorViewHolder holder, int position) {
-        IndicatorImageBinding binding = IndicatorImageBinding.bind(holder.itemView);
+        OpenImageIndicatorImageBinding binding = OpenImageIndicatorImageBinding.bind(holder.itemView);
         RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) binding.ivShowPos.getLayoutParams();
         if (orientation == OpenImageOrientation.HORIZONTAL){
             layoutParams.leftMargin = (int) (interval/2);

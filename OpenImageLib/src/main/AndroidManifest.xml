@@ -7,7 +7,7 @@
             android:name=".ViewPagerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
-            android:theme="@style/Theme.BasePhotosTheme">
+            android:theme="@style/Theme.OpenImageTheme">
             <meta-data
                 android:name="notch.config"
                 android:value="portrait|landscape" />
