@@ -86,6 +86,8 @@ public class ViewPagerActivity extends AppCompatActivity {
     private LinearLayoutManager imageIndicatorLayoutManager;
     private String onBackViewKey;
     private ImageLoadUtils.OnBackView onBackView;
+    private FontStyle fontStyle;
+    private boolean isCallClosed;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -217,12 +219,18 @@ public class ViewPagerActivity extends AppCompatActivity {
                 if (onBackView != null){
                     onBackView.onStartTouchScale(showPosition);
                 }
+                if (fontStyle == FontStyle.FULL_SCREEN){
+                    StatusBarHelper.cancelFullScreen(ViewPagerActivity.this);
+                }
             }
 
             @Override
             public void onEndTouch() {
                 if (onBackView != null){
                     onBackView.onEndTouchScale(showPosition);
+                }
+                if (fontStyle == FontStyle.FULL_SCREEN){
+                    StatusBarHelper.setFullScreen(ViewPagerActivity.this);
                 }
             }
 
@@ -302,14 +310,13 @@ public class ViewPagerActivity extends AppCompatActivity {
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         if (themeRes != 0) {
             setTheme(themeRes);
-            int fontStyle = AttrsUtils.getTypeValueInt(this, R.attr.openImage_statusBar_fontStyle);
-            if (fontStyle == 1) {
-                StatusBarHelper.translucent(this);
+            fontStyle = FontStyle.getStyle(AttrsUtils.getTypeValueInt(this, R.attr.openImage_statusBar_fontStyle));
+            StatusBarHelper.translucent(this);
+            if (fontStyle == FontStyle.LIGHT) {
                 StatusBarHelper.setStatusBarLightMode(this);
-            } else if (fontStyle == 3) {
+            } else if (fontStyle == FontStyle.FULL_SCREEN) {
                 StatusBarHelper.setFullScreen(this);
             } else {
-                StatusBarHelper.translucent(this);
                 StatusBarHelper.setStatusBarDarkMode(this);
             }
             int bgColor = AttrsUtils.getTypeValueResourceId(this, R.attr.openImage_background);
@@ -363,6 +370,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 compositePageTransformer.addTransformer(new MarginPageTransformer((int) ScreenUtils.dp2px(this, 10)));
             }
         } else {
+            fontStyle = FontStyle.DARK;
             StatusBarHelper.translucent(this);
             StatusBarHelper.setStatusBarDarkMode(this);
             orientation = OpenImageOrientation.HORIZONTAL;
@@ -592,11 +600,20 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     private void close(boolean isTouchClose) {
+        if (isCallClosed){
+            return;
+        }
         if (onBackView != null){
             onBackView.onTouchClose(isTouchClose);
         }
         setExitView();
-        finishAfterTransition();
+        if (!isTouchClose && fontStyle == FontStyle.FULL_SCREEN){
+            StatusBarHelper.cancelFullScreen(ViewPagerActivity.this);
+            mHandler.postDelayed(this::finishAfterTransition,100);
+        }else {
+            finishAfterTransition();
+        }
+        isCallClosed = true;
     }
 
     private View getCoverView() {
@@ -605,5 +622,28 @@ public class ViewPagerActivity extends AppCompatActivity {
             return baseFragment.getExitImageView();
         }
         return null;
+    }
+
+    private enum FontStyle{
+        LIGHT(1),
+        DARK(2),
+        FULL_SCREEN(3);
+        int value;
+
+        FontStyle(int value) {
+            this.value = value;
+        }
+
+        public static FontStyle getStyle(int style){
+            if (style == 1){
+                return LIGHT;
+            }else  if (style == 2){
+                return DARK;
+            }else  if (style == 3){
+                return FULL_SCREEN;
+            }else {
+                return DARK;
+            }
+        }
     }
 }

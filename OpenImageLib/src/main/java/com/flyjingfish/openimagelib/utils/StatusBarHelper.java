@@ -14,6 +14,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
+import com.flyjingfish.openimagelib.ViewPagerActivity;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -448,9 +450,12 @@ public class StatusBarHelper {
      * @param activity
      */
     public static void setFullScreen(Activity activity) {
-        Window window = activity.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        try {
+            Window window = activity.getWindow();
+//        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } catch (Exception ignored) {
+        }
 
     }
 
@@ -460,8 +465,11 @@ public class StatusBarHelper {
      * @param activity
      */
     public static void cancelFullScreen(Activity activity) {
-        Window window = activity.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        try {
+            Window window = activity.getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } catch (Exception ignored) {
+        }
+//        window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 }
