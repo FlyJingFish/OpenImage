@@ -37,6 +37,7 @@ import android.widget.OverScroller;
 import androidx.annotation.NonNull;
 
 import com.flyjingfish.openimagelib.OpenImageConfig;
+import com.flyjingfish.openimagelib.utils.ScreenOrientationEvent;
 
 /**
  * The component of {@link PhotoView} which does the work allowing for zooming, scaling, panning, etc.
@@ -98,6 +99,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float mTargetViewHeight;
     private float mStartWidth;
     private float mStartHeight;
+    private ScreenOrientationEvent screenOrientationEvent;
 
     public void setStartWidth(float mStartWidth) {
         this.mStartWidth = mStartWidth;
@@ -289,6 +291,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 return false;
             }
         });
+
+        screenOrientationEvent = new ScreenOrientationEvent(mImageView.getContext());
+        screenOrientationEvent.registerDisplayListener(() -> mTargetWidth = 0);
     }
 
     public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
@@ -1120,6 +1125,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void release() {
 //        mHandler.removeCallbacksAndMessages(null);
+        if (screenOrientationEvent != null){
+            screenOrientationEvent.unRegisterDisplayListener();
+        }
     }
 
 }
