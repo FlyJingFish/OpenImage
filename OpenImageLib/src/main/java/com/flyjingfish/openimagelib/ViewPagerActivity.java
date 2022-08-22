@@ -93,7 +93,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         getWindow().setAllowEnterTransitionOverlap(true);
         getWindow().setExitTransition(TransitionInflater.from(this)
-                .inflateTransition(R.transition.grid_exit_transition));
+                .inflateTransition(R.transition.open_image_exit_transition));
         binding = OpenImageActivityViewpagerBinding.inflate(getLayoutInflater());
 
         photosViewModel = new ViewModelProvider(this).get(PhotosViewModel.class);
