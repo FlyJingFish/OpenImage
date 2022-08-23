@@ -1,8 +1,10 @@
 package com.flyjingfish.openimagelib;
 
 import android.animation.ObjectAnimator;
+import android.app.Instrumentation;
 import android.app.SharedElementCallback;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -622,6 +624,14 @@ public class ViewPagerActivity extends AppCompatActivity {
             return baseFragment.getExitImageView();
         }
         return null;
+    }
+
+    @Override
+    protected void onStop() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isFinishing()){
+            new Instrumentation().callActivityOnSaveInstanceState(this,new Bundle());
+        }
+        super.onStop();
     }
 
     private enum FontStyle{
