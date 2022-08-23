@@ -9,11 +9,7 @@ import android.view.Window;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-/**
- * @author：luck
- * @date：2021/11/17 4:42 下午
- * @describe：ActivityCompatHelper
- */
+
 public class ActivityCompatHelper {
     private static final int MIN_FRAGMENT_COUNT = 1;
 
