@@ -1,6 +1,7 @@
 package com.flyjingfish.openimagelib;
 
 import android.view.View;
+import android.widget.ImageView;
 
 import com.flyjingfish.openimagelib.enums.BackViewType;
 
@@ -47,5 +48,15 @@ class ExitOnBackView implements ImageLoadUtils.OnBackView {
     @Override
     public void onEndTouchScale(int showPosition) {
 
+    }
+
+    protected static class ShareExitViewBean {
+        protected BackViewType backViewType;
+        protected ImageView shareExitView;
+
+        public ShareExitViewBean(BackViewType backViewType, ImageView shareExitView) {
+            this.backViewType = backViewType;
+            this.shareExitView = shareExitView;
+        }
     }
 }

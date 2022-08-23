@@ -33,7 +33,7 @@
         <enum name="none" value="2" />
     </attr>
     <!--如果指示器是文本可以设置例如(%1$d/%2$d) &ndash;&gt; (1/10)-->
-    <attr name="openImage.indicator.textFormat" format="reference" />
+    <attr name="openImage.indicator.textFormat" format="reference|string" />
     <!--文本指示器颜色-->
     <attr name="openImage.indicator.textColor" format="reference|color" />
     <!--文本大小-->

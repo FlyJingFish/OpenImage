@@ -22,36 +22,27 @@ import java.util.Locale;
 import java.util.Map;
 
 class ExitSharedElementCallback extends SharedElementCallback {
-    private Context context;
+    private final Context context;
     private View backView;
     private ImageView exitView;
     protected Float startAlpha;
     protected Integer startVisibility;
     protected Drawable startDrawable;
-    private ImageView.ScaleType srcImageViewScaleType;
-    private ImageView shareExitMapView;
+    private final ImageView.ScaleType srcImageViewScaleType;
+    private final ImageView shareExitMapView;
     private Rect paddingRect;
     private final boolean isRtl;
     private float startSrcAlpha;
-    private boolean showSrcImageView;
+    private final boolean showSrcImageView;
+    private final Float showCurrentViewStartAlpha;
 
-    public ExitSharedElementCallback(Context context, ImageView.ScaleType srcImageViewScaleType, ImageView shareExitMapView) {
-        this.context = context;
-        this.srcImageViewScaleType = srcImageViewScaleType;
-        this.shareExitMapView = shareExitMapView;
-        isRtl = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL;
-    }
-
-    public ExitSharedElementCallback(Context context, ImageView.ScaleType srcImageViewScaleType, ImageView shareExitMapView, boolean showSrcImageView) {
+    public ExitSharedElementCallback(Context context, ImageView.ScaleType srcImageViewScaleType, ImageView shareExitMapView, boolean showSrcImageView,Float showCurrentViewStartAlpha) {
         this.context = context;
         this.srcImageViewScaleType = srcImageViewScaleType;
         this.shareExitMapView = shareExitMapView;
         this.showSrcImageView = showSrcImageView;
+        this.showCurrentViewStartAlpha = showCurrentViewStartAlpha;
         isRtl = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL;
-        if (!showSrcImageView && shareExitMapView != null){
-            startSrcAlpha = shareExitMapView.getAlpha();
-            shareExitMapView.setAlpha(0f);
-        }
     }
 
     @Override
@@ -82,8 +73,6 @@ class ExitSharedElementCallback extends SharedElementCallback {
                 sharedElement.setAlpha(startAlpha);
                 sharedElement.setVisibility(startVisibility);
             }
-        }else {
-            sharedElement.setAlpha(0f);
         }
         return parcelable;
     }
@@ -106,6 +95,10 @@ class ExitSharedElementCallback extends SharedElementCallback {
             paddingRect.top = shareExitMapView.getPaddingTop();
             paddingRect.bottom = shareExitMapView.getPaddingBottom();
             sharedEls.put(name, shareExitMapView);
+            if (!showSrcImageView){
+                startSrcAlpha = showCurrentViewStartAlpha != null?showCurrentViewStartAlpha:shareExitMapView.getAlpha();
+                shareExitMapView.setAlpha(0f);
+            }
         } else {
             sharedEls.clear();
             names.clear();

@@ -3,6 +3,7 @@ package com.flyjingfish.openimagelib;
 import android.animation.ObjectAnimator;
 import android.app.Instrumentation;
 import android.app.SharedElementCallback;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -218,20 +219,20 @@ public class ViewPagerActivity extends AppCompatActivity {
         binding.getRoot().setOnTouchCloseListener(new TouchCloseLayout.OnTouchCloseListener() {
             @Override
             public void onStartTouch() {
-                if (onBackView != null){
+                if (onBackView != null) {
                     onBackView.onStartTouchScale(showPosition);
                 }
-                if (fontStyle == FontStyle.FULL_SCREEN){
+                if (fontStyle == FontStyle.FULL_SCREEN) {
                     StatusBarHelper.cancelFullScreen(ViewPagerActivity.this);
                 }
             }
 
             @Override
             public void onEndTouch() {
-                if (onBackView != null){
+                if (onBackView != null) {
                     onBackView.onEndTouchScale(showPosition);
                 }
-                if (fontStyle == FontStyle.FULL_SCREEN){
+                if (fontStyle == FontStyle.FULL_SCREEN) {
                     StatusBarHelper.setFullScreen(ViewPagerActivity.this);
                 }
             }
@@ -280,11 +281,11 @@ public class ViewPagerActivity extends AppCompatActivity {
             MediaType mediaType = openImageDetail.getType();
             for (MoreViewOption moreViewOption : moreViewOptions) {
                 MoreViewShowType showType = moreViewOption.getMoreViewShowType();
-                if (mediaType == MediaType.IMAGE && (showType == MoreViewShowType.IMAGE || showType == MoreViewShowType.BOTH)){
+                if (mediaType == MediaType.IMAGE && (showType == MoreViewShowType.IMAGE || showType == MoreViewShowType.BOTH)) {
                     moreViewOption.getView().setVisibility(View.VISIBLE);
-                }else if (mediaType == MediaType.VIDEO && (showType == MoreViewShowType.VIDEO || showType == MoreViewShowType.BOTH)){
+                } else if (mediaType == MediaType.VIDEO && (showType == MoreViewShowType.VIDEO || showType == MoreViewShowType.BOTH)) {
                     moreViewOption.getView().setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     moreViewOption.getView().setVisibility(View.GONE);
                 }
             }
@@ -312,7 +313,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         if (themeRes != 0) {
             setTheme(themeRes);
-            fontStyle = FontStyle.getStyle(AttrsUtils.getTypeValueInt(this, R.attr.openImage_statusBar_fontStyle));
+            fontStyle = FontStyle.getStyle(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_statusBar_fontStyle));
             StatusBarHelper.translucent(this);
             if (fontStyle == FontStyle.LIGHT) {
                 StatusBarHelper.setStatusBarLightMode(this);
@@ -321,16 +322,13 @@ public class ViewPagerActivity extends AppCompatActivity {
             } else {
                 StatusBarHelper.setStatusBarDarkMode(this);
             }
-            int bgColor = AttrsUtils.getTypeValueResourceId(this, R.attr.openImage_background);
-            if (bgColor != 0) {
-                binding.vBg.setBackgroundResource(bgColor);
-            }
-            indicatorType = AttrsUtils.getTypeValueInt(this, R.attr.openImage_indicator_type);
-            orientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, R.attr.openImage_viewPager_orientation));
+            AttrsUtils.setBackgroundResourceOrColor(this, themeRes, R.attr.openImage_background, binding.vBg);
+            indicatorType = AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_indicator_type);
+            orientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_viewPager_orientation));
             if (indicatorType < 2 && openImageBeans.size() > 1) {
                 if (indicatorType == INDICATOR_IMAGE) {//图片样式
-                    float interval = AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_image_interval, -1);
-                    int imageRes = AttrsUtils.getTypeValueResourceId(this, R.attr.openImage_indicator_imageRes);
+                    float interval = AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_image_interval, -1);
+                    int imageRes = AttrsUtils.getTypeValueResourceId(this, themeRes, R.attr.openImage_indicator_imageRes);
                     if (interval == -1) {
                         interval = ScreenUtils.dp2px(this, 4);
                     }
@@ -339,33 +337,33 @@ public class ViewPagerActivity extends AppCompatActivity {
                     }
                     RecyclerView recyclerView = new RecyclerView(this);
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    setIndicatorLayoutParams(layoutParams);
+                    setIndicatorLayoutParams(layoutParams, themeRes);
                     binding.getRoot().addView(recyclerView, layoutParams);
 
-                    OpenImageOrientation realOrientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, R.attr.openImage_indicator_image_orientation));
+                    OpenImageOrientation realOrientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_indicator_image_orientation));
                     imageIndicatorLayoutManager = new LinearLayoutManager(this, realOrientation == OpenImageOrientation.HORIZONTAL ? LinearLayoutManager.HORIZONTAL : LinearLayoutManager.VERTICAL, false);
                     recyclerView.setLayoutManager(imageIndicatorLayoutManager);
                     imageIndicatorAdapter = new ImageIndicatorAdapter(openImageBeans.size(), interval, imageRes, realOrientation);
                     recyclerView.setAdapter(imageIndicatorAdapter);
 
                 } else {
-                    int textColor = AttrsUtils.getTypeValueColor(this, R.attr.openImage_indicator_textColor, Color.WHITE);
-                    float textSize = AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_textSize);
+                    int textColor = AttrsUtils.getTypeValueColor(this, themeRes, R.attr.openImage_indicator_textColor, Color.WHITE);
+                    float textSize = AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_textSize);
                     indicatorTextBinding = OpenImageIndicatorTextBinding.inflate(getLayoutInflater(), binding.getRoot(), true);
                     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
-                    setIndicatorLayoutParams(layoutParams);
+                    setIndicatorLayoutParams(layoutParams, themeRes);
                     indicatorTextBinding.tvShowPos.setLayoutParams(layoutParams);
                     indicatorTextBinding.tvShowPos.setTextColor(textColor);
                     if (textSize != 0) {
                         indicatorTextBinding.tvShowPos.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
                     }
-                    CharSequence strFormat = AttrsUtils.getTypeValueText(this, R.attr.openImage_indicator_textFormat);
+                    CharSequence strFormat = AttrsUtils.getTypeValueText(this, themeRes, R.attr.openImage_indicator_textFormat);
                     if (!TextUtils.isEmpty(strFormat)) {
                         textFormat = strFormat + "";
                     }
                 }
             }
-            int pageMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_viewPager_pageMargin, -1);
+            int pageMargin = (int) AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_viewPager_pageMargin, -1);
             if (pageMargin >= 0) {
                 compositePageTransformer.addTransformer(new MarginPageTransformer(pageMargin));
             } else {
@@ -412,14 +410,14 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     }
 
-    private void setIndicatorLayoutParams(FrameLayout.LayoutParams layoutParams) {
-        int gravity = AttrsUtils.getTypeValueInt(this, R.attr.openImage_indicator_gravity);
-        int topMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_marginTop);
-        int bottomMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_marginBottom);
-        int leftMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_marginLeft);
-        int rightMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_marginRight);
-        int startMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_marginStart);
-        int endMargin = (int) AttrsUtils.getTypeValueDimension(this, R.attr.openImage_indicator_marginEnd);
+    private void setIndicatorLayoutParams(FrameLayout.LayoutParams layoutParams, int themeRes) {
+        int gravity = AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_indicator_gravity);
+        int topMargin = (int) AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_marginTop);
+        int bottomMargin = (int) AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_marginBottom);
+        int leftMargin = (int) AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_marginLeft);
+        int rightMargin = (int) AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_marginRight);
+        int startMargin = (int) AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_marginStart);
+        int endMargin = (int) AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_marginEnd);
         layoutParams.bottomMargin = bottomMargin;
         layoutParams.topMargin = topMargin + ScreenUtils.getStatusBarHeight(this);
         layoutParams.leftMargin = leftMargin;
@@ -506,8 +504,8 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     private void setExitView() {
         BackViewType backViewType = BackViewType.NO_SHARE;
-        if (onBackView != null){
-            backViewType= onBackView.onBack(showPosition);
+        if (onBackView != null) {
+            backViewType = onBackView.onBack(showPosition);
         }
         if (backViewType == BackViewType.NO_SHARE) {
             ViewCompat.setTransitionName(binding.viewPager, "");
@@ -602,17 +600,17 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     private void close(boolean isTouchClose) {
-        if (isCallClosed){
+        if (isCallClosed) {
             return;
         }
-        if (onBackView != null){
+        if (onBackView != null) {
             onBackView.onTouchClose(isTouchClose);
         }
         setExitView();
-        if (!isTouchClose && fontStyle == FontStyle.FULL_SCREEN){
+        if (!isTouchClose && fontStyle == FontStyle.FULL_SCREEN) {
             StatusBarHelper.cancelFullScreen(ViewPagerActivity.this);
-            mHandler.postDelayed(this::finishAfterTransition,100);
-        }else {
+            mHandler.postDelayed(this::finishAfterTransition, 100);
+        } else {
             finishAfterTransition();
         }
         isCallClosed = true;
@@ -628,13 +626,13 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isFinishing()){
-            new Instrumentation().callActivityOnSaveInstanceState(this,new Bundle());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isFinishing()) {
+            new Instrumentation().callActivityOnSaveInstanceState(this, new Bundle());
         }
         super.onStop();
     }
 
-    private enum FontStyle{
+    private enum FontStyle {
         LIGHT(1),
         DARK(2),
         FULL_SCREEN(3);
@@ -644,14 +642,14 @@ public class ViewPagerActivity extends AppCompatActivity {
             this.value = value;
         }
 
-        public static FontStyle getStyle(int style){
-            if (style == 1){
+        public static FontStyle getStyle(int style) {
+            if (style == 1) {
                 return LIGHT;
-            }else  if (style == 2){
+            } else if (style == 2) {
                 return DARK;
-            }else  if (style == 3){
+            } else if (style == 3) {
                 return FULL_SCREEN;
-            }else {
+            } else {
                 return DARK;
             }
         }
