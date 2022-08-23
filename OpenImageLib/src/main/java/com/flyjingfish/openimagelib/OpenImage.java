@@ -82,7 +82,7 @@ public class OpenImage {
     private String itemLoadHelperKey;
     private boolean disableClickClose;
     private boolean showSrcImageView = true;
-    private List<MoreViewOption> moreViewOptions = new ArrayList<>();
+    private final List<MoreViewOption> moreViewOptions = new ArrayList<>();
     private int srcViewType;
     private static final int RV = 1;
     private static final int AB_LIST = 2;
