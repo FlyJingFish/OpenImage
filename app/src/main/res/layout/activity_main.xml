@@ -100,7 +100,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="朋友圈"/>
-
+        <Button
+            android:id="@+id/btn_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ViewPager"/>
         <Button
             android:id="@+id/btn_listview"
             android:layout_width="match_parent"

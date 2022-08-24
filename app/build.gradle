@@ -61,6 +61,8 @@ dependencies {
     //完整版引入
     implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.3.3-release-jitpack'
     implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer-exo2:v8.3.3-release-jitpack'
+    implementation 'io.github.youth5201314:banner:2.2.2'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+
 }
