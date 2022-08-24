@@ -148,8 +148,8 @@ public final class OpenImage {
     }
 
     /**
-     * @param viewPager          展示数据的ViewPager2
-     * @param sourceImageViewGet 展示数据的ViewPager2 的图片ImageView
+     * @param viewPager          展示数据的ViewPager
+     * @param sourceImageViewGet 展示数据的ViewPager 的图片ImageView
      * @return
      */
     public OpenImage setClickViewPager(ViewPager viewPager, SourceImageViewGet<OpenImageUrl> sourceImageViewGet) {
