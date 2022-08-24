@@ -137,6 +137,28 @@ public final class OpenImage {
     }
 
     /**
+     * @param viewPager2           展示数据的ViewPager2
+     * @param sourceImageViewIdGet 展示数据的ViewPager2 的图片Id
+     * @return
+     */
+    public OpenImage setClickViewPager2(ViewPager2 viewPager2, SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet) {
+        this.viewPager2 = viewPager2;
+        this.sourceImageViewIdGet = sourceImageViewIdGet;
+        return this;
+    }
+
+    /**
+     * @param viewPager          展示数据的ViewPager2
+     * @param sourceImageViewGet 展示数据的ViewPager2 的图片ImageView
+     * @return
+     */
+    public OpenImage setClickViewPager(ViewPager viewPager, SourceImageViewGet<OpenImageUrl> sourceImageViewGet) {
+        this.viewPager = viewPager;
+        this.sourceImageViewGet = sourceImageViewGet;
+        return this;
+    }
+
+    /**
      * @param gridView             展示数据的GridView
      * @param sourceImageViewIdGet 展示数据的GridView 的图片Id
      * @return
@@ -180,28 +202,6 @@ public final class OpenImage {
      */
     public OpenImage setClickImageViews(List<ImageView> imageViews) {
         this.imageViews = imageViews;
-        return this;
-    }
-
-    /**
-     * @param viewPager2           展示数据的ViewPager2
-     * @param sourceImageViewIdGet 展示数据的ViewPager2 的图片Id
-     * @return
-     */
-    public OpenImage setClickViewPager2(ViewPager2 viewPager2, SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet) {
-        this.viewPager2 = viewPager2;
-        this.sourceImageViewIdGet = sourceImageViewIdGet;
-        return this;
-    }
-
-    /**
-     * @param viewPager          展示数据的ViewPager2
-     * @param sourceImageViewGet 展示数据的ViewPager2 的图片ImageView
-     * @return
-     */
-    public OpenImage setClickViewPager(ViewPager viewPager, SourceImageViewGet<OpenImageUrl> sourceImageViewGet) {
-        this.viewPager = viewPager;
-        this.sourceImageViewGet = sourceImageViewGet;
         return this;
     }
 
