@@ -183,12 +183,22 @@ public final class OpenImage {
         return this;
     }
 
+    /**
+     * @param viewPager2           展示数据的ViewPager2
+     * @param sourceImageViewIdGet 展示数据的ViewPager2 的图片Id
+     * @return
+     */
     public OpenImage setClickViewPager2(ViewPager2 viewPager2, SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet) {
         this.viewPager2 = viewPager2;
         this.sourceImageViewIdGet = sourceImageViewIdGet;
         return this;
     }
 
+    /**
+     * @param viewPager          展示数据的ViewPager2
+     * @param sourceImageViewGet 展示数据的ViewPager2 的图片ImageView
+     * @return
+     */
     public OpenImage setClickViewPager(ViewPager viewPager, SourceImageViewGet<OpenImageUrl> sourceImageViewGet) {
         this.viewPager = viewPager;
         this.sourceImageViewGet = sourceImageViewGet;
@@ -549,7 +559,7 @@ public final class OpenImage {
                 public void onScrollPos(int pos) {
                     if (isAutoScrollScanPosition) {
                         viewPager2.post(() -> {
-                            viewPager2.setCurrentItem(pos,false);
+                            viewPager2.setCurrentItem(pos, false);
                         });
                     }
                 }
@@ -583,7 +593,7 @@ public final class OpenImage {
                 public void onScrollPos(int pos) {
                     if (isAutoScrollScanPosition) {
                         viewPager.post(() -> {
-                            viewPager.setCurrentItem(pos,false);
+                            viewPager.setCurrentItem(pos, false);
                         });
                     }
                 }
@@ -646,7 +656,7 @@ public final class OpenImage {
                             continue;
                         }
                         ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(imageBean, i));
-                        if (shareView == null){
+                        if (shareView == null) {
                             throw new NullPointerException("请确保 SourceImageViewIdGet 返回的 ImageView 的Id正确");
                         }
                         if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
@@ -689,9 +699,9 @@ public final class OpenImage {
                 openImageDetails.add(openImageDetail);
                 if (clickDataPosition == i) {
                     View view = getItemView(viewPager2.getCurrentItem());
-                    if (view != null){
+                    if (view != null) {
                         ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(imageBean, i));
-                        if (shareView == null){
+                        if (shareView == null) {
                             throw new NullPointerException("请确保 SourceImageViewIdGet 返回的 ImageView 的Id正确");
                         }
                         if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
@@ -716,7 +726,7 @@ public final class OpenImage {
                 openImageDetails.add(openImageDetail);
                 if (clickDataPosition == i) {
                     ImageView shareView = sourceImageViewGet.getImageView(imageBean, i);
-                    if (shareView == null){
+                    if (shareView == null) {
                         throw new NullPointerException("请确保 SourceImageViewGet 返回的 ImageView 不能为null");
                     }
                     if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
