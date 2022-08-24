@@ -510,11 +510,10 @@ public final class OpenImage {
                 @Override
                 public void onScrollPos(int pos) {
                     if (!isAutoScrollScanPosition) {
-                        return;
+                        absListView.post(() -> {
+                            absListView.smoothScrollToPosition(pos);
+                        });
                     }
-                    absListView.post(() -> {
-                        absListView.smoothScrollToPosition(pos);
-                    });
                 }
 
             });
@@ -530,17 +529,6 @@ public final class OpenImage {
             RecyclerView.Adapter adapter = viewPager2.getAdapter();
             if (adapter == null) {
                 throw new NullPointerException("ViewPager2 的 Adapter 不能为null");
-            }
-
-            int itemCount = adapter.getItemCount();
-            if (itemCount != openImageUrls.size()) {
-                throw new IllegalArgumentException("所传数据和 ViewPager2 的数据个数不符");
-            }
-            if (clickDataPosition != clickViewPosition) {
-                throw new IllegalArgumentException("clickDataPosition 和 clickViewPosition不能不相等");
-            }
-            if (clickViewPosition >= itemCount) {
-                throw new IllegalArgumentException("clickViewPosition不能 >= ViewPager2 数据的个数");
             }
 
             srcViewType = VP2;
@@ -559,10 +547,11 @@ public final class OpenImage {
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
                 public void onScrollPos(int pos) {
-                    if (!isAutoScrollScanPosition) {
-                        return;
+                    if (isAutoScrollScanPosition) {
+                        viewPager2.post(() -> {
+                            viewPager2.setCurrentItem(pos,false);
+                        });
                     }
-                    viewPager2.setCurrentItem(pos);
                 }
             });
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
@@ -577,10 +566,6 @@ public final class OpenImage {
                 throw new NullPointerException("ViewPager 的 Adapter 不能为null");
             }
 
-            int itemCount = adapter.getCount();
-            if (itemCount != openImageUrls.size()) {
-                throw new IllegalArgumentException("所传数据和 ViewPager 的数据个数不符");
-            }
             srcViewType = VP;
             ArrayList<OpenImageDetail> openImageDetails = new ArrayList<>();
 
@@ -596,10 +581,11 @@ public final class OpenImage {
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
                 public void onScrollPos(int pos) {
-                    if (!isAutoScrollScanPosition) {
-                        return;
+                    if (isAutoScrollScanPosition) {
+                        viewPager.post(() -> {
+                            viewPager.setCurrentItem(pos,false);
+                        });
                     }
-                    viewPager.setCurrentItem(pos);
                 }
             });
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
@@ -701,7 +687,7 @@ public final class OpenImage {
                 openImageDetail.srcWidth = shareViewWidth;
                 openImageDetail.srcHeight = shareViewHeight;
                 openImageDetails.add(openImageDetail);
-                if (viewPager2.getCurrentItem() == i) {
+                if (clickDataPosition == i) {
                     View view = getItemView(viewPager2.getCurrentItem());
                     if (view != null){
                         ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(imageBean, i));
@@ -728,7 +714,7 @@ public final class OpenImage {
                 openImageDetail.srcWidth = shareViewWidth;
                 openImageDetail.srcHeight = shareViewHeight;
                 openImageDetails.add(openImageDetail);
-                if (viewPager.getCurrentItem() == i) {
+                if (clickDataPosition == i) {
                     ImageView shareView = sourceImageViewGet.getImageView(imageBean, i);
                     if (shareView == null){
                         throw new NullPointerException("请确保 SourceImageViewGet 返回的 ImageView 不能为null");

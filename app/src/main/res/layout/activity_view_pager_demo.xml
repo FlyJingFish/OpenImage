@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="ViewPager" />
+            android:text="系统：ViewPager" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewPager"
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="ViewPager2" />
+            android:text="系统：ViewPager2" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager2"
@@ -35,15 +35,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="Banner" />
+            android:text="网上比较火的一个Banner：(内核ViewPager2)" />
 
         <com.youth.banner.Banner
             android:id="@+id/banner"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="200dp"
+            />
 
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="900dp" />
     </LinearLayout>
 </ScrollView>
