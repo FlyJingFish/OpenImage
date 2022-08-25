@@ -44,7 +44,7 @@ public abstract class BaseFragment extends Fragment {
     protected ImageView.ScaleType srcScaleType;
     protected AnimatorSet coverAnim;
     protected ItemLoadHelper itemLoadHelper;
-    protected float currentScale;
+    protected float currentScale = 1f;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
