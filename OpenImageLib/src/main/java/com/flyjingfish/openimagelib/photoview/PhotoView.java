@@ -280,4 +280,7 @@ public class PhotoView extends AppCompatImageView {
         attacher.setExitMode(mode);
     }
 
+    public void setExitFloat(float exitFloat) {
+        attacher.setExitFloat(exitFloat);
+    }
 }

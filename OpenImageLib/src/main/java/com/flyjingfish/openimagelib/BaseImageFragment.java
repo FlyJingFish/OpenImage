@@ -20,6 +20,7 @@ import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
+import com.flyjingfish.openimagelib.photoview.PhotoViewAttacher;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 public abstract class BaseImageFragment<T extends View> extends BaseFragment {
@@ -83,39 +84,66 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                 photoView.setAlpha(0f);
             }
         } else if (imageDiskMode == ImageDiskMode.RESULT && imageDetail.srcWidth != 0 && imageDetail.srcHeight != 0) {
-            ViewGroup.LayoutParams layoutParams = smallCoverImageView.getLayoutParams();
-            if (srcScaleType == ImageView.ScaleType.CENTER_CROP || srcScaleType == ImageView.ScaleType.FIT_XY) {
-                layoutParams.width = imageDetail.srcWidth;
-                layoutParams.height = imageDetail.srcHeight;
-                smallCoverImageView.setLayoutParams(layoutParams);
-                smallCoverImageView.setScaleType(srcScaleType);
-            } else if (srcScaleType == ImageView.ScaleType.CENTER) {
-                smallCoverImageView.setScaleType(srcScaleType);
-            } else if (srcScaleType == ImageView.ScaleType.FIT_CENTER || srcScaleType == ImageView.ScaleType.FIT_START || srcScaleType == ImageView.ScaleType.FIT_END) {
-                smallCoverImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            }
+            setCoverImageView();
             smallCoverImageView.setVisibility(View.VISIBLE);
             smallCoverImageView.setAlpha(1f);
             photoView.setAlpha(0f);
-            if (itemLoadHelper != null) {
-                itemLoadHelper.loadImage(requireContext(), imageDetail.openImageUrl, imageDetail.getCoverImageUrl(), smallCoverImageView, imageDetail.srcWidth, imageDetail.srcHeight, new OnLoadCoverImageListener() {
-                    @Override
-                    public void onLoadImageSuccess() {
-                    }
-
-                    @Override
-                    public void onLoadImageFailed() {
-                        Drawable drawable = smallCoverImageView.getDrawable();
-                        if (photoView.getDrawable() == null && drawable != null) {
-                            photoView.setImageDrawable(drawable);
-                        }
-                    }
-                });
-            }
+            loadCoverImage();
         } else {
             smallCoverImageView.setVisibility(View.GONE);
             photoView.setAlpha(1f);
         }
+        loadBigImage();
+        setOnListener();
+    }
+
+    public void setCoverImageView(){
+        ViewGroup.LayoutParams layoutParams = smallCoverImageView.getLayoutParams();
+        if (srcScaleType == ImageView.ScaleType.CENTER_CROP || srcScaleType == ImageView.ScaleType.FIT_XY) {
+            layoutParams.width = imageDetail.srcWidth;
+            layoutParams.height = imageDetail.srcHeight;
+            smallCoverImageView.setLayoutParams(layoutParams);
+            smallCoverImageView.setScaleType(srcScaleType);
+        } else if (srcScaleType == ImageView.ScaleType.CENTER) {
+            smallCoverImageView.setScaleType(srcScaleType);
+        } else if (srcScaleType == ImageView.ScaleType.FIT_CENTER || srcScaleType == ImageView.ScaleType.FIT_START || srcScaleType == ImageView.ScaleType.FIT_END) {
+            smallCoverImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        }
+    }
+
+    public void setOnListener(){
+        if (!disableClickClose) {
+            photoView.setOnClickListener(view1 -> close());
+        }
+        if (onItemClickListener != null) {
+            photoView.setOnClickListener(v -> onItemClickListener.onItemClick(this, openImageUrl, showPosition));
+        }
+        if (onItemLongClickListener != null) {
+            photoView.setOnLongClickListener(v -> {
+                onItemLongClickListener.onItemLongClick(this, openImageUrl, showPosition);
+                return true;
+            });
+        }
+    }
+
+    public void loadCoverImage(){
+        if (itemLoadHelper != null) {
+            itemLoadHelper.loadImage(requireContext(), imageDetail.openImageUrl, imageDetail.getCoverImageUrl(), smallCoverImageView, imageDetail.srcWidth, imageDetail.srcHeight, new OnLoadCoverImageListener() {
+                @Override
+                public void onLoadImageSuccess() {
+                }
+
+                @Override
+                public void onLoadImageFailed() {
+                    Drawable drawable = smallCoverImageView.getDrawable();
+                    if (photoView.getDrawable() == null && drawable != null) {
+                        photoView.setImageDrawable(drawable);
+                    }
+                }
+            });
+        }
+    }
+    public void loadBigImage(){
         if (clickPosition == showPosition && TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl()) && coverDrawable != null) {
             onImageSuccess(coverDrawable);
         } else {
@@ -136,18 +164,6 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                         isInitImage = true;
                     });
                 }
-            });
-        }
-        if (!disableClickClose) {
-            photoView.setOnClickListener(view1 -> close());
-        }
-        if (onItemClickListener != null) {
-            photoView.setOnClickListener(v -> onItemClickListener.onItemClick(this, openImageUrl, showPosition));
-        }
-        if (onItemLongClickListener != null) {
-            photoView.setOnLongClickListener(v -> {
-                onItemLongClickListener.onItemLongClick(this, openImageUrl, showPosition);
-                return true;
             });
         }
     }
@@ -275,57 +291,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
 
     protected void initCoverAnim(int imageWidth, int imageHeight, final boolean isLoadImageSuccess) {
         if (imageDiskMode == ImageDiskMode.RESULT && (srcScaleType == ImageView.ScaleType.CENTER_CROP || srcScaleType == ImageView.ScaleType.FIT_XY) && imageDetail.srcWidth != 0 && imageDetail.srcHeight != 0) {
-            float scaleHW = imageDetail.srcHeight * 1f / imageDetail.srcWidth;
-            float originalScaleHW = imageHeight * 1f / imageWidth;
-            float coverWidth;
-            float coverHeight;
-            if (srcScaleType == ImageView.ScaleType.CENTER_CROP) {
-                if (originalScaleHW > scaleHW) {//原图高度比点击的ImageView长，缓存的图片是以宽度为准
-                    coverWidth = ScreenUtils.getScreenWidth(requireContext());
-                    coverHeight = coverWidth * scaleHW;
-                } else {//原图高度比点击的ImageView短，缓存的图片是以高度为准
-                    float targetWidth = ScreenUtils.getScreenWidth(requireContext());
-                    float targetHeight = targetWidth * originalScaleHW;
-                    coverHeight = targetHeight;
-                    coverWidth = targetHeight / scaleHW;
-                }
-            } else {
-                coverWidth = ScreenUtils.getScreenWidth(requireContext());
-                coverHeight = coverWidth * originalScaleHW;
-            }
-            ObjectAnimator coverAnim1 = ObjectAnimator.ofFloat(smallCoverImageView, "scaleX", 1f, coverWidth * 1f / imageDetail.srcWidth);
-            ObjectAnimator coverAnim2 = ObjectAnimator.ofFloat(smallCoverImageView, "scaleY", 1f, coverHeight * 1f / imageDetail.srcHeight);
-            ObjectAnimator coverAnim3 = ObjectAnimator.ofFloat(smallCoverImageView, "alpha", 1f, 0f);
-            ObjectAnimator vpPhotoAnim1 = ObjectAnimator.ofFloat(photoView, "alpha", 1f, 1f);
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.setDuration(100);
-            animatorSet.playTogether(coverAnim1, coverAnim2);
-            AnimatorSet animatorSet1 = new AnimatorSet();
-            animatorSet1.playTogether(coverAnim3, vpPhotoAnim1);
-            animatorSet1.setDuration(100);
-            coverAnim = new AnimatorSet();
-            coverAnim.playSequentially(animatorSet, animatorSet1);
-            coverAnim.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    loadPrivateImageFinish(isLoadImageSuccess);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
+            createCoverAnim(imageWidth, imageHeight, isLoadImageSuccess);
         } else {
             smallCoverImageView.setVisibility(View.GONE);
             photoView.setAlpha(1f);
@@ -334,10 +300,65 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         hideLoading(loadingView);
     }
 
+    public void createCoverAnim(int imageWidth, int imageHeight, final boolean isLoadImageSuccess){
+        float scaleHW = imageDetail.srcHeight * 1f / imageDetail.srcWidth;
+        float originalScaleHW = imageHeight * 1f / imageWidth;
+        float coverWidth;
+        float coverHeight;
+        if (srcScaleType == ImageView.ScaleType.CENTER_CROP) {
+            if (originalScaleHW > scaleHW) {//原图高度比点击的ImageView长，缓存的图片是以宽度为准
+                coverWidth = ScreenUtils.getScreenWidth(requireContext());
+                coverHeight = coverWidth * scaleHW;
+            } else {//原图高度比点击的ImageView短，缓存的图片是以高度为准
+                float targetWidth = ScreenUtils.getScreenWidth(requireContext());
+                float targetHeight = targetWidth * originalScaleHW;
+                coverHeight = targetHeight;
+                coverWidth = targetHeight / scaleHW;
+            }
+        } else {
+            coverWidth = ScreenUtils.getScreenWidth(requireContext());
+            coverHeight = coverWidth * originalScaleHW;
+        }
+        ObjectAnimator coverAnim1 = ObjectAnimator.ofFloat(smallCoverImageView, "scaleX", 1f, coverWidth * 1f / imageDetail.srcWidth);
+        ObjectAnimator coverAnim2 = ObjectAnimator.ofFloat(smallCoverImageView, "scaleY", 1f, coverHeight * 1f / imageDetail.srcHeight);
+        ObjectAnimator coverAnim3 = ObjectAnimator.ofFloat(smallCoverImageView, "alpha", 1f, 0f);
+        ObjectAnimator vpPhotoAnim1 = ObjectAnimator.ofFloat(photoView, "alpha", 1f, 1f);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(100);
+        animatorSet.playTogether(coverAnim1, coverAnim2);
+        AnimatorSet animatorSet1 = new AnimatorSet();
+        animatorSet1.playTogether(coverAnim3, vpPhotoAnim1);
+        animatorSet1.setDuration(100);
+        coverAnim = new AnimatorSet();
+        coverAnim.playSequentially(animatorSet, animatorSet1);
+        coverAnim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                loadPrivateImageFinish(isLoadImageSuccess);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+    }
+
     @Override
     public View getExitImageView() {
         smallCoverImageView.setExitMode(true);
         photoView.setExitMode(true);
+        photoView.setExitFloat(currentScale);
         if (isLoadSuccess) {
             smallCoverImageView.setVisibility(View.GONE);
             photoView.setVisibility(View.VISIBLE);

@@ -677,6 +677,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     private boolean isExitMode = false;
+    private float exitFloat = 1f;
+
+    public void setExitFloat(float exitFloat) {
+        this.exitFloat = exitFloat;
+    }
 
     public void setExitMode(boolean exitMode) {
         isExitMode = exitMode;
@@ -699,8 +704,15 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         final float widthScale = viewWidth / drawableWidth;
         final float heightScale = viewHeight / drawableHeight;
         if (mScaleType == ScaleType.CENTER) {
-            mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F,
-                    (viewHeight - drawableHeight) / 2F);
+            if (isExitMode){
+                float scale = 1/exitFloat;
+                mBaseMatrix.postScale(scale, scale);
+                mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
+                        (viewHeight - drawableHeight * scale) / 2F);
+            }else {
+                mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F,
+                        (viewHeight - drawableHeight) / 2F);
+            }
 
         } else if (mScaleType == ScaleType.CENTER_CROP) {
             float scale = Math.max(widthScale, heightScale);
