@@ -28,7 +28,6 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -892,7 +891,10 @@ public final class OpenImage {
     private void startActivity(Intent intent, Bundle newOptions, String drawableKey) {
         if (!isStartActivity) {
             if (ActivityCompatHelper.assertValidRequest(context)) {
-                context.startActivity(intent, newOptions);
+                try {
+                    context.startActivity(intent, newOptions);
+                } catch (Exception ignored){
+                }
                 release();
             } else {
                 isCanOpen = true;
@@ -971,7 +973,7 @@ public final class OpenImage {
                 backViewType = shareExitViewBean.backViewType;
                 shareExitView = shareExitViewBean.shareExitView;
             }
-            activity.setExitSharedElementCallback(new ExitSharedElementCallback(context, srcImageViewScaleType, shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null));
+            activity.setExitSharedElementCallback(new ExitSharedElementCallback2(context, srcImageViewScaleType, shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null));
             return backViewType;
         }
 

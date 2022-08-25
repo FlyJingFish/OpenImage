@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.core.text.TextUtilsCompat;
 
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+@Deprecated
 class ExitSharedElementCallback extends SharedElementCallback {
     private final Context context;
     private View backView;
@@ -110,7 +112,8 @@ class ExitSharedElementCallback extends SharedElementCallback {
         }
     }
 
-    private void initSrcViews(RectF screenBounds, Rect showRect) {
+
+    private void initSrcViews(@NonNull RectF screenBounds, Rect showRect) {
         if (context == null) {
             return;
         }
@@ -126,22 +129,13 @@ class ExitSharedElementCallback extends SharedElementCallback {
         int[] location = new int[2];
         rootInView.getLocationOnScreen(location);
 
-        FrameLayout flBelowView = new FrameLayout(context);
-        flBelowView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        if (screenBounds != null) {
-            layoutParams.topMargin = (int) screenBounds.top + showRect.top - location[1];
-            layoutParams.leftMargin = (int) screenBounds.left + showRect.left - location[0];
-            layoutParams.width = showRect.width();
-            layoutParams.height = showRect.height();
-        }
-        rootInView.addView(flBelowView, layoutParams);
         exitView = new ImageView(context);
         exitView.setScaleType(srcImageViewScaleType);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams((int) screenBounds.width(), (int) screenBounds.height());
-        params.leftMargin = -showRect.left;
-        params.topMargin = -showRect.top;
-        flBelowView.addView(exitView, params);
+        params.topMargin = (int) screenBounds.top - location[1];
+        params.leftMargin = (int) screenBounds.left  - location[0];
+        rootInView.addView(exitView, params);
+        exitView.setClipBounds(showRect);
     }
 
     private void removeBackView() {
