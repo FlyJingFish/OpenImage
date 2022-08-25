@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         binding.btnRecyclerview.setOnClickListener(v -> startActivity(new Intent(this, RecyclerViewActivity.class)));
         binding.btnIvs.setOnClickListener(v -> startActivity(new Intent(this, ImagesActivity.class)));
         binding.btnViewPager.setOnClickListener(v -> startActivity(new Intent(this, ViewPagerDemoActivity.class)));
+        binding.btnScaleType.setOnClickListener(v -> startActivity(new Intent(this, ScaleTypeActivity.class)));
     }
 
     private void clearCache(){

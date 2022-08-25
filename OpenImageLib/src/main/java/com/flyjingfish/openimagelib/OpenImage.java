@@ -536,9 +536,8 @@ public final class OpenImage {
             if (sourceImageViewIdGet == null) {
                 throw new IllegalArgumentException("sourceImageViewIdGet 不能为null");
             }
-            RecyclerView.Adapter adapter = viewPager2.getAdapter();
-            if (adapter == null) {
-                throw new NullPointerException("ViewPager2 的 Adapter 不能为null");
+            if (clickDataPosition >= openImageUrls.size()) {
+                throw new IllegalArgumentException("clickDataPosition 不能 >= OpenImageUrl 数据 size");
             }
 
             srcViewType = VP2;
@@ -571,9 +570,8 @@ public final class OpenImage {
             if (sourceImageViewGet == null) {
                 throw new IllegalArgumentException("sourceImageViewGet 不能为null");
             }
-            PagerAdapter adapter = viewPager.getAdapter();
-            if (adapter == null) {
-                throw new NullPointerException("ViewPager 的 Adapter 不能为null");
+            if (clickDataPosition >= openImageUrls.size()) {
+                throw new IllegalArgumentException("clickDataPosition 不能 >= OpenImageUrl 数据 size");
             }
 
             srcViewType = VP;
@@ -685,55 +683,51 @@ public final class OpenImage {
                 viewIndex++;
             }
         } else if (srcViewType == VP2) {
-            for (int i = 0; i < openImageUrls.size(); i++) {
-                OpenImageUrl imageBean = openImageUrls.get(i);
-                OpenImageDetail openImageDetail = new OpenImageDetail();
-                openImageDetail.openImageUrl = imageBean;
-                openImageDetail.dataPosition = i;
-                openImageDetail.viewPosition = i;
-                String shareName = OpenParams.SHARE_VIEW + i;
-                int shareViewWidth = viewPager2.getWidth();
-                int shareViewHeight = viewPager2.getHeight();
-                openImageDetail.srcWidth = shareViewWidth;
-                openImageDetail.srcHeight = shareViewHeight;
-                openImageDetails.add(openImageDetail);
-                if (clickDataPosition == i) {
-                    View view = getItemView(viewPager2.getCurrentItem());
-                    if (view != null) {
-                        ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(imageBean, i));
-                        if (shareView == null) {
-                            throw new NullPointerException("请确保 SourceImageViewIdGet 返回的 ImageView 的Id正确");
-                        }
-                        if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                            shareView.setScaleType(srcImageViewScaleType);
-                        }
-                        pair = Pair.create(shareView, shareName);
-                    }
+            View view = getItemView(viewPager2.getCurrentItem());
+            if (view != null) {
+                ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrls.get(clickDataPosition), clickDataPosition));
+                if (shareView == null) {
+                    throw new NullPointerException("请确保 SourceImageViewIdGet 返回的 ImageView 的Id正确");
+                }
+                if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
+                    shareView.setScaleType(srcImageViewScaleType);
+                }
+                String shareName = OpenParams.SHARE_VIEW + clickDataPosition;
+                pair = Pair.create(shareView, shareName);
+                int shareViewWidth = shareView.getWidth();
+                int shareViewHeight = shareView.getHeight();
+                for (int i = 0; i < openImageUrls.size(); i++) {
+                    OpenImageUrl imageBean = openImageUrls.get(i);
+                    OpenImageDetail openImageDetail = new OpenImageDetail();
+                    openImageDetail.openImageUrl = imageBean;
+                    openImageDetail.dataPosition = i;
+                    openImageDetail.viewPosition = i;
+                    openImageDetail.srcWidth = shareViewWidth;
+                    openImageDetail.srcHeight = shareViewHeight;
+                    openImageDetails.add(openImageDetail);
                 }
             }
         } else if (srcViewType == VP) {
+            ImageView shareView = sourceImageViewGet.getImageView(openImageUrls.get(clickDataPosition), clickDataPosition);
+            if (shareView == null) {
+                throw new NullPointerException("请确保 SourceImageViewGet 返回的 ImageView 不能为null");
+            }
+            if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
+                shareView.setScaleType(srcImageViewScaleType);
+            }
+            String shareName = OpenParams.SHARE_VIEW + clickDataPosition;
+            pair = Pair.create(shareView, shareName);
+            int shareViewWidth = shareView.getWidth();
+            int shareViewHeight = shareView.getHeight();
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
                 OpenImageDetail openImageDetail = new OpenImageDetail();
                 openImageDetail.openImageUrl = imageBean;
                 openImageDetail.dataPosition = i;
                 openImageDetail.viewPosition = i;
-                String shareName = OpenParams.SHARE_VIEW + i;
-                int shareViewWidth = viewPager.getWidth();
-                int shareViewHeight = viewPager.getHeight();
                 openImageDetail.srcWidth = shareViewWidth;
                 openImageDetail.srcHeight = shareViewHeight;
                 openImageDetails.add(openImageDetail);
-                if (clickDataPosition == i) {
-                    ImageView shareView = sourceImageViewGet.getImageView(imageBean, i);
-                    if (shareView == null) {
-                        throw new NullPointerException("请确保 SourceImageViewGet 返回的 ImageView 不能为null");
-                    }
-                    if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                        shareView.setScaleType(srcImageViewScaleType);
-                    }
-                    pair = Pair.create(shareView, shareName);
-                }
             }
         } else {
             for (int i = 0; i < openImageUrls.size(); i++) {
@@ -849,8 +843,6 @@ public final class OpenImage {
             @Override
             public void onLoadImageSuccess(Drawable drawable) {
                 handler.removeCallbacksAndMessages(null);
-                if (!ActivityCompatHelper.assertValidRequest(context))
-                    return;
                 String key = UUID.randomUUID().toString();
                 intent.putExtra(OpenParams.OPEN_COVER_DRAWABLE, key);
                 ImageLoadUtils.getInstance().setCoverDrawable(key, drawable);
@@ -860,8 +852,6 @@ public final class OpenImage {
             @Override
             public void onLoadImageFailed() {
                 handler.removeCallbacksAndMessages(null);
-                if (!ActivityCompatHelper.assertValidRequest(context))
-                    return;
                 startActivity(intent, newOptions, null);
             }
         });

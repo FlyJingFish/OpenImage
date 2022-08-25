@@ -41,12 +41,14 @@ public class FriendImageAdapter extends RecyclerView.Adapter<RvBaseHolder> {
     public void onBindViewHolder(@NonNull RvBaseHolder holder, int position) {
         ItemImageBinding binding = ItemImageBinding.bind(holder.itemView);
         ViewGroup.LayoutParams layoutParams = binding.ivImage.getLayoutParams();
-        int width = ViewGroup.LayoutParams.MATCH_PARENT;
+        int width;
         int height;
         if (spanCount == 3) {//90
             height = (int) ((ScreenUtils.getScreenWidth(holder.itemView.getContext()) - ScreenUtils.dp2px(holder.itemView.getContext(), 120)) / 3);
+            width = height;
         } else if (spanCount == 2) {
             height = (int) ((ScreenUtils.getScreenWidth(holder.itemView.getContext()) - ScreenUtils.dp2px(holder.itemView.getContext(), 110)) / 2);
+            width = height;
         } else {
             width = (int) ((ScreenUtils.getScreenWidth(holder.itemView.getContext()) - ScreenUtils.dp2px(holder.itemView.getContext(), 90)) / 1.5);
             height = width;

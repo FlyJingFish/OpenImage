@@ -59,7 +59,11 @@ public class MyImageLoader {
             return;
         into(url, iv, 0, 0, p, err, false, -1, false);
     }
-
+    public void load(ImageView iv, String url, int w, int h, @DrawableRes int p, @DrawableRes int err) {
+        if (!ActivityCompatHelper.assertValidRequest(iv.getContext()))
+            return;
+        into(url, iv, w, h, p, err, false, -1, false,null);
+    }
     public void load(ImageView iv, String url, int w, int h, @DrawableRes int p, @DrawableRes int err,OnImageLoadListener requestListener) {
         if (!ActivityCompatHelper.assertValidRequest(iv.getContext()))
             return;

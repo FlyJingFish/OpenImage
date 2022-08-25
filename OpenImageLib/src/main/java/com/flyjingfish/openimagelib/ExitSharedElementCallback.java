@@ -28,6 +28,7 @@ class ExitSharedElementCallback extends SharedElementCallback {
     protected Float startAlpha;
     protected Integer startVisibility;
     protected Drawable startDrawable;
+    protected Drawable startBackgroundDrawable;
     private final ImageView.ScaleType srcImageViewScaleType;
     private final ImageView shareExitMapView;
     private Rect paddingRect;
@@ -69,6 +70,9 @@ class ExitSharedElementCallback extends SharedElementCallback {
                 if (startAlpha != null){
                     exitView.setAlpha(startAlpha);
                 }
+                if (startBackgroundDrawable != null){
+                    exitView.setBackground(startBackgroundDrawable);
+                }
             } else if (sharedElement != null && startAlpha != null){
                 sharedElement.setAlpha(startAlpha);
                 sharedElement.setVisibility(startVisibility);
@@ -89,6 +93,7 @@ class ExitSharedElementCallback extends SharedElementCallback {
             startAlpha = shareExitMapView.getAlpha();
             startVisibility = shareExitMapView.getVisibility();
             startDrawable = shareExitMapView.getDrawable();
+            startBackgroundDrawable = shareExitMapView.getBackground();
             paddingRect = new Rect();
             paddingRect.left = isRtl ?Math.max(shareExitMapView.getPaddingLeft(),shareExitMapView.getPaddingEnd()):Math.max(shareExitMapView.getPaddingLeft(),shareExitMapView.getPaddingStart());
             paddingRect.right = isRtl ?Math.max(shareExitMapView.getPaddingRight(),shareExitMapView.getPaddingStart()):Math.max(shareExitMapView.getPaddingRight(),shareExitMapView.getPaddingEnd());

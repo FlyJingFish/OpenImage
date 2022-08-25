@@ -33,6 +33,7 @@ import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
+import com.flyjingfish.openimagelib.utils.ScreenUtils;
 import com.youth.banner.adapter.BannerAdapter;
 import com.youth.banner.indicator.CircleIndicator;
 import com.youth.banner.indicator.RectangleIndicator;
@@ -91,6 +92,7 @@ public class ViewPagerDemoActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             binding.viewPager.setAdapter(new ViewPagerAdapter(datas));
             binding.viewPager2.setAdapter(new ViewPager2Adapter(datas));
+            binding.banner.setBannerGalleryEffect(50,10);
             binding.banner.setIndicator(new CircleIndicator(this));
             binding.banner.addBannerLifecycleObserver(this);
             binding.banner.setAdapter(new MyBannerAdapter(datas));

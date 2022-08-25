@@ -84,41 +84,55 @@
             android:id="@+id/btn_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="RecyclerView"/>
         <Button
             android:id="@+id/btn_ivs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="单独的ImageView"/>
+        <Button
+            android:id="@+id/btn_scale_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="所有ScaleType的ImageView"/>
         <Button
             android:id="@+id/btn_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="聊天页面"/>
         <Button
             android:id="@+id/btn_friends"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="朋友圈"/>
         <Button
             android:id="@+id/btn_view_pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="ViewPager"/>
         <Button
             android:id="@+id/btn_listview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="ListView"/>
         <Button
             android:id="@+id/btn_gridview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="GridView"/>
         <Button
             android:id="@+id/btn_clear_glide_cache"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="清除Glide缓存"/>
     </LinearLayout>
 
