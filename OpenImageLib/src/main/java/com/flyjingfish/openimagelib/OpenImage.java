@@ -938,6 +938,8 @@ public final class OpenImage {
                         context = null;
                         recyclerView = null;
                         absListView = null;
+                        viewPager = null;
+                        viewPager2 = null;
                         if (imageViews != null) {
                             imageViews.clear();
                             imageViews = null;
