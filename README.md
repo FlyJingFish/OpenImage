@@ -138,6 +138,9 @@ OpenImage.with(RecyclerViewActivity.this).setClickRecyclerView(binding.rv.rv,new
 
 [点此查看更多使用说明](https://github.com/FlyJingFish/OpenImage/wiki)
 
+## 版本限制
+最低SDK版本：minSdkVersion >= 21
+
 # 效果演示</br>
 
 
