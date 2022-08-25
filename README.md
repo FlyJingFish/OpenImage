@@ -148,3 +148,14 @@ RecyclerView场景  | 聊天页面  | 打开视频
  
  
  <img src="/screenshot/Screenshot_20220731_203125_com.flyjingfish.openim.jpg" width="405px" height="940px" alt="show" />
+
+### Thanks
+
+- [PhotoView](https://github.com/Baseflow/PhotoView)
+
+### 联系方式
+
+* 有问题可以加群大家一起交流（QQ：221045694）
+
+<img src="/screenshot/qq.jpg" width="220"/>
+
