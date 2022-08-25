@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimage.DataUtils;
 import com.flyjingfish.openimage.MyApplication;
@@ -34,6 +35,7 @@ import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
+import com.youth.banner.Banner;
 import com.youth.banner.adapter.BannerAdapter;
 import com.youth.banner.indicator.CircleIndicator;
 import com.youth.banner.indicator.RectangleIndicator;
@@ -71,11 +73,11 @@ public class ViewPagerDemoActivity extends AppCompatActivity {
                     JSONObject jsonObject = jsonArray.optJSONObject(i);
                     int type = jsonObject.getInt("type");
                     itemData.type = type;
-                    if (type == MessageBean.IMAGE){
+                    if (type == MessageBean.IMAGE) {
                         itemData.imageUrl = jsonObject.getString("imageUrl");
                         itemData.coverUrl = jsonObject.getString("coverUrl");
                         datas.add(itemData);
-                    }else if (type == MessageBean.VIDEO){
+                    } else if (type == MessageBean.VIDEO) {
                         itemData.videoUrl = jsonObject.getString("videoUrl");
                         itemData.coverUrl = jsonObject.getString("coverUrl");
                         datas.add(itemData);
@@ -92,7 +94,7 @@ public class ViewPagerDemoActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             binding.viewPager.setAdapter(new ViewPagerAdapter(datas));
             binding.viewPager2.setAdapter(new ViewPager2Adapter(datas));
-            binding.banner.setBannerGalleryEffect(50,10);
+            binding.banner.setBannerGalleryEffect(50, 10);
             binding.banner.setIndicator(new CircleIndicator(this));
             binding.banner.addBannerLifecycleObserver(this);
             binding.banner.setAdapter(new MyBannerAdapter(datas));
@@ -136,7 +138,7 @@ public class ViewPagerDemoActivity extends AppCompatActivity {
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             ItemVideoBinding imageBinding = ItemVideoBinding.inflate(LayoutInflater.from(container.getContext()), container, true);
-            imageBinding.ivPlay.setVisibility(datas.get(position).getType() == MediaType.VIDEO?View.VISIBLE:View.GONE);
+            imageBinding.ivPlay.setVisibility(datas.get(position).getType() == MediaType.VIDEO ? View.VISIBLE : View.GONE);
             View view = imageBinding.getRoot();
             MyImageLoader.getInstance().load(imageBinding.ivImage, datas.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
             imageBinding.ivImage.setOnClickListener(v -> {
@@ -211,7 +213,7 @@ public class ViewPagerDemoActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewPager2Adapter.MyHolder holder, int position) {
             ItemVideoBinding videoBinding = ItemVideoBinding.bind(holder.itemView);
-            videoBinding.ivPlay.setVisibility(datas.get(position).getType() == MediaType.VIDEO?View.VISIBLE:View.GONE);
+            videoBinding.ivPlay.setVisibility(datas.get(position).getType() == MediaType.VIDEO ? View.VISIBLE : View.GONE);
             MyImageLoader.getInstance().load(holder.ivImage, datas.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
             holder.ivImage.setOnClickListener(v -> {
                 OpenImage.with(ViewPagerDemoActivity.this).setClickViewPager2(binding.viewPager2, new SourceImageViewIdGet<OpenImageUrl>() {
@@ -220,7 +222,8 @@ public class ViewPagerDemoActivity extends AppCompatActivity {
                         return R.id.iv_image;
                     }
                 }).setShowSrcImageView(true)
-                        .setAutoScrollScanPosition(true)
+                        .setAutoScrollScanPosition(false)
+                        .setWechatExitFillInEffect(true)
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
                         .setImageUrlList(datas).setImageDiskMode(MyImageLoader.imageDiskMode)
                         .setItemLoadHelper(new ItemLoadHelper() {
@@ -273,11 +276,17 @@ public class ViewPagerDemoActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onBindViewHolder(@NonNull MyBannerHolder holder, int position, @NonNull List<Object> payloads) {
+            super.onBindViewHolder(holder, position, payloads);
+        }
+
+        @Override
         public void onBindView(MyBannerHolder holder, MessageBean data, int position, int size) {
             ItemVideoBinding videoBinding = ItemVideoBinding.bind(holder.itemView);
-            videoBinding.ivPlay.setVisibility(data.getType() == MediaType.VIDEO?View.VISIBLE:View.GONE);
+            videoBinding.ivPlay.setVisibility(data.getType() == MediaType.VIDEO ? View.VISIBLE : View.GONE);
             MyImageLoader.getInstance().load(holder.ivImage, mDatas.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
             holder.ivImage.setOnClickListener(v -> {
+                int curPos = getViewPosition(binding.banner.isInfiniteLoop(),position,binding.banner,holder);
                 OpenImage.with(ViewPagerDemoActivity.this).setClickViewPager2(binding.banner.getViewPager2(), new SourceImageViewIdGet<OpenImageUrl>() {
                     @Override
                     public int getImageViewId(OpenImageUrl data, int position) {
@@ -305,15 +314,31 @@ public class ViewPagerDemoActivity extends AppCompatActivity {
                         })
                         .setAutoScrollScanPosition(false)
                         .setOnSelectMediaListener(new OnSelectMediaListener() {
+                            boolean isFirst = true;
                             @Override
                             public void onSelect(OpenImageUrl openImageUrl, int position) {
-                                binding.banner.setCurrentItem(position + 1);
+                                if (!isFirst){
+                                    binding.banner.setCurrentItem(position + 1);
+                                }
+                                isFirst = false;
                             }
                         })
                         .addPageTransformer(new ScaleInTransformer())
                         .setOpenImageStyle(R.style.DefaultPhotosTheme)
-                        .setClickPosition(position).show();
+                        .setClickPosition(position,curPos).show();
             });
+        }
+
+        public int getViewPosition(boolean isIncrease, int position, Banner banner, RecyclerView.ViewHolder viewHolder) {
+            if (!isIncrease) {
+                return position;
+            }
+            int curPos = banner.getCurrentItem();
+            RecyclerView.LayoutManager layoutManager = ((RecyclerView) banner.getViewPager2().getChildAt(0)).getLayoutManager();
+            if (layoutManager != null){
+                curPos = layoutManager.getPosition(viewHolder.itemView);
+            }
+            return curPos;
         }
 
         public class MyBannerHolder extends RecyclerView.ViewHolder {

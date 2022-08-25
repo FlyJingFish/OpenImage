@@ -564,6 +564,7 @@ public final class OpenImage {
                 }
             });
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
+            replenishImageUrl(openImageDetails);
             Bundle newOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareViewClick, shareNameClick).toBundle();
             postOpen(intent, newOptions);
         } else if (viewPager != null) {
@@ -650,31 +651,30 @@ public final class OpenImage {
                     openImageDetail.dataPosition = i;
                     if (viewIndex >= firstPos && viewIndex <= lastPos) {
                         View view = getItemView(viewIndex);
-                        if (view == null) {
-                            continue;
-                        }
-                        ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(imageBean, i));
-                        if (shareView == null) {
-                            throw new NullPointerException("请确保 SourceImageViewIdGet 返回的 ImageView 的Id正确");
-                        }
-                        if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                            shareView.setScaleType(srcImageViewScaleType);
-                        }
-                        String shareName = OpenParams.SHARE_VIEW + openImageDetails.size();
-                        if (clickViewPosition == viewIndex) {
-                            pair = Pair.create(shareView, shareName);
-                        }
-                        int shareViewWidth = shareView.getWidth();
-                        int shareViewHeight = shareView.getHeight();
-                        openImageDetail.srcWidth = shareViewWidth;
-                        openImageDetail.srcHeight = shareViewHeight;
-                        if (imageBean.getType() == MediaType.IMAGE) {
-                            srcImageWidthCache.add(shareViewWidth);
-                            srcImageHeightCache.add(shareViewHeight);
-                        }
-                        if (imageBean.getType() == MediaType.VIDEO) {
-                            srcVideoWidthCache.add(shareViewWidth);
-                            srcVideoHeightCache.add(shareViewHeight);
+                        if (view != null) {
+                            ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(imageBean, i));
+                            if (shareView == null) {
+                                throw new NullPointerException("请确保 SourceImageViewIdGet 返回的 ImageView 的Id正确");
+                            }
+                            if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
+                                shareView.setScaleType(srcImageViewScaleType);
+                            }
+                            String shareName = OpenParams.SHARE_VIEW + openImageDetails.size();
+                            if (clickViewPosition == viewIndex) {
+                                pair = Pair.create(shareView, shareName);
+                            }
+                            int shareViewWidth = shareView.getWidth();
+                            int shareViewHeight = shareView.getHeight();
+                            openImageDetail.srcWidth = shareViewWidth;
+                            openImageDetail.srcHeight = shareViewHeight;
+                            if (imageBean.getType() == MediaType.IMAGE) {
+                                srcImageWidthCache.add(shareViewWidth);
+                                srcImageHeightCache.add(shareViewHeight);
+                            }
+                            if (imageBean.getType() == MediaType.VIDEO) {
+                                srcVideoWidthCache.add(shareViewWidth);
+                                srcVideoHeightCache.add(shareViewHeight);
+                            }
                         }
                     }
                     openImageDetail.viewPosition = viewIndex;
@@ -683,29 +683,45 @@ public final class OpenImage {
                 viewIndex++;
             }
         } else if (srcViewType == VP2) {
-            View view = getItemView(viewPager2.getCurrentItem());
-            if (view != null) {
-                ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrls.get(clickDataPosition), clickDataPosition));
-                if (shareView == null) {
-                    throw new NullPointerException("请确保 SourceImageViewIdGet 返回的 ImageView 的Id正确");
-                }
-                if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                    shareView.setScaleType(srcImageViewScaleType);
-                }
-                String shareName = OpenParams.SHARE_VIEW + clickDataPosition;
-                pair = Pair.create(shareView, shareName);
-                int shareViewWidth = shareView.getWidth();
-                int shareViewHeight = shareView.getHeight();
-                for (int i = 0; i < openImageUrls.size(); i++) {
-                    OpenImageUrl imageBean = openImageUrls.get(i);
+            int viewIndex = clickViewPosition - clickDataPosition;
+            for (int i = 0; i < openImageUrls.size(); i++) {
+                OpenImageUrl imageBean = openImageUrls.get(i);
+                if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
                     OpenImageDetail openImageDetail = new OpenImageDetail();
                     openImageDetail.openImageUrl = imageBean;
                     openImageDetail.dataPosition = i;
-                    openImageDetail.viewPosition = i;
-                    openImageDetail.srcWidth = shareViewWidth;
-                    openImageDetail.srcHeight = shareViewHeight;
+                    if (viewIndex >= 0) {
+                        View view = getItemView(viewIndex);
+                        if (view != null) {
+                            ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(imageBean, i));
+                            if (shareView == null) {
+                                throw new NullPointerException("请确保 SourceImageViewIdGet 返回的 ImageView 的Id正确");
+                            }
+                            if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
+                                shareView.setScaleType(srcImageViewScaleType);
+                            }
+                            String shareName = OpenParams.SHARE_VIEW + openImageDetails.size();
+                            if (clickViewPosition == viewIndex) {
+                                pair = Pair.create(shareView, shareName);
+                            }
+                            int shareViewWidth = shareView.getWidth();
+                            int shareViewHeight = shareView.getHeight();
+                            openImageDetail.srcWidth = shareViewWidth;
+                            openImageDetail.srcHeight = shareViewHeight;
+                            if (imageBean.getType() == MediaType.IMAGE) {
+                                srcImageWidthCache.add(shareViewWidth);
+                                srcImageHeightCache.add(shareViewHeight);
+                            }
+                            if (imageBean.getType() == MediaType.VIDEO) {
+                                srcVideoWidthCache.add(shareViewWidth);
+                                srcVideoHeightCache.add(shareViewHeight);
+                            }
+                        }
+                    }
+                    openImageDetail.viewPosition = viewIndex;
                     openImageDetails.add(openImageDetail);
                 }
+                viewIndex++;
             }
         } else if (srcViewType == VP) {
             ImageView shareView = sourceImageViewGet.getImageView(openImageUrls.get(clickDataPosition), clickDataPosition);
@@ -793,7 +809,22 @@ public final class OpenImage {
 
             position[0] = firstPos;
             position[1] = lastPos;
-        } else if (srcViewType == AB_LIST) {
+        }else if (srcViewType == VP2) {
+            int childCount = viewPager2.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childView = viewPager2.getChildAt(i);
+                if (childView instanceof RecyclerView) {
+                    RecyclerView recyclerView = (RecyclerView) childView;
+                    RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                    if (layoutManager instanceof LinearLayoutManager) {
+                        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+                        position[0] = linearLayoutManager.findFirstVisibleItemPosition();
+                        position[1] = linearLayoutManager.findLastVisibleItemPosition();
+                    }
+                    break;
+                }
+            }
+        }else if (srcViewType == AB_LIST) {
             int firstPos = absListView.getFirstVisiblePosition();
             int lastPos = absListView.getLastVisiblePosition();
             position[0] = firstPos;
@@ -975,7 +1006,7 @@ public final class OpenImage {
                 return null;
             }
             ShareExitViewBean shareExitViewBean = null;
-            if (srcViewType == RV || srcViewType == AB_LIST) {
+            if (srcViewType == RV || srcViewType == AB_LIST || srcViewType == VP2) {
                 int[] position = getVisiblePosition();
                 int firstPos = position[0];
                 int lastPos = position[1];
@@ -1024,27 +1055,6 @@ public final class OpenImage {
                         }
                     }
                 }
-            } else if (srcViewType == VP2) {
-                OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
-                OpenImageUrl openImageUrl = openImageDetail.openImageUrl;
-                int viewPosition = openImageDetail.viewPosition;
-                int dataPosition = openImageDetail.dataPosition;
-
-                View view = getItemView(viewPager2.getCurrentItem());
-
-                if (view != null) {
-                    ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
-                    if (shareView != null) {
-                        if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                            shareView.setScaleType(srcImageViewScaleType);
-                        }
-                        boolean isAttachedToWindow = shareView.isAttachedToWindow();
-                        if (isAttachedToWindow) {
-                            shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_NORMAL, shareView);
-                        }
-                    }
-                }
-
             } else if (srcViewType == VP) {
                 OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
                 OpenImageUrl openImageUrl = openImageDetail.openImageUrl;
