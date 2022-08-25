@@ -205,7 +205,7 @@ public final class OpenImage {
     }
 
     /**
-     * 如果数据下标 和 RecyclerView或ListView或GridView 的所在位置一致 可调用这个
+     * 如果数据下标 和 RecyclerView、ViewPager2、ListView、GridView 的所在位置一致 可调用这个
      *
      * @param clickPosition 点击的图片和View所在的位置
      * @return
@@ -215,7 +215,7 @@ public final class OpenImage {
     }
 
     /**
-     * 如果数据下标 和 RecyclerView或ListView或GridView 的所在位置不一致 调用这个
+     * 如果数据下标 和 RecyclerView、ViewPager2、ListView、GridView 的所在位置不一致 调用这个
      *
      * @param clickDataPosition 点击的图片所在数据的位置
      * @param clickViewPosition 点击的图片View在RecyclerView或ListView或GridView的位置
@@ -302,7 +302,7 @@ public final class OpenImage {
     }
 
     /**
-     * 只对传入RecyclerView, ListView, GridView 有效
+     * 只对传入RecyclerView，ViewPager，ViewPager2， ListView, GridView 有效
      *
      * @param autoScrollScanPosition 自动滑向最后看的图片的位置
      * @return
@@ -334,7 +334,7 @@ public final class OpenImage {
     /**
      * 设置微信补位效果，设置后当退出大图页面时，如果前一页面没有当前图片，则自动回到点击进来的那张图的位置
      * 开启后自动自动滚动效果关闭
-     * (只对父容器是RecyclerView, ListView, GridView 时有效)
+     * (只对父容器是RecyclerView, ViewPager2，ListView, GridView 时有效)
      *
      * @param wechatExitFillInEffect 是否设置微信补位效果
      * @return
@@ -394,7 +394,7 @@ public final class OpenImage {
     }
 
     /**
-     * @param showSrcImageView 退出时，回退ImageView是否可见
+     * @param showSrcImageView 退出时，前一页面的ImageView是否可见
      * @return
      */
     public OpenImage setShowSrcImageView(boolean showSrcImageView) {
