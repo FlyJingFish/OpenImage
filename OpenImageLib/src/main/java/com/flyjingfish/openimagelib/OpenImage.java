@@ -211,8 +211,7 @@ public final class OpenImage {
      * @return
      */
     public OpenImage setClickPosition(int clickPosition) {
-        this.setClickPosition(clickPosition, clickPosition);
-        return this;
+        return setClickPosition(clickPosition, clickPosition);
     }
 
     /**
