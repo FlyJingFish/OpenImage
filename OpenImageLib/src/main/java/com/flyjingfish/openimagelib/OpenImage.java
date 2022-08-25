@@ -975,7 +975,7 @@ public final class OpenImage {
                 backViewType = shareExitViewBean.backViewType;
                 shareExitView = shareExitViewBean.shareExitView;
             }
-            activity.setExitSharedElementCallback(new ExitSharedElementCallback2(context, srcImageViewScaleType, shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null));
+            activity.setExitSharedElementCallback(new ExitSharedElementCallback2(shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null));
             return backViewType;
         }
 

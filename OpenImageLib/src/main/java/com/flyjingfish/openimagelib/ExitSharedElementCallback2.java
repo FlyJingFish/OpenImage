@@ -25,18 +25,14 @@ import java.util.Locale;
 import java.util.Map;
 
 class ExitSharedElementCallback2 extends SharedElementCallback {
-    private final Context context;
     protected Float startAlpha;
     protected Integer startVisibility;
-    private final ImageView.ScaleType srcImageViewScaleType;
     private final ImageView shareExitMapView;
     private float startSrcAlpha;
     private final boolean showSrcImageView;
     private final Float showCurrentViewStartAlpha;
 
-    public ExitSharedElementCallback2(Context context, ImageView.ScaleType srcImageViewScaleType, ImageView shareExitMapView, boolean showSrcImageView, Float showCurrentViewStartAlpha) {
-        this.context = context;
-        this.srcImageViewScaleType = srcImageViewScaleType;
+    public ExitSharedElementCallback2(ImageView shareExitMapView, boolean showSrcImageView, Float showCurrentViewStartAlpha) {
         this.shareExitMapView = shareExitMapView;
         this.showSrcImageView = showSrcImageView;
         this.showCurrentViewStartAlpha = showCurrentViewStartAlpha;
