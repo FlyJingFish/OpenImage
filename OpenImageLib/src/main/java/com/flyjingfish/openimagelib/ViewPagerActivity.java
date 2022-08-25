@@ -476,7 +476,6 @@ public class ViewPagerActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        OpenImage.isCanOpen = true;
         showPosition = 0;
         fragmentHashMap.clear();
         mHandler.removeCallbacksAndMessages(null);
@@ -614,6 +613,12 @@ public class ViewPagerActivity extends AppCompatActivity {
             finishAfterTransition();
         }
         isCallClosed = true;
+    }
+
+    @Override
+    public void finishAfterTransition() {
+        super.finishAfterTransition();
+        OpenImage.isCanOpen = true;
     }
 
     private View getCoverView() {
