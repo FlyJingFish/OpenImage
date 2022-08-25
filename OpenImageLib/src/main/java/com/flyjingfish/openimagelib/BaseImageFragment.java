@@ -358,6 +358,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
     public View getExitImageView() {
         smallCoverImageView.setExitMode(true);
         photoView.setExitMode(true);
+        smallCoverImageView.setExitFloat(currentScale);
         photoView.setExitFloat(currentScale);
         if (isLoadSuccess) {
             smallCoverImageView.setVisibility(View.GONE);
