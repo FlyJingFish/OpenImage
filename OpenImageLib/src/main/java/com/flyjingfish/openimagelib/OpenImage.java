@@ -1002,9 +1002,24 @@ public final class OpenImage {
             }
         }
 
+        private boolean checkViewAvailable(){
+            if (srcViewType == SrcViewType.RV){
+                return recyclerView != null && recyclerView.isAttachedToWindow();
+            }else if (srcViewType == SrcViewType.AB_LIST){
+                return absListView != null && absListView.isAttachedToWindow();
+            }else if (srcViewType == SrcViewType.VP2){
+                return viewPager2 != null && viewPager2.isAttachedToWindow();
+            }else if (srcViewType == SrcViewType.VP){
+                return viewPager != null && viewPager.isAttachedToWindow();
+            }else if (srcViewType == SrcViewType.IV){
+                return true;
+            }
+            return false;
+        }
+
         private ShareExitViewBean getShareExitViewBean(int showPosition) {
             Activity activity = ActivityCompatHelper.getActivity(context);
-            if (activity == null) {
+            if (activity == null || !checkViewAvailable()) {
                 return null;
             }
             ShareExitViewBean shareExitViewBean = null;
