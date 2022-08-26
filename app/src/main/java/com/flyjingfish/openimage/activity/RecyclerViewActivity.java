@@ -171,6 +171,10 @@ public class RecyclerViewActivity extends AppCompatActivity {
                         }).addPageTransformer(new ScaleInTransformer())
                         .setOpenImageStyle(R.style.DefaultPhotosTheme)
                         .setClickPosition(position).show();
+
+                setSelect(2);
+                binding.rv.rv.setLayoutManager(new GridLayoutManager(RecyclerViewActivity.this, 2));
+                loadData();
             });
         }
 

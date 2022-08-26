@@ -1,14 +1,19 @@
 package com.flyjingfish.openimagelib;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -47,6 +52,7 @@ import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -857,6 +863,77 @@ public final class OpenImage {
     }
 
     private void postOpen(Intent intent, Pair<View, String> viewPair) {
+        View shareElementView = viewPair.first;
+        ViewGroup parent = (ViewGroup) shareElementView.getParent();
+        ViewTreeObserver mViewTreeObserver = parent.getViewTreeObserver();
+//        parent.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            @Override
+//            public boolean onPreDraw() {
+//                View shareElementView = viewPair.first;
+//                ViewGroup parent = (ViewGroup) shareElementView.getParent();
+//                ViewGroup der = (ViewGroup) ActivityCompatHelper.getWindow(context).getDecorView();
+//                if (shareElementView == null || !shareElementView.isAttachedToWindow() || parent == null || !parent.isAttachedToWindow() || der == null){
+//                    Log.e("startActivity_null","=====");
+//                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+//                        try {
+//                            Field fieldPassword = ViewTreeObserver.class.getDeclaredField("mOnPreDrawListeners");
+//                            fieldPassword.setAccessible(true);
+//                            Object mOnPreDrawListeners = fieldPassword.get(mViewTreeObserver);
+//
+//                            Field mDataField = mOnPreDrawListeners.getClass().getDeclaredField("mData");
+//                            mDataField.setAccessible(true);
+//                            ArrayList<ViewTreeObserver.OnPreDrawListener> mData = (ArrayList<ViewTreeObserver.OnPreDrawListener>) mDataField.get(mOnPreDrawListeners);
+//                            for (ViewTreeObserver.OnPreDrawListener mDatum : mData) {
+//                                mViewTreeObserver.removeOnPreDrawListener(mDatum);
+//                            }
+//                        } catch (Throwable ignored) {
+//
+//                        }
+//                    }
+//
+//                }
+//                return true;
+//            }
+//        });
+        shareElementView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+
+
+            @Override
+            public void onViewAttachedToWindow(View v) {
+
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                View shareElementView = viewPair.first;
+                ViewGroup parent = (ViewGroup) shareElementView.getParent();
+                Log.e("startActivity_null","=====1");
+//                if (shareElementView == null || !shareElementView.isAttachedToWindow() || parent == null || !parent.isAttachedToWindow()){
+//                    Log.e("startActivity_null","=====2");
+//
+//                }
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    try {
+                        Field fieldPassword = ViewTreeObserver.class.getDeclaredField("mOnPreDrawListeners");
+                        fieldPassword.setAccessible(true);
+                        Object mOnPreDrawListeners = fieldPassword.get(mViewTreeObserver);
+
+                        Field mDataField = mOnPreDrawListeners.getClass().getDeclaredField("mData");
+                        mDataField.setAccessible(true);
+                        ArrayList<ViewTreeObserver.OnPreDrawListener> mData = (ArrayList<ViewTreeObserver.OnPreDrawListener>) mDataField.get(mOnPreDrawListeners);
+                        for (ViewTreeObserver.OnPreDrawListener mDatum : mData) {
+                            mViewTreeObserver.removeOnPreDrawListener(mDatum);
+                        }
+                    } catch (Throwable ignored) {
+
+                    }
+                }
+
+
+            }
+
+        });
+
         isCanOpen = false;
         OpenImageUrl openImageUrl = openImageUrls.get(clickDataPosition);
         Handler handler = new Handler(Looper.getMainLooper());
@@ -886,6 +963,8 @@ public final class OpenImage {
                 String shareElementName = viewPair.second;
                 try {
                     if (shareElementView != null && shareElementView.isAttachedToWindow()){
+
+
                         Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareElementView, shareElementName).toBundle();
                         context.startActivity(intent, options);
                     }else {

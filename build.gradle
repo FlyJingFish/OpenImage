@@ -24,6 +24,6 @@ task clean(type: Delete) {
 }
 
 ext {
-    sdkVersion = 30
+    sdkVersion = 25
     minSdkVersion = 21
 }
