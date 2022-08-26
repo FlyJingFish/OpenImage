@@ -88,7 +88,7 @@ public final class OpenImage {
     private SourceImageViewGet<OpenImageUrl> sourceImageViewGet;
     private int leftRightShowWidthDp;
     public static boolean isCanOpen = true;
-    private String selectKey;
+    private String onselectKey;
     private String pageTransformersKey;
     private String onItemClickListenerKey;
     private String onItemLongClickListenerKey;
@@ -97,8 +97,11 @@ public final class OpenImage {
     private boolean showSrcImageView = true;
     private final List<MoreViewOption> moreViewOptions = new ArrayList<>();
     private SrcViewType srcViewType;
-    private enum SrcViewType{
-        RV,AB_LIST,VP,VP2,IV
+    private String backViewKey;
+    private String moreViewOptionKey;
+
+    private enum SrcViewType {
+        RV, AB_LIST, VP, VP2, IV
     }
 
     public static OpenImage with(Context context) {
@@ -302,8 +305,8 @@ public final class OpenImage {
      * @return
      */
     public OpenImage setOnSelectMediaListener(OnSelectMediaListener onSelectMediaListener) {
-        selectKey = UUID.randomUUID().toString();
-        ImageLoadUtils.getInstance().setOnSelectMediaListener(selectKey, onSelectMediaListener);
+        onselectKey = UUID.randomUUID().toString();
+        ImageLoadUtils.getInstance().setOnSelectMediaListener(onselectKey, onSelectMediaListener);
         return this;
     }
 
@@ -435,8 +438,8 @@ public final class OpenImage {
         Intent intent = new Intent(context, ViewPagerActivity.class);
 
         intent.putExtra(OpenParams.CLICK_POSITION, clickDataPosition);
-        if (selectKey != null) {
-            intent.putExtra(OpenParams.ON_SELECT_KEY, selectKey);
+        if (onselectKey != null) {
+            intent.putExtra(OpenParams.ON_SELECT_KEY, onselectKey);
         }
         if (pageTransformersKey != null) {
             intent.putExtra(OpenParams.PAGE_TRANSFORMERS, pageTransformersKey);
@@ -448,7 +451,7 @@ public final class OpenImage {
             intent.putExtra(OpenParams.ON_ITEM_LONG_CLICK_KEY, onItemLongClickListenerKey);
         }
         if (moreViewOptions.size() > 0) {
-            String moreViewOptionKey = UUID.randomUUID().toString();
+            moreViewOptionKey = UUID.randomUUID().toString();
             intent.putExtra(OpenParams.MORE_VIEW_KEY, moreViewOptionKey);
             ImageLoadUtils.getInstance().setMoreViewOption(moreViewOptionKey, moreViewOptions);
         }
@@ -463,7 +466,7 @@ public final class OpenImage {
         intent.putExtra(OpenParams.OPEN_IMAGE_STYLE, openImageStyle);
         intent.putExtra(OpenParams.OPEN_ANIM_TIME_MS, openPageAnimTimeMs);
         intent.putExtra(OpenParams.GALLERY_EFFECT_WIDTH, leftRightShowWidthDp);
-
+        backViewKey = OpenImage.this.toString();
         if (recyclerView != null) {
             if (sourceImageViewIdGet == null) {
                 throw new IllegalArgumentException("sourceImageViewIdGet 不能为null");
@@ -482,7 +485,6 @@ public final class OpenImage {
             }
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-            String backViewKey = OpenImage.this.toString();
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
@@ -515,7 +517,6 @@ public final class OpenImage {
             }
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-            String backViewKey = OpenImage.this.toString();
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
 
@@ -552,7 +553,6 @@ public final class OpenImage {
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
 
-            String backViewKey = OpenImage.this.toString();
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
@@ -585,7 +585,6 @@ public final class OpenImage {
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
 
-            String backViewKey = OpenImage.this.toString();
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
@@ -620,7 +619,6 @@ public final class OpenImage {
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
 
-            String backViewKey = OpenImage.this.toString();
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails));
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
@@ -807,7 +805,7 @@ public final class OpenImage {
 
             position[0] = firstPos;
             position[1] = lastPos;
-        }else if (srcViewType == SrcViewType.VP2) {
+        } else if (srcViewType == SrcViewType.VP2) {
             int childCount = viewPager2.getChildCount();
             for (int i = 0; i < childCount; i++) {
                 View childView = viewPager2.getChildAt(i);
@@ -822,7 +820,7 @@ public final class OpenImage {
                     break;
                 }
             }
-        }else if (srcViewType == SrcViewType.AB_LIST) {
+        } else if (srcViewType == SrcViewType.AB_LIST) {
             int firstPos = absListView.getFirstVisiblePosition();
             int lastPos = absListView.getLastVisiblePosition();
             position[0] = firstPos;
@@ -863,80 +861,11 @@ public final class OpenImage {
         }
         return view;
     }
-    private boolean isMapShareView = true;
+
+    private volatile boolean isMapShareView = true;
+
     private void postOpen(Intent intent, Pair<View, String> viewPair) {
-        View shareElementView = viewPair.first;
-        ViewGroup parent = (ViewGroup) shareElementView.getParent();
-        ViewTreeObserver mViewTreeObserver = parent.getViewTreeObserver();
-//        parent.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//            @Override
-//            public boolean onPreDraw() {
-//                View shareElementView = viewPair.first;
-//                ViewGroup parent = (ViewGroup) shareElementView.getParent();
-//                ViewGroup der = (ViewGroup) ActivityCompatHelper.getWindow(context).getDecorView();
-//                if (shareElementView == null || !shareElementView.isAttachedToWindow() || parent == null || !parent.isAttachedToWindow() || der == null){
-//                    Log.e("startActivity_null","=====");
-//                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-//                        try {
-//                            Field fieldPassword = ViewTreeObserver.class.getDeclaredField("mOnPreDrawListeners");
-//                            fieldPassword.setAccessible(true);
-//                            Object mOnPreDrawListeners = fieldPassword.get(mViewTreeObserver);
-//
-//                            Field mDataField = mOnPreDrawListeners.getClass().getDeclaredField("mData");
-//                            mDataField.setAccessible(true);
-//                            ArrayList<ViewTreeObserver.OnPreDrawListener> mData = (ArrayList<ViewTreeObserver.OnPreDrawListener>) mDataField.get(mOnPreDrawListeners);
-//                            for (ViewTreeObserver.OnPreDrawListener mDatum : mData) {
-//                                mViewTreeObserver.removeOnPreDrawListener(mDatum);
-//                            }
-//                        } catch (Throwable ignored) {
-//
-//                        }
-//                    }
-//
-//                }
-//                return true;
-//            }
-//        });
-        shareElementView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-
-
-            @Override
-            public void onViewAttachedToWindow(View v) {
-
-            }
-
-            @Override
-            public void onViewDetachedFromWindow(View v) {
-                View shareElementView = viewPair.first;
-                ViewGroup parent = (ViewGroup) shareElementView.getParent();
-                Log.e("startActivity_null","=====1=="+v.toString());
-//                if (shareElementView == null || !shareElementView.isAttachedToWindow() || parent == null || !parent.isAttachedToWindow()){
-//                    Log.e("startActivity_null","=====2");
-//
-//                }
-//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-//                    try {
-//                        Field fieldPassword = ViewTreeObserver.class.getDeclaredField("mOnPreDrawListeners");
-//                        fieldPassword.setAccessible(true);
-//                        Object mOnPreDrawListeners = fieldPassword.get(mViewTreeObserver);
-//
-//                        Field mDataField = mOnPreDrawListeners.getClass().getDeclaredField("mData");
-//                        mDataField.setAccessible(true);
-//                        ArrayList<ViewTreeObserver.OnPreDrawListener> mData = (ArrayList<ViewTreeObserver.OnPreDrawListener>) mDataField.get(mOnPreDrawListeners);
-//                        for (ViewTreeObserver.OnPreDrawListener mDatum : mData) {
-//                            mViewTreeObserver.removeOnPreDrawListener(mDatum);
-//                        }
-//                        isMapShareView = false;
-//                    } catch (Throwable ignored) {
-//
-//                    }
-//                }
-                isMapShareView = false;
-
-            }
-
-        });
-
+        fixAndroid5_7Bug(viewPair);
         isCanOpen = false;
         OpenImageUrl openImageUrl = openImageUrls.get(clickDataPosition);
         Handler handler = new Handler(Looper.getMainLooper());
@@ -965,34 +894,105 @@ public final class OpenImage {
                 View shareElementView = viewPair.first;
                 String shareElementName = viewPair.second;
                 try {
-                    if (shareElementView != null && shareElementView.isAttachedToWindow()){
-                        ActivityCompatHelper.getActivity(context).setExitSharedElementCallback(new SharedElementCallback() {
-                            @Override
-                            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                                if (!isMapShareView){
-                                    sharedElements.clear();
-                                }
-                                super.onMapSharedElements(names, sharedElements);
-                            }
-                        });
-
+                    if (shareElementView != null && shareElementView.isAttachedToWindow()) {
+                        fixAndroid5_7Bug();
                         Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareElementView, shareElementName).toBundle();
                         context.startActivity(intent, options);
-                    }else {
-                        isCanOpen = true;
+                    } else {
+                        releaseImageLoadUtilMap(drawableKey);
                     }
-                } catch (Exception ignored){
-                    isCanOpen = true;
+                } catch (Exception ignored) {
+                    releaseImageLoadUtilMap(drawableKey);
                 }
                 release();
             } else {
-                isCanOpen = true;
+                releaseImageLoadUtilMap(drawableKey);
             }
         } else if (!TextUtils.isEmpty(drawableKey)) {
             ImageLoadUtils.getInstance().clearCoverDrawable(drawableKey);
         }
         isStartActivity = true;
     }
+
+    private void releaseImageLoadUtilMap(String drawableKey){
+        isCanOpen = true;
+        ImageLoadUtils.getInstance().clearItemLoadHelper(itemLoadHelperKey);
+        ImageLoadUtils.getInstance().clearOnSelectMediaListener(onselectKey);
+        ImageLoadUtils.getInstance().clearCoverDrawable(drawableKey);
+        ImageLoadUtils.getInstance().clearPageTransformers(pageTransformersKey);
+        ImageLoadUtils.getInstance().clearOnItemClickListener(onItemClickListenerKey);
+        ImageLoadUtils.getInstance().clearOnItemLongClickListener(onItemLongClickListenerKey);
+        ImageLoadUtils.getInstance().clearMoreViewOption(moreViewOptionKey);
+        ImageLoadUtils.getInstance().clearOnBackView(backViewKey);
+        moreViewOptions.clear();
+    }
+    private void fixAndroid5_7Bug() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            ActivityCompatHelper.getActivity(context).setExitSharedElementCallback(new SharedElementCallback() {
+                @Override
+                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                    if (!isMapShareView) {
+                        names.clear();
+                        sharedElements.clear();
+                    }
+                    super.onMapSharedElements(names, sharedElements);
+                }
+            });
+        }
+    }
+    private void fixAndroid5_7Bug(Pair<View, String> viewPair) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            View shareElementView = viewPair.first;
+            ViewGroup parent = (ViewGroup) shareElementView.getParent();
+            ViewTreeObserver parentViewTreeObserver = parent.getViewTreeObserver();
+            shareElementView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+
+
+                @Override
+                public void onViewAttachedToWindow(View v) {
+
+                }
+
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    if (ActivityCompatHelper.getActivity(context) == null) {
+                        shareElementView.removeOnAttachStateChangeListener(this);
+                        return;
+                    }
+                    if (v != shareElementView) {
+                        return;
+                    }
+                    shareElementView.removeOnAttachStateChangeListener(this);
+                    boolean isCallStop = false;
+                    try {
+                        Field fieldPassword = ViewTreeObserver.class.getDeclaredField("mOnPreDrawListeners");
+                        fieldPassword.setAccessible(true);
+                        Object mOnPreDrawListeners = fieldPassword.get(parentViewTreeObserver);
+
+                        Field mDataField = mOnPreDrawListeners.getClass().getDeclaredField("mData");
+                        mDataField.setAccessible(true);
+                        ArrayList<ViewTreeObserver.OnPreDrawListener> mData = (ArrayList<ViewTreeObserver.OnPreDrawListener>) mDataField.get(mOnPreDrawListeners);
+                        for (ViewTreeObserver.OnPreDrawListener mDatum : mData) {
+                            if (mDatum.getClass().getName().contains("GhostViewListeners")) {
+                                isCallStop = true;
+                                parentViewTreeObserver.removeOnPreDrawListener(mDatum);
+                            }
+                        }
+                    } catch (Throwable ignored) {
+                    } finally {
+                        isMapShareView = false;
+                        if (isCallStop) {
+                            new Instrumentation().callActivityOnStop(ActivityCompatHelper.getActivity(context));
+                        }
+                    }
+
+                }
+
+            });
+        }
+    }
+
+
     private void replenishImageUrl(ArrayList<OpenImageDetail> openImageDetails) {
         if (srcImageWidthCache.size() == 1 || srcImageHeightCache.size() == 1) {
             int srcWidth = srcImageWidthCache.iterator().next();
@@ -1092,16 +1092,16 @@ public final class OpenImage {
             }
         }
 
-        private boolean checkViewAvailable(){
-            if (srcViewType == SrcViewType.RV){
+        private boolean checkViewAvailable() {
+            if (srcViewType == SrcViewType.RV) {
                 return recyclerView != null && recyclerView.isAttachedToWindow();
-            }else if (srcViewType == SrcViewType.AB_LIST){
+            } else if (srcViewType == SrcViewType.AB_LIST) {
                 return absListView != null && absListView.isAttachedToWindow();
-            }else if (srcViewType == SrcViewType.VP2){
+            } else if (srcViewType == SrcViewType.VP2) {
                 return viewPager2 != null && viewPager2.isAttachedToWindow();
-            }else if (srcViewType == SrcViewType.VP){
+            } else if (srcViewType == SrcViewType.VP) {
                 return viewPager != null && viewPager.isAttachedToWindow();
-            }else if (srcViewType == SrcViewType.IV){
+            } else if (srcViewType == SrcViewType.IV) {
                 return true;
             }
             return false;

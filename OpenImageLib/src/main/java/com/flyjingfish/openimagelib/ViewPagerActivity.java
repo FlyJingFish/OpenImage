@@ -611,12 +611,6 @@ public class ViewPagerActivity extends BaseActivity {
         isCallClosed = true;
     }
 
-    @Override
-    public void finishAfterTransition() {
-        super.finishAfterTransition();
-        OpenImage.isCanOpen = true;
-    }
-
     private View getCoverView() {
         BaseFragment baseFragment = fragmentHashMap.get(showPosition);
         if (baseFragment != null) {

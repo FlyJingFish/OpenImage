@@ -3,27 +3,76 @@ package com.flyjingfish.openimagelib;
 import android.annotation.SuppressLint;
 import android.app.Instrumentation;
 import android.app.SharedElementCallback;
+import android.content.Context;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.os.Parcelable;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.ArrayMap;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class BaseActivity extends AppCompatActivity {
+    private static final int CHECK_FINISH = 1009;
+    private static final long CHECK_DELAY_MS = 200;
+    private Handler closeHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            finishAfterTransition();
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.e("startActivity_null","=====2==");
-        finish();
         super.onCreate(savedInstanceState);
+        fixAndroid5_7Bug();
+    }
+
+    private void fixAndroid5_7Bug() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            setEnterSharedElementCallback(new SharedElementCallback() {
+                @Override
+                public void onSharedElementStart(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
+                    super.onSharedElementStart(sharedElementNames, sharedElements, sharedElementSnapshots);
+                    closeHandler.removeMessages(CHECK_FINISH);
+                }
+
+                @Override
+                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                    super.onMapSharedElements(names, sharedElements);
+                    closeHandler.sendEmptyMessageDelayed(CHECK_FINISH,CHECK_DELAY_MS);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void finish() {
+        OpenImage.isCanOpen = true;
+        super.finish();
+    }
+
+    @Override
+    public void finishAfterTransition() {
+        super.finishAfterTransition();
+        OpenImage.isCanOpen = true;
     }
 
     @Override
