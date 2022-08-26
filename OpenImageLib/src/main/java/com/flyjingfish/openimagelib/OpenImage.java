@@ -88,12 +88,10 @@ public final class OpenImage {
     private boolean disableClickClose;
     private boolean showSrcImageView = true;
     private final List<MoreViewOption> moreViewOptions = new ArrayList<>();
-    private int srcViewType;
-    private static final int RV = 1;
-    private static final int AB_LIST = 2;
-    private static final int VP = 3;
-    private static final int VP2 = 4;
-    private static final int IV = 5;
+    private SrcViewType srcViewType;
+    private enum SrcViewType{
+        RV,AB_LIST,VP,VP2,IV
+    }
 
     public static OpenImage with(Context context) {
         return new OpenImage(context);
@@ -467,7 +465,7 @@ public final class OpenImage {
             if (!(layoutManager instanceof LinearLayoutManager || layoutManager instanceof StaggeredGridLayoutManager)) {
                 throw new IllegalArgumentException("只支持使用继承自LinearLayoutManager和StaggeredGridLayoutManager的RecyclerView");
             }
-            srcViewType = RV;
+            srcViewType = SrcViewType.RV;
 
             ArrayList<OpenImageDetail> openImageDetails = new ArrayList<>();
             Pair<View, String> viewPair = initShareView(openImageDetails);
@@ -481,16 +479,15 @@ public final class OpenImage {
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
                 public void onScrollPos(int pos) {
-                    if (!isAutoScrollScanPosition) {
-                        return;
-                    }
-                    final RecyclerView.LayoutManager layoutManager =
-                            recyclerView.getLayoutManager();
-                    View viewAtPosition =
-                            layoutManager.findViewByPosition(pos);
-                    if (viewAtPosition == null
-                            || layoutManager.isViewPartiallyVisible(viewAtPosition, true, true)) {
-                        recyclerView.post(() -> layoutManager.scrollToPosition(pos));
+                    if (isAutoScrollScanPosition) {
+                        final RecyclerView.LayoutManager layoutManager =
+                                recyclerView.getLayoutManager();
+                        View viewAtPosition =
+                                layoutManager.findViewByPosition(pos);
+                        if (viewAtPosition == null
+                                || layoutManager.isViewPartiallyVisible(viewAtPosition, true, true)) {
+                            recyclerView.post(() -> layoutManager.scrollToPosition(pos));
+                        }
                     }
                 }
             });
@@ -503,7 +500,7 @@ public final class OpenImage {
             if (sourceImageViewIdGet == null) {
                 throw new IllegalArgumentException("sourceImageViewIdGet 不能为null");
             }
-            srcViewType = AB_LIST;
+            srcViewType = SrcViewType.AB_LIST;
             ArrayList<OpenImageDetail> openImageDetails = new ArrayList<>();
             Pair<View, String> viewPair = initShareView(openImageDetails);
             if (viewPair == null) {
@@ -517,7 +514,7 @@ public final class OpenImage {
 
                 @Override
                 public void onScrollPos(int pos) {
-                    if (!isAutoScrollScanPosition) {
+                    if (isAutoScrollScanPosition) {
                         absListView.post(() -> {
                             absListView.smoothScrollToPosition(pos);
                         });
@@ -538,7 +535,7 @@ public final class OpenImage {
                 throw new IllegalArgumentException("clickDataPosition 不能 >= OpenImageUrl 数据 size");
             }
 
-            srcViewType = VP2;
+            srcViewType = SrcViewType.VP2;
             ArrayList<OpenImageDetail> openImageDetails = new ArrayList<>();
 
             Pair<View, String> viewPair = initShareView(openImageDetails);
@@ -573,7 +570,7 @@ public final class OpenImage {
                 throw new IllegalArgumentException("clickDataPosition 不能 >= OpenImageUrl 数据 size");
             }
 
-            srcViewType = VP;
+            srcViewType = SrcViewType.VP;
             ArrayList<OpenImageDetail> openImageDetails = new ArrayList<>();
 
             Pair<View, String> viewPair = initShareView(openImageDetails);
@@ -608,7 +605,7 @@ public final class OpenImage {
             if (clickViewPosition >= imageViews.size()) {
                 throw new IllegalArgumentException("clickViewPosition不能 >= ImageView 的个数");
             }
-            srcViewType = IV;
+            srcViewType = SrcViewType.IV;
             ArrayList<OpenImageDetail> openImageDetails = new ArrayList<>();
 
             Pair<View, String> viewPair = initShareView(openImageDetails);
@@ -633,7 +630,7 @@ public final class OpenImage {
 
     private Pair<View, String> initShareView(ArrayList<OpenImageDetail> openImageDetails) {
         Pair<View, String> pair = null;
-        if (srcViewType == RV || srcViewType == AB_LIST) {
+        if (srcViewType == SrcViewType.RV || srcViewType == SrcViewType.AB_LIST) {
             int[] position = getVisiblePosition();
             int firstPos = position[0];
             int lastPos = position[1];
@@ -680,7 +677,7 @@ public final class OpenImage {
                 }
                 viewIndex++;
             }
-        } else if (srcViewType == VP2) {
+        } else if (srcViewType == SrcViewType.VP2) {
             int viewIndex = clickViewPosition - clickDataPosition;
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
@@ -721,7 +718,7 @@ public final class OpenImage {
                 }
                 viewIndex++;
             }
-        } else if (srcViewType == VP) {
+        } else if (srcViewType == SrcViewType.VP) {
             ImageView shareView = sourceImageViewGet.getImageView(openImageUrls.get(clickDataPosition), clickDataPosition);
             if (shareView == null) {
                 throw new NullPointerException("请确保 SourceImageViewGet 返回的 ImageView 不能为null");
@@ -771,7 +768,7 @@ public final class OpenImage {
 
     private int[] getVisiblePosition() {
         int[] position = new int[]{-1, -1};
-        if (srcViewType == RV) {
+        if (srcViewType == SrcViewType.RV) {
             int firstPos = 0;
             int lastPos = 0;
             RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
@@ -807,7 +804,7 @@ public final class OpenImage {
 
             position[0] = firstPos;
             position[1] = lastPos;
-        }else if (srcViewType == VP2) {
+        }else if (srcViewType == SrcViewType.VP2) {
             int childCount = viewPager2.getChildCount();
             for (int i = 0; i < childCount; i++) {
                 View childView = viewPager2.getChildAt(i);
@@ -822,7 +819,7 @@ public final class OpenImage {
                     break;
                 }
             }
-        }else if (srcViewType == AB_LIST) {
+        }else if (srcViewType == SrcViewType.AB_LIST) {
             int firstPos = absListView.getFirstVisiblePosition();
             int lastPos = absListView.getLastVisiblePosition();
             position[0] = firstPos;
@@ -833,17 +830,17 @@ public final class OpenImage {
 
     private View getItemView(int position) {
         View view = null;
-        if (srcViewType == RV) {
+        if (srcViewType == SrcViewType.RV) {
             RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
             if (layoutManager != null) {
                 view = layoutManager.findViewByPosition(position);
             }
-        } else if (srcViewType == AB_LIST) {
+        } else if (srcViewType == SrcViewType.AB_LIST) {
             if (absListView != null) {
                 int firstPos = absListView.getFirstVisiblePosition();
                 view = absListView.getChildAt(position - firstPos);
             }
-        } else if (srcViewType == VP2) {
+        } else if (srcViewType == SrcViewType.VP2) {
             int childCount = viewPager2.getChildCount();
             for (int i = 0; i < childCount; i++) {
                 View childView = viewPager2.getChildAt(i);
@@ -974,7 +971,7 @@ public final class OpenImage {
                 backViewType = shareExitViewBean.backViewType;
                 shareExitView = shareExitViewBean.shareExitView;
             }
-            activity.setExitSharedElementCallback(new ExitSharedElementCallback2(shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null));
+            activity.setExitSharedElementCallback(new ExitSharedElementCallback2(context, shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null));
             return backViewType;
         }
 
@@ -1009,7 +1006,7 @@ public final class OpenImage {
                 return null;
             }
             ShareExitViewBean shareExitViewBean = null;
-            if (srcViewType == RV || srcViewType == AB_LIST || srcViewType == VP2) {
+            if (srcViewType == SrcViewType.RV || srcViewType == SrcViewType.AB_LIST || srcViewType == SrcViewType.VP2) {
                 int[] position = getVisiblePosition();
                 int firstPos = position[0];
                 int lastPos = position[1];
@@ -1058,7 +1055,7 @@ public final class OpenImage {
                         }
                     }
                 }
-            } else if (srcViewType == VP) {
+            } else if (srcViewType == SrcViewType.VP) {
                 OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
                 OpenImageUrl openImageUrl = openImageDetail.openImageUrl;
                 int viewPosition = openImageDetail.viewPosition;

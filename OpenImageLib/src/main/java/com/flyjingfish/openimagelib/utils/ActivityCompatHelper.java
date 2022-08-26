@@ -64,7 +64,11 @@ public class ActivityCompatHelper {
     }
 
     public static Window getWindow(Context context) {
-        return getActivity(context).getWindow();
+        Activity activity = getActivity(context);
+        if (activity != null){
+            return activity.getWindow();
+        }
+        return null;
     }
 
     public static Activity getActivity(Context context) {

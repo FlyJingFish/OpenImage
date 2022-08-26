@@ -1,30 +1,25 @@
 package com.flyjingfish.openimagelib;
 
+import android.app.Activity;
 import android.app.SharedElementCallback;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
-import android.util.LayoutDirection;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-import androidx.core.text.TextUtilsCompat;
 
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 class ExitSharedElementCallback2 extends SharedElementCallback {
+    protected Context context;
     protected Float startAlpha;
     protected Integer startVisibility;
     private final ImageView shareExitMapView;
@@ -32,7 +27,8 @@ class ExitSharedElementCallback2 extends SharedElementCallback {
     private final boolean showSrcImageView;
     private final Float showCurrentViewStartAlpha;
 
-    public ExitSharedElementCallback2(ImageView shareExitMapView, boolean showSrcImageView, Float showCurrentViewStartAlpha) {
+    public ExitSharedElementCallback2(Context context, ImageView shareExitMapView, boolean showSrcImageView, Float showCurrentViewStartAlpha) {
+        this.context = context;
         this.shareExitMapView = shareExitMapView;
         this.showSrcImageView = showSrcImageView;
         this.showCurrentViewStartAlpha = showCurrentViewStartAlpha;
@@ -47,6 +43,10 @@ class ExitSharedElementCallback2 extends SharedElementCallback {
         if (!showSrcImageView && shareExitMapView != null) {
             shareExitMapView.setAlpha(Math.max(startAlpha, startSrcAlpha));
         }
+        Activity activity = ActivityCompatHelper.getActivity(context);
+        if (activity != null){
+            activity.setExitSharedElementCallback(null);
+        }
     }
 
     @Override
@@ -56,7 +56,7 @@ class ExitSharedElementCallback2 extends SharedElementCallback {
             Rect showRect = new Rect();
             sharedElement.getLocalVisibleRect(showRect);
             sharedElement.setClipBounds(showRect);
-            if (startAlpha != null){
+            if (startAlpha != null) {
                 sharedElement.setAlpha(startAlpha);
                 sharedElement.setVisibility(startVisibility);
             }

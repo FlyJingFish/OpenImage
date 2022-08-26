@@ -1,11 +1,8 @@
 package com.flyjingfish.openimagelib;
 
 import android.animation.ObjectAnimator;
-import android.app.Instrumentation;
 import android.app.SharedElementCallback;
-import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,7 +21,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -55,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ViewPagerActivity extends AppCompatActivity {
+public class ViewPagerActivity extends BaseActivity {
 
     private OpenImageActivityViewpagerBinding binding;
     private List<OpenImageDetail> openImageBeans;
@@ -629,34 +625,4 @@ public class ViewPagerActivity extends AppCompatActivity {
         return null;
     }
 
-    @Override
-    protected void onStop() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isFinishing()) {
-            new Instrumentation().callActivityOnSaveInstanceState(this, new Bundle());
-        }
-        super.onStop();
-    }
-
-    private enum FontStyle {
-        LIGHT(1),
-        DARK(2),
-        FULL_SCREEN(3);
-        int value;
-
-        FontStyle(int value) {
-            this.value = value;
-        }
-
-        public static FontStyle getStyle(int style) {
-            if (style == 1) {
-                return LIGHT;
-            } else if (style == 2) {
-                return DARK;
-            } else if (style == 3) {
-                return FULL_SCREEN;
-            } else {
-                return DARK;
-            }
-        }
-    }
 }

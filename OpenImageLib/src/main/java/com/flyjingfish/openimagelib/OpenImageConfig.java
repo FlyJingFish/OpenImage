@@ -19,6 +19,7 @@ public class OpenImageConfig {
     protected float readModeRule = DEFAULT_READ_MODE_RULE;
     private boolean disEnableTouchClose;
     private float touchCloseScale;
+    private boolean isFixSharedAnimMemoryLeaks = true;
 
     private OpenImageConfig() {
     }
@@ -96,5 +97,17 @@ public class OpenImageConfig {
      */
     public void setTouchCloseScale(@FloatRange(from = .01f, to = .99f) float touchCloseScale) {
         this.touchCloseScale = touchCloseScale;
+    }
+
+    public boolean isFixSharedAnimMemoryLeaks() {
+        return isFixSharedAnimMemoryLeaks;
+    }
+
+    /**
+     *
+     * @param fixSharedAnimMemoryLeaks 是否修复共享元素内存泄漏的bug
+     */
+    public void setFixSharedAnimMemoryLeaks(boolean fixSharedAnimMemoryLeaks) {
+        isFixSharedAnimMemoryLeaks = fixSharedAnimMemoryLeaks;
     }
 }
