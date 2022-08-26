@@ -494,8 +494,7 @@ public final class OpenImage {
 
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
             replenishImageUrl(openImageDetails);
-            Bundle newOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareViewClick, shareNameClick).toBundle();
-            postOpen(intent, newOptions);
+            postOpen(intent, viewPair);
         } else if (absListView != null) {
             if (sourceImageViewIdGet == null) {
                 throw new IllegalArgumentException("sourceImageViewIdGet 不能为null");
@@ -525,8 +524,7 @@ public final class OpenImage {
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
 
             replenishImageUrl(openImageDetails);
-            Bundle newOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareViewClick, shareNameClick).toBundle();
-            postOpen(intent, newOptions);
+            postOpen(intent, viewPair);
         } else if (viewPager2 != null) {
             if (sourceImageViewIdGet == null) {
                 throw new IllegalArgumentException("sourceImageViewIdGet 不能为null");
@@ -560,8 +558,7 @@ public final class OpenImage {
             });
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
             replenishImageUrl(openImageDetails);
-            Bundle newOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareViewClick, shareNameClick).toBundle();
-            postOpen(intent, newOptions);
+            postOpen(intent, viewPair);
         } else if (viewPager != null) {
             if (sourceImageViewGet == null) {
                 throw new IllegalArgumentException("sourceImageViewGet 不能为null");
@@ -593,8 +590,7 @@ public final class OpenImage {
                 }
             });
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
-            Bundle newOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareViewClick, shareNameClick).toBundle();
-            postOpen(intent, newOptions);
+            postOpen(intent, viewPair);
         } else if (imageViews != null && imageViews.size() > 0) {
             if (imageViews.size() != openImageUrls.size()) {
                 throw new IllegalArgumentException("所传ImageView个数需与数据个数一致");
@@ -620,8 +616,7 @@ public final class OpenImage {
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails));
             intent.putExtra(OpenParams.IMAGES, openImageDetails);
-            Bundle newOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareViewClick, shareNameClick).toBundle();
-            postOpen(intent, newOptions);
+            postOpen(intent, viewPair);
         } else {
             throw new IllegalArgumentException("请设置至少一个点击的ImageView");
         }
@@ -861,7 +856,7 @@ public final class OpenImage {
         return view;
     }
 
-    private void postOpen(Intent intent, Bundle newOptions) {
+    private void postOpen(Intent intent, Pair<View, String> viewPair) {
         isCanOpen = false;
         OpenImageUrl openImageUrl = openImageUrls.get(clickDataPosition);
         Handler handler = new Handler(Looper.getMainLooper());
@@ -872,23 +867,28 @@ public final class OpenImage {
                 String key = UUID.randomUUID().toString();
                 intent.putExtra(OpenParams.OPEN_COVER_DRAWABLE, key);
                 ImageLoadUtils.getInstance().setCoverDrawable(key, drawable);
-                startActivity(intent, newOptions, key);
+                startActivity(intent, viewPair, key);
             }
 
             @Override
             public void onLoadImageFailed() {
                 handler.removeCallbacksAndMessages(null);
-                startActivity(intent, newOptions, null);
+                startActivity(intent, viewPair, null);
             }
         });
-        handler.postDelayed(() -> startActivity(intent, newOptions, null), 100);
+        handler.postDelayed(() -> startActivity(intent, viewPair, null), 100);
     }
 
-    private void startActivity(Intent intent, Bundle newOptions, String drawableKey) {
+    private void startActivity(Intent intent, Pair<View, String> viewPair, String drawableKey) {
         if (!isStartActivity) {
             if (ActivityCompatHelper.assertValidRequest(context)) {
+                View shareElementView = viewPair.first;
+                String shareElementName = viewPair.second;
                 try {
-                    context.startActivity(intent, newOptions);
+                    if (shareElementView != null && shareElementView.isAttachedToWindow()){
+                        Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareElementView, shareElementName).toBundle();
+                        context.startActivity(intent, options);
+                    }
                 } catch (Exception ignored){
                 }
                 release();
@@ -900,7 +900,6 @@ public final class OpenImage {
         }
         isStartActivity = true;
     }
-
     private void replenishImageUrl(ArrayList<OpenImageDetail> openImageDetails) {
         if (srcImageWidthCache.size() == 1 || srcImageHeightCache.size() == 1) {
             int srcWidth = srcImageWidthCache.iterator().next();
