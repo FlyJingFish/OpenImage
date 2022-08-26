@@ -92,7 +92,10 @@ public abstract class BaseFragment extends Fragment {
         currentScale = scale;
     }
 
-    protected void close() {
+    /**
+     * 关闭页面
+     */
+    public void close() {
         photosViewModel.closeViewLiveData.setValue(1);
     }
 

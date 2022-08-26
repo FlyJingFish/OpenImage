@@ -62,7 +62,7 @@ public class TouchCloseLayout extends FrameLayout {
             @Override
             public void onAnimationEnd(Animator animation) {
                 if (onTouchCloseListener != null) {
-                    onTouchCloseListener.onTouchScale(0);
+                    onTouchCloseListener.onTouchScale(1f);
                 }
                 if (onTouchCloseListener != null){
                     onTouchCloseListener.onEndTouch();

@@ -16,10 +16,11 @@ import com.flyjingfish.openimage.databinding.FragmentVideoBinding;
 import com.flyjingfish.openimage.videoplayer.GSYVideoController;
 import com.flyjingfish.openimagelib.BaseImageFragment;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
+import com.flyjingfish.openimagelib.widget.LoadingView;
 
 import moe.codeest.enviews.ENDownloadView;
 
-public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
+public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
 
     protected FragmentVideoBinding binding;
     protected String playerKey;
@@ -37,21 +38,19 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
     }
 
     @Override
-    protected ENDownloadView getLoadingView() {
-        return (ENDownloadView) binding.videoPlayer.getLoadingView();
+    protected LoadingView getLoadingView() {
+        return (LoadingView) binding.videoPlayer.getLoadingView();
     }
 
     @Override
-    protected void hideLoading(ENDownloadView pbLoading) {
+    protected void hideLoading(LoadingView pbLoading) {
         super.hideLoading(pbLoading);
-        pbLoading.release();
         binding.videoPlayer.getStartButton().setVisibility(View.VISIBLE);
     }
 
     @Override
-    protected void showLoading(ENDownloadView pbLoading) {
+    protected void showLoading(LoadingView pbLoading) {
         super.showLoading(pbLoading);
-        pbLoading.start();
         binding.videoPlayer.getStartButton().setVisibility(View.GONE);
     }
 

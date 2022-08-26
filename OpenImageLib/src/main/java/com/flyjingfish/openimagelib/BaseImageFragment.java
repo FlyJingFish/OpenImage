@@ -97,7 +97,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         setOnListener();
     }
 
-    public void setCoverImageView(){
+    protected void setCoverImageView(){
         ViewGroup.LayoutParams layoutParams = smallCoverImageView.getLayoutParams();
         if (srcScaleType == ImageView.ScaleType.CENTER_CROP || srcScaleType == ImageView.ScaleType.FIT_XY) {
             layoutParams.width = imageDetail.srcWidth;
@@ -111,7 +111,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         }
     }
 
-    public void setOnListener(){
+    protected void setOnListener(){
         if (!disableClickClose) {
             photoView.setOnClickListener(view1 -> close());
         }
@@ -126,7 +126,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         }
     }
 
-    public void loadCoverImage(){
+    protected void loadCoverImage(){
         if (itemLoadHelper != null) {
             itemLoadHelper.loadImage(requireContext(), imageDetail.openImageUrl, imageDetail.getCoverImageUrl(), smallCoverImageView, imageDetail.srcWidth, imageDetail.srcHeight, new OnLoadCoverImageListener() {
                 @Override
@@ -143,7 +143,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             });
         }
     }
-    public void loadBigImage(){
+    protected void loadBigImage(){
         if (clickPosition == showPosition && TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl()) && coverDrawable != null) {
             onImageSuccess(coverDrawable);
         } else {
@@ -168,7 +168,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         }
     }
 
-    private void onImageSuccess(Drawable drawable) {
+    protected void onImageSuccess(Drawable drawable) {
         mHandler.post(() -> {
             photoView.setImageDrawable(drawable);
             int imageWidth = drawable.getIntrinsicWidth(), imageHeight = drawable.getIntrinsicHeight();
@@ -300,7 +300,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         hideLoading(loadingView);
     }
 
-    public void createCoverAnim(int imageWidth, int imageHeight, final boolean isLoadImageSuccess){
+    protected void createCoverAnim(int imageWidth, int imageHeight, final boolean isLoadImageSuccess){
         float scaleHW = imageDetail.srcHeight * 1f / imageDetail.srcWidth;
         float originalScaleHW = imageHeight * 1f / imageWidth;
         float coverWidth;
