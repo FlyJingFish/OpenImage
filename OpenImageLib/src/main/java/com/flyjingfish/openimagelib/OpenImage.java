@@ -888,8 +888,11 @@ public final class OpenImage {
                     if (shareElementView != null && shareElementView.isAttachedToWindow()){
                         Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareElementView, shareElementName).toBundle();
                         context.startActivity(intent, options);
+                    }else {
+                        isCanOpen = true;
                     }
                 } catch (Exception ignored){
+                    isCanOpen = true;
                 }
                 release();
             } else {
