@@ -2,6 +2,7 @@ package com.flyjingfish.openimagelib;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.app.SharedElementCallback;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -57,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public final class OpenImage {
@@ -861,7 +863,7 @@ public final class OpenImage {
         }
         return view;
     }
-
+    private boolean isMapShareView = true;
     private void postOpen(Intent intent, Pair<View, String> viewPair) {
         View shareElementView = viewPair.first;
         ViewGroup parent = (ViewGroup) shareElementView.getParent();
@@ -907,28 +909,29 @@ public final class OpenImage {
             public void onViewDetachedFromWindow(View v) {
                 View shareElementView = viewPair.first;
                 ViewGroup parent = (ViewGroup) shareElementView.getParent();
-                Log.e("startActivity_null","=====1");
+                Log.e("startActivity_null","=====1=="+v.toString());
 //                if (shareElementView == null || !shareElementView.isAttachedToWindow() || parent == null || !parent.isAttachedToWindow()){
 //                    Log.e("startActivity_null","=====2");
 //
 //                }
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    try {
-                        Field fieldPassword = ViewTreeObserver.class.getDeclaredField("mOnPreDrawListeners");
-                        fieldPassword.setAccessible(true);
-                        Object mOnPreDrawListeners = fieldPassword.get(mViewTreeObserver);
-
-                        Field mDataField = mOnPreDrawListeners.getClass().getDeclaredField("mData");
-                        mDataField.setAccessible(true);
-                        ArrayList<ViewTreeObserver.OnPreDrawListener> mData = (ArrayList<ViewTreeObserver.OnPreDrawListener>) mDataField.get(mOnPreDrawListeners);
-                        for (ViewTreeObserver.OnPreDrawListener mDatum : mData) {
-                            mViewTreeObserver.removeOnPreDrawListener(mDatum);
-                        }
-                    } catch (Throwable ignored) {
-
-                    }
-                }
-
+//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+//                    try {
+//                        Field fieldPassword = ViewTreeObserver.class.getDeclaredField("mOnPreDrawListeners");
+//                        fieldPassword.setAccessible(true);
+//                        Object mOnPreDrawListeners = fieldPassword.get(mViewTreeObserver);
+//
+//                        Field mDataField = mOnPreDrawListeners.getClass().getDeclaredField("mData");
+//                        mDataField.setAccessible(true);
+//                        ArrayList<ViewTreeObserver.OnPreDrawListener> mData = (ArrayList<ViewTreeObserver.OnPreDrawListener>) mDataField.get(mOnPreDrawListeners);
+//                        for (ViewTreeObserver.OnPreDrawListener mDatum : mData) {
+//                            mViewTreeObserver.removeOnPreDrawListener(mDatum);
+//                        }
+//                        isMapShareView = false;
+//                    } catch (Throwable ignored) {
+//
+//                    }
+//                }
+                isMapShareView = false;
 
             }
 
@@ -963,7 +966,15 @@ public final class OpenImage {
                 String shareElementName = viewPair.second;
                 try {
                     if (shareElementView != null && shareElementView.isAttachedToWindow()){
-
+                        ActivityCompatHelper.getActivity(context).setExitSharedElementCallback(new SharedElementCallback() {
+                            @Override
+                            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                                if (!isMapShareView){
+                                    sharedElements.clear();
+                                }
+                                super.onMapSharedElements(names, sharedElements);
+                            }
+                        });
 
                         Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareElementView, shareElementName).toBundle();
                         context.startActivity(intent, options);

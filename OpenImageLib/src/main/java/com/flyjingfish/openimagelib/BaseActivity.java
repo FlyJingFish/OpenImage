@@ -8,15 +8,24 @@ import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class BaseActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.e("startActivity_null","=====2==");
+        finish();
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     protected void onStop() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isFinishing()) {
