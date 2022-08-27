@@ -26,11 +26,15 @@ import java.util.Map;
 public class BaseActivity extends AppCompatActivity {
     private static final int CHECK_FINISH = 1009;
     private static final long CHECK_DELAY_MS = 200;
-    private Handler closeHandler = new Handler(Looper.getMainLooper()){
+    private final Handler closeHandler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            finishAfterTransition();
+            if (msg.what == CHECK_FINISH) {
+                finishAfterTransition();
+                fixAndroid5_7BugForRemoveListener();
+            }
+
         }
     };
 
@@ -40,6 +44,16 @@ public class BaseActivity extends AppCompatActivity {
         fixAndroid5_7Bug();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fixAndroid5_7BugForRemoveListener();
+    }
+    private void fixAndroid5_7BugForRemoveListener() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            ImageLoadUtils.getInstance().notifyOnRemoveListener4FixBug();
+        }
+    }
     private void fixAndroid5_7Bug() {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
             setEnterSharedElementCallback(new SharedElementCallback() {

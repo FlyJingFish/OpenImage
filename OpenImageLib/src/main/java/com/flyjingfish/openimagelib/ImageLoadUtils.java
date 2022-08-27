@@ -85,6 +85,20 @@ class ImageLoadUtils {
         void onStartTouchScale(int showPosition);
         void onEndTouchScale(int showPosition);
     }
+    private OnRemoveListener4FixBug onRemoveListener4FixBug;
+    public interface OnRemoveListener4FixBug{
+        void onRemove();
+    }
+
+    public void notifyOnRemoveListener4FixBug() {
+        if (onRemoveListener4FixBug != null){
+            onRemoveListener4FixBug.onRemove();
+        }
+    }
+
+    public void setOnRemoveListener4FixBug(OnRemoveListener4FixBug onRemoveListener4FixBug) {
+        this.onRemoveListener4FixBug = onRemoveListener4FixBug;
+    }
 
     public OnBackView getOnBackView(String key) {
         return onBackViewHashMap.get(key);

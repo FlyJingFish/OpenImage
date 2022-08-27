@@ -865,7 +865,6 @@ public final class OpenImage {
     private volatile boolean isMapShareView = true;
 
     private void postOpen(Intent intent, Pair<View, String> viewPair) {
-        fixAndroid5_7Bug(viewPair);
         isCanOpen = false;
         OpenImageUrl openImageUrl = openImageUrls.get(clickDataPosition);
         Handler handler = new Handler(Looper.getMainLooper());
@@ -887,26 +886,27 @@ public final class OpenImage {
         });
         handler.postDelayed(() -> startActivity(intent, viewPair, null), 100);
     }
-
+    private String drawableKey;
     private void startActivity(Intent intent, Pair<View, String> viewPair, String drawableKey) {
         if (!isStartActivity) {
             if (ActivityCompatHelper.assertValidRequest(context)) {
+                this.drawableKey = drawableKey;
                 View shareElementView = viewPair.first;
                 String shareElementName = viewPair.second;
                 try {
                     if (shareElementView != null && shareElementView.isAttachedToWindow()) {
-                        fixAndroid5_7Bug();
+                        fixAndroid5_7Bug(shareElementView,true);
                         Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareElementView, shareElementName).toBundle();
                         context.startActivity(intent, options);
                     } else {
-                        releaseImageLoadUtilMap(drawableKey);
+                        releaseImageLoadUtilMap();
                     }
                 } catch (Exception ignored) {
-                    releaseImageLoadUtilMap(drawableKey);
+                    releaseImageLoadUtilMap();
                 }
                 release();
             } else {
-                releaseImageLoadUtilMap(drawableKey);
+                releaseImageLoadUtilMap();
             }
         } else if (!TextUtils.isEmpty(drawableKey)) {
             ImageLoadUtils.getInstance().clearCoverDrawable(drawableKey);
@@ -914,7 +914,7 @@ public final class OpenImage {
         isStartActivity = true;
     }
 
-    private void releaseImageLoadUtilMap(String drawableKey){
+    private void releaseImageLoadUtilMap(){
         isCanOpen = true;
         ImageLoadUtils.getInstance().clearItemLoadHelper(itemLoadHelperKey);
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onselectKey);
@@ -924,28 +924,28 @@ public final class OpenImage {
         ImageLoadUtils.getInstance().clearOnItemLongClickListener(onItemLongClickListenerKey);
         ImageLoadUtils.getInstance().clearMoreViewOption(moreViewOptionKey);
         ImageLoadUtils.getInstance().clearOnBackView(backViewKey);
+        ImageLoadUtils.getInstance().setOnRemoveListener4FixBug(null);
         moreViewOptions.clear();
     }
-    private void fixAndroid5_7Bug() {
+    private void fixAndroid5_7Bug(final View shareElementView,final boolean isSetExitSharedElementCallback) {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
-            ActivityCompatHelper.getActivity(context).setExitSharedElementCallback(new SharedElementCallback() {
-                @Override
-                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                    if (!isMapShareView) {
-                        names.clear();
-                        sharedElements.clear();
+            if (isSetExitSharedElementCallback && context != null){
+                Activity activity = ActivityCompatHelper.getActivity(context);
+                activity.setExitSharedElementCallback(new SharedElementCallback() {
+                    @Override
+                    public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                        if (!isMapShareView) {
+                            names.clear();
+                            sharedElements.clear();
+                        }
+                        super.onMapSharedElements(names, sharedElements);
+                        activity.setExitSharedElementCallback(null);
                     }
-                    super.onMapSharedElements(names, sharedElements);
-                }
-            });
-        }
-    }
-    private void fixAndroid5_7Bug(Pair<View, String> viewPair) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
-            View shareElementView = viewPair.first;
+                });
+            }
             ViewGroup parent = (ViewGroup) shareElementView.getParent();
             ViewTreeObserver parentViewTreeObserver = parent.getViewTreeObserver();
-            shareElementView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            final View.OnAttachStateChangeListener onAttachStateChangeListener =  new View.OnAttachStateChangeListener() {
 
 
                 @Override
@@ -988,7 +988,9 @@ public final class OpenImage {
 
                 }
 
-            });
+            };
+            shareElementView.addOnAttachStateChangeListener(onAttachStateChangeListener);
+            ImageLoadUtils.getInstance().setOnRemoveListener4FixBug(() -> shareElementView.removeOnAttachStateChangeListener(onAttachStateChangeListener));
         }
     }
 
@@ -1033,6 +1035,7 @@ public final class OpenImage {
                             imageViews = null;
                         }
                         source.getLifecycle().removeObserver(this);
+                        releaseImageLoadUtilMap();
                     }
                 }
             });
