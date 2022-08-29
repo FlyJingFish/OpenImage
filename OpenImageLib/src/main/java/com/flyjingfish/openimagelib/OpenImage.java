@@ -52,6 +52,7 @@ import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
+import com.flyjingfish.openimagelib.widget.OpenImageView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -75,6 +76,7 @@ public final class OpenImage {
     private int errorResId;
     private int openImageStyle;
     private ImageView.ScaleType srcImageViewScaleType;
+    private OpenImageView.OpenScaleType srcImageViewOpenScaleType;
     private boolean autoSetScaleType;
     private ImageDiskMode imageDiskMode = ImageDiskMode.CONTAIN_ORIGINAL;
     private final HashSet<Integer> srcImageWidthCache = new HashSet<>();
@@ -243,6 +245,12 @@ public final class OpenImage {
      */
     public OpenImage setSrcImageViewScaleType(ImageView.ScaleType srcImageViewScaleType, boolean autoSetScaleType) {
         this.srcImageViewScaleType = srcImageViewScaleType;
+        this.autoSetScaleType = autoSetScaleType;
+        return this;
+    }
+
+    public OpenImage setSrcImageViewScaleType(OpenImageView.OpenScaleType srcImageViewOpenScaleType, boolean autoSetScaleType) {
+        this.srcImageViewOpenScaleType = srcImageViewOpenScaleType;
         this.autoSetScaleType = autoSetScaleType;
         return this;
     }
@@ -458,7 +466,7 @@ public final class OpenImage {
         intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);
         intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, OpenImageConfig.getInstance().isDisEnableTouchClose());
-        intent.putExtra(OpenParams.SRC_SCALE_TYPE, srcImageViewScaleType);
+        intent.putExtra(OpenParams.SRC_SCALE_TYPE,srcImageViewOpenScaleType != null?OpenImageView.OpenScaleType.getType(srcImageViewOpenScaleType.getType()): OpenImageView.OpenScaleType.getType(srcImageViewScaleType));
         intent.putExtra(OpenParams.IMAGE_DISK_MODE, imageDiskMode);
         intent.putExtra(OpenParams.ERROR_RES_ID, errorResId);
         intent.putExtra(OpenParams.ITEM_LOAD_KEY, itemLoadHelperKey);
@@ -629,6 +637,22 @@ public final class OpenImage {
 
     }
 
+    private void autoSetScaleType(ImageView shareView){
+        if (!autoSetScaleType){
+            return;
+        }
+        if (srcImageViewOpenScaleType != null && shareView instanceof OpenImageView){
+            OpenImageView openImageView = (OpenImageView) shareView;
+            if (openImageView.getOpenScaleType() != srcImageViewOpenScaleType){
+                openImageView.setOpenScaleType(srcImageViewOpenScaleType);
+            }
+        }if (srcImageViewScaleType != null){
+            if (shareView.getScaleType() != srcImageViewScaleType) {
+                shareView.setScaleType(srcImageViewScaleType);
+            }
+        }
+
+    }
     private Pair<View, String> initShareView(ArrayList<OpenImageDetail> openImageDetails) {
         Pair<View, String> pair = null;
         if (srcViewType == SrcViewType.RV || srcViewType == SrcViewType.AB_LIST) {
@@ -652,9 +676,7 @@ public final class OpenImage {
                             if (shareView == null) {
                                 throw new NullPointerException("请确保 SourceImageViewIdGet 返回的 ImageView 的Id正确");
                             }
-                            if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                                shareView.setScaleType(srcImageViewScaleType);
-                            }
+                            autoSetScaleType(shareView);
                             String shareName = OpenParams.SHARE_VIEW + openImageDetails.size();
                             if (clickViewPosition == viewIndex) {
                                 pair = Pair.create(shareView, shareName);
@@ -693,9 +715,7 @@ public final class OpenImage {
                             if (shareView == null) {
                                 throw new NullPointerException("请确保 SourceImageViewIdGet 返回的 ImageView 的Id正确");
                             }
-                            if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                                shareView.setScaleType(srcImageViewScaleType);
-                            }
+                            autoSetScaleType(shareView);
                             String shareName = OpenParams.SHARE_VIEW + openImageDetails.size();
                             if (clickViewPosition == viewIndex) {
                                 pair = Pair.create(shareView, shareName);
@@ -724,9 +744,7 @@ public final class OpenImage {
             if (shareView == null) {
                 throw new NullPointerException("请确保 SourceImageViewGet 返回的 ImageView 不能为null");
             }
-            if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                shareView.setScaleType(srcImageViewScaleType);
-            }
+            autoSetScaleType(shareView);
             String shareName = OpenParams.SHARE_VIEW + clickDataPosition;
             pair = Pair.create(shareView, shareName);
             int shareViewWidth = shareView.getWidth();
@@ -749,9 +767,7 @@ public final class OpenImage {
                 openImageDetail.dataPosition = i;
                 openImageDetail.viewPosition = i;
                 ImageView shareView = imageViews.get(i);
-                if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                    shareView.setScaleType(srcImageViewScaleType);
-                }
+                autoSetScaleType(shareView);
                 String shareName = OpenParams.SHARE_VIEW + i;
                 int shareViewWidth = shareView.getWidth();
                 int shareViewHeight = shareView.getHeight();
@@ -1135,11 +1151,9 @@ public final class OpenImage {
                 if (view != null) {
                     ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
                     if (shareView != null) {
-                        if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                            shareView.setScaleType(srcImageViewScaleType);
-                        }
                         boolean isAttachedToWindow = shareView.isAttachedToWindow();
                         if (isAttachedToWindow) {
+                            autoSetScaleType(shareView);
                             shareExitView = shareView;
                             shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_NORMAL, shareExitView);
                         }
@@ -1154,11 +1168,9 @@ public final class OpenImage {
                     if (wechatView != null) {
                         ImageView shareView = wechatView.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
                         if (shareView != null) {
-                            if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                                shareView.setScaleType(srcImageViewScaleType);
-                            }
                             boolean isAttachedToWindow = shareView.isAttachedToWindow();
                             if (isAttachedToWindow) {
+                                autoSetScaleType(shareView);
                                 shareExitView = shareView;
                                 shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_WECHAT, shareExitView);
                             }
@@ -1173,11 +1185,9 @@ public final class OpenImage {
 
                 ImageView shareView = sourceImageViewGet.getImageView(openImageUrl, dataPosition);
                 if (shareView != null) {
-                    if (autoSetScaleType && shareView.getScaleType() != srcImageViewScaleType) {
-                        shareView.setScaleType(srcImageViewScaleType);
-                    }
                     boolean isAttachedToWindow = shareView.isAttachedToWindow();
                     if (isAttachedToWindow) {
+                        autoSetScaleType(shareView);
                         shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_NORMAL, shareView);
                     }
                 }
@@ -1186,6 +1196,7 @@ public final class OpenImage {
                 ImageView shareExitView = null;
                 ImageView shareView = imageViews.get(showPosition);
                 if (shareView != null && shareView.isAttachedToWindow()) {
+                    autoSetScaleType(shareView);
                     shareExitView = shareView;
                     shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_NORMAL, shareExitView);
                 }
@@ -1193,6 +1204,7 @@ public final class OpenImage {
                 if (shareExitView == null && wechatExitFillInEffect) {
                     ImageView wechatView = imageViews.get(clickViewPosition);
                     if (wechatView != null && wechatView.isAttachedToWindow()) {
+                        autoSetScaleType(wechatView);
                         shareExitView = wechatView;
                         shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_WECHAT, shareExitView);
                     }

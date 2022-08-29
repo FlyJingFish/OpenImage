@@ -44,6 +44,7 @@ import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.utils.AttrsUtils;
 import com.flyjingfish.openimagelib.utils.StatusBarHelper;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
+import com.flyjingfish.openimagelib.widget.OpenImageView;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class ViewPagerActivity extends BaseActivity {
     private ImageIndicatorAdapter imageIndicatorAdapter;
     private OpenImageOrientation orientation;
     private ImageDiskMode imageDiskMode;
-    private ImageView.ScaleType srcScaleType;
+    private OpenImageView.OpenScaleType srcScaleType;
     private int selectPos;
     private OnSelectMediaListener onSelectMediaListener;
     private String onSelectKey;
@@ -99,7 +100,7 @@ public class ViewPagerActivity extends BaseActivity {
 
         photosViewModel = new ViewModelProvider(this).get(PhotosViewModel.class);
         photosViewModel.closeViewLiveData.observe(this, integer -> close(false));
-        srcScaleType = (ImageView.ScaleType) getIntent().getSerializableExtra(OpenParams.SRC_SCALE_TYPE);
+        srcScaleType = (OpenImageView.OpenScaleType) getIntent().getSerializableExtra(OpenParams.SRC_SCALE_TYPE);
         openImageBeans = (List<OpenImageDetail>) getIntent().getSerializableExtra(OpenParams.IMAGES);
         clickPosition = getIntent().getIntExtra(OpenParams.CLICK_POSITION, 0);
         boolean disEnableTouchClose = getIntent().getBooleanExtra(OpenParams.DISABLE_TOUCH_CLOSE, false);

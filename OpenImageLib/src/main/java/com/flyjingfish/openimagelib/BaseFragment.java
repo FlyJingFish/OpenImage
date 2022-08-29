@@ -19,6 +19,7 @@ import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
+import com.flyjingfish.openimagelib.widget.OpenImageView;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -41,7 +42,7 @@ public abstract class BaseFragment extends Fragment {
     protected boolean isInitImage;
     protected boolean isLoading;
     protected boolean isStartCoverAnim = true;
-    protected ImageView.ScaleType srcScaleType;
+    protected OpenImageView.OpenScaleType srcScaleType;
     protected AnimatorSet coverAnim;
     protected ItemLoadHelper itemLoadHelper;
     protected float currentScale = 1f;
@@ -58,7 +59,7 @@ public abstract class BaseFragment extends Fragment {
         }
         showPosition = bundle.getInt(OpenParams.SHOW_POSITION);
         clickPosition = bundle.getInt(OpenParams.CLICK_POSITION);
-        srcScaleType = (ImageView.ScaleType) bundle.getSerializable(OpenParams.SRC_SCALE_TYPE);
+        srcScaleType = OpenImageView.OpenScaleType.getType(((OpenImageView.OpenScaleType) bundle.getSerializable(OpenParams.SRC_SCALE_TYPE)).getType());
         errorResId = bundle.getInt(OpenParams.ERROR_RES_ID,0);
         String itemLoadKey = bundle.getString(OpenParams.ITEM_LOAD_KEY);
         itemLoadHelper = ImageLoadUtils.getInstance().getItemLoadHelper(itemLoadKey);

@@ -38,6 +38,7 @@ import androidx.annotation.NonNull;
 
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.utils.ScreenOrientationEvent;
+import com.flyjingfish.openimagelib.widget.OpenImageView;
 
 /**
  * The component of {@link PhotoView} which does the work allowing for zooming, scaling, panning, etc.
@@ -93,7 +94,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private boolean mZoomEnabled = true;
     private boolean mScreenOrientationChange = false;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
-    private ScaleType mSrcScaleType = ScaleType.FIT_CENTER;
+    private OpenImageView.OpenScaleType mSrcScaleType = OpenImageView.OpenScaleType.FIT_CENTER;
     // TODO: 2022/8/2 设置高度
     private float mTargetWidth;
     private float mTargetHeight;
@@ -532,17 +533,15 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void setScaleType(ScaleType scaleType) {
-        if (Util.isSupportedScaleType(scaleType) && scaleType != mScaleType) {
+        if (scaleType != mScaleType) {
             mScaleType = scaleType;
             update();
         }
     }
 
-    public void setSrcScaleType(ScaleType scaleType) {
-        if (Util.isSupportedScaleType(scaleType)) {
-            mSrcScaleType = scaleType;
-            update();
-        }
+    public void setSrcScaleType(OpenImageView.OpenScaleType scaleType) {
+        mSrcScaleType = scaleType;
+        update();
     }
 
     public boolean isZoomable() {
@@ -714,13 +713,19 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         (viewHeight - drawableHeight) / 2F);
             }
 
+        } else if (mScaleType == ScaleType.MATRIX) {
+            // TODO: 2022/8/29 未完成
+            float scale = Math.max(widthScale, heightScale);
+            mBaseMatrix.postScale(scale, scale);
+            mBaseMatrix.postTranslate(0,0);
+
         } else if (mScaleType == ScaleType.CENTER_CROP) {
             float scale = Math.max(widthScale, heightScale);
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
                     (viewHeight - drawableHeight * scale) / 2F);
 
-        } else if (mScaleType == ScaleType.CENTER_INSIDE) {
+        }else if (mScaleType == ScaleType.CENTER_INSIDE) {
             float scale = Math.min(1.0f, Math.min(widthScale, heightScale));
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
@@ -740,7 +745,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     float targetWidth = Math.max(mTargetWidth,viewWidth);
                     float targetHeight = Math.max(mTargetViewHeight,viewHeight);
                     float scaleStartViewHW = mStartHeight*1f/mStartWidth;
-                    if (mSrcScaleType == ScaleType.CENTER_CROP){
+                    if (mSrcScaleType == OpenImageView.OpenScaleType.CENTER_CROP){
                         if (scaleImageHW > scaleStartViewHW) {
                             float height = mStartWidth * scaleImageHW;
                             float tansY = (height - mStartHeight) / 2;
@@ -751,7 +756,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                             startDstRectF = new RectF(-tansX, 0, width - tansX, mStartHeight);
 
                         }
-                    }else if (mSrcScaleType == ScaleType.CENTER_INSIDE){
+                    }else if (mSrcScaleType == OpenImageView.OpenScaleType.CENTER_INSIDE){
                         if (drawableWidth < mStartWidth && drawableHeight< mStartHeight){
                             float left = (mStartWidth - drawableWidth)/2;
                             float top = (mStartHeight - drawableHeight)/2;
@@ -759,7 +764,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         }else {
                             startDstRectF = new RectF(0, 0, mStartWidth, mStartHeight);
                         }
-                    }else if (mSrcScaleType == ScaleType.CENTER){
+                    }else if (mSrcScaleType == OpenImageView.OpenScaleType.CENTER){
                         startDstRectF = new RectF(0, 0, drawableWidth, drawableHeight);
                     }else{
                         startDstRectF = new RectF(0, 0, mStartWidth, mStartHeight);
@@ -824,7 +829,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
 
 
-                    if (mSrcScaleType == ScaleType.FIT_XY){
+                    if (mSrcScaleType == OpenImageView.OpenScaleType.FIT_XY){
                         float scaleEndViewHW = mTargetHeight / mTargetWidth;
                         float targetHeight , targetWidth ;
                         if (scaleEndViewHW > scaleImageHW){
@@ -844,10 +849,15 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         }
                         mTempDst = new RectF(0, 0, width, height);
                     }
-                    else if (mSrcScaleType == ScaleType.FIT_START||mSrcScaleType == ScaleType.FIT_END){
+                    else if (mSrcScaleType == OpenImageView.OpenScaleType.FIT_START||mSrcScaleType == OpenImageView.OpenScaleType.FIT_END){
                         mTempDst = new RectF (0, 0, viewWidth , currentHeight);
                     }
-                    else {
+                    else if (mSrcScaleType == OpenImageView.OpenScaleType.START_CROP){
+                        mTempDst = new RectF(-tansX, -tansY, currentWidth-tansX, currentHeight-tansY);
+                    }else if (mSrcScaleType == OpenImageView.OpenScaleType.END_CROP){
+                        // TODO: 2022/8/29 未完成
+                        mTempDst = new RectF(-tansX, -tansY, currentWidth-tansX, currentHeight-tansY);
+                    }else {
                         mTempDst = new RectF(-tansX, -tansY, currentWidth-tansX, currentHeight-tansY);
                     }
                 }else {
@@ -861,7 +871,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             }
             switch (mScaleType) {
                 case FIT_CENTER:
-                    if (mSrcScaleType == ScaleType.FIT_XY &&  mStartWidth !=0 && mStartHeight!=0){
+                    if (mSrcScaleType == OpenImageView.OpenScaleType.FIT_XY &&  mStartWidth !=0 && mStartHeight!=0){
                         if (viewWidth <mTargetWidth||viewHeight <mTargetHeight){
                             mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
                         }else {
@@ -905,7 +915,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         final float height = rect.height(), width = rect.width();
         float deltaX = 0, deltaY = 0;
         if (!isExitMode){
-            if (startDstRectF != null && (mSrcScaleType == ScaleType.FIT_START || mSrcScaleType == ScaleType.FIT_END )) {
+            if (startDstRectF != null && (mSrcScaleType == OpenImageView.OpenScaleType.FIT_START || mSrcScaleType == OpenImageView.OpenScaleType.FIT_END )) {
                 float addWidthScale ;
                 float addHeightScale ;
                 addWidthScale= (viewWidth - mStartWidth)*1f/(mTargetWidth - mStartWidth);
@@ -925,44 +935,32 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     targetWidth = mTargetHeight/scaleImageHW;
                 }
                 if (height <= viewHeight) {
-                    switch (mSrcScaleType) {
-                        case FIT_START:
-                            deltaY = -rect.top+addHeightScale*((mTargetHeight - targetHeight) / 2);
-                            break;
-                        case FIT_END:
-                            deltaY = -addHeightScale*(mTargetHeight - targetHeight)/2+ viewHeight - height- rect.top;
-                            break;
-                        default:
-                            deltaY = (viewHeight - height) / 2 - rect.top;
-                            break;
+                    if (OpenImageView.OpenScaleType.FIT_START.equals(mSrcScaleType)) {
+                        deltaY = -rect.top + addHeightScale * ((mTargetHeight - targetHeight) / 2);
+                    } else if (OpenImageView.OpenScaleType.FIT_END.equals(mSrcScaleType)) {
+                        deltaY = -addHeightScale * (mTargetHeight - targetHeight) / 2 + viewHeight - height - rect.top;
+                    } else {
+                        deltaY = (viewHeight - height) / 2 - rect.top;
                     }
                 }
                 if (width <= viewWidth) {
-                    switch (mSrcScaleType) {
-                        case FIT_START:
-                            deltaX = -rect.left+addWidthScale*((mTargetWidth - targetWidth) / 2 );
-                            break;
-                        case FIT_END:
-                            deltaX = -addWidthScale*(mTargetWidth - targetWidth)/2 +viewWidth - width- rect.left;
-                            break;
-                        default:
-                            deltaX = (viewWidth - width) / 2 - rect.left;
-                            break;
+                    if (OpenImageView.OpenScaleType.FIT_START.equals(mSrcScaleType)) {
+                        deltaX = -rect.left + addWidthScale * ((mTargetWidth - targetWidth) / 2);
+                    } else if (OpenImageView.OpenScaleType.FIT_END.equals(mSrcScaleType)) {
+                        deltaX = -addWidthScale * (mTargetWidth - targetWidth) / 2 + viewWidth - width - rect.left;
+                    } else {
+                        deltaX = (viewWidth - width) / 2 - rect.left;
                     }
                 }
 
             }else {
                 if (height <= viewHeight) {
-                    switch (mSrcScaleType) {
-                        case FIT_START:
-                            deltaY = -rect.top;
-                            break;
-                        case FIT_END:
-                            deltaY = viewHeight - height - rect.top;
-                            break;
-                        default:
-                            deltaY = (viewHeight - height) / 2 - rect.top;
-                            break;
+                    if (OpenImageView.OpenScaleType.FIT_START.equals(mSrcScaleType)) {
+                        deltaY = -rect.top;
+                    } else if (OpenImageView.OpenScaleType.FIT_END.equals(mSrcScaleType)) {
+                        deltaY = viewHeight - height - rect.top;
+                    } else {
+                        deltaY = (viewHeight - height) / 2 - rect.top;
                     }
                 } else if (rect.top > 0) {
                     deltaY = -rect.top;
@@ -970,16 +968,12 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     deltaY = viewHeight - rect.bottom;
                 }
                 if (width <= viewWidth) {
-                    switch (mSrcScaleType) {
-                        case FIT_START:
-                            deltaX = -rect.left;
-                            break;
-                        case FIT_END:
-                            deltaX = viewWidth - width - rect.left;
-                            break;
-                        default:
-                            deltaX = (viewWidth - width) / 2 - rect.left;
-                            break;
+                    if (OpenImageView.OpenScaleType.FIT_START.equals(mSrcScaleType)) {
+                        deltaX = -rect.left;
+                    } else if (OpenImageView.OpenScaleType.FIT_END.equals(mSrcScaleType)) {
+                        deltaX = viewWidth - width - rect.left;
+                    } else {
+                        deltaX = (viewWidth - width) / 2 - rect.left;
                     }
                 } else if (rect.left > 0) {
                     deltaX = -rect.left;

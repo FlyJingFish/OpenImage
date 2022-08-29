@@ -22,6 +22,7 @@ import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.photoview.PhotoViewAttacher;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
+import com.flyjingfish.openimagelib.widget.OpenImageView;
 
 public abstract class BaseImageFragment<T extends View> extends BaseFragment {
 
@@ -99,14 +100,14 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
 
     protected void setCoverImageView(){
         ViewGroup.LayoutParams layoutParams = smallCoverImageView.getLayoutParams();
-        if (srcScaleType == ImageView.ScaleType.CENTER_CROP || srcScaleType == ImageView.ScaleType.FIT_XY) {
+        if (srcScaleType == OpenImageView.OpenScaleType.CENTER_CROP || srcScaleType == OpenImageView.OpenScaleType.FIT_XY) {
             layoutParams.width = imageDetail.srcWidth;
             layoutParams.height = imageDetail.srcHeight;
             smallCoverImageView.setLayoutParams(layoutParams);
-            smallCoverImageView.setScaleType(srcScaleType);
-        } else if (srcScaleType == ImageView.ScaleType.CENTER) {
-            smallCoverImageView.setScaleType(srcScaleType);
-        } else if (srcScaleType == ImageView.ScaleType.FIT_CENTER || srcScaleType == ImageView.ScaleType.FIT_START || srcScaleType == ImageView.ScaleType.FIT_END) {
+            smallCoverImageView.setScaleType(OpenImageView.OpenScaleType.getScaleType(srcScaleType));
+        } else if (srcScaleType == OpenImageView.OpenScaleType.CENTER) {
+            smallCoverImageView.setScaleType(OpenImageView.OpenScaleType.getScaleType(srcScaleType));
+        } else if (srcScaleType == OpenImageView.OpenScaleType.FIT_CENTER || srcScaleType == OpenImageView.OpenScaleType.FIT_START || srcScaleType == OpenImageView.OpenScaleType.FIT_END) {
             smallCoverImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         }
     }
@@ -290,7 +291,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
     }
 
     protected void initCoverAnim(int imageWidth, int imageHeight, final boolean isLoadImageSuccess) {
-        if (imageDiskMode == ImageDiskMode.RESULT && (srcScaleType == ImageView.ScaleType.CENTER_CROP || srcScaleType == ImageView.ScaleType.FIT_XY) && imageDetail.srcWidth != 0 && imageDetail.srcHeight != 0) {
+        if (imageDiskMode == ImageDiskMode.RESULT && (srcScaleType == OpenImageView.OpenScaleType.CENTER_CROP || srcScaleType == OpenImageView.OpenScaleType.FIT_XY) && imageDetail.srcWidth != 0 && imageDetail.srcHeight != 0) {
             createCoverAnim(imageWidth, imageHeight, isLoadImageSuccess);
         } else {
             smallCoverImageView.setVisibility(View.GONE);
@@ -305,7 +306,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         float originalScaleHW = imageHeight * 1f / imageWidth;
         float coverWidth;
         float coverHeight;
-        if (srcScaleType == ImageView.ScaleType.CENTER_CROP) {
+        if (srcScaleType == OpenImageView.OpenScaleType.CENTER_CROP) {
             if (originalScaleHW > scaleHW) {//原图高度比点击的ImageView长，缓存的图片是以宽度为准
                 coverWidth = ScreenUtils.getScreenWidth(requireContext());
                 coverHeight = coverWidth * scaleHW;

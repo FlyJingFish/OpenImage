@@ -19,6 +19,7 @@ import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
+import com.flyjingfish.openimagelib.widget.OpenImageView;
 
 
 public class ScaleTypeActivity extends AppCompatActivity {
@@ -45,6 +46,8 @@ public class ScaleTypeActivity extends AppCompatActivity {
         MyImageLoader.getInstance().load(binding.ivFitCenter, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
         MyImageLoader.getInstance().load(binding.ivFitEnd, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
         MyImageLoader.getInstance().load(binding.ivFitXY, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        MyImageLoader.getInstance().load(binding.ivStartCrop, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        MyImageLoader.getInstance().load(binding.ivEndCrop, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
     }
 
     public void onPicClick(View view) {
@@ -64,9 +67,7 @@ public class ScaleTypeActivity extends AppCompatActivity {
     }
 
     public void onIvClick(View view) {
-        ImageView.ScaleType scaleType = ((ImageView) view).getScaleType();
-        OpenImage.with(this).setClickImageView(((ImageView) view))
-                .setSrcImageViewScaleType(scaleType, true)
+        OpenImage openImage = OpenImage.with(this).setClickImageView(((ImageView) view))
                 .setImageUrl(itemData).setImageDiskMode(MyImageLoader.imageDiskMode)
                 .setItemLoadHelper(new ItemLoadHelper() {
                     @Override
@@ -85,6 +86,16 @@ public class ScaleTypeActivity extends AppCompatActivity {
                     }
                 }).addPageTransformer(new ScaleInTransformer())
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
-                .setClickPosition(0).show();
+                .setClickPosition(0);
+
+        if (view instanceof OpenImageView){
+            OpenImageView.OpenScaleType scaleType = ((OpenImageView) view).getOpenScaleType();
+            openImage.setSrcImageViewScaleType(scaleType, true);
+        }else {
+            ImageView.ScaleType scaleType = ((ImageView) view).getScaleType();
+            openImage.setSrcImageViewScaleType(scaleType, true);
+        }
+
+        openImage.show();
     }
 }

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -146,6 +147,18 @@
                 android:layout_marginStart="5dp"
                 android:gravity="center_horizontal"
                 android:text="fitXY"/>
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="center_horizontal"
+                android:text="start_crop"/>
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="center_horizontal"
+                android:text="end_crop"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -159,6 +172,22 @@
                 android:background="#999999"
                 android:onClick="onIvClick"
                 android:scaleType="fitXY"/>
+            <com.flyjingfish.openimagelib.widget.OpenImageView
+                android:id="@+id/iv_start_crop"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_marginStart="5dp"
+                android:background="#999999"
+                android:onClick="onIvClick"
+                app:openScaleType="start_crop"/>
+            <com.flyjingfish.openimagelib.widget.OpenImageView
+                android:id="@+id/iv_end_crop"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_marginStart="5dp"
+                android:background="#999999"
+                android:onClick="onIvClick"
+                app:openScaleType="end_crop"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

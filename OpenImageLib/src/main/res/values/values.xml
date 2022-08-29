@@ -55,4 +55,18 @@
     </attr>
     <!--卡片之间的距离-->
     <attr name="openImage.viewPager.pageMargin" format="dimension" />
+
+    <declare-styleable name="OpenImageView">
+        <attr name="openScaleType" format="enum">
+            <enum name="fitXY" value="1" />
+            <enum name="fitStart" value="2" />
+            <enum name="fitCenter" value="3" />
+            <enum name="fitEnd" value="4" />
+            <enum name="center" value="5" />
+            <enum name="centerCrop" value="6" />
+            <enum name="centerInside" value="7" />
+            <enum name="start_crop" value="8" />
+            <enum name="end_crop" value="9" />
+        </attr>
+    </declare-styleable>
 </resources>
