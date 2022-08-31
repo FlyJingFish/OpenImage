@@ -932,7 +932,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                                 deltaX = -addWidthScale * (mTargetWidth - targetWidth) / 2 + viewWidth - showWidth - left;
                             }
                         }
-                        mTempDst = new RectF (deltaX, deltaY, viewWidth+deltaX , currentHeight+deltaY);
+//                        mTempDst = new RectF (deltaX, deltaY, viewWidth+deltaX , currentHeight+deltaY);
+                        mTempDst = new RectF(-tansX+deltaX, -tansY+deltaY, currentWidth-tansX+deltaX, currentHeight-tansY+deltaY);
                         Log.e("checkMatrixBounds1",currentWidth +"=="+currentHeight+"=="+viewWidth +"=="+deltaX +"=="+deltaY );
                     }
                     else if (mSrcScaleType == OpenImageView.OpenScaleType.START_CROP){
