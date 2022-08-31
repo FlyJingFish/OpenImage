@@ -20,21 +20,18 @@ import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
-
-import androidx.annotation.NonNull;
 
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.utils.ScreenOrientationEvent;
@@ -102,6 +99,12 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float mStartWidth;
     private float mStartHeight;
     private ScreenOrientationEvent screenOrientationEvent;
+    private float exitSuperScaleX;
+    private float exitSuperScaleY;
+    private float exitSuperTransX;
+    private float exitSuperTransY;
+    private float exitStartWidth;
+    private float exitStartHeight;
 
     public void setStartWidth(float mStartWidth) {
         this.mStartWidth = mStartWidth;
@@ -630,10 +633,35 @@ public class PhotoViewAttacher implements View.OnTouchListener,
      * Resets the Matrix back to FIT_CENTER, and then displays its contents
      */
     private void resetMatrix() {
-        mSuppMatrix.reset();
+        if (isExitMode && (mSrcScaleType == OpenImageView.OpenScaleType.START_CROP || mSrcScaleType == OpenImageView.OpenScaleType.END_CROP)){
+            final float viewWidth = getImageViewWidth(mImageView);
+            final float viewHeight = getImageViewHeight(mImageView);
+            float addWidthScale ;
+            float addHeightScale ;
+            if (exitStartWidth/mTargetWidth<exitStartHeight/mTargetViewHeight||isBigImage){
+                addWidthScale =  (viewWidth - exitStartWidth)*1f/(mTargetWidth  - exitStartWidth);
+                addHeightScale = addWidthScale;
+            }else {
+                addHeightScale = (viewHeight - exitStartHeight)*1f/(mTargetViewHeight  - exitStartHeight);
+                addWidthScale = addHeightScale;
+            }
+            addWidthScale = Math.max(0f,addWidthScale);
+            addHeightScale = Math.max(0f,addHeightScale);
+
+            mSuppMatrix.reset();
+
+            float scaleX = 1+(exitSuperScaleX -1)*addWidthScale;
+            float scaleY = 1+(exitSuperScaleY -1)*addHeightScale;
+            mSuppMatrix.postScale(scaleX,scaleY);
+            mSuppMatrix.postTranslate(exitSuperTransX *addWidthScale, exitSuperTransY *addHeightScale);
+
+        }else {
+            mSuppMatrix.reset();
+        }
         setRotationBy(mBaseRotation);
         setImageViewMatrix(getDrawMatrix());
         checkMatrixBounds();
+
 
     }
 
@@ -704,23 +732,21 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         final float heightScale = viewHeight / drawableHeight;
         if (mScaleType == ScaleType.CENTER) {
             if (isExitMode){
-                float scale = 1/exitFloat;
-                mBaseMatrix.postScale(scale, scale);
-                mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
-                        (viewHeight - drawableHeight * scale) / 2F);
+                float exitScale = 1/exitFloat;
+                mBaseMatrix.postScale(exitScale, exitScale);
+                mBaseMatrix.postTranslate((viewWidth - drawableWidth * exitScale) / 2F,
+                        (viewHeight - drawableHeight * exitScale) / 2F);
             }else {
                 mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F,
                         (viewHeight - drawableHeight) / 2F);
             }
 
-        } else if (mScaleType == ScaleType.MATRIX) {
+        } else if (mScaleType == ScaleType.MATRIX && isExitMode) {
+            float scale = Math.max(widthScale, heightScale);
+            mBaseMatrix.postScale(scale, scale);
             if (mSrcScaleType == OpenImageView.OpenScaleType.START_CROP){
-                float scale = Math.max(widthScale, heightScale);
-                mBaseMatrix.postScale(scale, scale);
                 mBaseMatrix.postTranslate(0,0);
             }else if (mSrcScaleType == OpenImageView.OpenScaleType.END_CROP){
-                float scale = Math.max(widthScale, heightScale);
-                mBaseMatrix.postScale(scale, scale);
                 mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale),
                         (viewHeight - drawableHeight * scale));
             }
@@ -745,7 +771,17 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst;
             if (isExitMode){
-                mTempDst = new RectF(0, 0, viewWidth, viewHeight);
+                if (isBigImage && (mSrcScaleType == OpenImageView.OpenScaleType.START_CROP || mSrcScaleType == OpenImageView.OpenScaleType.END_CROP)) {
+                    mTempDst = new RectF(0, 0, viewWidth, viewWidth * scaleImageHW);
+                }else {
+                    mTempDst = new RectF(0, 0, viewWidth, viewHeight);
+                }
+                exitSuperScaleX = getValue(mSuppMatrix, Matrix.MSCALE_X);
+                exitSuperScaleY = getValue(mSuppMatrix, Matrix.MSCALE_Y);
+                exitSuperTransX = getValue(mSuppMatrix, Matrix.MTRANS_X);
+                exitSuperTransY = getValue(mSuppMatrix, Matrix.MTRANS_Y);
+                exitStartWidth = mStartWidth / exitFloat;
+                exitStartHeight = mStartWidth / exitFloat;
             }else {
                 if (mTargetWidth >0 || startDstRectF == null){
                     float targetWidth = Math.max(mTargetWidth,viewWidth);
@@ -868,7 +904,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         float width = viewWidth-mTargetWidth*addWidthScale*(1-(targetWidth *1f/ mTargetWidth));
                         float height ;
                         if (isBigImage){
-                            height = mTargetHeight-mTargetHeight*addHeightScale*(1-(targetHeight *1f/ mTargetHeight));
+//                            height = mTargetHeight-mTargetHeight*addHeightScale*(1-(targetHeight *1f/ mTargetHeight));
+                            height = viewHeight + addHeightScale * (mTargetHeight - viewHeight);
                         }else {
                             height = viewHeight-mTargetHeight*addHeightScale*(1-(targetHeight *1f/ mTargetHeight));
                         }

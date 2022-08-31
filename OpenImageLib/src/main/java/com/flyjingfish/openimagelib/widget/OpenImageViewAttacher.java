@@ -39,23 +39,25 @@ public class OpenImageViewAttacher implements View.OnLayoutChangeListener {
         final float viewHeight = getImageViewHeight(mImageView);
         final int drawableWidth = drawable.getIntrinsicWidth();
         final int drawableHeight = drawable.getIntrinsicHeight();
-        mBaseMatrix.reset();
         final float widthScale = viewWidth / drawableWidth;
         final float heightScale = viewHeight / drawableHeight;
         if (mScaleType == OpenImageView.OpenScaleType.START_CROP) {
+            mBaseMatrix.reset();
             float scale = Math.max(widthScale, heightScale);
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate(0,0);
+            resetMatrix();
         } else if (mScaleType == OpenImageView.OpenScaleType.END_CROP) {
+            mBaseMatrix.reset();
             float scale = Math.max(widthScale, heightScale);
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale),
                     (viewHeight - drawableHeight * scale));
-
+            resetMatrix();
         } else {
-            mImageView.setOpenScaleType(mScaleType);
+            mImageView.setScaleType(OpenImageView.OpenScaleType.getScaleType(mScaleType));
         }
-        resetMatrix();
+
 
     }
 
