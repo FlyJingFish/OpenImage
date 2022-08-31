@@ -65,8 +65,8 @@
             <enum name="center" value="5" />
             <enum name="centerCrop" value="6" />
             <enum name="centerInside" value="7" />
-            <enum name="start_crop" value="8" />
-            <enum name="end_crop" value="9" />
+            <enum name="startCrop" value="8" />
+            <enum name="endCrop" value="9" />
         </attr>
     </declare-styleable>
 </resources>
