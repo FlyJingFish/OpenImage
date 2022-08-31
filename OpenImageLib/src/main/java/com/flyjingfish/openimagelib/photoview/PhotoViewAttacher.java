@@ -149,9 +149,19 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         || (bigViewWidth && !bigViewHeight) && ((Math.abs(dy) > Math.abs(dx)) && (displayRect.top >= 0 || displayRect.bottom <= imageHeight))
                         || (!bigViewWidth && bigViewHeight) && ((Math.abs(dx) > Math.abs(dy)) && (displayRect.left >= 0 || displayRect.right <= imageWidth))
                         || ((bigViewHeight && bigViewWidth) && (displayRect.right == imageWidth || displayRect.left == 0 || displayRect.top == 0 || displayRect.bottom == imageHeight))) {
-                    if (parent != null) {
-                        parent.requestDisallowInterceptTouchEvent(false);
+                    if (!(bigViewHeight && bigViewWidth) || ((displayRect.top == 0 && Math.abs(dy) > Math.abs(dx))
+                            ||(displayRect.right == imageWidth && Math.abs(dx) > Math.abs(dy))
+                            ||(displayRect.bottom == imageHeight && Math.abs(dy) > Math.abs(dx))
+                            ||(displayRect.left == 0 && Math.abs(dx) > Math.abs(dy)))){
+                        if (parent != null) {
+                            parent.requestDisallowInterceptTouchEvent(false);
+                        }
+                    }else {
+                        if (parent != null) {
+                            parent.requestDisallowInterceptTouchEvent(true);
+                        }
                     }
+
                 } else {
                     if (parent != null) {
                         parent.requestDisallowInterceptTouchEvent(true);
