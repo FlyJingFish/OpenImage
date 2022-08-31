@@ -38,16 +38,16 @@ public class ScaleTypeActivity extends AppCompatActivity {
     }
 
 
-    private void setData() {// Target.SIZE_ORIGINAL ,Target.SIZE_ORIGINAL,
+    private void setData() {
         MyImageLoader.getInstance().load(binding.ivCenter, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
-        MyImageLoader.getInstance().load(binding.ivCenterCrop, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
-        MyImageLoader.getInstance().load(binding.ivCenterInside, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
-        MyImageLoader.getInstance().load(binding.ivFitStart, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
-        MyImageLoader.getInstance().load(binding.ivFitCenter, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
-        MyImageLoader.getInstance().load(binding.ivFitEnd, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
-        MyImageLoader.getInstance().load(binding.ivFitXY, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
-        MyImageLoader.getInstance().load(binding.ivStartCrop, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
-        MyImageLoader.getInstance().load(binding.ivEndCrop, itemData.getCoverImageUrl(), Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        MyImageLoader.getInstance().load(binding.ivCenterCrop, itemData.getCoverImageUrl(),  R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        MyImageLoader.getInstance().load(binding.ivCenterInside, itemData.getCoverImageUrl(),  R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        MyImageLoader.getInstance().load(binding.ivFitStart, itemData.getCoverImageUrl(),  R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        MyImageLoader.getInstance().load(binding.ivFitCenter, itemData.getCoverImageUrl(),  R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        MyImageLoader.getInstance().load(binding.ivFitEnd, itemData.getCoverImageUrl(),  R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        MyImageLoader.getInstance().load(binding.ivFitXY, itemData.getCoverImageUrl(),  R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        MyImageLoader.getInstance().load(binding.ivStartCrop, itemData.getCoverImageUrl(),  R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        MyImageLoader.getInstance().load(binding.ivEndCrop, itemData.getCoverImageUrl(),  R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
     }
 
     public void onPicClick(View view) {
@@ -94,6 +94,7 @@ public class ScaleTypeActivity extends AppCompatActivity {
                     }
                 }).addPageTransformer(new ScaleInTransformer())
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
+                .setOpenPageAnimTimeMs(2000)
                 .setClickPosition(0);
 
         if (view instanceof OpenImageView){

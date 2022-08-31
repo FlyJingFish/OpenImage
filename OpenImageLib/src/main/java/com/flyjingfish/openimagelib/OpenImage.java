@@ -466,7 +466,7 @@ public final class OpenImage {
         intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);
         intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, OpenImageConfig.getInstance().isDisEnableTouchClose());
-        intent.putExtra(OpenParams.SRC_SCALE_TYPE,srcImageViewOpenScaleType != null?OpenImageView.OpenScaleType.getType(srcImageViewOpenScaleType.getType()): OpenImageView.OpenScaleType.getType(srcImageViewScaleType));
+        intent.putExtra(OpenParams.SRC_SCALE_TYPE,srcImageViewOpenScaleType != null?srcImageViewOpenScaleType: OpenImageView.OpenScaleType.getType(srcImageViewScaleType));
         intent.putExtra(OpenParams.IMAGE_DISK_MODE, imageDiskMode);
         intent.putExtra(OpenParams.ERROR_RES_ID, errorResId);
         intent.putExtra(OpenParams.ITEM_LOAD_KEY, itemLoadHelperKey);

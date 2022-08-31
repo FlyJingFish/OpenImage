@@ -100,99 +100,75 @@ public class OpenImageView extends AppCompatImageView {
         return changed;
     }
 
-    public static class OpenScaleType implements Serializable {
-        public static final OpenScaleType FIT_XY = new OpenScaleType(1);
-        public static final OpenScaleType FIT_START = new OpenScaleType(2);
-        public static final OpenScaleType FIT_CENTER = new OpenScaleType(3);
-        public static final OpenScaleType FIT_END = new OpenScaleType(4);
-        public static final OpenScaleType CENTER = new OpenScaleType(5);
-        public static final OpenScaleType CENTER_CROP = new OpenScaleType(6);
-        public static final OpenScaleType CENTER_INSIDE = new OpenScaleType(7);
-        public static final OpenScaleType START_CROP = new OpenScaleType(8);
-        public static final OpenScaleType END_CROP = new OpenScaleType(9);
+    public enum OpenScaleType implements Serializable {
+        FIT_XY(1), FIT_START(2), FIT_CENTER(3), FIT_END(4),
+        CENTER(5), CENTER_CROP(6), CENTER_INSIDE(7), START_CROP(8),
+        END_CROP(9);
 
         OpenScaleType(int ni) {
             type = ni;
         }
 
-        public static OpenScaleType getType(int ni){
-            if (ni == 1){
+        public static OpenScaleType getType(int ni) {
+            if (ni == 1) {
                 return FIT_XY;
-            }else if (ni == 2){
+            } else if (ni == 2) {
                 return FIT_START;
-            }else if (ni == 3){
+            } else if (ni == 3) {
                 return FIT_CENTER;
-            }else if (ni == 4){
+            } else if (ni == 4) {
                 return FIT_END;
-            }else if (ni == 5){
+            } else if (ni == 5) {
                 return CENTER;
-            }else if (ni == 6){
+            } else if (ni == 6) {
                 return CENTER_CROP;
-            }else if (ni == 7){
+            } else if (ni == 7) {
                 return CENTER_INSIDE;
-            }else if (ni == 8){
+            } else if (ni == 8) {
                 return START_CROP;
-            }else if (ni == 9){
+            } else if (ni == 9) {
                 return END_CROP;
-            }else {
+            } else {
                 return null;
             }
         }
 
-        public static OpenScaleType getType(ScaleType scaleType){
-            if (scaleType == ScaleType.FIT_XY){
+        public static OpenScaleType getType(ScaleType scaleType) {
+            if (scaleType == ScaleType.FIT_XY) {
                 return FIT_XY;
-            }else if (scaleType == ScaleType.FIT_START){
+            } else if (scaleType == ScaleType.FIT_START) {
                 return FIT_START;
-            }else if (scaleType == ScaleType.FIT_CENTER){
+            } else if (scaleType == ScaleType.FIT_CENTER) {
                 return FIT_CENTER;
-            }else if (scaleType == ScaleType.FIT_END){
+            } else if (scaleType == ScaleType.FIT_END) {
                 return FIT_END;
-            }else if (scaleType == ScaleType.CENTER){
+            } else if (scaleType == ScaleType.CENTER) {
                 return CENTER;
-            }else if (scaleType == ScaleType.CENTER_CROP){
+            } else if (scaleType == ScaleType.CENTER_CROP) {
                 return CENTER_CROP;
-            }else if (scaleType == ScaleType.CENTER_INSIDE){
+            } else if (scaleType == ScaleType.CENTER_INSIDE) {
                 return CENTER_INSIDE;
-            }else {
+            } else {
                 return null;
             }
         }
-        public static ScaleType getScaleType(OpenScaleType scaleType){
-            if (scaleType == OpenScaleType.FIT_XY){
+
+        public static ScaleType getScaleType(OpenScaleType scaleType) {
+            if (scaleType == OpenScaleType.FIT_XY) {
                 return ScaleType.FIT_XY;
-            }else if (scaleType == OpenScaleType.FIT_START){
+            } else if (scaleType == OpenScaleType.FIT_START) {
                 return ScaleType.FIT_START;
-            }else if (scaleType == OpenScaleType.FIT_CENTER){
+            } else if (scaleType == OpenScaleType.FIT_CENTER) {
                 return ScaleType.FIT_CENTER;
-            }else if (scaleType == OpenScaleType.FIT_END){
+            } else if (scaleType == OpenScaleType.FIT_END) {
                 return ScaleType.FIT_END;
-            }else if (scaleType == OpenScaleType.CENTER){
+            } else if (scaleType == OpenScaleType.CENTER) {
                 return ScaleType.CENTER;
-            }else if (scaleType == OpenScaleType.CENTER_CROP){
+            } else if (scaleType == OpenScaleType.CENTER_CROP) {
                 return ScaleType.CENTER_CROP;
-            }else if (scaleType == OpenScaleType.CENTER_INSIDE){
+            } else if (scaleType == OpenScaleType.CENTER_INSIDE) {
                 return ScaleType.CENTER_INSIDE;
-            }else {
-                return null;
-            }
-        }
-        public static ScaleType getScaleType(int ni){
-            if (ni == 1){
-                return ScaleType.FIT_XY;
-            }else if (ni == 2){
-                return ScaleType.FIT_START;
-            }else if (ni == 3){
-                return ScaleType.FIT_CENTER;
-            }else if (ni == 4){
-                return ScaleType.FIT_END;
-            }else if (ni == 5){
-                return ScaleType.CENTER;
-            }else if (ni == 6){
-                return ScaleType.CENTER_CROP;
-            }else if (ni == 7){
-                return ScaleType.CENTER_INSIDE;
-            }else {
+            } else {
                 return null;
             }
         }
@@ -203,41 +179,5 @@ public class OpenImageView extends AppCompatImageView {
             return type;
         }
 
-        @Override
-        public boolean equals(@Nullable Object obj) {
-            if (obj instanceof OpenScaleType){
-                return this.getType() == ((OpenScaleType) obj).getType();
-            }
-            return super.equals(obj);
-        }
     }
-//    public static class OpenScaleType {
-//        public static final ImageView.ScaleType FIT_XY = ScaleType.FIT_XY;
-//        public static final ImageView.ScaleType FIT_START = ScaleType.FIT_START;
-//        public static final ImageView.ScaleType FIT_CENTER = ScaleType.FIT_CENTER;
-//        public static final ImageView.ScaleType FIT_END = ScaleType.FIT_END;
-//        public static final ImageView.ScaleType CENTER = ScaleType.CENTER;
-//        public static final ImageView.ScaleType CENTER_CROP = ScaleType.CENTER_CROP;
-//        public static final ImageView.ScaleType CENTER_INSIDE = ScaleType.CENTER_INSIDE;
-//        public static final OpenScaleType START_CROP = new OpenScaleType(8);
-//        public static final OpenScaleType END_CROP = new OpenScaleType(9);
-//
-//        OpenScaleType(int ni) {
-//            nativeInt = ni;
-//        }
-//
-//        public static OpenScaleType getType(int ni){
-//            if (ni == 8){
-//                return START_CROP;
-//            }else if (ni == 9){
-//                return END_CROP;
-//            }else {
-//                return null;
-//            }
-//        }
-//
-//        final int nativeInt;
-//    }
-
-
 }

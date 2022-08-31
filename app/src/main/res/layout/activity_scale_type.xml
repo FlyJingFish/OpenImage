@@ -184,7 +184,7 @@
                 android:id="@+id/iv_start_crop"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:background="#999999"
                 android:onClick="onIvClick"
                 app:openScaleType="startCrop"/>
@@ -192,7 +192,7 @@
                 android:id="@+id/iv_end_crop"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:background="#999999"
                 android:onClick="onIvClick"
                 app:openScaleType="endCrop"/>

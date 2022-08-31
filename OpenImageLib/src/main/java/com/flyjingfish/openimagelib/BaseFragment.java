@@ -59,7 +59,7 @@ public abstract class BaseFragment extends Fragment {
         }
         showPosition = bundle.getInt(OpenParams.SHOW_POSITION);
         clickPosition = bundle.getInt(OpenParams.CLICK_POSITION);
-        srcScaleType = OpenImageView.OpenScaleType.getType(((OpenImageView.OpenScaleType) bundle.getSerializable(OpenParams.SRC_SCALE_TYPE)).getType());
+        srcScaleType = (OpenImageView.OpenScaleType) bundle.getSerializable(OpenParams.SRC_SCALE_TYPE);
         errorResId = bundle.getInt(OpenParams.ERROR_RES_ID,0);
         String itemLoadKey = bundle.getString(OpenParams.ITEM_LOAD_KEY);
         itemLoadHelper = ImageLoadUtils.getInstance().getItemLoadHelper(itemLoadKey);
