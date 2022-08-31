@@ -86,6 +86,7 @@ public class ScaleTypeActivity extends AppCompatActivity {
                     }
                 }).addPageTransformer(new ScaleInTransformer())
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
+                .setOpenPageAnimTimeMs(2000)
                 .setClickPosition(0);
 
         if (view instanceof OpenImageView){

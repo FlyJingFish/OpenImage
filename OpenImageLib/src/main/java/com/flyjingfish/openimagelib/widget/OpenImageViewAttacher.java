@@ -14,7 +14,6 @@ public class OpenImageViewAttacher implements View.OnLayoutChangeListener {
     private final Matrix mDrawMatrix = new Matrix();
     private final Matrix mSuppMatrix = new Matrix();
     private final RectF mDisplayRect = new RectF();
-    private final float[] mMatrixValues = new float[9];
     private OpenImageView.OpenScaleType mScaleType;
 
     public OpenImageViewAttacher(OpenImageView imageView) {

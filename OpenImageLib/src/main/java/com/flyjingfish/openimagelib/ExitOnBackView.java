@@ -23,8 +23,8 @@ class ExitOnBackView implements ImageLoadUtils.OnBackView {
     }
 
     @Override
-    public BackViewType onBack(int showPosition) {
-        return BackViewType.NO_SHARE;
+    public ShareExitViewBean onBack(int showPosition) {
+        return new ShareExitViewBean(BackViewType.NO_SHARE,null);
     }
 
     @Override
@@ -50,7 +50,7 @@ class ExitOnBackView implements ImageLoadUtils.OnBackView {
 
     }
 
-    protected static class ShareExitViewBean {
+    public static class ShareExitViewBean {
         protected BackViewType backViewType;
         protected ImageView shareExitView;
 

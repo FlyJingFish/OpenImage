@@ -45,6 +45,11 @@ public class OpenImageView extends AppCompatImageView {
     }
 
     @Override
+    public void setScaleType(ScaleType scaleType) {
+        super.setScaleType(scaleType);
+    }
+
+    @Override
     public Matrix getImageMatrix() {
         return attacher.getImageMatrix();
     }

@@ -76,7 +76,7 @@ class ImageLoadUtils {
     }
 
     public interface OnBackView {
-        BackViewType onBack(int showPosition);
+        ExitOnBackView.ShareExitViewBean onBack(int showPosition);
 
         void onTouchClose(boolean isTouchClose);
 

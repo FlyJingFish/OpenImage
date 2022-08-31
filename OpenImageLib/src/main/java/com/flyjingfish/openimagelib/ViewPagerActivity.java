@@ -2,10 +2,14 @@ package com.flyjingfish.openimagelib;
 
 import android.animation.ObjectAnimator;
 import android.app.SharedElementCallback;
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
@@ -41,6 +45,7 @@ import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
+import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.AttrsUtils;
 import com.flyjingfish.openimagelib.utils.StatusBarHelper;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
@@ -500,8 +505,11 @@ public class ViewPagerActivity extends BaseActivity {
 
     private void setExitView() {
         BackViewType backViewType = BackViewType.NO_SHARE;
+        ImageView backView = null;
         if (onBackView != null) {
-            backViewType = onBackView.onBack(showPosition);
+            ExitOnBackView.ShareExitViewBean shareExitViewBean = onBackView.onBack(showPosition);
+            backViewType = shareExitViewBean.backViewType;
+            backView = shareExitViewBean.shareExitView;
         }
         if (backViewType == BackViewType.NO_SHARE) {
             ViewCompat.setTransitionName(binding.viewPager, "");
@@ -520,7 +528,7 @@ public class ViewPagerActivity extends BaseActivity {
         }
 
         View shareView = getCoverView();
-
+        final ImageView exitView = backView;
         if (shareView != null) {
             ViewCompat.setTransitionName(binding.viewPager, "");
             ViewCompat.setTransitionName(shareView, OpenParams.SHARE_VIEW + showPosition);
@@ -533,6 +541,12 @@ public class ViewPagerActivity extends BaseActivity {
                     super.onMapSharedElements(names, sharedElements);
                     if (names.size() == 0) {
                         return;
+                    }
+                    if (exitView instanceof OpenImageView){
+                        OpenImageView.OpenScaleType openScaleType = ((OpenImageView) exitView).getOpenScaleType();
+                        if (shareView instanceof PhotoView){
+                            ((PhotoView) shareView).setSrcScaleType(openScaleType);
+                        }
                     }
                     sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);
                 }

@@ -1070,20 +1070,19 @@ public final class OpenImage {
         }
 
         @Override
-        public BackViewType onBack(int showPosition) {
-            BackViewType backViewType = BackViewType.NO_SHARE;
+        public ShareExitViewBean onBack(int showPosition) {
+            ShareExitViewBean shareExitViewBean = new ShareExitViewBean(BackViewType.NO_SHARE,null);
             Activity activity = ActivityCompatHelper.getActivity(context);
             if (activity == null) {
-                return backViewType;
+                return shareExitViewBean;
             }
             ImageView shareExitView = null;
-            ShareExitViewBean shareExitViewBean = getShareExitViewBean(showPosition);
+            shareExitViewBean = getShareExitViewBean(showPosition);
             if (shareExitViewBean != null) {
-                backViewType = shareExitViewBean.backViewType;
                 shareExitView = shareExitViewBean.shareExitView;
             }
             activity.setExitSharedElementCallback(new ExitSharedElementCallback2(context, shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null));
-            return backViewType;
+            return shareExitViewBean;
         }
 
         @Override

@@ -715,9 +715,16 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         } else if (mScaleType == ScaleType.MATRIX) {
             // TODO: 2022/8/29 未完成
-            float scale = Math.max(widthScale, heightScale);
-            mBaseMatrix.postScale(scale, scale);
-            mBaseMatrix.postTranslate(0,0);
+            if (mSrcScaleType == OpenImageView.OpenScaleType.START_CROP){
+                float scale = Math.max(widthScale, heightScale);
+                mBaseMatrix.postScale(scale, scale);
+                mBaseMatrix.postTranslate(0,0);
+            }else if (mSrcScaleType == OpenImageView.OpenScaleType.END_CROP){
+                float scale = Math.max(widthScale, heightScale);
+                mBaseMatrix.postScale(scale, scale);
+                mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale),
+                        (viewHeight - drawableHeight * scale));
+            }
 
         } else if (mScaleType == ScaleType.CENTER_CROP) {
             float scale = Math.max(widthScale, heightScale);
@@ -757,16 +764,23 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
                         }
                     }if (mSrcScaleType == OpenImageView.OpenScaleType.START_CROP){
-                        // TODO: 2022/8/29 未完成
+                        if (scaleImageHW > scaleStartViewHW) {
+                            float height = mStartWidth * scaleImageHW;
+                            startDstRectF = new RectF(0, 0, mStartWidth, height);
+                        } else {
+                            float width = mStartHeight / scaleImageHW;
+                            startDstRectF = new RectF(0, 0, width , mStartHeight);
+
+                        }
+                    }if (mSrcScaleType == OpenImageView.OpenScaleType.END_CROP){
                         if (scaleImageHW > scaleStartViewHW) {
                             float height = mStartWidth * scaleImageHW;
                             float tansY = (height - mStartHeight) / 2;
-                            startDstRectF = new RectF(0, -tansY, mStartWidth, height - tansY);
+                            startDstRectF = new RectF(0, -tansY*2, mStartWidth, height - tansY*2);
                         } else {
                             float width = mStartHeight / scaleImageHW;
                             float tansX = (width - mStartWidth) / 2;
-                            startDstRectF = new RectF(-tansX, 0, width - tansX, mStartHeight);
-
+                            startDstRectF = new RectF(-tansX*2, 0, width - tansX*2, mStartHeight);
                         }
                     }else if (mSrcScaleType == OpenImageView.OpenScaleType.CENTER_INSIDE){
                         if (drawableWidth < mStartWidth && drawableHeight< mStartHeight){
@@ -865,11 +879,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         mTempDst = new RectF (0, 0, viewWidth , currentHeight);
                     }
                     else if (mSrcScaleType == OpenImageView.OpenScaleType.START_CROP){
-                        // TODO: 2022/8/29 未完成
                         mTempDst = new RectF(0, 0, currentWidth, currentHeight);
                     }else if (mSrcScaleType == OpenImageView.OpenScaleType.END_CROP){
-                        // TODO: 2022/8/29 未完成
-                        mTempDst = new RectF(-tansX, -tansY, currentWidth-tansX, currentHeight-tansY);
+                        mTempDst = new RectF(-tansX*2, -tansY*2, currentWidth-tansX*2, currentHeight-tansY*2);
                     }else {
                         mTempDst = new RectF(-tansX, -tansY, currentWidth-tansX, currentHeight-tansY);
                     }
