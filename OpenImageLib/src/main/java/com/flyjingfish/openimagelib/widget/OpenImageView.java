@@ -25,13 +25,13 @@ public class OpenImageView extends AppCompatImageView {
     private OpenImageViewAttacher mAttacher;
     private OpenScaleType mPendingScaleType;
     private float mAutoCropHeightWidthRatio;
-    private int leftTopRadius;
-    private int leftBottomRadius;
-    private int rightTopRadius;
-    private int rightBottomRadius;
-    private Paint mImagePaint;
-    private Paint mRoundPaint;
-    private ShapeType shapeType;
+    private final int leftTopRadius;
+    private final int leftBottomRadius;
+    private final int rightTopRadius;
+    private final int rightBottomRadius;
+    private final Paint mImagePaint;
+    private final Paint mRoundPaint;
+    private final ShapeType shapeType;
 
     public OpenImageView(Context context) {
         this(context, null);
@@ -118,6 +118,7 @@ public class OpenImageView extends AppCompatImageView {
             mAttacher.update();
         }
     }
+
 
     @Override
     public void setImageResource(int resId) {
