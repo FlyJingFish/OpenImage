@@ -187,6 +187,7 @@
                 android:layout_marginStart="10dp"
                 android:background="#999999"
                 android:onClick="onIvClick"
+                android:padding="10dp"
                 app:openScaleType="startCrop"/>
             <com.flyjingfish.openimagelib.widget.OpenImageView
                 android:id="@+id/iv_end_crop"
@@ -195,6 +196,7 @@
                 android:layout_marginStart="10dp"
                 android:background="#999999"
                 android:onClick="onIvClick"
+                android:padding="10dp"
                 app:openScaleType="endCrop"/>
         </LinearLayout>
         <LinearLayout
@@ -226,6 +228,7 @@
                 android:layout_marginStart="5dp"
                 android:background="#999999"
                 android:onClick="onIvClick"
+                android:padding="10dp"
                 app:autoCrop_height_width_ratio="2"
                 app:openScaleType="autoStartCenterCrop"/>
             <com.flyjingfish.openimagelib.widget.OpenImageView
@@ -235,6 +238,7 @@
                 android:layout_marginStart="10dp"
                 android:background="#999999"
                 android:onClick="onIvClick"
+                android:padding="10dp"
                 app:autoCrop_height_width_ratio="2"
                 app:openScaleType="autoEndCenterCrop"/>
         </LinearLayout>

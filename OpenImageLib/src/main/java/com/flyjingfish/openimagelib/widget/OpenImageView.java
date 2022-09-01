@@ -13,10 +13,12 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.flyjingfish.openimagelib.R;
+import com.flyjingfish.openimagelib.utils.ImageViewUtils;
 
 import java.io.Serializable;
 
@@ -149,19 +151,55 @@ public class OpenImageView extends AppCompatImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        OpenScaleType openScaleType = mAttacher.getOpenScaleType();
+        boolean isOpenCrop = openScaleType == OpenScaleType.START_CROP
+                || openScaleType == OpenScaleType.END_CROP
+                || openScaleType == OpenScaleType.AUTO_START_CENTER_CROP
+                || openScaleType == OpenScaleType.AUTO_END_CENTER_CROP;
         if (shapeType == ShapeType.OVAL){
             canvas.saveLayer(new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), mImagePaint, Canvas.ALL_SAVE_FLAG);
             super.onDraw(canvas);
             drawOval(canvas);
+            if (isOpenCrop) {
+                drawPadding(canvas);
+            }
             canvas.restore();
         }else if (leftTopRadius > 0 || leftBottomRadius > 0 || rightTopRadius > 0 || rightBottomRadius > 0){
             canvas.saveLayer(new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), mImagePaint, Canvas.ALL_SAVE_FLAG);
             super.onDraw(canvas);
             drawRectangle(canvas);
+            if (isOpenCrop) {
+                drawPadding(canvas);
+            }
             canvas.restore();
         }else {
-            super.onDraw(canvas);
+            if (isOpenCrop) {
+                canvas.saveLayer(new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), mImagePaint, Canvas.ALL_SAVE_FLAG);
+                super.onDraw(canvas);
+                drawPadding(canvas);
+                canvas.restore();
+            } else {
+                super.onDraw(canvas);
+            }
         }
+
+
+
+    }
+
+    private void drawPadding(Canvas canvas){
+        drawLeft(canvas);
+        drawTop(canvas);
+        drawRight(canvas);
+        drawBottom(canvas);
+    }
+
+    private int getImageViewWidth(ImageView imageView) {
+        return imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
+    }
+
+    private int getImageViewHeight(ImageView imageView) {
+        return imageView.getHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
     }
     private void drawOval(Canvas canvas){
         drawTopLeft(canvas);
@@ -219,7 +257,7 @@ public class OpenImageView extends AppCompatImageView {
             path.lineTo(width, rightTopRadius);
             path.arcTo(new RectF(width - 2 * rightTopRadius, 0, width, rightTopRadius * 2), 0, -90);
         }
-         path.close();
+        path.close();
         canvas.drawPath(path, mRoundPaint);
     }
 
@@ -257,6 +295,57 @@ public class OpenImageView extends AppCompatImageView {
             path.lineTo(width, height - rightBottomRadius);
             path.arcTo(new RectF(width - 2 * rightBottomRadius, height - 2 * rightBottomRadius, width, height), 0, 90);
         }
+        path.close();
+        canvas.drawPath(path, mRoundPaint);
+    }
+
+    private void drawLeft(Canvas canvas) {
+        Path path = new Path();
+        int height = getHeight();
+        int paddingLeft = ImageViewUtils.getViewPaddingLeft(this);
+        path.moveTo(0, height);
+        path.lineTo(0, 0);
+        path.lineTo(paddingLeft, 0);
+        path.lineTo(paddingLeft, height);
+        path.close();
+        canvas.drawPath(path, mRoundPaint);
+    }
+
+    private void drawTop(Canvas canvas) {
+        Path path = new Path();
+        int height = getHeight();
+        int width = getWidth();
+        int paddingTop = getPaddingTop();
+        path.moveTo(0, 0);
+        path.lineTo(width, 0);
+        path.lineTo(width, paddingTop);
+        path.lineTo(0, paddingTop);
+        path.close();
+        canvas.drawPath(path, mRoundPaint);
+    }
+
+    private void drawRight(Canvas canvas) {
+        Path path = new Path();
+        int height = getHeight();
+        int width = getWidth();
+        int paddingRight = ImageViewUtils.getViewPaddingRight(this);
+        path.moveTo(width, 0);
+        path.lineTo(width, height);
+        path.lineTo(width - paddingRight, height);
+        path.lineTo(width - paddingRight, 0);
+        path.close();
+        canvas.drawPath(path, mRoundPaint);
+    }
+
+    private void drawBottom(Canvas canvas) {
+        Path path = new Path();
+        int height = getHeight();
+        int width = getWidth();
+        int paddingBottom = getPaddingBottom();
+        path.moveTo(0, height);
+        path.lineTo(width, height);
+        path.lineTo(width, height - paddingBottom);
+        path.lineTo(0, height - paddingBottom);
         path.close();
         canvas.drawPath(path, mRoundPaint);
     }
