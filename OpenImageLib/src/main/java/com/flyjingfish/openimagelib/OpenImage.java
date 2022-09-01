@@ -248,6 +248,11 @@ public final class OpenImage {
         return this;
     }
 
+    /**
+     * @param srcImageViewOpenScaleType 点击的OpenImageView显示模式
+     * @param autoSetScaleType      如果点击的OpenImageView与您所设置scaleType不相同，则自动设置
+     * @return
+     */
     public OpenImage setSrcImageViewScaleType(OpenImageView.OpenScaleType srcImageViewOpenScaleType, boolean autoSetScaleType) {
         this.srcImageViewOpenScaleType = srcImageViewOpenScaleType;
         this.autoSetScaleType = autoSetScaleType;
