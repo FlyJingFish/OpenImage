@@ -99,10 +99,10 @@ public class OpenImageView extends AppCompatImageView {
         return mAutoCropHeightWidthRatio;
     }
 
-    public void setAspectRatio(float aspectRatio) {
-        this.mAutoCropHeightWidthRatio = aspectRatio;
+    public void setAutoCropHeightWidthRatio(float autoCropHeightWidthRatio) {
+        this.mAutoCropHeightWidthRatio = autoCropHeightWidthRatio;
         if (mAttacher != null) {
-            mAttacher.setAutoCropHeightWidthRatio(aspectRatio);
+            mAttacher.setAutoCropHeightWidthRatio(autoCropHeightWidthRatio);
             mAttacher.update();
         }
 
