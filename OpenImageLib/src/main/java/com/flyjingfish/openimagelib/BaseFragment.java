@@ -46,6 +46,7 @@ public abstract class BaseFragment extends Fragment {
     protected AnimatorSet coverAnim;
     protected ItemLoadHelper itemLoadHelper;
     protected float currentScale = 1f;
+    protected float autoAspectRadio;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +70,8 @@ public abstract class BaseFragment extends Fragment {
         onItemClickListener = ImageLoadUtils.getInstance().getOnItemClickListener(onItemCLickKey);
         onItemLongClickListener = ImageLoadUtils.getInstance().getOnItemLongClickListener(onItemLongCLickKey);
         coverDrawable = ImageLoadUtils.getInstance().getCoverDrawable(getArguments().getString(OpenParams.OPEN_COVER_DRAWABLE));
+
+        autoAspectRadio = bundle.getFloat(OpenParams.AUTO_ASPECT_RATIO,0);
     }
 
 

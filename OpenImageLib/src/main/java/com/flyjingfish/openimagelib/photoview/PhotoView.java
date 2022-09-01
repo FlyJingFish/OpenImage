@@ -285,4 +285,8 @@ public class PhotoView extends AppCompatImageView {
     public void setExitFloat(float exitFloat) {
         attacher.setExitFloat(exitFloat);
     }
+
+    public void setAutoCropHeightWidthRatio(float autoCropHeightWidthRatio) {
+        this.attacher.setAutoCropHeightWidthRatio(autoCropHeightWidthRatio);
+    }
 }

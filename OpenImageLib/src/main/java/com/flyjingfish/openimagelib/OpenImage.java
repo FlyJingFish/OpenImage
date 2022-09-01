@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -493,6 +492,9 @@ public final class OpenImage {
             }
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
+            if (shareViewClick instanceof OpenImageView){
+                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((OpenImageView) shareViewClick).getAutoCropHeightWidthRatio());
+            }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
@@ -525,6 +527,9 @@ public final class OpenImage {
             }
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
+            if (shareViewClick instanceof OpenImageView){
+                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((OpenImageView) shareViewClick).getAutoCropHeightWidthRatio());
+            }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
 
@@ -560,7 +565,9 @@ public final class OpenImage {
 
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-
+            if (shareViewClick instanceof OpenImageView){
+                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((OpenImageView) shareViewClick).getAutoCropHeightWidthRatio());
+            }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
@@ -592,7 +599,9 @@ public final class OpenImage {
             }
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-
+            if (shareViewClick instanceof OpenImageView){
+                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((OpenImageView) shareViewClick).getAutoCropHeightWidthRatio());
+            }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
@@ -626,7 +635,9 @@ public final class OpenImage {
 
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-
+            if (shareViewClick instanceof OpenImageView){
+                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((OpenImageView) shareViewClick).getAutoCropHeightWidthRatio());
+            }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails));
             intent.putExtra(OpenParams.IMAGES, openImageDetails);

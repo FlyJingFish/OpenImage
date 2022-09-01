@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +19,6 @@ import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
-import com.flyjingfish.openimagelib.photoview.PhotoViewAttacher;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 import com.flyjingfish.openimagelib.widget.OpenImageView;
 
@@ -59,6 +57,10 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         smallCoverImageView.setStartWidth(imageDetail.srcWidth);
         smallCoverImageView.setStartHeight(imageDetail.srcHeight);
         smallCoverImageView.setZoomable(false);
+        if (srcScaleType == OpenImageView.OpenScaleType.AUTO_START_CENTER_CROP || srcScaleType == OpenImageView.OpenScaleType.AUTO_END_CENTER_CROP){
+            smallCoverImageView.setAutoCropHeightWidthRatio(autoAspectRadio);
+            photoView.setAutoCropHeightWidthRatio(autoAspectRadio);
+        }
         if (imageDetail.getType() != MediaType.IMAGE) {
             photoView.setZoomable(false);
         } else {

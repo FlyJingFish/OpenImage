@@ -6,8 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.flyjingfish.openimagelib.OpenImageConfig;
-
 public class OpenImageViewAttacher implements View.OnLayoutChangeListener {
     private final OpenImageView mImageView;
     private final Matrix mBaseMatrix = new Matrix();
@@ -15,6 +13,7 @@ public class OpenImageViewAttacher implements View.OnLayoutChangeListener {
     private final Matrix mSuppMatrix = new Matrix();
     private final RectF mDisplayRect = new RectF();
     private OpenImageView.OpenScaleType mScaleType;
+    private float mAutoCropHeightWidthRatio;
 
     public OpenImageViewAttacher(OpenImageView imageView) {
         this.mImageView = imageView;
@@ -45,7 +44,7 @@ public class OpenImageViewAttacher implements View.OnLayoutChangeListener {
             mBaseMatrix.reset();
             float scale = Math.max(widthScale, heightScale);
             mBaseMatrix.postScale(scale, scale);
-            mBaseMatrix.postTranslate(0,0);
+            mBaseMatrix.postTranslate(0, 0);
             resetMatrix();
         } else if (mScaleType == OpenImageView.OpenScaleType.END_CROP) {
             mBaseMatrix.reset();
@@ -53,6 +52,35 @@ public class OpenImageViewAttacher implements View.OnLayoutChangeListener {
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale),
                     (viewHeight - drawableHeight * scale));
+            resetMatrix();
+        } else if (mScaleType == OpenImageView.OpenScaleType.AUTO_START_CENTER_CROP) {
+            float imageHeightWidthRatio = drawableHeight * 1f / drawableWidth;
+            float viewHeightWidthRatio = viewHeight / viewWidth;
+            float ratio = imageHeightWidthRatio/viewHeightWidthRatio;
+            mBaseMatrix.reset();
+            float scale = Math.max(widthScale, heightScale);
+            mBaseMatrix.postScale(scale, scale);
+            if (ratio >= mAutoCropHeightWidthRatio) {
+                mBaseMatrix.postTranslate(0, 0);
+            } else {
+                mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2,
+                        (viewHeight - drawableHeight * scale) / 2);
+            }
+            resetMatrix();
+        } else if (mScaleType == OpenImageView.OpenScaleType.AUTO_END_CENTER_CROP) {
+            float imageHeightWidthRatio = drawableHeight * 1f / drawableWidth;
+            float viewHeightWidthRatio = viewHeight / viewWidth;
+            float ratio = imageHeightWidthRatio/viewHeightWidthRatio;
+            mBaseMatrix.reset();
+            float scale = Math.max(widthScale, heightScale);
+            mBaseMatrix.postScale(scale, scale);
+            if (ratio >= mAutoCropHeightWidthRatio) {
+                mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale),
+                        (viewHeight - drawableHeight * scale));
+            } else {
+                mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2,
+                        (viewHeight - drawableHeight * scale) / 2);
+            }
             resetMatrix();
         } else {
             mImageView.setScaleType(OpenImageView.OpenScaleType.getScaleType(mScaleType));
@@ -64,7 +92,7 @@ public class OpenImageViewAttacher implements View.OnLayoutChangeListener {
     private void resetMatrix() {
         mSuppMatrix.reset();
         setImageViewMatrix(getDrawMatrix());
-        checkMatrixBounds();
+//        checkMatrixBounds();
     }
 
     private Matrix getDrawMatrix() {
@@ -145,5 +173,9 @@ public class OpenImageViewAttacher implements View.OnLayoutChangeListener {
 
     public Matrix getImageMatrix() {
         return mDrawMatrix;
+    }
+
+    public void setAutoCropHeightWidthRatio(float autoCropHeightWidthRatio) {
+        this.mAutoCropHeightWidthRatio = autoCropHeightWidthRatio;
     }
 }

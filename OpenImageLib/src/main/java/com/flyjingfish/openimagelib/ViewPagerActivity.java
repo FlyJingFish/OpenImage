@@ -2,14 +2,10 @@ package com.flyjingfish.openimagelib;
 
 import android.animation.ObjectAnimator;
 import android.app.SharedElementCallback;
-import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
@@ -130,6 +126,7 @@ public class ViewPagerActivity extends BaseActivity {
         moreViewKey = getIntent().getStringExtra(OpenParams.MORE_VIEW_KEY);
         onBackViewKey = getIntent().getStringExtra(OpenParams.ON_BACK_VIEW);
         onBackView = ImageLoadUtils.getInstance().getOnBackView(onBackViewKey);
+        float autoAspectRadio = getIntent().getFloatExtra(OpenParams.AUTO_ASPECT_RATIO,0);
         initStyleConfig();
 
         super.onCreate(savedInstanceState);
@@ -179,6 +176,7 @@ public class ViewPagerActivity extends BaseActivity {
                     bundle.putString(OpenParams.ON_ITEM_CLICK_KEY, onItemCLickKey);
                     bundle.putString(OpenParams.ON_ITEM_LONG_CLICK_KEY, onItemLongCLickKey);
                     bundle.putString(OpenParams.OPEN_COVER_DRAWABLE, openCoverKey);
+                    bundle.putFloat(OpenParams.AUTO_ASPECT_RATIO, autoAspectRadio);
                     fragment.setArguments(bundle);
                     fragmentHashMap.put(position, fragment);
                     baseFragment = fragment;
@@ -546,6 +544,11 @@ public class ViewPagerActivity extends BaseActivity {
                         OpenImageView.OpenScaleType openScaleType = ((OpenImageView) exitView).getOpenScaleType();
                         if (shareView instanceof PhotoView){
                             ((PhotoView) shareView).setSrcScaleType(openScaleType);
+                            if (openScaleType == OpenImageView.OpenScaleType.AUTO_START_CENTER_CROP || srcScaleType == OpenImageView.OpenScaleType.AUTO_END_CENTER_CROP){
+                                ((PhotoView) shareView).setAutoCropHeightWidthRatio( ((OpenImageView) exitView).getAutoCropHeightWidthRatio());
+                                ((PhotoView) shareView).setStartWidth(exitView.getWidth());
+                                ((PhotoView) shareView).setStartHeight(exitView.getHeight());
+                            }
                         }
                     }
                     sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);

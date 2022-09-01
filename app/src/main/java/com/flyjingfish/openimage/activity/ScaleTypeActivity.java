@@ -48,6 +48,8 @@ public class ScaleTypeActivity extends AppCompatActivity {
         MyImageLoader.getInstance().load(binding.ivFitXY, itemData.getCoverImageUrl(),  R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
         MyImageLoader.getInstance().load(binding.ivStartCrop, itemData.getCoverImageUrl(),  R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
         MyImageLoader.getInstance().load(binding.ivEndCrop, itemData.getCoverImageUrl(),  R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        MyImageLoader.getInstance().load(binding.ivAutoStartCrop, itemData.getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        MyImageLoader.getInstance().load(binding.ivAutoEndCrop, itemData.getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
     }
 
     public void onPicClick(View view) {
@@ -94,7 +96,6 @@ public class ScaleTypeActivity extends AppCompatActivity {
                     }
                 }).addPageTransformer(new ScaleInTransformer())
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
-                .setOpenPageAnimTimeMs(2000)
                 .setClickPosition(0);
 
         if (view instanceof OpenImageView){

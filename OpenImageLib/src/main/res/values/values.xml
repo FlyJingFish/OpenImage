@@ -67,6 +67,19 @@
             <enum name="centerInside" value="7" />
             <enum name="startCrop" value="8" />
             <enum name="endCrop" value="9" />
+            <enum name="autoStartCenterCrop" value="10" />
+            <enum name="autoEndCenterCrop" value="11" />
+        </attr>
+        <attr name="openImage_left_top_radius" format="dimension" />
+        <attr name="openImage_left_bottom_radius" format="dimension" />
+        <attr name="openImage_right_top_radius" format="dimension" />
+        <attr name="openImage_right_bottom_radius" format="dimension" />
+        <attr name="openImage_radius" format="dimension" />
+        <!-- 图像高宽比是View高宽比的倍数 -->
+        <attr name="autoCrop_height_width_ratio" format="float" />
+        <attr name="openImage_shape" format="enum">
+            <enum name="rectangle" value="0" />
+            <enum name="oval" value="1" />
         </attr>
     </declare-styleable>
 </resources>
