@@ -3,6 +3,7 @@ package com.flyjingfish.openimagelib.widget;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -83,7 +84,10 @@ public class OpenImageViewAttacher implements View.OnLayoutChangeListener {
             }
             resetMatrix();
         } else {
-            mImageView.setScaleType(OpenImageView.OpenScaleType.getScaleType(mScaleType));
+            ImageView.ScaleType scaleType = OpenImageView.OpenScaleType.getScaleType(mScaleType);
+            if (scaleType != null){
+                mImageView.setScaleType(scaleType);
+            }
         }
 
 

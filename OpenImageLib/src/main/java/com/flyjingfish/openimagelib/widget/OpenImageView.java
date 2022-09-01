@@ -68,10 +68,12 @@ public class OpenImageView extends AppCompatImageView {
     private void init() {
         mAttacher = new OpenImageViewAttacher(this);
         mAttacher.setAutoCropHeightWidthRatio(mAutoCropHeightWidthRatio);
-        super.setScaleType(ScaleType.MATRIX);
         if (mPendingScaleType != null) {
+            super.setScaleType(ScaleType.MATRIX);
             setOpenScaleType(mPendingScaleType);
             mPendingScaleType = null;
+        }else {
+            setOpenScaleType(OpenScaleType.getType(getScaleType()));
         }
     }
 
