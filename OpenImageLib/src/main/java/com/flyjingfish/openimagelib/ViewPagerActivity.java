@@ -546,10 +546,12 @@ public class ViewPagerActivity extends BaseActivity {
                             ((PhotoView) shareView).setSrcScaleType(openScaleType);
                             if (openScaleType == OpenImageView.OpenScaleType.AUTO_START_CENTER_CROP || srcScaleType == OpenImageView.OpenScaleType.AUTO_END_CENTER_CROP){
                                 ((PhotoView) shareView).setAutoCropHeightWidthRatio( ((OpenImageView) exitView).getAutoCropHeightWidthRatio());
-                                ((PhotoView) shareView).setStartWidth(exitView.getWidth());
-                                ((PhotoView) shareView).setStartHeight(exitView.getHeight());
                             }
                         }
+                    }
+                    if (shareView instanceof PhotoView){
+                        ((PhotoView) shareView).setStartWidth(exitView.getWidth());
+                        ((PhotoView) shareView).setStartHeight(exitView.getHeight());
                     }
                     sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);
                 }

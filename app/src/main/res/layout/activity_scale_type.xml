@@ -239,6 +239,21 @@
                 app:openScaleType="autoEndCenterCrop"/>
         </LinearLayout>
         <TextView
+            android:id="@+id/tv_radio_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginTop="10dp"
+            android:text="autoCrop_height_width_ratio = 2"/>
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:max="20"
+            android:progress="2"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
