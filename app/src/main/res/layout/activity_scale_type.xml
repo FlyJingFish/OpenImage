@@ -243,6 +243,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:textColor="@android:color/holo_red_dark"
-            android:text="startCrop、endCrop 和 autoStartCenterCrop 为本项目新增的显示模式，需要使用OpenImageView，详看Demo"/>
+            android:text="startCrop、endCrop、autoStartCenterCrop 和 autoEndCenterCrop 为本项目新增的显示模式，需要使用OpenImageView，详看Demo"/>
     </LinearLayout>
 </ScrollView>
