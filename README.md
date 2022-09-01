@@ -20,7 +20,7 @@
 
 4，支持微信聊天页面大图不在聊天页面时回到点击位置的效果
 
-5，支持全部 ImageView.ScaleType 显示模式的图片打开大图效果
+5，支持全部 ImageView.ScaleType 显示模式的图片打开大图效果，并且新增startCrop，endCrop，autoStartCenterCrop，autoEndCenterCrop四种显示模式
 
 6，支持图片和视频混合数据
 
