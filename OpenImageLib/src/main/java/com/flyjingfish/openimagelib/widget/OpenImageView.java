@@ -25,13 +25,13 @@ public class OpenImageView extends AppCompatImageView {
     private OpenImageViewAttacher mAttacher;
     private OpenScaleType mPendingScaleType;
     private float mAutoCropHeightWidthRatio;
-    private final int leftTopRadius;
-    private final int leftBottomRadius;
-    private final int rightTopRadius;
-    private final int rightBottomRadius;
+    private int leftTopRadius;
+    private int leftBottomRadius;
+    private int rightTopRadius;
+    private int rightBottomRadius;
     private final Paint mImagePaint;
     private final Paint mRoundPaint;
-    private final ShapeType shapeType;
+    private ShapeType shapeType;
 
     public OpenImageView(Context context) {
         this(context, null);
@@ -366,5 +366,58 @@ public class OpenImageView extends AppCompatImageView {
                 return RECTANGLE;
             }
         }
+    }
+
+    public int getLeftTopRadius() {
+        return leftTopRadius;
+    }
+
+    public void setLeftTopRadius(int leftTopRadius) {
+        this.leftTopRadius = leftTopRadius;
+        invalidate();
+    }
+
+    public int getLeftBottomRadius() {
+        return leftBottomRadius;
+    }
+
+    public void setLeftBottomRadius(int leftBottomRadius) {
+        this.leftBottomRadius = leftBottomRadius;
+        invalidate();
+    }
+
+    public int getRightTopRadius() {
+        return rightTopRadius;
+    }
+
+    public void setRightTopRadius(int rightTopRadius) {
+        this.rightTopRadius = rightTopRadius;
+        invalidate();
+    }
+
+    public int getRightBottomRadius() {
+        return rightBottomRadius;
+    }
+
+    public void setRightBottomRadius(int rightBottomRadius) {
+        this.rightBottomRadius = rightBottomRadius;
+        invalidate();
+    }
+
+    public void setRadius(int radius) {
+        this.leftTopRadius = radius;
+        this.rightTopRadius = radius;
+        this.leftBottomRadius = radius;
+        this.rightBottomRadius = radius;
+        invalidate();
+    }
+
+    public ShapeType getShapeType() {
+        return shapeType;
+    }
+
+    public void setShapeType(ShapeType shapeType) {
+        this.shapeType = shapeType;
+        invalidate();
     }
 }
