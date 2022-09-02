@@ -92,5 +92,11 @@
         <attr name="openImage_shape_bg_endColor" format="color" />
         <attr name="openImage_shape_bg_angle" format="float" />
         <attr name="openImage_shape_bg_gradient" format="boolean" />
+        <attr name="openImage_shape_bg_strokeWidth" format="dimension" />
+        <attr name="openImage_shape_bg_radius" format="dimension" />
+        <attr name="openImage_shape_bg_left_top_radius" format="dimension" />
+        <attr name="openImage_shape_bg_left_bottom_radius" format="dimension" />
+        <attr name="openImage_shape_bg_right_top_radius" format="dimension" />
+        <attr name="openImage_shape_bg_right_bottom_radius" format="dimension" />
     </declare-styleable>
 </resources>
