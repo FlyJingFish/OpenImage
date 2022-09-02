@@ -180,22 +180,22 @@
                 android:background="#999999"
                 android:onClick="onIvClick"
                 android:scaleType="fitXY"/>
-            <com.flyjingfish.openimagelib.widget.OpenImageView
+            <com.flyjingfish.library.ShapeImageView
                 android:id="@+id/iv_start_crop"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_marginStart="10dp"
                 android:background="#999999"
                 android:onClick="onIvClick"
-                app:openScaleType="startCrop"/>
-            <com.flyjingfish.openimagelib.widget.OpenImageView
+                app:shapeScaleType="startCrop"/>
+            <com.flyjingfish.library.ShapeImageView
                 android:id="@+id/iv_end_crop"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_marginStart="10dp"
                 android:background="#999999"
                 android:onClick="onIvClick"
-                app:openScaleType="endCrop"/>
+                app:shapeScaleType="endCrop"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -219,7 +219,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <com.flyjingfish.openimagelib.widget.OpenImageView
+            <com.flyjingfish.library.ShapeImageView
                 android:id="@+id/iv_auto_start_crop"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
@@ -227,8 +227,8 @@
                 android:background="#999999"
                 android:onClick="onIvClick"
                 app:autoCrop_height_width_ratio="2"
-                app:openScaleType="autoStartCenterCrop"/>
-            <com.flyjingfish.openimagelib.widget.OpenImageView
+                app:shapeScaleType="autoStartCenterCrop"/>
+            <com.flyjingfish.library.ShapeImageView
                 android:id="@+id/iv_auto_end_crop"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
@@ -236,7 +236,7 @@
                 android:background="#999999"
                 android:onClick="onIvClick"
                 app:autoCrop_height_width_ratio="2"
-                app:openScaleType="autoEndCenterCrop"/>
+                app:shapeScaleType="autoEndCenterCrop"/>
         </LinearLayout>
         <TextView
             android:id="@+id/tv_radio_value"
@@ -258,6 +258,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:textColor="@android:color/holo_red_dark"
-            android:text="startCrop、endCrop、autoStartCenterCrop 和 autoEndCenterCrop 为本项目新增的显示模式，需要使用OpenImageView，详看Demo"/>
+            android:text="startCrop、endCrop、autoStartCenterCrop 和 autoEndCenterCrop 为本项目新增的显示模式，需要使用ShapeImageView，详看Demo"/>
     </LinearLayout>
 </ScrollView>

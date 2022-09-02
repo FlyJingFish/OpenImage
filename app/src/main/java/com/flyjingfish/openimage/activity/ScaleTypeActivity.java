@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.request.target.Target;
+import com.flyjingfish.library.ShapeImageView;
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.bean.ImageEntity;
 import com.flyjingfish.openimage.databinding.ActivityScaleTypeBinding;
@@ -20,7 +21,6 @@ import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
-import com.flyjingfish.openimagelib.widget.OpenImageView;
 
 
 public class ScaleTypeActivity extends AppCompatActivity {
@@ -118,8 +118,8 @@ public class ScaleTypeActivity extends AppCompatActivity {
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
                 .setClickPosition(0);
 
-        if (view instanceof OpenImageView) {
-            OpenImageView.OpenScaleType scaleType = ((OpenImageView) view).getOpenScaleType();
+        if (view instanceof ShapeImageView) {
+            ShapeImageView.ShapeScaleType scaleType = ((ShapeImageView) view).getShapeScaleType();
             openImage.setSrcImageViewScaleType(scaleType, true);
         } else {
             ImageView.ScaleType scaleType = ((ImageView) view).getScaleType();

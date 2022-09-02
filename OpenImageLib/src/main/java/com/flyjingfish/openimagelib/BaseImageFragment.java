@@ -14,13 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 
+import com.flyjingfish.library.ShapeImageView;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
-import com.flyjingfish.openimagelib.widget.OpenImageView;
 
 public abstract class BaseImageFragment<T extends View> extends BaseFragment {
 
@@ -57,7 +57,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         smallCoverImageView.setStartWidth(imageDetail.srcWidth);
         smallCoverImageView.setStartHeight(imageDetail.srcHeight);
         smallCoverImageView.setZoomable(false);
-        if (srcScaleType == OpenImageView.OpenScaleType.AUTO_START_CENTER_CROP || srcScaleType == OpenImageView.OpenScaleType.AUTO_END_CENTER_CROP){
+        if (srcScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP || srcScaleType == ShapeImageView.ShapeScaleType.AUTO_END_CENTER_CROP){
             smallCoverImageView.setAutoCropHeightWidthRatio(autoAspectRadio);
             photoView.setAutoCropHeightWidthRatio(autoAspectRadio);
         }
@@ -102,14 +102,14 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
 
     protected void setCoverImageView(){
         ViewGroup.LayoutParams layoutParams = smallCoverImageView.getLayoutParams();
-        if (srcScaleType == OpenImageView.OpenScaleType.CENTER_CROP || srcScaleType == OpenImageView.OpenScaleType.FIT_XY) {
+        if (srcScaleType == ShapeImageView.ShapeScaleType.CENTER_CROP || srcScaleType == ShapeImageView.ShapeScaleType.FIT_XY) {
             layoutParams.width = imageDetail.srcWidth;
             layoutParams.height = imageDetail.srcHeight;
             smallCoverImageView.setLayoutParams(layoutParams);
-            smallCoverImageView.setScaleType(OpenImageView.OpenScaleType.getScaleType(srcScaleType));
-        } else if (srcScaleType == OpenImageView.OpenScaleType.CENTER) {
-            smallCoverImageView.setScaleType(OpenImageView.OpenScaleType.getScaleType(srcScaleType));
-        } else if (srcScaleType == OpenImageView.OpenScaleType.FIT_CENTER || srcScaleType == OpenImageView.OpenScaleType.FIT_START || srcScaleType == OpenImageView.OpenScaleType.FIT_END) {
+            smallCoverImageView.setScaleType(ShapeImageView.ShapeScaleType.getScaleType(srcScaleType));
+        } else if (srcScaleType == ShapeImageView.ShapeScaleType.CENTER) {
+            smallCoverImageView.setScaleType(ShapeImageView.ShapeScaleType.getScaleType(srcScaleType));
+        } else if (srcScaleType == ShapeImageView.ShapeScaleType.FIT_CENTER || srcScaleType == ShapeImageView.ShapeScaleType.FIT_START || srcScaleType == ShapeImageView.ShapeScaleType.FIT_END) {
             smallCoverImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         }
     }
@@ -293,7 +293,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
     }
 
     protected void initCoverAnim(int imageWidth, int imageHeight, final boolean isLoadImageSuccess) {
-        if (imageDiskMode == ImageDiskMode.RESULT && (srcScaleType == OpenImageView.OpenScaleType.CENTER_CROP || srcScaleType == OpenImageView.OpenScaleType.FIT_XY) && imageDetail.srcWidth != 0 && imageDetail.srcHeight != 0) {
+        if (imageDiskMode == ImageDiskMode.RESULT && (srcScaleType == ShapeImageView.ShapeScaleType.CENTER_CROP || srcScaleType == ShapeImageView.ShapeScaleType.FIT_XY) && imageDetail.srcWidth != 0 && imageDetail.srcHeight != 0) {
             createCoverAnim(imageWidth, imageHeight, isLoadImageSuccess);
         } else {
             smallCoverImageView.setVisibility(View.GONE);
@@ -308,7 +308,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         float originalScaleHW = imageHeight * 1f / imageWidth;
         float coverWidth;
         float coverHeight;
-        if (srcScaleType == OpenImageView.OpenScaleType.CENTER_CROP) {
+        if (srcScaleType == ShapeImageView.ShapeScaleType.CENTER_CROP) {
             if (originalScaleHW > scaleHW) {//原图高度比点击的ImageView长，缓存的图片是以宽度为准
                 coverWidth = ScreenUtils.getScreenWidth(requireContext());
                 coverHeight = coverWidth * scaleHW;

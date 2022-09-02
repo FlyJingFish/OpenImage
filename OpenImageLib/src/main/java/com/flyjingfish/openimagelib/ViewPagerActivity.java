@@ -31,6 +31,7 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.library.ShapeImageView;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.databinding.OpenImageActivityViewpagerBinding;
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
@@ -45,7 +46,6 @@ import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.AttrsUtils;
 import com.flyjingfish.openimagelib.utils.StatusBarHelper;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
-import com.flyjingfish.openimagelib.widget.OpenImageView;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class ViewPagerActivity extends BaseActivity {
     private ImageIndicatorAdapter imageIndicatorAdapter;
     private OpenImageOrientation orientation;
     private ImageDiskMode imageDiskMode;
-    private OpenImageView.OpenScaleType srcScaleType;
+    private ShapeImageView.ShapeScaleType srcScaleType;
     private int selectPos;
     private OnSelectMediaListener onSelectMediaListener;
     private String onSelectKey;
@@ -101,7 +101,7 @@ public class ViewPagerActivity extends BaseActivity {
 
         photosViewModel = new ViewModelProvider(this).get(PhotosViewModel.class);
         photosViewModel.closeViewLiveData.observe(this, integer -> close(false));
-        srcScaleType = (OpenImageView.OpenScaleType) getIntent().getSerializableExtra(OpenParams.SRC_SCALE_TYPE);
+        srcScaleType = (ShapeImageView.ShapeScaleType) getIntent().getSerializableExtra(OpenParams.SRC_SCALE_TYPE);
         openImageBeans = (List<OpenImageDetail>) getIntent().getSerializableExtra(OpenParams.IMAGES);
         clickPosition = getIntent().getIntExtra(OpenParams.CLICK_POSITION, 0);
         boolean disEnableTouchClose = getIntent().getBooleanExtra(OpenParams.DISABLE_TOUCH_CLOSE, false);
@@ -540,12 +540,12 @@ public class ViewPagerActivity extends BaseActivity {
                     if (names.size() == 0) {
                         return;
                     }
-                    if (exitView instanceof OpenImageView){
-                        OpenImageView.OpenScaleType openScaleType = ((OpenImageView) exitView).getOpenScaleType();
+                    if (exitView instanceof ShapeImageView){
+                        ShapeImageView.ShapeScaleType ShapeScaleType = ((ShapeImageView) exitView).getShapeScaleType();
                         if (shareView instanceof PhotoView){
-                            ((PhotoView) shareView).setSrcScaleType(openScaleType);
-                            if (openScaleType == OpenImageView.OpenScaleType.AUTO_START_CENTER_CROP || srcScaleType == OpenImageView.OpenScaleType.AUTO_END_CENTER_CROP){
-                                ((PhotoView) shareView).setAutoCropHeightWidthRatio( ((OpenImageView) exitView).getAutoCropHeightWidthRatio());
+                            ((PhotoView) shareView).setSrcScaleType(ShapeScaleType);
+                            if (ShapeScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP || srcScaleType == ShapeImageView.ShapeScaleType.AUTO_END_CENTER_CROP){
+                                ((PhotoView) shareView).setAutoCropHeightWidthRatio( ((ShapeImageView) exitView).getAutoCropHeightWidthRatio());
                             }
                         }
                     }

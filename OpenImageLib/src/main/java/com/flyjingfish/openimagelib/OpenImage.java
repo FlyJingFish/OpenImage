@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.library.ShapeImageView;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.enums.BackViewType;
@@ -51,7 +52,6 @@ import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
-import com.flyjingfish.openimagelib.widget.OpenImageView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public final class OpenImage {
     private int errorResId;
     private int openImageStyle;
     private ImageView.ScaleType srcImageViewScaleType;
-    private OpenImageView.OpenScaleType srcImageViewOpenScaleType;
+    private ShapeImageView.ShapeScaleType srcImageViewShapeScaleType;
     private boolean autoSetScaleType;
     private ImageDiskMode imageDiskMode = ImageDiskMode.CONTAIN_ORIGINAL;
     private final HashSet<Integer> srcImageWidthCache = new HashSet<>();
@@ -249,13 +249,13 @@ public final class OpenImage {
     }
 
     /**
-     * 使用OpenImageView时调用这个
-     * @param srcImageViewOpenScaleType 点击的OpenImageView显示模式
-     * @param autoSetScaleType      如果点击的OpenImageView与您所设置scaleType不相同，则自动设置
+     * 使用ShapeImageView时调用这个
+     * @param srcImageViewShapeScaleType 点击的ShapeImageView显示模式
+     * @param autoSetScaleType      如果点击的ShapeImageView与您所设置scaleType不相同，则自动设置
      * @return
      */
-    public OpenImage setSrcImageViewScaleType(OpenImageView.OpenScaleType srcImageViewOpenScaleType, boolean autoSetScaleType) {
-        this.srcImageViewOpenScaleType = srcImageViewOpenScaleType;
+    public OpenImage setSrcImageViewScaleType(ShapeImageView.ShapeScaleType srcImageViewShapeScaleType, boolean autoSetScaleType) {
+        this.srcImageViewShapeScaleType = srcImageViewShapeScaleType;
         this.autoSetScaleType = autoSetScaleType;
         return this;
     }
@@ -471,7 +471,7 @@ public final class OpenImage {
         intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);
         intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, OpenImageConfig.getInstance().isDisEnableTouchClose());
-        intent.putExtra(OpenParams.SRC_SCALE_TYPE,srcImageViewOpenScaleType != null?srcImageViewOpenScaleType: OpenImageView.OpenScaleType.getType(srcImageViewScaleType));
+        intent.putExtra(OpenParams.SRC_SCALE_TYPE,srcImageViewShapeScaleType != null?srcImageViewShapeScaleType: ShapeImageView.ShapeScaleType.getType(srcImageViewScaleType));
         intent.putExtra(OpenParams.IMAGE_DISK_MODE, imageDiskMode);
         intent.putExtra(OpenParams.ERROR_RES_ID, errorResId);
         intent.putExtra(OpenParams.ITEM_LOAD_KEY, itemLoadHelperKey);
@@ -498,8 +498,8 @@ public final class OpenImage {
             }
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-            if (shareViewClick instanceof OpenImageView){
-                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((OpenImageView) shareViewClick).getAutoCropHeightWidthRatio());
+            if (shareViewClick instanceof ShapeImageView){
+                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((ShapeImageView) shareViewClick).getAutoCropHeightWidthRatio());
             }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
@@ -533,8 +533,8 @@ public final class OpenImage {
             }
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-            if (shareViewClick instanceof OpenImageView){
-                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((OpenImageView) shareViewClick).getAutoCropHeightWidthRatio());
+            if (shareViewClick instanceof ShapeImageView){
+                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((ShapeImageView) shareViewClick).getAutoCropHeightWidthRatio());
             }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
@@ -571,8 +571,8 @@ public final class OpenImage {
 
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-            if (shareViewClick instanceof OpenImageView){
-                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((OpenImageView) shareViewClick).getAutoCropHeightWidthRatio());
+            if (shareViewClick instanceof ShapeImageView){
+                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((ShapeImageView) shareViewClick).getAutoCropHeightWidthRatio());
             }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
@@ -605,8 +605,8 @@ public final class OpenImage {
             }
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-            if (shareViewClick instanceof OpenImageView){
-                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((OpenImageView) shareViewClick).getAutoCropHeightWidthRatio());
+            if (shareViewClick instanceof ShapeImageView){
+                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((ShapeImageView) shareViewClick).getAutoCropHeightWidthRatio());
             }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
@@ -641,8 +641,8 @@ public final class OpenImage {
 
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-            if (shareViewClick instanceof OpenImageView){
-                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((OpenImageView) shareViewClick).getAutoCropHeightWidthRatio());
+            if (shareViewClick instanceof ShapeImageView){
+                intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((ShapeImageView) shareViewClick).getAutoCropHeightWidthRatio());
             }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails));
@@ -658,10 +658,10 @@ public final class OpenImage {
         if (!autoSetScaleType){
             return;
         }
-        if (srcImageViewOpenScaleType != null && shareView instanceof OpenImageView){
-            OpenImageView openImageView = (OpenImageView) shareView;
-            if (openImageView.getOpenScaleType() != srcImageViewOpenScaleType){
-                openImageView.setOpenScaleType(srcImageViewOpenScaleType);
+        if (srcImageViewShapeScaleType != null && shareView instanceof ShapeImageView){
+            ShapeImageView ShapeImageView = (ShapeImageView) shareView;
+            if (ShapeImageView.getShapeScaleType() != srcImageViewShapeScaleType){
+                ShapeImageView.setShapeScaleType(srcImageViewShapeScaleType);
             }
         }if (srcImageViewScaleType != null){
             if (shareView.getScaleType() != srcImageViewScaleType) {
