@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 import androidx.appcompat.widget.AppCompatImageView;
 
@@ -46,6 +47,7 @@ public class OpenImageView extends AppCompatImageView {
     private float bgLeftBottomRadius;
     private float bgRightTopRadius;
     private float bgRightBottomRadius;
+    private float[] gradientPositions;
 
     public OpenImageView(Context context) {
         this(context, null);
@@ -258,7 +260,7 @@ public class OpenImageView extends AppCompatImageView {
             }
             x1 = width - x0;
             y1 = height - y0;
-            LinearGradient linearGradient = new LinearGradient(x0, y0, x1, y1, gradientColors, null, Shader.TileMode.CLAMP);
+            LinearGradient linearGradient = new LinearGradient(x0, y0, x1, y1, gradientColors, gradientPositions, Shader.TileMode.CLAMP);
             mBgPaint.setShader(linearGradient);
         }
         if (bgShapeType == ShapeType.OVAL) {
@@ -692,5 +694,18 @@ public class OpenImageView extends AppCompatImageView {
         }else {
             return false;
         }
+    }
+
+    public float[] getGradientPositions() {
+        return gradientPositions;
+    }
+
+    /**
+     * 渐变色比重
+     * @param gradientPositions
+     */
+    public void setGradientPositions(@Nullable float[] gradientPositions) {
+        this.gradientPositions = gradientPositions;
+        invalidate();
     }
 }
