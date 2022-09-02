@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
@@ -18,6 +20,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import com.flyjingfish.openimagelib.R;
 import com.flyjingfish.openimagelib.utils.ImageViewUtils;
+import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 import java.io.Serializable;
 
@@ -33,6 +36,12 @@ public class OpenImageView extends AppCompatImageView {
     private final Paint mImagePaint;
     private final Paint mRoundPaint;
     private ShapeType shapeType;
+    private final Paint mBgPaint;
+    private final float mBgPaintWidth;
+    private ShapeType bgShapeType;
+    private int[] gradientColors;
+    private float gradientAngle;
+    private boolean isGradient;
 
     public OpenImageView(Context context) {
         this(context, null);
@@ -52,8 +61,29 @@ public class OpenImageView extends AppCompatImageView {
         leftBottomRadius = a.getDimensionPixelSize(R.styleable.OpenImageView_openImage_left_bottom_radius, radius);
         rightTopRadius = a.getDimensionPixelSize(R.styleable.OpenImageView_openImage_right_top_radius, radius);
         rightBottomRadius = a.getDimensionPixelSize(R.styleable.OpenImageView_openImage_right_bottom_radius, radius);
-        shapeType = ShapeType.getType(a.getInt(R.styleable.OpenImageView_openImage_shape, 0));
+        shapeType = ShapeType.getType(a.getInt(R.styleable.OpenImageView_openImage_shape, 1));
+        bgShapeType = ShapeType.getType(a.getInt(R.styleable.OpenImageView_openImage_shape_bg, 0));
+        int startColor = a.getColor(R.styleable.OpenImageView_openImage_shape_bg_startColor, Color.TRANSPARENT);
+        int centerColor = a.getColor(R.styleable.OpenImageView_openImage_shape_bg_centerColor, 0);
+        int endColor = a.getColor(R.styleable.OpenImageView_openImage_shape_bg_endColor, Color.TRANSPARENT);
+        int color = a.getColor(R.styleable.OpenImageView_openImage_shape_bg_color, Color.TRANSPARENT);
+        gradientAngle = a.getFloat(R.styleable.OpenImageView_openImage_shape_bg_angle, 0);
+        isGradient = a.getBoolean(R.styleable.OpenImageView_openImage_shape_bg_gradient, false);
         a.recycle();
+
+
+        mBgPaintWidth = ScreenUtils.dp2px(context,5);
+        mBgPaint = new Paint();
+        mBgPaint.setColor(color);
+        mBgPaint.setAntiAlias(true);
+        mBgPaint.setStrokeWidth(mBgPaintWidth);
+        mBgPaint.setStyle(Paint.Style.STROKE);
+        if (centerColor == 0){
+            gradientColors = new int[]{startColor, endColor};
+        }else {
+            gradientColors = new int[]{startColor,centerColor, endColor};
+        }
+
 
         mImagePaint = new Paint();
         mImagePaint.setXfermode(null);
@@ -150,6 +180,7 @@ public class OpenImageView extends AppCompatImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        drawBgShape(canvas);
         clipPadding(canvas);
         if (shapeType == ShapeType.OVAL){
             canvas.saveLayer(new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), mImagePaint, Canvas.ALL_SAVE_FLAG);
@@ -164,6 +195,28 @@ public class OpenImageView extends AppCompatImageView {
         }else {
             super.onDraw(canvas);
         }
+
+    }
+
+    private void drawBgShape(Canvas canvas) {
+        final int saveCount = canvas.getSaveCount();
+        canvas.save();
+
+        int height = getHeight();
+        int width = getWidth();
+        RectF rectF = new RectF(mBgPaintWidth/2,mBgPaintWidth/2,width - mBgPaintWidth/2,height - mBgPaintWidth/2);
+        if (isGradient){
+            LinearGradient linearGradient = new LinearGradient(width/3,0,width*2/3,height,new int[]{Color.BLUE, Color.RED},null, Shader.TileMode.CLAMP);
+            mBgPaint.setShader(linearGradient);
+        }
+        if (bgShapeType == ShapeType.OVAL){
+            canvas.drawArc(rectF,0,360,true, mBgPaint);
+        }else {
+
+        }
+
+
+        canvas.restoreToCount(saveCount);
 
     }
 
@@ -384,7 +437,7 @@ public class OpenImageView extends AppCompatImageView {
     }
 
     public enum ShapeType{
-        RECTANGLE(0),OVAL(1);
+        NONE(0),RECTANGLE(1),OVAL(2);
 
         ShapeType(int type) {
             this.type = type;
@@ -398,9 +451,11 @@ public class OpenImageView extends AppCompatImageView {
 
         public static ShapeType getType(int type) {
             if (type == 1) {
-                return OVAL;
-            } {
                 return RECTANGLE;
+            } else if (type == 2){
+                return OVAL;
+            } else {
+                return NONE;
             }
         }
     }

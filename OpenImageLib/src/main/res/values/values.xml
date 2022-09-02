@@ -78,8 +78,19 @@
         <!-- 图像高宽比是View高宽比的倍数 -->
         <attr name="autoCrop_height_width_ratio" format="float" />
         <attr name="openImage_shape" format="enum">
-            <enum name="rectangle" value="0" />
-            <enum name="oval" value="1" />
+            <enum name="rectangle" value="1" />
+            <enum name="oval" value="2" />
         </attr>
+        <attr name="openImage_shape_bg" format="enum">
+            <enum name="none" value="0" />
+            <enum name="rectangle" value="1" />
+            <enum name="oval" value="2" />
+        </attr>
+        <attr name="openImage_shape_bg_color" format="color"/>
+        <attr name="openImage_shape_bg_startColor" format="color" />
+        <attr name="openImage_shape_bg_centerColor" format="color" />
+        <attr name="openImage_shape_bg_endColor" format="color" />
+        <attr name="openImage_shape_bg_angle" format="float" />
+        <attr name="openImage_shape_bg_gradient" format="boolean" />
     </declare-styleable>
 </resources>

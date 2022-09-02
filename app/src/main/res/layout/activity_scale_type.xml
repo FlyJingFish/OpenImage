@@ -185,8 +185,9 @@
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_marginStart="10dp"
-                android:background="#999999"
                 android:onClick="onIvClick"
+                android:padding="10dp"
+                app:openImage_shape="oval"
                 app:openScaleType="startCrop"/>
             <com.flyjingfish.openimagelib.widget.OpenImageView
                 android:id="@+id/iv_end_crop"
