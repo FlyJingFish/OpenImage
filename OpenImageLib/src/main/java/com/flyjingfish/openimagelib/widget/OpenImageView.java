@@ -399,7 +399,7 @@ public class OpenImageView extends AppCompatImageView {
         public static ShapeType getType(int type) {
             if (type == 1) {
                 return OVAL;
-            } {
+            } else  {
                 return RECTANGLE;
             }
         }
