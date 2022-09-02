@@ -7,12 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.flyjingfish.openimagelib.utils.ImageViewUtils;
+
 public class OpenImageViewAttacher implements View.OnLayoutChangeListener {
     private final OpenImageView mImageView;
     private final Matrix mBaseMatrix = new Matrix();
     private final Matrix mDrawMatrix = new Matrix();
-    private final Matrix mSuppMatrix = new Matrix();
-    private final RectF mDisplayRect = new RectF();
     private OpenImageView.OpenScaleType mScaleType;
     private float mAutoCropHeightWidthRatio;
 
@@ -94,58 +94,12 @@ public class OpenImageViewAttacher implements View.OnLayoutChangeListener {
     }
 
     private void resetMatrix() {
-        mSuppMatrix.reset();
         setImageViewMatrix(getDrawMatrix());
-//        checkMatrixBounds();
     }
 
     private Matrix getDrawMatrix() {
         mDrawMatrix.set(mBaseMatrix);
-        mDrawMatrix.postConcat(mSuppMatrix);
         return mDrawMatrix;
-    }
-
-    public RectF getDisplayRect() {
-        checkMatrixBounds();
-        return getDisplayRect(getDrawMatrix());
-    }
-
-    private RectF getDisplayRect(Matrix matrix) {
-        Drawable d = mImageView.getDrawable();
-        if (d != null) {
-            mDisplayRect.set(0, 0, d.getIntrinsicWidth(),
-                    d.getIntrinsicHeight());
-            matrix.mapRect(mDisplayRect);
-            return mDisplayRect;
-        }
-        return null;
-    }
-
-    private boolean checkMatrixBounds() {
-        final RectF rect = getDisplayRect(getDrawMatrix());
-        if (rect == null) {
-            return false;
-        }
-        final int viewWidth = getImageViewWidth(mImageView);
-        final int viewHeight = getImageViewHeight(mImageView);
-        final float height = rect.height(), width = rect.width();
-        float deltaX = 0, deltaY = 0;
-        if (height <= viewHeight) {
-            deltaY = (viewHeight - height) / 2 - rect.top;
-        } else if (rect.top > 0) {
-            deltaY = -rect.top;
-        } else if (rect.bottom < viewHeight) {
-            deltaY = viewHeight - rect.bottom;
-        }
-        if (width <= viewWidth) {
-            deltaX = (viewWidth - width) / 2 - rect.left;
-        } else if (rect.left > 0) {
-            deltaX = -rect.left;
-        } else if (rect.right < viewWidth) {
-            deltaX = viewWidth - rect.right;
-        }
-        mSuppMatrix.postTranslate(deltaX, deltaY);
-        return true;
     }
 
     private void setImageViewMatrix(Matrix matrix) {
@@ -164,16 +118,12 @@ public class OpenImageViewAttacher implements View.OnLayoutChangeListener {
     }
 
     private int getImageViewWidth(ImageView imageView) {
-        return imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
+        return imageView.getWidth() - ImageViewUtils.getViewPaddingLeft(imageView) - ImageViewUtils.getViewPaddingRight(imageView);
     }
 
     private int getImageViewHeight(ImageView imageView) {
         return imageView.getHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
     }
-
-//    public ImageView.ScaleType getScaleType() {
-//        return mScaleType;
-//    }
 
     public Matrix getImageMatrix() {
         return mDrawMatrix;

@@ -32,6 +32,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
 
 import com.flyjingfish.openimagelib.OpenImageConfig;
+import com.flyjingfish.openimagelib.utils.ImageViewUtils;
 import com.flyjingfish.openimagelib.utils.ScreenOrientationEvent;
 import com.flyjingfish.openimagelib.widget.OpenImageView;
 
@@ -1079,7 +1080,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     private int getImageViewWidth(ImageView imageView) {
-        return imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
+        return imageView.getWidth() - ImageViewUtils.getViewPaddingLeft(imageView) - ImageViewUtils.getViewPaddingRight(imageView);
     }
 
     private int getImageViewHeight(ImageView imageView) {
