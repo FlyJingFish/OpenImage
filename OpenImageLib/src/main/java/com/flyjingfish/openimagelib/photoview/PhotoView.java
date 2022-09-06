@@ -25,7 +25,8 @@ import android.view.GestureDetector;
 
 import androidx.appcompat.widget.AppCompatImageView;
 
-import com.flyjingfish.library.ShapeImageView;
+import com.flyjingfish.shapeimageviewlib.ShapeImageView;
+
 
 /**
  * A zoomable ImageView. See {@link PhotoViewAttacher} for most of the details on how the zooming

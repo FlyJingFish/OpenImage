@@ -14,13 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 
-import com.flyjingfish.library.ShapeImageView;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
+import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 public abstract class BaseImageFragment<T extends View> extends BaseFragment {
 

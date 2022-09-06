@@ -180,7 +180,7 @@
                 android:background="#999999"
                 android:onClick="onIvClick"
                 android:scaleType="fitXY"/>
-            <com.flyjingfish.library.ShapeImageView
+            <com.flyjingfish.shapeimageviewlib.ShapeImageView
                 android:id="@+id/iv_start_crop"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
@@ -188,7 +188,7 @@
                 android:background="#999999"
                 android:onClick="onIvClick"
                 app:shapeScaleType="startCrop"/>
-            <com.flyjingfish.library.ShapeImageView
+            <com.flyjingfish.shapeimageviewlib.ShapeImageView
                 android:id="@+id/iv_end_crop"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
@@ -219,7 +219,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <com.flyjingfish.library.ShapeImageView
+            <com.flyjingfish.shapeimageviewlib.ShapeImageView
                 android:id="@+id/iv_auto_start_crop"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
@@ -228,7 +228,7 @@
                 android:onClick="onIvClick"
                 app:autoCrop_height_width_ratio="2"
                 app:shapeScaleType="autoStartCenterCrop"/>
-            <com.flyjingfish.library.ShapeImageView
+            <com.flyjingfish.shapeimageviewlib.ShapeImageView
                 android:id="@+id/iv_auto_end_crop"
                 android:layout_width="110dp"
                 android:layout_height="110dp"

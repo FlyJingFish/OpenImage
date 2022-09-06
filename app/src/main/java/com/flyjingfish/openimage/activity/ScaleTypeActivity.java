@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.request.target.Target;
-import com.flyjingfish.library.ShapeImageView;
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.bean.ImageEntity;
 import com.flyjingfish.openimage.databinding.ActivityScaleTypeBinding;
@@ -21,6 +20,7 @@ import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
+import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 
 public class ScaleTypeActivity extends AppCompatActivity {

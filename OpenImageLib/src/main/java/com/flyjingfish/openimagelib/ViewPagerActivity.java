@@ -31,7 +31,6 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.flyjingfish.library.ShapeImageView;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.databinding.OpenImageActivityViewpagerBinding;
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
@@ -47,6 +46,7 @@ import com.flyjingfish.openimagelib.utils.AttrsUtils;
 import com.flyjingfish.openimagelib.utils.StatusBarHelper;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
+import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
