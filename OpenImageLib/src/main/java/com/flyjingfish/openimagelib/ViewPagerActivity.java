@@ -504,8 +504,8 @@ public class ViewPagerActivity extends BaseActivity {
     private void setExitView() {
         BackViewType backViewType = BackViewType.NO_SHARE;
         ImageView backView = null;
-        if (onBackView != null) {
-            ExitOnBackView.ShareExitViewBean shareExitViewBean = onBackView.onBack(showPosition);
+        ExitOnBackView.ShareExitViewBean shareExitViewBean;
+        if (onBackView != null && (shareExitViewBean = onBackView.onBack(showPosition)) != null) {
             backViewType = shareExitViewBean.backViewType;
             backView = shareExitViewBean.shareExitView;
         }
