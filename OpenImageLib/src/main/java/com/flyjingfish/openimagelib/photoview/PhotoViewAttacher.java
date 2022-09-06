@@ -32,9 +32,9 @@ import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
 
 import com.flyjingfish.openimagelib.OpenImageConfig;
-import com.flyjingfish.openimagelib.utils.ImageViewUtils;
 import com.flyjingfish.openimagelib.utils.ScreenOrientationEvent;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
+import com.flyjingfish.shapeimageviewlib.ViewUtils;
 
 /**
  * The component of {@link PhotoView} which does the work allowing for zooming, scaling, panning, etc.
@@ -1080,7 +1080,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     private int getImageViewWidth(ImageView imageView) {
-        return imageView.getWidth() - ImageViewUtils.getViewPaddingLeft(imageView) - ImageViewUtils.getViewPaddingRight(imageView);
+        return imageView.getWidth() - ViewUtils.getViewPaddingLeft(imageView) - ViewUtils.getViewPaddingRight(imageView);
     }
 
     private int getImageViewHeight(ImageView imageView) {
