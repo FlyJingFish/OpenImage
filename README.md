@@ -151,10 +151,15 @@ RecyclerView场景  | 聊天页面  | 打开视频
  
  
  <img src="/screenshot/Screenshot_20220731_203125_com.flyjingfish.openim.jpg" width="405px" height="940px" alt="show" />
+ 
+### 常见问题
+
+##### [点此查看常见问题](https://github.com/FlyJingFish/OpenImage/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
 
 ### Thanks
 
 - [PhotoView](https://github.com/Baseflow/PhotoView)
+
 
 ### 联系方式
 
