@@ -54,7 +54,16 @@ dependencies {
 第三步，您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
 
 ```java
- OpenImageConfig.getInstance().setBigImageHelper(new BigImageHelperImpl());
+ public class MyApplication extends Application {
+     @Override
+     public void onCreate() {
+         super.onCreate();
+         //初始化大图加载器
+         OpenImageConfig.getInstance().setBigImageHelper(new BigImageHelperImpl());
+         //初始化视频加载，如果有多个请每次在调用openImage.show之前设置一遍
+         OpenImageConfig.getInstance().setVideoFragmentCreate(new VideoFragmentCreateImpl());
+     }
+ }
  
  public class BigImageHelperImpl implements BigImageHelper {
     @Override
