@@ -251,8 +251,9 @@ public final class OpenImage {
 
     /**
      * 使用ShapeImageView时调用这个
+     *
      * @param srcImageViewShapeScaleType 点击的ShapeImageView显示模式
-     * @param autoSetScaleType      如果点击的ShapeImageView与您所设置scaleType不相同，则自动设置
+     * @param autoSetScaleType           如果点击的ShapeImageView与您所设置scaleType不相同，则自动设置
      * @return
      */
     public OpenImage setSrcImageViewScaleType(ShapeImageView.ShapeScaleType srcImageViewShapeScaleType, boolean autoSetScaleType) {
@@ -404,14 +405,51 @@ public final class OpenImage {
     /**
      * 添加View 到大图页面，此方法可多次调用，添加多个View
      *
-     * @param layoutRes                添加的图片xml id
+     * @param layoutRes                添加的布局xml id
      * @param layoutParams             要添加到页面布局的参数
      * @param moreViewShowType         展示类型
      * @param onLoadViewFinishListener 加载完毕View后回调
      * @return
      */
     public OpenImage addMoreView(@LayoutRes int layoutRes, @NonNull FrameLayout.LayoutParams layoutParams, MoreViewShowType moreViewShowType, OnLoadViewFinishListener onLoadViewFinishListener) {
-        MoreViewOption moreViewOption = new MoreViewOption(layoutRes, layoutParams, moreViewShowType, onLoadViewFinishListener);
+        return addMoreView(layoutRes, layoutParams, moreViewShowType, false, onLoadViewFinishListener);
+    }
+
+    /**
+     * 添加View 到大图页面，此方法可多次调用，添加多个View
+     *
+     * @param layoutView       添加的View
+     * @param layoutParams     要添加到页面布局的参数
+     * @param moreViewShowType 展示类型
+     * @return
+     */
+    public OpenImage addMoreView(View layoutView, @NonNull FrameLayout.LayoutParams layoutParams, MoreViewShowType moreViewShowType) {
+        return addMoreView(layoutView, layoutParams, moreViewShowType, false);
+    }
+
+    /**
+     * @param layoutRes                添加的布局xml id
+     * @param layoutParams             要添加到页面布局的参数
+     * @param moreViewShowType         展示类型
+     * @param followTouch              是否跟随图片拖动
+     * @param onLoadViewFinishListener 加载完毕View后回调
+     * @return
+     */
+    public OpenImage addMoreView(@LayoutRes int layoutRes, @NonNull FrameLayout.LayoutParams layoutParams, MoreViewShowType moreViewShowType, boolean followTouch, OnLoadViewFinishListener onLoadViewFinishListener) {
+        MoreViewOption moreViewOption = new MoreViewOption(layoutRes, layoutParams, moreViewShowType, followTouch, onLoadViewFinishListener);
+        moreViewOptions.add(moreViewOption);
+        return this;
+    }
+
+    /**
+     * @param layoutView       添加的View
+     * @param layoutParams     要添加到页面布局的参数
+     * @param moreViewShowType 展示类型
+     * @param followTouch      是否跟随图片拖动
+     * @return
+     */
+    public OpenImage addMoreView(View layoutView, @NonNull FrameLayout.LayoutParams layoutParams, MoreViewShowType moreViewShowType, boolean followTouch) {
+        MoreViewOption moreViewOption = new MoreViewOption(layoutView, layoutParams, moreViewShowType, followTouch);
         moreViewOptions.add(moreViewOption);
         return this;
     }
@@ -472,7 +510,7 @@ public final class OpenImage {
         intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);
         intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, OpenImageConfig.getInstance().isDisEnableTouchClose());
-        intent.putExtra(OpenParams.SRC_SCALE_TYPE,srcImageViewShapeScaleType != null?srcImageViewShapeScaleType: ShapeImageView.ShapeScaleType.getType(srcImageViewScaleType));
+        intent.putExtra(OpenParams.SRC_SCALE_TYPE, srcImageViewShapeScaleType != null ? srcImageViewShapeScaleType : ShapeImageView.ShapeScaleType.getType(srcImageViewScaleType));
         intent.putExtra(OpenParams.IMAGE_DISK_MODE, imageDiskMode);
         intent.putExtra(OpenParams.ERROR_RES_ID, errorResId);
         intent.putExtra(OpenParams.ITEM_LOAD_KEY, itemLoadHelperKey);
@@ -499,7 +537,7 @@ public final class OpenImage {
             }
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-            if (shareViewClick instanceof ShapeImageView){
+            if (shareViewClick instanceof ShapeImageView) {
                 intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((ShapeImageView) shareViewClick).getAutoCropHeightWidthRatio());
             }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
@@ -534,7 +572,7 @@ public final class OpenImage {
             }
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-            if (shareViewClick instanceof ShapeImageView){
+            if (shareViewClick instanceof ShapeImageView) {
                 intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((ShapeImageView) shareViewClick).getAutoCropHeightWidthRatio());
             }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
@@ -572,7 +610,7 @@ public final class OpenImage {
 
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-            if (shareViewClick instanceof ShapeImageView){
+            if (shareViewClick instanceof ShapeImageView) {
                 intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((ShapeImageView) shareViewClick).getAutoCropHeightWidthRatio());
             }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
@@ -606,7 +644,7 @@ public final class OpenImage {
             }
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-            if (shareViewClick instanceof ShapeImageView){
+            if (shareViewClick instanceof ShapeImageView) {
                 intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((ShapeImageView) shareViewClick).getAutoCropHeightWidthRatio());
             }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
@@ -642,7 +680,7 @@ public final class OpenImage {
 
             View shareViewClick = viewPair.first;
             String shareNameClick = viewPair.second;
-            if (shareViewClick instanceof ShapeImageView){
+            if (shareViewClick instanceof ShapeImageView) {
                 intent.putExtra(OpenParams.AUTO_ASPECT_RATIO, ((ShapeImageView) shareViewClick).getAutoCropHeightWidthRatio());
             }
             intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
@@ -655,22 +693,24 @@ public final class OpenImage {
 
     }
 
-    private void autoSetScaleType(ImageView shareView){
-        if (!autoSetScaleType){
+    private void autoSetScaleType(ImageView shareView) {
+        if (!autoSetScaleType) {
             return;
         }
-        if (srcImageViewShapeScaleType != null && shareView instanceof ShapeImageView){
+        if (srcImageViewShapeScaleType != null && shareView instanceof ShapeImageView) {
             ShapeImageView ShapeImageView = (ShapeImageView) shareView;
-            if (ShapeImageView.getShapeScaleType() != srcImageViewShapeScaleType){
+            if (ShapeImageView.getShapeScaleType() != srcImageViewShapeScaleType) {
                 ShapeImageView.setShapeScaleType(srcImageViewShapeScaleType);
             }
-        }if (srcImageViewScaleType != null){
+        }
+        if (srcImageViewScaleType != null) {
             if (shareView.getScaleType() != srcImageViewScaleType) {
                 shareView.setScaleType(srcImageViewScaleType);
             }
         }
 
     }
+
     private Pair<View, String> initShareView(ArrayList<OpenImageDetail> openImageDetails) {
         Pair<View, String> pair = null;
         if (srcViewType == SrcViewType.RV || srcViewType == SrcViewType.AB_LIST) {
@@ -920,7 +960,9 @@ public final class OpenImage {
         });
         handler.postDelayed(() -> startActivity(intent, viewPair, null), 100);
     }
+
     private String drawableKey;
+
     private void startActivity(Intent intent, Pair<View, String> viewPair, String drawableKey) {
         if (!isStartActivity) {
             if (ActivityCompatHelper.assertValidRequest(context)) {
@@ -929,7 +971,7 @@ public final class OpenImage {
                 String shareElementName = viewPair.second;
                 try {
                     if (shareElementView != null && shareElementView.isAttachedToWindow()) {
-                        fixAndroid5_7Bug(shareElementView,true);
+                        fixAndroid5_7Bug(shareElementView, true);
                         Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, shareElementView, shareElementName).toBundle();
                         context.startActivity(intent, options);
                     } else {
@@ -948,7 +990,7 @@ public final class OpenImage {
         isStartActivity = true;
     }
 
-    private void releaseImageLoadUtilMap(){
+    private void releaseImageLoadUtilMap() {
         isCanOpen = true;
         ImageLoadUtils.getInstance().clearItemLoadHelper(itemLoadHelperKey);
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onselectKey);
@@ -961,9 +1003,10 @@ public final class OpenImage {
         ImageLoadUtils.getInstance().setOnRemoveListener4FixBug(null);
         moreViewOptions.clear();
     }
-    private void fixAndroid5_7Bug(final View shareElementView,final boolean isSetExitSharedElementCallback) {
+
+    private void fixAndroid5_7Bug(final View shareElementView, final boolean isSetExitSharedElementCallback) {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
-            if (isSetExitSharedElementCallback && context != null){
+            if (isSetExitSharedElementCallback && context != null) {
                 Activity activity = ActivityCompatHelper.getActivity(context);
                 activity.setExitSharedElementCallback(new SharedElementCallback() {
                     @Override
@@ -979,7 +1022,7 @@ public final class OpenImage {
             }
             ViewGroup parent = (ViewGroup) shareElementView.getParent();
             ViewTreeObserver parentViewTreeObserver = parent.getViewTreeObserver();
-            final View.OnAttachStateChangeListener onAttachStateChangeListener =  new View.OnAttachStateChangeListener() {
+            final View.OnAttachStateChangeListener onAttachStateChangeListener = new View.OnAttachStateChangeListener() {
 
 
                 @Override
@@ -1089,7 +1132,7 @@ public final class OpenImage {
 
         @Override
         public ShareExitViewBean onBack(int showPosition) {
-            ShareExitViewBean shareExitViewBean = new ShareExitViewBean(BackViewType.NO_SHARE,null);
+            ShareExitViewBean shareExitViewBean = new ShareExitViewBean(BackViewType.NO_SHARE, null);
             Activity activity = ActivityCompatHelper.getActivity(context);
             if (activity == null) {
                 return shareExitViewBean;
@@ -1101,7 +1144,7 @@ public final class OpenImage {
                 shareExitView = shareExitViewBean.shareExitView;
                 isClipSrcImageView = shareExitViewBean.isClipSrcImageView;
             }
-            activity.setExitSharedElementCallback(new ExitSharedElementCallback2(context, shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null,isClipSrcImageView));
+            activity.setExitSharedElementCallback(new ExitSharedElementCallback2(context, shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null, isClipSrcImageView));
             return shareExitViewBean;
         }
 
@@ -1196,7 +1239,7 @@ public final class OpenImage {
                         }
                     }
                 }
-                if (srcViewType == SrcViewType.VP2 && shareExitViewBean != null && viewPager2.getCurrentItem() != viewPosition){
+                if (srcViewType == SrcViewType.VP2 && shareExitViewBean != null && viewPager2.getCurrentItem() != viewPosition) {
                     shareExitViewBean.isClipSrcImageView = false;
                 }
             } else if (srcViewType == SrcViewType.VP) {
@@ -1213,7 +1256,7 @@ public final class OpenImage {
                         shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_NORMAL, shareView);
                     }
                 }
-                if (shareExitViewBean != null && viewPager.getCurrentItem() != viewPosition){
+                if (shareExitViewBean != null && viewPager.getCurrentItem() != viewPosition) {
                     shareExitViewBean.isClipSrcImageView = false;
                 }
             } else {

@@ -1,6 +1,8 @@
 package com.flyjingfish.openimagelib;
 
 import android.graphics.drawable.Drawable;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -8,6 +10,7 @@ import com.flyjingfish.openimagelib.enums.BackViewType;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
+import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 
 import java.util.HashMap;
@@ -169,6 +172,14 @@ class ImageLoadUtils {
     }
 
     public void clearMoreViewOption(String key) {
+        List<MoreViewOption> viewOptions = moreViewOptionHashMap.get(key);
+        if (viewOptions != null){
+            for (MoreViewOption moreViewOption : viewOptions) {
+                if (moreViewOption != null){
+                    moreViewOption.setView(null);
+                }
+            }
+        }
         this.moreViewOptionHashMap.remove(key);
     }
 }

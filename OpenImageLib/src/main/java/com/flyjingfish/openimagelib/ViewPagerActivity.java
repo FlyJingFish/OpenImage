@@ -213,7 +213,7 @@ public class ViewPagerActivity extends BaseActivity {
         });
         binding.viewPager.setCurrentItem(selectPos, false);
         binding.getRoot().setTouchCloseScale(touchScaleClose);
-        binding.getRoot().setTouchView(binding.viewPager, binding.vBg);
+        binding.getRoot().setTouchView(binding.flTouchView, binding.vBg);
         binding.getRoot().setDisEnableTouchClose(disEnableTouchClose);
         binding.getRoot().setOrientation(orientation == OpenImageOrientation.VERTICAL ? OpenImageOrientation.HORIZONTAL : OpenImageOrientation.VERTICAL);
         binding.getRoot().setOnTouchCloseListener(new TouchCloseLayout.OnTouchCloseListener() {
@@ -260,9 +260,19 @@ public class ViewPagerActivity extends BaseActivity {
         if (moreViewKey != null) {
             List<MoreViewOption> viewOptions = ImageLoadUtils.getInstance().getMoreViewOption(moreViewKey);
             for (MoreViewOption moreViewOption : viewOptions) {
-                if (moreViewOption != null) {
-                    View view = LayoutInflater.from(this).inflate(moreViewOption.getLayoutRes(), null, false);
-                    binding.getRoot().addView(view, moreViewOption.getLayoutParams());
+                View view = null;
+                if (moreViewOption != null && moreViewOption.getViewType() == MoreViewOption.LAYOUT_RES) {
+                    view = LayoutInflater.from(this).inflate(moreViewOption.getLayoutRes(), null, false);
+                }if (moreViewOption != null && moreViewOption.getViewType() == MoreViewOption.LAYOUT_VIEW) {
+                    view = moreViewOption.getView();
+                }
+
+                if (view != null){
+                    if (moreViewOption.isFollowTouch()){
+                        binding.flTouchView.addView(view, moreViewOption.getLayoutParams());
+                    }else {
+                        binding.getRoot().addView(view, moreViewOption.getLayoutParams());
+                    }
                     OnLoadViewFinishListener onLoadViewFinishListener = moreViewOption.getOnLoadViewFinishListener();
                     if (onLoadViewFinishListener != null) {
                         onLoadViewFinishListener.onLoadViewFinish(view);
