@@ -25,13 +25,15 @@ class ExitSharedElementCallback2 extends SharedElementCallback {
     private final ImageView shareExitMapView;
     private float startSrcAlpha;
     private final boolean showSrcImageView;
+    private final boolean isClipSrcImageView;
     private final Float showCurrentViewStartAlpha;
 
-    public ExitSharedElementCallback2(Context context, ImageView shareExitMapView, boolean showSrcImageView, Float showCurrentViewStartAlpha) {
+    public ExitSharedElementCallback2(Context context, ImageView shareExitMapView, boolean showSrcImageView, Float showCurrentViewStartAlpha,boolean isClipSrcImageView) {
         this.context = context;
         this.shareExitMapView = shareExitMapView;
         this.showSrcImageView = showSrcImageView;
         this.showCurrentViewStartAlpha = showCurrentViewStartAlpha;
+        this.isClipSrcImageView = isClipSrcImageView;
     }
 
     @Override
@@ -53,9 +55,11 @@ class ExitSharedElementCallback2 extends SharedElementCallback {
     public Parcelable onCaptureSharedElementSnapshot(View sharedElement, Matrix viewToGlobalMatrix, RectF screenBounds) {
         Parcelable parcelable = super.onCaptureSharedElementSnapshot(sharedElement, viewToGlobalMatrix, screenBounds);
         if (showSrcImageView && sharedElement != null) {
-            Rect showRect = new Rect();
-            sharedElement.getLocalVisibleRect(showRect);
-            sharedElement.setClipBounds(showRect);
+            if (isClipSrcImageView){
+                Rect showRect = new Rect();
+                sharedElement.getLocalVisibleRect(showRect);
+                sharedElement.setClipBounds(showRect);
+            }
             if (startAlpha != null) {
                 sharedElement.setAlpha(startAlpha);
                 sharedElement.setVisibility(startVisibility);

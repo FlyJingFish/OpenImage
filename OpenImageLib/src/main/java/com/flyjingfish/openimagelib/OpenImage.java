@@ -1095,11 +1095,13 @@ public final class OpenImage {
                 return shareExitViewBean;
             }
             ImageView shareExitView = null;
+            boolean isClipSrcImageView = true;
             shareExitViewBean = getShareExitViewBean(showPosition);
             if (shareExitViewBean != null) {
                 shareExitView = shareExitViewBean.shareExitView;
+                isClipSrcImageView = shareExitViewBean.isClipSrcImageView;
             }
-            activity.setExitSharedElementCallback(new ExitSharedElementCallback2(context, shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null));
+            activity.setExitSharedElementCallback(new ExitSharedElementCallback2(context, shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null,isClipSrcImageView));
             return shareExitViewBean;
         }
 
@@ -1194,6 +1196,9 @@ public final class OpenImage {
                         }
                     }
                 }
+                if (srcViewType == SrcViewType.VP2 && shareExitViewBean != null && viewPager2.getCurrentItem() != viewPosition){
+                    shareExitViewBean.isClipSrcImageView = false;
+                }
             } else if (srcViewType == SrcViewType.VP) {
                 OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
                 OpenImageUrl openImageUrl = openImageDetail.openImageUrl;
@@ -1208,7 +1213,9 @@ public final class OpenImage {
                         shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_NORMAL, shareView);
                     }
                 }
-
+                if (shareExitViewBean != null && viewPager.getCurrentItem() != viewPosition){
+                    shareExitViewBean.isClipSrcImageView = false;
+                }
             } else {
                 ImageView shareExitView = null;
                 ImageView shareView = imageViews.get(showPosition);

@@ -53,6 +53,7 @@ class ExitOnBackView implements ImageLoadUtils.OnBackView {
     public static class ShareExitViewBean {
         protected BackViewType backViewType;
         protected ImageView shareExitView;
+        protected boolean isClipSrcImageView = true;
 
         public ShareExitViewBean(BackViewType backViewType, ImageView shareExitView) {
             this.backViewType = backViewType;
