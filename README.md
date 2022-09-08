@@ -112,9 +112,10 @@ dependencies {
 第四步. 使用它
 ```java
 
-RecyclerView 适配器加载图片
+//RecyclerView 适配器加载图片
 MyImageLoader.getInstance().load(holder.ivImage,datas.get(position).getCoverImageUrl(),R.mipmap.img_load_placeholder,R.mipmap.img_load_placeholder);
 
+//在点击时调用
 OpenImage.with(RecyclerViewActivity.this).setClickRecyclerView(binding.rv.rv,new SourceImageViewIdGet() {
                    @Override
                    public int getImageViewId(OpenImageUrl data, int position) {
