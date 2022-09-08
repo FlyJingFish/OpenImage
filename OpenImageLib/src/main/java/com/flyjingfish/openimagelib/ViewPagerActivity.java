@@ -117,6 +117,7 @@ public class ViewPagerActivity extends BaseActivity {
                 break;
             }
         }
+        showPosition = selectPos;
         onSelectKey = getIntent().getStringExtra(OpenParams.ON_SELECT_KEY);
         openCoverKey = getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE);
         onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(onSelectKey);
@@ -225,6 +226,7 @@ public class ViewPagerActivity extends BaseActivity {
                 if (fontStyle == FontStyle.FULL_SCREEN) {
                     StatusBarHelper.cancelFullScreen(ViewPagerActivity.this);
                 }
+                touchHideMoreView();
             }
 
             @Override
@@ -235,6 +237,7 @@ public class ViewPagerActivity extends BaseActivity {
                 if (fontStyle == FontStyle.FULL_SCREEN) {
                     StatusBarHelper.setFullScreen(ViewPagerActivity.this);
                 }
+                showMoreView();
             }
 
             @Override
@@ -302,6 +305,22 @@ public class ViewPagerActivity extends BaseActivity {
         }
     }
 
+    private void touchHideMoreView() {
+        if (moreViewOptions.size() > 0) {
+            OpenImageDetail openImageDetail = openImageBeans.get(showPosition);
+            MediaType mediaType = openImageDetail.getType();
+            for (MoreViewOption moreViewOption : moreViewOptions) {
+                MoreViewShowType showType = moreViewOption.getMoreViewShowType();
+                if (mediaType == MediaType.IMAGE && (showType == MoreViewShowType.IMAGE || showType == MoreViewShowType.BOTH) && !moreViewOption.isFollowTouch()) {
+                    moreViewOption.getView().setVisibility(View.GONE);
+                } else if (mediaType == MediaType.VIDEO && (showType == MoreViewShowType.VIDEO || showType == MoreViewShowType.BOTH) && !moreViewOption.isFollowTouch()) {
+                    moreViewOption.getView().setVisibility(View.GONE);
+                } else {
+                    moreViewOption.getView().setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
 
     private void setIndicatorPosition() {
         mHandler.post(() -> {
@@ -631,6 +650,7 @@ public class ViewPagerActivity extends BaseActivity {
         if (onBackView != null) {
             onBackView.onTouchClose(isTouchClose);
         }
+        touchHideMoreView();
         setExitView();
         if (!isTouchClose && fontStyle == FontStyle.FULL_SCREEN) {
             StatusBarHelper.cancelFullScreen(ViewPagerActivity.this);

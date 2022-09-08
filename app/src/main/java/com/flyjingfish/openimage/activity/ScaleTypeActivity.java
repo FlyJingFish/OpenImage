@@ -3,7 +3,10 @@ package com.flyjingfish.openimage.activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
@@ -17,6 +20,7 @@ import com.flyjingfish.openimage.databinding.ActivityScaleTypeBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
+import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
@@ -97,6 +101,15 @@ public class ScaleTypeActivity extends AppCompatActivity {
     }
 
     public void onIvClick(View view) {
+        ImageView imageView = new ImageView(this);
+        imageView.setImageResource(R.mipmap.ic_launcher_round);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.END | Gravity.CENTER_VERTICAL;
+
+        ImageView imageView2 = new ImageView(this);
+        imageView2.setImageResource(R.mipmap.ic_launcher_round);
+        FrameLayout.LayoutParams layoutParams2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams2.gravity = Gravity.START | Gravity.CENTER_VERTICAL;
         OpenImage openImage = OpenImage.with(this).setClickImageView(((ImageView) view))
                 .setImageUrl(itemData).setImageDiskMode(MyImageLoader.imageDiskMode)
                 .setItemLoadHelper(new ItemLoadHelper() {
@@ -116,6 +129,8 @@ public class ScaleTypeActivity extends AppCompatActivity {
                     }
                 }).addPageTransformer(new ScaleInTransformer())
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
+                .addMoreView(imageView,layoutParams, MoreViewShowType.BOTH,true)
+                .addMoreView(imageView2,layoutParams2, MoreViewShowType.BOTH,false)
                 .setClickPosition(0);
 
         if (view instanceof ShapeImageView) {
