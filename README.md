@@ -68,6 +68,10 @@ dependencies {
  public class BigImageHelperImpl implements BigImageHelper {
     @Override
     public void loadImage(Context context, String imageUrl, OnLoadBigImageListener onLoadBigImageListener) {
+        RequestOptions requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                    .format(DecodeFormat.PREFER_RGB_565);
         Glide.with(context)
                     .load(imageUrl).apply(requestOptions).addListener(new RequestListener<Drawable>() {
                 @Override
