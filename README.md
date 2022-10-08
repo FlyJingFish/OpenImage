@@ -120,15 +120,17 @@ dependencies {
 MyImageLoader.getInstance().load(holder.ivImage,datas.get(position).getCoverImageUrl(),R.mipmap.img_load_placeholder,R.mipmap.img_load_placeholder);
 
 //在点击时调用
-OpenImage.with(RecyclerViewActivity.this).setClickRecyclerView(binding.rv.rv,new SourceImageViewIdGet() {
+OpenImage.with(RecyclerViewActivity.this)
+                .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {//点击ImageView所在的RecyclerView
                    @Override
                    public int getImageViewId(OpenImageUrl data, int position) {
-                       return R.id.iv_image;
+                       return R.id.iv_image;//点击的ImageView的Id
                    }
                })
-               .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
-               .setImageUrlList(datas).setImageDiskMode(MyImageLoader.imageDiskMode)
-               .setItemLoadHelper(new ItemLoadHelper() {
+               .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)//点击的ImageView的ScaleType类型
+               .setImageUrlList(datas)//RecyclerView的数据
+               .setImageDiskMode(ImageDiskMode.CONTAIN_ORIGINAL)
+               .setItemLoadHelper(new ItemLoadHelper() {//可不设置（setImageDiskMode设置为RESULT或NONE时必须设置）
                    @Override
                    public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
                         //如果使用的Glide缓存模式是ImageDiskMode.RESULT(只保存目标图片大小),必须在加载图片时传入大小，详看Demo
@@ -145,8 +147,9 @@ OpenImage.with(RecyclerViewActivity.this).setClickRecyclerView(binding.rv.rv,new
                        });
                    }
                })
-               .setOpenImageStyle(R.style.DefaultPhotosTheme)
-               .setClickPosition(position).show();
+               .setOpenImageStyle(R.style.DefaultPhotosTheme)//可不设置
+               .setClickPosition(position)//点击的ImageView所在数据的位置
+               .show();//开始展示大图
 ```
 # 点击以下链接查看更多使用说明
 
