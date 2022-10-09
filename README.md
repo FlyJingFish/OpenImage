@@ -172,6 +172,59 @@ OpenImage.with(RecyclerViewActivity.this)
 
 [点此查看更多使用说明](https://github.com/FlyJingFish/OpenImage/wiki)
 
+# 混淆
+
+### 一，如果您使用的是 OpenImageFullLib 需要遵循以下三方库的规则
+
+[GSYVideoPlayer](https://github.com/FlyJingFish/GSYVideoPlayer)
+[Glide](https://github.com/bumptech/glide)
+
+### 二，如果您使用的是 OpenImageGlideLib 需要遵循以下三方库的规则
+[Glide](https://github.com/bumptech/glide)
+
+### 三，如果您使用的是 OpenImageLib 则不需要添加任何混淆规则
+
+为了方便我将所有的混淆规则直接粘贴如下：
+
+GSYVideoPlayer 的混淆规则：
+
+```
+-keep class com.shuyu.gsyvideoplayer.video.** { *; }
+-dontwarn com.shuyu.gsyvideoplayer.video.**
+-keep class com.shuyu.gsyvideoplayer.video.base.** { *; }
+-dontwarn com.shuyu.gsyvideoplayer.video.base.**
+-keep class com.shuyu.gsyvideoplayer.utils.** { *; }
+-dontwarn com.shuyu.gsyvideoplayer.utils.**
+-keep class tv.danmaku.ijk.** { *; }
+-dontwarn tv.danmaku.ijk.**
+
+-keep public class * extends android.view.View{
+    *** get*();
+    void set*(***);
+    public <init>(android.content.Context);
+    public <init>(android.content.Context, java.lang.Boolean);
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+```
+
+Glide 的混淆规则：
+
+```
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep class * extends com.bumptech.glide.module.AppGlideModule {
+ <init>(...);
+}
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+-keep class com.bumptech.glide.load.data.ParcelFileDescriptorRewinder$InternalRewinder {
+  *** rewind();
+}
+
+```
+
 ## 版本限制
 最低SDK版本：minSdkVersion >= 21
 
