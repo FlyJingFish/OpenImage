@@ -184,7 +184,7 @@ OpenImage.with(RecyclerViewActivity.this)
 
 ### 三，如果您使用的是 OpenImageLib 则不需要添加任何混淆规则
 
-为了方便我将所有的混淆规则直接粘贴如下：
+### 为了方便我将所有的混淆规则直接粘贴如下：
 
 GSYVideoPlayer 的混淆规则：
 
