@@ -106,7 +106,7 @@ OpenImage.with(RecyclerViewActivity.this)
                .show();//开始展示大图
 ```
 
-第四步，如果您引用的库是 OpenImageLib 您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
+第四步，如果您引用的库是 OpenImageLib（如果您使用的是OpenImageFullLib或OpenImageGlideLib则不需要这一步） 您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
 
 ```java
  public class MyApplication extends Application {
