@@ -74,40 +74,40 @@ implementation 'com.github.FlyJingFish.OpenImage:OpenImageLib:v1.2.92'
 ```java
 
 //在点击时调用
-        OpenImage.with(activity)
-                .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {//点击ImageView所在的RecyclerView
-                   @Override
-                   public int getImageViewId(OpenImageUrl data, int position) {
-                       return R.id.iv_image;//点击的ImageView的Id
-                   }
-               })
-               .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)//点击的ImageView的ScaleType类型
-               .setImageUrlList(datas)//RecyclerView的数据
-               .setClickPosition(position)//点击的ImageView所在数据的位置
-               .setImageDiskMode(ImageDiskMode.CONTAIN_ORIGINAL)//可不设置,默认ImageDiskMode.CONTAIN_ORIGINAL
-               .setItemLoadHelper(new ItemLoadHelper() {//可不设置（setImageDiskMode设置为RESULT或NONE时必须设置）
-                   @Override
-                   public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
-                        //如果使用的Glide缓存模式是ImageDiskMode.RESULT(只保存目标图片大小),必须在加载图片时传入大小，详看Demo
-                        GlideApp.with(imageView).load(imageUrl)
-                            .override(overrideWidth, overrideHeight)
-                            .addListener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                        onLoadCoverImageListener.onLoadImageFailed();
-                                        return false;
-                                        }
-                                
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                        onLoadCoverImageListener.onLoadImageSuccess();
-                                        return false;
-                            }
-                        }).into(imageView);
-                   }
-               })
-               .setOpenImageStyle(R.style.DefaultPhotosTheme)//可不设置（定制页面样式）
-               .show();//开始展示大图
+OpenImage.with(activity)
+        .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {//点击ImageView所在的RecyclerView
+           @Override
+           public int getImageViewId(OpenImageUrl data, int position) {
+               return R.id.iv_image;//点击的ImageView的Id
+           }
+       })
+       .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)//点击的ImageView的ScaleType类型
+       .setImageUrlList(datas)//RecyclerView的数据
+       .setClickPosition(position)//点击的ImageView所在数据的位置
+       .setImageDiskMode(ImageDiskMode.CONTAIN_ORIGINAL)//可不设置,默认ImageDiskMode.CONTAIN_ORIGINAL
+       .setItemLoadHelper(new ItemLoadHelper() {//可不设置（setImageDiskMode设置为RESULT或NONE时必须设置）
+           @Override
+           public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
+                //如果使用的Glide缓存模式是ImageDiskMode.RESULT(只保存目标图片大小),必须在加载图片时传入大小，详看Demo
+                GlideApp.with(imageView).load(imageUrl)
+                    .override(overrideWidth, overrideHeight)
+                    .addListener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                onLoadCoverImageListener.onLoadImageFailed();
+                                return false;
+                                }
+                        
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                onLoadCoverImageListener.onLoadImageSuccess();
+                                return false;
+                    }
+                }).into(imageView);
+           }
+       })
+       .setOpenImageStyle(R.style.DefaultPhotosTheme)//可不设置（定制页面样式）
+       .show();//开始展示大图
 ```
 
 ### 第三步，如果您引用的库是 OpenImageLib 您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
