@@ -84,22 +84,22 @@ public class ImageEntity implements OpenImageUrl {
 
     @Override
     public String getImageUrl() {
-        return url;
+        return url;//大图链接（或视频的封面大图链接）
     }
 
     @Override
     public String getVideoUrl() {
-        return null;
+        return null;//视频链接
     }
 
     @Override
     public String getCoverImageUrl() {
-        return url;
+        return url;//封面小图链接（或视频的封面小图链接）
     }
 
     @Override
     public MediaType getType() {
-        return MediaType.IMAGE;
+        return MediaType.IMAGE;//数据是图片还是视频
     }
 }
 
