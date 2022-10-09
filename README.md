@@ -50,13 +50,13 @@ allprojects {
 #### A、直接引入完整版（同时支持查看图片和视频）
 ```
 //OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
-//Glide版本4.12.0 视频播放器 GSYVideoPlayer 版本8.3.3
+//Glide版本4.12.0 视频播放器 GSYVideoPlayer 版本8.3.3，如果你的项目存在 Glide 或 GSYVideoPlayer 且小于这个版本请升级否则可能出现冲突
 implementation 'com.github.FlyJingFish.OpenImage:OpenImageFullLib:v1.2.92'
 ```
 
 #### B、引入只带有图片引擎的版本（只支持查看图片）
 ```
-//OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器
+//OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器，如果你的项目存在 Glide 且小于这个版本请升级否则可能出现冲突
 //如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
 implementation 'com.github.FlyJingFish.OpenImage:OpenImageGlideLib:v1.2.92'
 ```
