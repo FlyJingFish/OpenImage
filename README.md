@@ -32,7 +32,9 @@
 
 ## 使用步骤
 
-第一步. 根目录build.gradle
+### 第一步、Jitpack 引入方法
+
+#### 首先、在项目根目录下的build.gradle添加
 
 ```gradle
 allprojects {
@@ -43,34 +45,36 @@ allprojects {
 }
 ```
 
-第二步. 需要引用的build.gradle （最新版本[![](https://jitpack.io/v/FlyJingFish/OpenImage.svg)](https://jitpack.io/#FlyJingFish/OpenImage)）
+**你可以选择下面三种的其中一种，在module下的build.gradle添加。**
 
-以下依赖任选一种
-
-```gradle
-dependencies {
-    //任选其一，OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
-    //Glide版本4.12.0 视频播放器 GSYVideoPlayer 版本8.3.3
-    implementation 'com.github.FlyJingFish.OpenImage:OpenImageFullLib:v1.2.92'
-    
-    
-    //任选其一，OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器
-    //如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-    implementation 'com.github.FlyJingFish.OpenImage:OpenImageGlideLib:v1.2.92'
-    
-    
-    //任选其一，OpenImageLib是基础库，没有引入图片引擎和视频播放器
-    //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
-    implementation 'com.github.FlyJingFish.OpenImage:OpenImageLib:v1.2.92'
-}
+#### A、直接引入完整版（同时支持查看图片和视频）
+```
+//OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
+//Glide版本4.12.0 视频播放器 GSYVideoPlayer 版本8.3.3
+implementation 'com.github.FlyJingFish.OpenImage:OpenImageFullLib:v1.2.92'
 ```
 
-第三步. 简单一步调用即可
+#### B、引入只带有图片引擎的版本（只支持查看图片）
+```
+//OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器
+//如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
+implementation 'com.github.FlyJingFish.OpenImage:OpenImageGlideLib:v1.2.92'
+```
+
+#### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
+```
+//OpenImageLib 是基础库，没有引入图片引擎和视频播放器
+//至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
+implementation 'com.github.FlyJingFish.OpenImage:OpenImageLib:v1.2.92'
+
+```
+
+### 第二步. 简单一步调用即可
 
 ```java
 
 //在点击时调用
-OpenImage.with(RecyclerViewActivity.this)
+        OpenImage.with(activity)
                 .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {//点击ImageView所在的RecyclerView
                    @Override
                    public int getImageViewId(OpenImageUrl data, int position) {
@@ -106,7 +110,8 @@ OpenImage.with(RecyclerViewActivity.this)
                .show();//开始展示大图
 ```
 
-第四步，如果您引用的库是 OpenImageLib（如果您使用的是OpenImageFullLib或OpenImageGlideLib则不需要这一步） 您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
+### 第三步，如果您引用的库是 OpenImageLib 您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
+**（如果您使用的是OpenImageFullLib或OpenImageGlideLib则不需要这一步）**
 
 ```java
  public class MyApplication extends Application {
