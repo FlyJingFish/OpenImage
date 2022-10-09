@@ -45,9 +45,23 @@ allprojects {
 
 第二步. 需要引用的build.gradle （最新版本[![](https://jitpack.io/v/FlyJingFish/OpenImage.svg)](https://jitpack.io/#FlyJingFish/OpenImage)）
 
+以下依赖任选一种
+
 ```gradle
 dependencies {
-    implementation 'com.github.FlyJingFish:OpenImage:latest.release.here'
+    //任选其一，OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
+    //Glide版本4.12.0 视频播放器 GSYVideoPlayer 版本8.3.3
+    implementation 'com.github.FlyJingFish.OpenImage:OpenImageFullLib:v1.2.92'
+    
+    
+    //任选其一，OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器
+    //如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
+    implementation 'com.github.FlyJingFish.OpenImage:OpenImageGlideLib:v1.2.92'
+    
+    
+    //任选其一，OpenImageLib是基础库，没有引入图片引擎和视频播放器
+    //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
+    implementation 'com.github.FlyJingFish.OpenImage:OpenImageLib:v1.2.92'
 }
 ```
 
@@ -92,7 +106,7 @@ OpenImage.with(RecyclerViewActivity.this)
                .show();//开始展示大图
 ```
 
-第四步，您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
+第四步，如果您引用的库是 OpenImageLib 您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
 
 ```java
  public class MyApplication extends Application {
