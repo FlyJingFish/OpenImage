@@ -69,7 +69,43 @@ implementation 'com.github.FlyJingFish.OpenImage:OpenImageLib:v1.2.92'
 
 ```
 
-### 第二步. 简单一步调用即可
+### 第二步. 你的数据需要实现 OpenImageUrl 接口
+
+```java
+public class ImageEntity implements OpenImageUrl {
+    public String url;
+
+    public ImageEntity(String url) {
+        this.url = url;
+    }
+
+    public ImageEntity() {
+    }
+
+    @Override
+    public String getImageUrl() {
+        return url;
+    }
+
+    @Override
+    public String getVideoUrl() {
+        return null;
+    }
+
+    @Override
+    public String getCoverImageUrl() {
+        return url;
+    }
+
+    @Override
+    public MediaType getType() {
+        return MediaType.IMAGE;
+    }
+}
+
+```
+
+### 第三步. 简单一步调用即可
 
 ```java
 
