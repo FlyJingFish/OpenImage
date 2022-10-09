@@ -43,6 +43,7 @@ import com.flyjingfish.openimagelib.enums.BackViewType;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.MoreViewShowType;
+import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
@@ -51,6 +52,7 @@ import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
+import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
@@ -62,7 +64,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public final class OpenImage {
+public class OpenImage {
     private Context context;
     private final List<OpenImageUrl> openImageUrls = new ArrayList<>();
     private List<ImageView> imageViews;
@@ -101,6 +103,8 @@ public final class OpenImage {
     private SrcViewType srcViewType;
     private String backViewKey;
     private String moreViewOptionKey;
+    private String videoFragmentCreateKey;
+    private String imageFragmentCreateKey;
 
     private enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV
@@ -464,6 +468,28 @@ public final class OpenImage {
     }
 
     /**
+     * 调用这个方法将使 OpenImageConfig 的配置失效
+     * @param imageFragmentCreate 用于自定义图片展示页面
+     * @return
+     */
+    public OpenImage setImageFragmentCreate(ImageFragmentCreate imageFragmentCreate) {
+        imageFragmentCreateKey = UUID.randomUUID().toString();
+        ImageLoadUtils.getInstance().setImageFragmentCreate(pageTransformersKey, imageFragmentCreate);
+        return this;
+    }
+
+    /**
+     * 调用这个方法将使 OpenImageConfig 的配置失效
+     * @param videoFragmentCreate 用于自定义视频展示页面
+     * @return
+     */
+    public OpenImage setVideoFragmentCreate(VideoFragmentCreate videoFragmentCreate) {
+        videoFragmentCreateKey = UUID.randomUUID().toString();
+        ImageLoadUtils.getInstance().setVideoFragmentCreate(pageTransformersKey, videoFragmentCreate);
+        return this;
+    }
+
+    /**
      * 打开大图页面
      */
     public void show() {
@@ -501,6 +527,12 @@ public final class OpenImage {
         }
         if (onItemLongClickListenerKey != null) {
             intent.putExtra(OpenParams.ON_ITEM_LONG_CLICK_KEY, onItemLongClickListenerKey);
+        }
+        if (imageFragmentCreateKey != null) {
+            intent.putExtra(OpenParams.IMAGE_FRAGMENT_KEY, imageFragmentCreateKey);
+        }
+        if (videoFragmentCreateKey != null) {
+            intent.putExtra(OpenParams.VIDEO_FRAGMENT_KEY, videoFragmentCreateKey);
         }
         if (moreViewOptions.size() > 0) {
             moreViewOptionKey = UUID.randomUUID().toString();
@@ -1000,6 +1032,8 @@ public final class OpenImage {
         ImageLoadUtils.getInstance().clearOnItemLongClickListener(onItemLongClickListenerKey);
         ImageLoadUtils.getInstance().clearMoreViewOption(moreViewOptionKey);
         ImageLoadUtils.getInstance().clearOnBackView(backViewKey);
+        ImageLoadUtils.getInstance().clearImageFragmentCreate(imageFragmentCreateKey);
+        ImageLoadUtils.getInstance().clearVideoFragmentCreate(videoFragmentCreateKey);
         ImageLoadUtils.getInstance().setOnRemoveListener4FixBug(null);
         moreViewOptions.clear();
     }

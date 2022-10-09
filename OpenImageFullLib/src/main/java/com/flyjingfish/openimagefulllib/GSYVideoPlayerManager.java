@@ -1,4 +1,4 @@
-package com.flyjingfish.openimage.videoplayer;
+package com.flyjingfish.openimagefulllib;
 
 import com.shuyu.gsyvideoplayer.GSYVideoBaseManager;
 import com.shuyu.gsyvideoplayer.player.IPlayerManager;

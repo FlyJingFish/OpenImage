@@ -3,22 +3,14 @@ package com.flyjingfish.openimage.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.ActivityMainBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
-import com.flyjingfish.openimage.openImpl.BigImageHelperImpl;
-import com.flyjingfish.openimage.openImpl.VideoFragmentCreateImpl;
-import com.flyjingfish.openimagelib.ImageFragment;
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
-import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;

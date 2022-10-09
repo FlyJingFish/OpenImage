@@ -1,4 +1,4 @@
-package com.flyjingfish.openimage.videoplayer;
+package com.flyjingfish.openimagefulllib;
 
 import android.text.TextUtils;
 

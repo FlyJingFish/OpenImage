@@ -1,11 +1,10 @@
-package com.flyjingfish.openimage.videoplayer;
+package com.flyjingfish.openimagefulllib;
 
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
@@ -53,30 +52,9 @@ public class MyVideoPlayer extends GSYVideoPlayer {
         return R.layout.layout_videos;
     }
 
-//    public void goneAllWidget() {
-//        cancelDismissControlViewTimer();
-//        mPostDismiss = true;
-//        if (mCurrentState != CURRENT_STATE_NORMAL
-//                && mCurrentState != CURRENT_STATE_ERROR
-//                && mCurrentState != CURRENT_STATE_AUTO_COMPLETE) {
-//            if (getActivityContext() != null) {
-//                hideAllWidget();
-//                setViewShowState(mLockScreen, GONE);
-//                if (mHideKey && mIfCurrentIsFullscreen && mShowVKey) {
-//                    hideNavKey(mContext);
-//                }
-//            }
-//            if (mPostDismiss) {
-//                startDismissControlViewTimer();
-//            }
-//        }
-//    }
 
     public void goneAllWidget() {
-//        cancelDismissControlViewTimer();
-//        mPostDismiss = true;
         hideAllWidget();
-//        startDismissControlViewTimer();
     }
 
     public void showAllWidget() {

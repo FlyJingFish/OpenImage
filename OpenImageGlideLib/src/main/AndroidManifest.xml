@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.flyjingfish.openimageglidelib">
+    <application>
+        <provider
+            android:name=".GlideInitProvider"
+            android:authorities="${applicationId}.GlideInitProvider"
+            android:exported="false"
+            android:multiprocess="true" />
+    </application>
+</manifest>

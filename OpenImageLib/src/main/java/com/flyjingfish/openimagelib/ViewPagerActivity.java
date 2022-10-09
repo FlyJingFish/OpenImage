@@ -39,8 +39,10 @@ import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
+import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
+import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.AttrsUtils;
 import com.flyjingfish.openimagelib.utils.StatusBarHelper;
@@ -89,6 +91,8 @@ public class ViewPagerActivity extends BaseActivity {
     private ImageLoadUtils.OnBackView onBackView;
     private FontStyle fontStyle;
     private boolean isCallClosed;
+    private String videoFragmentCreateKey;
+    private String imageFragmentCreateKey;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +125,18 @@ public class ViewPagerActivity extends BaseActivity {
         onSelectKey = getIntent().getStringExtra(OpenParams.ON_SELECT_KEY);
         openCoverKey = getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE);
         onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(onSelectKey);
+        imageFragmentCreateKey = getIntent().getStringExtra(OpenParams.IMAGE_FRAGMENT_KEY);
+        videoFragmentCreateKey = getIntent().getStringExtra(OpenParams.VIDEO_FRAGMENT_KEY);
+        VideoFragmentCreate videoCreate = ImageLoadUtils.getInstance().getVideoFragmentCreate(videoFragmentCreateKey);
+        ImageFragmentCreate imageCreate = ImageLoadUtils.getInstance().getImageFragmentCreate(imageFragmentCreateKey);
+        if (videoCreate == null){
+            videoCreate = OpenImageConfig.getInstance().getVideoFragmentCreate();
+        }
+        if (imageCreate == null){
+            imageCreate = OpenImageConfig.getInstance().getImageFragmentCreate();
+        }
+        VideoFragmentCreate videoFragmentCreate = videoCreate;
+        ImageFragmentCreate imageFragmentCreate = imageCreate;
         boolean disableClickClose = getIntent().getBooleanExtra(OpenParams.DISABLE_CLICK_CLOSE, false);
         onItemCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_CLICK_KEY);
         onItemLongCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_LONG_CLICK_KEY);
@@ -143,10 +159,10 @@ public class ViewPagerActivity extends BaseActivity {
                     MediaType mediaType = openImageBean.getType();
                     BaseFragment fragment = null;
                     if (mediaType == MediaType.VIDEO) {
-                        if (OpenImageConfig.getInstance().getVideoFragmentCreate() != null) {
-                            fragment = OpenImageConfig.getInstance().getVideoFragmentCreate().createVideoFragment();
+                        if (videoFragmentCreate != null) {
+                            fragment = videoFragmentCreate.createVideoFragment();
                             if (fragment == null) {
-                                throw new IllegalArgumentException(OpenImageConfig.getInstance().getVideoFragmentCreate().getClass().getName() + "请重写createVideoFragment");
+                                throw new IllegalArgumentException(videoFragmentCreate.getClass().getName() + "请重写createVideoFragment");
                             }
                         } else {
                             if (fragment == null) {
@@ -155,15 +171,12 @@ public class ViewPagerActivity extends BaseActivity {
                         }
 
                     } else {
-                        if (OpenImageConfig.getInstance().getImageFragmentCreate() != null) {
-                            fragment = OpenImageConfig.getInstance().getImageFragmentCreate().createImageFragment();
+                        if (imageFragmentCreate != null) {
+                            fragment = imageFragmentCreate.createImageFragment();
                         } else {
                             fragment = new ImageFragment();
                         }
 
-                        if (fragment == null) {
-                            throw new IllegalArgumentException(OpenImageConfig.getInstance().getImageFragmentCreate().getClass().getName() + "请重写createImageFragment");
-                        }
                     }
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(OpenParams.IMAGE, openImageBean);
@@ -516,6 +529,8 @@ public class ViewPagerActivity extends BaseActivity {
         ImageLoadUtils.getInstance().clearOnItemLongClickListener(onItemLongCLickKey);
         ImageLoadUtils.getInstance().clearMoreViewOption(moreViewKey);
         ImageLoadUtils.getInstance().clearOnBackView(onBackViewKey);
+        ImageLoadUtils.getInstance().clearImageFragmentCreate(imageFragmentCreateKey);
+        ImageLoadUtils.getInstance().clearVideoFragmentCreate(videoFragmentCreateKey);
         if (wechatEffectAnim != null) {
             wechatEffectAnim.cancel();
         }

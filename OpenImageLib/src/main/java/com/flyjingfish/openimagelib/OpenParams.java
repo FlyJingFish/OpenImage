@@ -25,4 +25,6 @@ class OpenParams {
     public static final String MORE_VIEW_KEY = "more_view_key";
     public static final String ON_BACK_VIEW = "on_back_view";
     public static final String AUTO_ASPECT_RATIO = "auto_aspect_ratio";
+    public static final String VIDEO_FRAGMENT_KEY = "video_fragment";
+    public static final String IMAGE_FRAGMENT_KEY = "image_fragment";
 }

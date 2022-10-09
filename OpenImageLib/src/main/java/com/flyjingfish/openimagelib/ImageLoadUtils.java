@@ -7,11 +7,13 @@ import android.view.View;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.enums.BackViewType;
+import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
+import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +29,8 @@ class ImageLoadUtils {
     private HashMap<String, OnItemLongClickListener> onItemLongClickListenerHashMap = new HashMap<>();
     private HashMap<String, List<MoreViewOption>> moreViewOptionHashMap = new HashMap<>();
     private HashMap<String, OnBackView> onBackViewHashMap = new HashMap<>();
+    private HashMap<String, ImageFragmentCreate> imageFragmentCreateHashMap = new HashMap<>();
+    private HashMap<String, VideoFragmentCreate> videoFragmentCreateHashMap = new HashMap<>();
 
     private ImageLoadUtils() {
     }
@@ -161,6 +165,30 @@ class ImageLoadUtils {
 
     public void clearOnItemLongClickListener(String key) {
         this.onItemLongClickListenerHashMap.remove(key);
+    }
+
+    public ImageFragmentCreate getImageFragmentCreate(String key) {
+        return imageFragmentCreateHashMap.get(key);
+    }
+
+    public void setImageFragmentCreate(String key, ImageFragmentCreate imageFragmentCreate) {
+        this.imageFragmentCreateHashMap.put(key, imageFragmentCreate);
+    }
+
+    public void clearImageFragmentCreate(String key) {
+        this.imageFragmentCreateHashMap.remove(key);
+    }
+
+    public VideoFragmentCreate getVideoFragmentCreate(String key) {
+        return videoFragmentCreateHashMap.get(key);
+    }
+
+    public void setVideoFragmentCreate(String key, VideoFragmentCreate videoFragmentCreate) {
+        this.videoFragmentCreateHashMap.put(key, videoFragmentCreate);
+    }
+
+    public void clearVideoFragmentCreate(String key) {
+        this.videoFragmentCreateHashMap.remove(key);
     }
 
     public List<MoreViewOption> getMoreViewOption(String key) {

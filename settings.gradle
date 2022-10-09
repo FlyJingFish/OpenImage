@@ -1,3 +1,5 @@
 rootProject.name = "OpenImage"
 include ':app'
 include ':OpenImageLib'
+include ':OpenImageFullLib'
+include ':OpenImageGlideLib'

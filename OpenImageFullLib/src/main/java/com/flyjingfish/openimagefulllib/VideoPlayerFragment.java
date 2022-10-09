@@ -1,4 +1,4 @@
-package com.flyjingfish.openimage.openImpl;
+package com.flyjingfish.openimagefulllib;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,14 +11,10 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.flyjingfish.openimage.R;
-import com.flyjingfish.openimage.databinding.FragmentVideoBinding;
-import com.flyjingfish.openimage.videoplayer.GSYVideoController;
+import com.flyjingfish.openimagefulllib.databinding.FragmentVideoBinding;
 import com.flyjingfish.openimagelib.BaseImageFragment;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.widget.LoadingView;
-
-import moe.codeest.enviews.ENDownloadView;
 
 public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
 

@@ -1,4 +1,4 @@
-package com.flyjingfish.openimage.openImpl;
+package com.flyjingfish.openimagefulllib;
 
 import com.flyjingfish.openimagelib.BaseFragment;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;

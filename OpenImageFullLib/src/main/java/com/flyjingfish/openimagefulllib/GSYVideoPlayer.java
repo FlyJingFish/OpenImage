@@ -1,8 +1,6 @@
-package com.flyjingfish.openimage.videoplayer;
+package com.flyjingfish.openimagefulllib;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
