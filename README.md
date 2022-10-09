@@ -51,7 +51,7 @@ dependencies {
 }
 ```
 
-第四步. 简单一步调用即可
+第三步. 简单一步调用即可
 
 ```java
 
@@ -92,7 +92,7 @@ OpenImage.with(RecyclerViewActivity.this)
                .show();//开始展示大图
 ```
 
-如需自定义，您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
+第四步，您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
 
 ```java
  public class MyApplication extends Application {
