@@ -110,7 +110,9 @@ OpenImage.with(activity)
        .show();//开始展示大图
 ```
 
-### 第三步，如果您引用的库是 OpenImageLib 您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
+### 额外步骤
+
+#### A、如果您引用的库是 OpenImageLib 您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
 **（如果您使用的是OpenImageFullLib或OpenImageGlideLib则不需要这一步）**
 
 ```java
@@ -169,6 +171,156 @@ OpenImage.with(activity)
     }
 
 }
+```
+
+#### B、如果您引用的库是 OpenImageLib 或 OpenImageGlideLib 需要查看视频的功能，需要以下步骤
+**（如果您使用的是OpenImageFullLib则不需要这一步）**
+
+```java
+
+public class MyApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //初始化视频创建类
+        OpenImageConfig.getInstance().setVideoFragmentCreate(new VideoFragmentCreateImpl());
+    }
+}
+public class VideoFragmentCreateImpl implements VideoFragmentCreate {
+   @Override
+   public BaseFragment createVideoFragment() {
+       return new VideoPlayerFragment();
+   }
+}
+
+public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
+
+   private FragmentVideoBinding binding;
+   private String playerKey;
+   private boolean isLoadImageFinish;
+   protected boolean isPlayed;
+
+   @Override
+   protected ImageView getSmallCoverImageView() {//返回小封面图
+       return binding.videoPlayer.getSmallCoverImageView();
+   }
+
+   @Override
+   protected ImageView getPhotoView() {//返回大封面图，必须在小封面图下边
+       return binding.videoPlayer.getCoverImageView();
+   }
+
+   @Override
+   protected ENDownloadView getLoadingView() {//返回loadingView
+       return (ENDownloadView) binding.videoPlayer.getLoadingView();
+   }
+
+   @Override
+   protected void hideLoading(ENDownloadView pbLoading) {//隐藏loading需要特殊处理的重写这个
+       super.hideLoading(pbLoading);
+       pbLoading.release();
+       binding.videoPlayer.getStartButton().setVisibility(View.VISIBLE);
+   }
+
+   @Override
+   protected void showLoading(ENDownloadView pbLoading) {//显示loading需要特殊处理的重写这个
+       super.showLoading(pbLoading);
+       pbLoading.start();
+       binding.videoPlayer.getStartButton().setVisibility(View.GONE);
+   }
+
+   @Override
+   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+       super.onViewCreated(view, savedInstanceState);
+       binding.videoPlayer.findViewById(R.id.back).setOnClickListener(v -> close());
+       playerKey = binding.videoPlayer.getVideoKey();
+       binding.videoPlayer.goneAllWidget();
+       isPlayed = false;
+   }
+   @Override
+   protected void onTouchClose(float scale) {//下拉关闭回调
+       super.onTouchClose(scale);
+       binding.videoPlayer.findViewById(R.id.surface_container).setVisibility(View.GONE);
+       binding.videoPlayer.goneAllWidget();
+   }
+
+   @Override
+   protected void onTouchScale(float scale) {//下拉时回调
+       super.onTouchScale(scale);
+       binding.videoPlayer.goneAllWidget();
+       if (scale == 0){
+           binding.videoPlayer.showAllWidget();
+       }
+   }
+
+   @Override
+   protected void loadImageFinish(boolean isLoadImageSuccess) {
+       isLoadImageFinish = true;
+       play();
+   }
+
+   private void play(){
+       if (isTransitionEnd && isLoadImageFinish && !isPlayed){//这里可以不等封面图加载完就播放，这个是为了更好的效果
+           if (getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+               toPlay4Resume();
+           }else {
+               getLifecycle().addObserver(new LifecycleEventObserver() {
+                   @Override
+                   public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                       if (event == Lifecycle.Event.ON_RESUME){
+                           toPlay4Resume();
+                           source.getLifecycle().removeObserver(this);
+                       }
+                   }
+               });
+           }
+
+           isPlayed = true;
+       }
+   }
+
+   protected void toPlay4Resume(){
+       binding.videoPlayer.playUrl(openImageBean.getVideoUrl());
+       binding.videoPlayer.startPlayLogic();
+   }
+
+   @Override
+   protected void onTransitionEnd() {
+       super.onTransitionEnd();
+       play();
+   }
+
+   @Override
+   public void onResume() {
+       super.onResume();
+       if (playerKey != null) {
+           GSYVideoController.resumeByKey(playerKey);
+       }
+   }
+
+   @Override
+   public void onPause() {
+       super.onPause();
+       if (playerKey != null) {
+           GSYVideoController.pauseByKey(playerKey);
+       }
+   }
+
+   @Override
+   public void onDestroyView() {
+       super.onDestroyView();
+       if (playerKey != null) {
+           GSYVideoController.cancelByKeyAndDeleteKey(playerKey);
+       }
+   }
+
+   @Override
+   public View getExitImageView() {//退出页面时需要保证封面图可见
+       binding.videoPlayer.getThumbImageViewLayout().setVisibility(View.VISIBLE);
+       return super.getExitImageView();
+   }
+}
+
 ```
 
 # 点击以下链接查看更多使用说明
