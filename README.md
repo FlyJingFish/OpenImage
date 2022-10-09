@@ -115,8 +115,6 @@ OpenImage.with(RecyclerViewActivity.this)
          super.onCreate();
          //初始化大图加载器
          OpenImageConfig.getInstance().setBigImageHelper(new BigImageHelperImpl());
-         //初始化视频加载，如果有多个请每次在调用openImage.show之前设置一遍
-         OpenImageConfig.getInstance().setVideoFragmentCreate(new VideoFragmentCreateImpl());
      }
  }
  
