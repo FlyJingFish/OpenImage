@@ -175,6 +175,7 @@ OpenImage.with(RecyclerViewActivity.this)
 ### 一，如果您使用的是 OpenImageFullLib 需要遵循以下三方库的规则
 
 [GSYVideoPlayer](https://github.com/FlyJingFish/GSYVideoPlayer)
+
 [Glide](https://github.com/bumptech/glide)
 
 ### 二，如果您使用的是 OpenImageGlideLib 需要遵循以下三方库的规则
