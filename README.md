@@ -109,19 +109,25 @@ public class ImageEntity implements OpenImageUrl {
 
 ```java
 
-//在点击时调用
+//在点击时调用（以下以RecyclerView为例介绍）
 OpenImage.with(activity)
-        .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {//点击ImageView所在的RecyclerView
+        //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView）
+        .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
            @Override
            public int getImageViewId(OpenImageUrl data, int position) {
                return R.id.iv_image;//点击的ImageView的Id
            }
        })
-       .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)//点击的ImageView的ScaleType类型
-       .setImageUrlList(datas)//RecyclerView的数据
-       .setClickPosition(position)//点击的ImageView所在数据的位置
-       .setImageDiskMode(ImageDiskMode.CONTAIN_ORIGINAL)//可不设置,默认ImageDiskMode.CONTAIN_ORIGINAL
-       .setItemLoadHelper(new ItemLoadHelper() {//可不设置（setImageDiskMode设置为RESULT或NONE时必须设置）
+       //点击的ImageView的ScaleType类型（如果设置不对，打开的动画效果将是错误的）
+       .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+       //RecyclerView的数据
+       .setImageUrlList(datas)
+       //点击的ImageView所在数据的位置
+       .setClickPosition(position)
+       //可不设置,默认ImageDiskMode.CONTAIN_ORIGINAL，如果Glide不缓存原图，请设置其他参数
+       .setImageDiskMode(ImageDiskMode.CONTAIN_ORIGINAL)
+       //可不设置（setImageDiskMode设置为RESULT或NONE时必须设置）
+       .setItemLoadHelper(new ItemLoadHelper() {
            @Override
            public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
                 //如果使用的Glide缓存模式是ImageDiskMode.RESULT(只保存目标图片大小),必须在加载图片时传入大小，详看Demo
@@ -142,8 +148,10 @@ OpenImage.with(activity)
                 }).into(imageView);
            }
        })
-       .setOpenImageStyle(R.style.DefaultPhotosTheme)//可不设置（定制页面样式）
-       .show();//开始展示大图
+       //可不设置（定制页面样式，详细可看Wiki文档）
+       .setOpenImageStyle(R.style.DefaultPhotosTheme)
+       //开始展示大图
+       .show();
 ```
 
 ### 额外步骤
