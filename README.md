@@ -124,6 +124,29 @@ OpenImage.with(activity)
        .setImageUrlList(datas)
        //点击的ImageView所在数据的位置
        .setClickPosition(position)
+       //开始展示大图
+       .show();
+```
+
+**PS.完整调用示例**
+
+```java
+
+//在点击时调用（以下以RecyclerView为例介绍）
+OpenImage.with(activity)
+        //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView）
+        .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
+           @Override
+           public int getImageViewId(OpenImageUrl data, int position) {
+               return R.id.iv_image;//点击的ImageView的Id
+           }
+       })
+       //点击的ImageView的ScaleType类型（如果设置不对，打开的动画效果将是错误的）
+       .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+       //RecyclerView的数据
+       .setImageUrlList(datas)
+       //点击的ImageView所在数据的位置
+       .setClickPosition(position)
        //可不设置,默认ImageDiskMode.CONTAIN_ORIGINAL，如果Glide不缓存原图，请设置其他参数
        .setImageDiskMode(ImageDiskMode.CONTAIN_ORIGINAL)
        //可不设置（setImageDiskMode设置为RESULT或NONE时必须设置）
@@ -153,7 +176,6 @@ OpenImage.with(activity)
        //开始展示大图
        .show();
 ```
-
 ### 额外步骤
 
 #### A、如果您引用的库是 OpenImageLib 您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
