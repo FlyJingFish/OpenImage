@@ -9,17 +9,17 @@ import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 
-public class MyVideoPlayer extends GSYVideoPlayer {
+public class OpenImageVideoPlayer extends GSYVideoPlayer {
 
 
     private PhotoView coverImageView;
     private PhotoView smallCoverImageView;
 
-    public MyVideoPlayer(Context context) {
+    public OpenImageVideoPlayer(Context context) {
         super(context);
     }
 
-    public MyVideoPlayer(Context context, AttributeSet attrs) {
+    public OpenImageVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
         coverImageView = new PhotoView(context);
         coverImageView.setId(R.id.iv_video_player_cover);
