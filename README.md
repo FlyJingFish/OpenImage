@@ -2,7 +2,7 @@
 [![](https://jitpack.io/v/FlyJingFish/OpenImage.svg)](https://jitpack.io/#FlyJingFish/OpenImage)
 
 
-## 属于你的侵入性低的大图查看器，高仿微信完美的过渡动画，同样支持视频，您可以自定义加载图片的内核，例如Glide，Picasso或其他的
+## 属于你的侵入性低的大图查看器，高仿微信完美的过渡动画，支持自定义视频播放器，也可以自定义加载图片的内核，例如Glide，Picasso或其他的
 
 ### 建议使用Glide效果更好，另外建议开启原图缓存（有些版本是自动缓存原图的） diskCacheStrategy(DiskCacheStrategy.ALL或DiskCacheStrategy.DATA) 本库设置为ImageDiskMode.CONTAIN_ORIGINAL
 
