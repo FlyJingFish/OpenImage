@@ -140,6 +140,31 @@ public class OpenImage {
     }
 
     /**
+     *
+     * @param openImageUrls 图片String数据组
+     * @param mediaType 图片还是视频
+     * @return
+     */
+    public OpenImage setImageUrlList(List<String> openImageUrls,MediaType mediaType) {
+        List<SingleImageUrl> list = new ArrayList<>();
+        for (String openImageUrl : openImageUrls) {
+            list.add(new SingleImageUrl(openImageUrl,mediaType));
+        }
+        setImageUrlList(list);
+        return this;
+    }
+
+    /**
+     *
+     * @param openImageUrl 单个String图片数据可设置这个
+     * @param mediaType 图片还是视频
+     * @return
+     */
+    public OpenImage setImageUrl(String openImageUrl,MediaType mediaType) {
+        return setImageUrlList(new ArrayList<>(Arrays.asList(new SingleImageUrl(openImageUrl,mediaType))));
+    }
+
+    /**
      * @param recyclerView         展示数据的RecyclerView
      * @param sourceImageViewIdGet 展示数据的RecyclerView 的图片Id
      * @return
