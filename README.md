@@ -69,7 +69,39 @@ implementation 'com.github.FlyJingFish.OpenImage:OpenImageLib:v1.3.0'
 
 ```
 
-### 第二步. 你的数据需要实现 OpenImageUrl 接口
+### 第二步. 简单一步调用即可
+
+**你可以选择下面两种图片数据的其中一种**
+
+#### A、直接将数据转化为 String 的List
+
+```java
+
+List<String> dataList = new ArrayList<>();
+for (ImageEntity data : datas) {
+    dataList.add(data.getImageUrl());
+}
+
+//在点击时调用（以下以RecyclerView为例介绍）
+OpenImage.with(activity)
+        //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView）
+        .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
+           @Override
+           public int getImageViewId(OpenImageUrl data, int position) {
+               return R.id.iv_image;//点击的ImageView的Id
+           }
+       })
+       //点击的ImageView的ScaleType类型（如果设置不对，打开的动画效果将是错误的）
+       .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+       //RecyclerView的数据
+       .setImageUrlList(dataList, MediaType.IMAGE)
+       //点击的ImageView所在数据的位置
+       .setClickPosition(position)
+       //开始展示大图
+       .show();
+```
+
+#### B、在您的数据实体类上实现OpenImageUrl接口
 
 ```java
 public class ImageEntity implements OpenImageUrl {
@@ -105,7 +137,7 @@ public class ImageEntity implements OpenImageUrl {
 
 ```
 
-### 第三步. 简单一步调用即可
+**然后调用显示**
 
 ```java
 
