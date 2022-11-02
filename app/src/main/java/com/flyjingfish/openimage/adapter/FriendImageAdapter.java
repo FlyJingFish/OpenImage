@@ -1,18 +1,22 @@
 package com.flyjingfish.openimage.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.flyjingfish.openimage.bean.ImageEntity;
+import com.flyjingfish.openimage.bean.ImageItem;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.ItemImageBinding;
+import com.flyjingfish.openimage.openImpl.FriendLayerFragmentCreateImpl;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
@@ -24,10 +28,12 @@ import java.util.List;
 
 public class FriendImageAdapter extends RecyclerView.Adapter<RvBaseHolder> {
     private List<ImageEntity> data;
+    private ImageItem imageItem;
     private int spanCount;
 
-    public FriendImageAdapter(List<ImageEntity> data, int spanCount) {
-        this.data = data;
+    public FriendImageAdapter(ImageItem imageItem, int spanCount) {
+        this.imageItem = imageItem;
+        this.data = imageItem.images;
         this.spanCount = spanCount;
     }
 
@@ -56,6 +62,8 @@ public class FriendImageAdapter extends RecyclerView.Adapter<RvBaseHolder> {
         layoutParams.width = width;
         layoutParams.height = height;
         binding.ivImage.setLayoutParams(layoutParams);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("ImageItem",imageItem);
 
         ImageEntity imageEntity = data.get(position);
         View.OnClickListener onClickListener = v -> OpenImage.with(holder.itemView.getContext()).setClickRecyclerView((RecyclerView) holder.itemView.getParent(), new SourceImageViewIdGet<OpenImageUrl>() {
@@ -82,6 +90,7 @@ public class FriendImageAdapter extends RecyclerView.Adapter<RvBaseHolder> {
                         });
                     }
                 })
+                .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle)
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
                 .setClickPosition(position).show();
         binding.ivImage.setOnClickListener(onClickListener);

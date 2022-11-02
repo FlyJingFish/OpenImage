@@ -18,11 +18,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +45,7 @@ import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
+import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.AttrsUtils;
@@ -93,6 +97,8 @@ public class ViewPagerActivity extends BaseActivity {
     private boolean isCallClosed;
     private String videoFragmentCreateKey;
     private String imageFragmentCreateKey;
+    private String upperLayerFragmentCreateKey;
+    private Fragment upLayerFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -127,8 +133,13 @@ public class ViewPagerActivity extends BaseActivity {
         onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(onSelectKey);
         imageFragmentCreateKey = getIntent().getStringExtra(OpenParams.IMAGE_FRAGMENT_KEY);
         videoFragmentCreateKey = getIntent().getStringExtra(OpenParams.VIDEO_FRAGMENT_KEY);
+        upperLayerFragmentCreateKey = getIntent().getStringExtra(OpenParams.UPPER_LAYER_FRAGMENT_KEY);
         VideoFragmentCreate videoCreate = ImageLoadUtils.getInstance().getVideoFragmentCreate(videoFragmentCreateKey);
         ImageFragmentCreate imageCreate = ImageLoadUtils.getInstance().getImageFragmentCreate(imageFragmentCreateKey);
+        UpperLayerFragmentCreate upperLayerCreate = ImageLoadUtils.getInstance().getUpperLayerFragmentCreate(upperLayerFragmentCreateKey);
+        if (upperLayerCreate != null){
+            upLayerFragment = upperLayerCreate.createVideoFragment();
+        }
         if (videoCreate == null){
             videoCreate = OpenImageConfig.getInstance().getVideoFragmentCreate();
         }
@@ -316,6 +327,11 @@ public class ViewPagerActivity extends BaseActivity {
                 }
             }
         }
+
+        View upperView;
+        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null){
+            upperView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void touchHideMoreView() {
@@ -332,6 +348,10 @@ public class ViewPagerActivity extends BaseActivity {
                     moreViewOption.getView().setVisibility(View.VISIBLE);
                 }
             }
+        }
+        View upperView;
+        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null){
+            upperView.setVisibility(View.GONE);
         }
     }
 
@@ -495,6 +515,20 @@ public class ViewPagerActivity extends BaseActivity {
                 public void onTransitionEnd(Transition transition) {
                     photosViewModel.transitionEndLiveData.setValue(true);
                     transition.removeListener(this);
+                    mHandler.post(() -> {
+                        if (upLayerFragment != null && ViewPagerActivity.this.getLifecycle().getCurrentState() != Lifecycle.State.DESTROYED){
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            FrameLayout frameLayout = new FrameLayout(ViewPagerActivity.this);
+                            frameLayout.setId(R.id.upper_layer_container);
+                            Bundle upperLayerBundle = getIntent().getBundleExtra(OpenParams.UPPER_LAYER_BUNDLE);
+                            if (upperLayerBundle != null){
+                                upLayerFragment.setArguments(upperLayerBundle);
+                            }
+                            binding.getRoot().addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                            transaction.replace(R.id.upper_layer_container,upLayerFragment).commit();
+                        }
+                    });
+
                 }
 
                 @Override
@@ -531,6 +565,7 @@ public class ViewPagerActivity extends BaseActivity {
         ImageLoadUtils.getInstance().clearOnBackView(onBackViewKey);
         ImageLoadUtils.getInstance().clearImageFragmentCreate(imageFragmentCreateKey);
         ImageLoadUtils.getInstance().clearVideoFragmentCreate(videoFragmentCreateKey);
+        ImageLoadUtils.getInstance().clearUpperLayerFragmentCreate(upperLayerFragmentCreateKey);
         if (wechatEffectAnim != null) {
             wechatEffectAnim.cancel();
         }
@@ -658,7 +693,7 @@ public class ViewPagerActivity extends BaseActivity {
         }
     }
 
-    private void close(boolean isTouchClose) {
+    public void close(boolean isTouchClose) {
         if (isCallClosed) {
             return;
         }

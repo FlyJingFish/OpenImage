@@ -27,4 +27,6 @@ class OpenParams {
     public static final String AUTO_ASPECT_RATIO = "auto_aspect_ratio";
     public static final String VIDEO_FRAGMENT_KEY = "video_fragment";
     public static final String IMAGE_FRAGMENT_KEY = "image_fragment";
+    public static final String UPPER_LAYER_FRAGMENT_KEY = "upper_layer_fragment";
+    public static final String UPPER_LAYER_BUNDLE = "upperLayerBundle";
 }

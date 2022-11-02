@@ -13,6 +13,7 @@ import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
+import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 
 import java.util.HashMap;
@@ -31,6 +32,7 @@ class ImageLoadUtils {
     private HashMap<String, OnBackView> onBackViewHashMap = new HashMap<>();
     private HashMap<String, ImageFragmentCreate> imageFragmentCreateHashMap = new HashMap<>();
     private HashMap<String, VideoFragmentCreate> videoFragmentCreateHashMap = new HashMap<>();
+    private HashMap<String, UpperLayerFragmentCreate> upperLayerFragmentCreateHashMap = new HashMap<>();
 
     private ImageLoadUtils() {
     }
@@ -209,5 +211,17 @@ class ImageLoadUtils {
             }
         }
         this.moreViewOptionHashMap.remove(key);
+    }
+
+    public UpperLayerFragmentCreate getUpperLayerFragmentCreate(String key) {
+        return upperLayerFragmentCreateHashMap.get(key);
+    }
+
+    public void setUpperLayerFragmentCreate(String key, UpperLayerFragmentCreate upperLayerFragmentCreate) {
+        this.upperLayerFragmentCreateHashMap.put(key, upperLayerFragmentCreate);
+    }
+
+    public void clearUpperLayerFragmentCreate(String key) {
+        this.upperLayerFragmentCreateHashMap.remove(key);
     }
 }

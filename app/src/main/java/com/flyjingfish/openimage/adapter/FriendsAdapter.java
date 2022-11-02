@@ -111,7 +111,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RvBaseHolder> {
             content.setText("小图");
             spanCount = dataCount == 4 ? 2 : 3;
         }
-        FriendImageAdapter friendImageAdapter = new FriendImageAdapter(data.images, spanCount);
+        FriendImageAdapter friendImageAdapter = new FriendImageAdapter(data, spanCount);
         binding.itemImage.addItemDecoration(new SpaceDecoration((int) ScreenUtils.dp2px(context, 10)));
         binding.itemImage.setLayoutManager(new GridLayoutManager(context, spanCount));
         binding.itemImage.setAdapter(friendImageAdapter);

@@ -52,6 +52,7 @@ import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
+import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
@@ -105,6 +106,8 @@ public class OpenImage {
     private String moreViewOptionKey;
     private String videoFragmentCreateKey;
     private String imageFragmentCreateKey;
+    private String upperLayerFragmentCreateKey;
+    private Bundle upperLayerBundle;
 
     private enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV
@@ -499,7 +502,7 @@ public class OpenImage {
      */
     public OpenImage setImageFragmentCreate(ImageFragmentCreate imageFragmentCreate) {
         imageFragmentCreateKey = UUID.randomUUID().toString();
-        ImageLoadUtils.getInstance().setImageFragmentCreate(pageTransformersKey, imageFragmentCreate);
+        ImageLoadUtils.getInstance().setImageFragmentCreate(imageFragmentCreateKey, imageFragmentCreate);
         return this;
     }
 
@@ -510,7 +513,20 @@ public class OpenImage {
      */
     public OpenImage setVideoFragmentCreate(VideoFragmentCreate videoFragmentCreate) {
         videoFragmentCreateKey = UUID.randomUUID().toString();
-        ImageLoadUtils.getInstance().setVideoFragmentCreate(pageTransformersKey, videoFragmentCreate);
+        ImageLoadUtils.getInstance().setVideoFragmentCreate(videoFragmentCreateKey, videoFragmentCreate);
+        return this;
+    }
+
+    /**
+     * 这是可以显示在页面上方的Fragment
+     * @param upperLayerFragmentCreate 用于创建覆盖在页面上方的Fragment
+     * @param bundle 传入数据
+     * @return
+     */
+    public OpenImage setUpperLayerFragmentCreate(UpperLayerFragmentCreate upperLayerFragmentCreate,Bundle bundle) {
+        upperLayerFragmentCreateKey = UUID.randomUUID().toString();
+        upperLayerBundle = bundle;
+        ImageLoadUtils.getInstance().setUpperLayerFragmentCreate(upperLayerFragmentCreateKey, upperLayerFragmentCreate);
         return this;
     }
 
@@ -556,8 +572,11 @@ public class OpenImage {
         if (imageFragmentCreateKey != null) {
             intent.putExtra(OpenParams.IMAGE_FRAGMENT_KEY, imageFragmentCreateKey);
         }
-        if (videoFragmentCreateKey != null) {
-            intent.putExtra(OpenParams.VIDEO_FRAGMENT_KEY, videoFragmentCreateKey);
+        if (upperLayerFragmentCreateKey != null) {
+            intent.putExtra(OpenParams.UPPER_LAYER_FRAGMENT_KEY, upperLayerFragmentCreateKey);
+        }
+        if (upperLayerBundle != null){
+            intent.putExtra(OpenParams.UPPER_LAYER_BUNDLE,upperLayerBundle);
         }
         if (moreViewOptions.size() > 0) {
             moreViewOptionKey = UUID.randomUUID().toString();
@@ -1059,6 +1078,7 @@ public class OpenImage {
         ImageLoadUtils.getInstance().clearOnBackView(backViewKey);
         ImageLoadUtils.getInstance().clearImageFragmentCreate(imageFragmentCreateKey);
         ImageLoadUtils.getInstance().clearVideoFragmentCreate(videoFragmentCreateKey);
+        ImageLoadUtils.getInstance().clearUpperLayerFragmentCreate(upperLayerFragmentCreateKey);
         ImageLoadUtils.getInstance().setOnRemoveListener4FixBug(null);
         moreViewOptions.clear();
     }
