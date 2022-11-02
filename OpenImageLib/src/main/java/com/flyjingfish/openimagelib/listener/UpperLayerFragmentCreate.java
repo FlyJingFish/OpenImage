@@ -1,8 +1,9 @@
 package com.flyjingfish.openimagelib.listener;
 
-import androidx.fragment.app.Fragment;
+
+import com.flyjingfish.openimagelib.BaseUpperLayerFragment;
 
 
 public interface UpperLayerFragmentCreate {
-    Fragment createVideoFragment();
+    BaseUpperLayerFragment createVideoFragment();
 }

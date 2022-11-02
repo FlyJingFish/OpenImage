@@ -137,9 +137,6 @@ public class ViewPagerActivity extends BaseActivity {
         VideoFragmentCreate videoCreate = ImageLoadUtils.getInstance().getVideoFragmentCreate(videoFragmentCreateKey);
         ImageFragmentCreate imageCreate = ImageLoadUtils.getInstance().getImageFragmentCreate(imageFragmentCreateKey);
         UpperLayerFragmentCreate upperLayerCreate = ImageLoadUtils.getInstance().getUpperLayerFragmentCreate(upperLayerFragmentCreateKey);
-        if (upperLayerCreate != null){
-            upLayerFragment = upperLayerCreate.createVideoFragment();
-        }
         if (videoCreate == null){
             videoCreate = OpenImageConfig.getInstance().getVideoFragmentCreate();
         }
@@ -159,6 +156,9 @@ public class ViewPagerActivity extends BaseActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
+        if (upperLayerCreate != null){
+            upLayerFragment = upperLayerCreate.createVideoFragment();
+        }
         initMoreView();
         binding.viewPager.setAdapter(new FragmentStateAdapter(this) {
             @NonNull

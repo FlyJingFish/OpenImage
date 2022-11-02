@@ -7,13 +7,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.flyjingfish.openimage.bean.ImageItem;
 import com.flyjingfish.openimage.databinding.LayoutFriendsBinding;
+import com.flyjingfish.openimagelib.BaseUpperLayerFragment;
 import com.flyjingfish.openimagelib.ViewPagerActivity;
 
-public class FriendsFragment extends Fragment {
+public class FriendsFragment extends BaseUpperLayerFragment {
 
     private com.flyjingfish.openimage.databinding.LayoutFriendsBinding binding;
     private ImageItem imageItem;
