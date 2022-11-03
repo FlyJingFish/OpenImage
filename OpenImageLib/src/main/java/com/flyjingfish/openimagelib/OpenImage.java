@@ -143,28 +143,26 @@ public class OpenImage {
     }
 
     /**
-     *
      * @param openImageUrls 图片String数据组
-     * @param mediaType 图片还是视频
+     * @param mediaType     图片还是视频
      * @return
      */
-    public OpenImage setImageUrlList(List<String> openImageUrls,MediaType mediaType) {
+    public OpenImage setImageUrlList(List<String> openImageUrls, MediaType mediaType) {
         List<SingleImageUrl> list = new ArrayList<>();
         for (String openImageUrl : openImageUrls) {
-            list.add(new SingleImageUrl(openImageUrl,mediaType));
+            list.add(new SingleImageUrl(openImageUrl, mediaType));
         }
         setImageUrlList(list);
         return this;
     }
 
     /**
-     *
      * @param openImageUrl 单个String图片数据可设置这个
-     * @param mediaType 图片还是视频
+     * @param mediaType    图片还是视频
      * @return
      */
-    public OpenImage setImageUrl(String openImageUrl,MediaType mediaType) {
-        return setImageUrlList(new ArrayList<>(Arrays.asList(new SingleImageUrl(openImageUrl,mediaType))));
+    public OpenImage setImageUrl(String openImageUrl, MediaType mediaType) {
+        return setImageUrlList(new ArrayList<>(Arrays.asList(new SingleImageUrl(openImageUrl, mediaType))));
     }
 
     /**
@@ -497,6 +495,7 @@ public class OpenImage {
 
     /**
      * 调用这个方法将使 OpenImageConfig 的配置失效
+     *
      * @param imageFragmentCreate 用于自定义图片展示页面
      * @return
      */
@@ -508,6 +507,7 @@ public class OpenImage {
 
     /**
      * 调用这个方法将使 OpenImageConfig 的配置失效
+     *
      * @param videoFragmentCreate 用于自定义视频展示页面
      * @return
      */
@@ -519,18 +519,27 @@ public class OpenImage {
 
     /**
      * 这是可以显示在页面上方的Fragment
+     *
      * @param upperLayerFragmentCreate 用于创建覆盖在页面上方的Fragment
-     * @param bundle 传入数据
+     * @param bundle                   传入数据
      * @return
      */
-    public OpenImage setUpperLayerFragmentCreate(UpperLayerFragmentCreate upperLayerFragmentCreate,Bundle bundle) {
-        return setUpperLayerFragmentCreate(upperLayerFragmentCreate, bundle,false);
+    public OpenImage setUpperLayerFragmentCreate(UpperLayerFragmentCreate upperLayerFragmentCreate, Bundle bundle) {
+        return setUpperLayerFragmentCreate(upperLayerFragmentCreate, bundle, false);
     }
 
-    public OpenImage setUpperLayerFragmentCreate(UpperLayerFragmentCreate upperLayerFragmentCreate,Bundle bundle, boolean followTouch) {
+    /**
+     * 这是可以显示在页面上方的Fragment
+     *
+     * @param upperLayerFragmentCreate 用于创建覆盖在页面上方的Fragment
+     * @param bundle                   传入数据
+     * @param followTouch              是否跟随拖动
+     * @return
+     */
+    public OpenImage setUpperLayerFragmentCreate(UpperLayerFragmentCreate upperLayerFragmentCreate, Bundle bundle, boolean followTouch) {
         upperLayerFragmentCreateKey = UUID.randomUUID().toString();
         upperLayerBundle = bundle;
-        ImageLoadUtils.getInstance().setUpperLayerFragmentCreate(upperLayerFragmentCreateKey, new UpperLayerOption(upperLayerFragmentCreate,followTouch));
+        ImageLoadUtils.getInstance().setUpperLayerFragmentCreate(upperLayerFragmentCreateKey, new UpperLayerOption(upperLayerFragmentCreate, followTouch));
         return this;
     }
 
@@ -582,8 +591,8 @@ public class OpenImage {
         if (upperLayerFragmentCreateKey != null) {
             intent.putExtra(OpenParams.UPPER_LAYER_FRAGMENT_KEY, upperLayerFragmentCreateKey);
         }
-        if (upperLayerBundle != null){
-            intent.putExtra(OpenParams.UPPER_LAYER_BUNDLE,upperLayerBundle);
+        if (upperLayerBundle != null) {
+            intent.putExtra(OpenParams.UPPER_LAYER_BUNDLE, upperLayerBundle);
         }
         if (moreViewOptions.size() > 0) {
             moreViewOptionKey = UUID.randomUUID().toString();
