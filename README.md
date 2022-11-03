@@ -6,8 +6,10 @@
 
 ### 建议使用Glide效果更好，另外建议开启原图缓存（有些版本是自动缓存原图的） diskCacheStrategy(DiskCacheStrategy.ALL或DiskCacheStrategy.DATA) 本库设置为ImageDiskMode.CONTAIN_ORIGINAL
 
-[点此下载apk](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk)
+## [点此下载apk](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk)
 
+## 效果演示
+ 
 RecyclerView场景  | 聊天页面
  ------ | ------   
  <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" alt="show" width="320px" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203549_1.gif" alt="show" width="320px" alt="show" /> |
@@ -493,16 +495,11 @@ Glide 的混淆规则：
 ## 版本限制
 最低SDK版本：minSdkVersion >= 21
 
-# 效果演示</br>
+## Demo 一览
 
-
-
-RecyclerView场景  | 聊天页面  | 打开视频
- ---- | ----- | ------  
- <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203549_1.gif" alt="show" /> | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203923_1.gif" alt="show" />  
+ <img src="/screenshot/Screenshot_20220731_203125_com.flyjingfish.openim.jpg" width="320" alt="show" />
  
- 
- <img src="/screenshot/Screenshot_20220731_203125_com.flyjingfish.openim.jpg" width="405px" height="940px" alt="show" />
+## [点此下载apk](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk)
  
 ### 常见问题
 
