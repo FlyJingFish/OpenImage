@@ -103,6 +103,7 @@ public class ViewPagerActivity extends BaseActivity {
     private String imageFragmentCreateKey;
     private String upperLayerFragmentCreateKey;
     private Fragment upLayerFragment;
+    private UpperLayerOption upperLayerOption;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,7 +141,7 @@ public class ViewPagerActivity extends BaseActivity {
         upperLayerFragmentCreateKey = getIntent().getStringExtra(OpenParams.UPPER_LAYER_FRAGMENT_KEY);
         VideoFragmentCreate videoCreate = ImageLoadUtils.getInstance().getVideoFragmentCreate(videoFragmentCreateKey);
         ImageFragmentCreate imageCreate = ImageLoadUtils.getInstance().getImageFragmentCreate(imageFragmentCreateKey);
-        UpperLayerFragmentCreate upperLayerCreate = ImageLoadUtils.getInstance().getUpperLayerFragmentCreate(upperLayerFragmentCreateKey);
+        upperLayerOption = ImageLoadUtils.getInstance().getUpperLayerFragmentCreate(upperLayerFragmentCreateKey);
         if (videoCreate == null){
             videoCreate = OpenImageConfig.getInstance().getVideoFragmentCreate();
         }
@@ -160,9 +161,7 @@ public class ViewPagerActivity extends BaseActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
-        if (upperLayerCreate != null){
-            upLayerFragment = upperLayerCreate.createVideoFragment();
-        }
+
         initMoreView();
         binding.viewPager.setAdapter(new FragmentStateAdapter(this) {
             @NonNull
@@ -355,7 +354,7 @@ public class ViewPagerActivity extends BaseActivity {
         }
 
         View upperView;
-        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null){
+        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null && upperLayerOption !=null && !upperLayerOption.isFollowTouch()){
             upperView.setVisibility(View.VISIBLE);
         }
     }
@@ -376,7 +375,7 @@ public class ViewPagerActivity extends BaseActivity {
             }
         }
         View upperView;
-        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null){
+        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null && upperLayerOption !=null && !upperLayerOption.isFollowTouch()){
             upperView.setVisibility(View.GONE);
         }
     }
@@ -542,16 +541,27 @@ public class ViewPagerActivity extends BaseActivity {
                     photosViewModel.transitionEndLiveData.setValue(true);
                     transition.removeListener(this);
                     mHandler.post(() -> {
-                        if (upLayerFragment != null && ViewPagerActivity.this.getLifecycle().getCurrentState() != Lifecycle.State.DESTROYED){
-                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                            FrameLayout frameLayout = new FrameLayout(ViewPagerActivity.this);
-                            frameLayout.setId(R.id.upper_layer_container);
-                            Bundle upperLayerBundle = getIntent().getBundleExtra(OpenParams.UPPER_LAYER_BUNDLE);
-                            if (upperLayerBundle != null){
-                                upLayerFragment.setArguments(upperLayerBundle);
+
+                        if (upperLayerOption != null && ViewPagerActivity.this.getLifecycle().getCurrentState() != Lifecycle.State.DESTROYED){
+                            UpperLayerFragmentCreate upperLayerCreate = upperLayerOption.getUpperLayerFragmentCreate();
+                            if (upperLayerCreate != null){
+                                upLayerFragment = upperLayerCreate.createVideoFragment();
                             }
-                            binding.getRoot().addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                            transaction.replace(R.id.upper_layer_container,upLayerFragment).commit();
+                            if (upLayerFragment != null){
+                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                FrameLayout frameLayout = new FrameLayout(ViewPagerActivity.this);
+                                frameLayout.setId(R.id.upper_layer_container);
+                                Bundle upperLayerBundle = getIntent().getBundleExtra(OpenParams.UPPER_LAYER_BUNDLE);
+                                if (upperLayerBundle != null){
+                                    upLayerFragment.setArguments(upperLayerBundle);
+                                }
+                                if (upperLayerOption.isFollowTouch()){
+                                    binding.flTouchView.addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                                }else {
+                                    binding.getRoot().addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                                }
+                                transaction.replace(R.id.upper_layer_container,upLayerFragment).commit();
+                            }
                         }
                     });
 

@@ -32,7 +32,7 @@ class ImageLoadUtils {
     private HashMap<String, OnBackView> onBackViewHashMap = new HashMap<>();
     private HashMap<String, ImageFragmentCreate> imageFragmentCreateHashMap = new HashMap<>();
     private HashMap<String, VideoFragmentCreate> videoFragmentCreateHashMap = new HashMap<>();
-    private HashMap<String, UpperLayerFragmentCreate> upperLayerFragmentCreateHashMap = new HashMap<>();
+    private HashMap<String, UpperLayerOption> upperLayerFragmentCreateHashMap = new HashMap<>();
 
     private ImageLoadUtils() {
     }
@@ -213,12 +213,12 @@ class ImageLoadUtils {
         this.moreViewOptionHashMap.remove(key);
     }
 
-    public UpperLayerFragmentCreate getUpperLayerFragmentCreate(String key) {
+    public UpperLayerOption getUpperLayerFragmentCreate(String key) {
         return upperLayerFragmentCreateHashMap.get(key);
     }
 
-    public void setUpperLayerFragmentCreate(String key, UpperLayerFragmentCreate upperLayerFragmentCreate) {
-        this.upperLayerFragmentCreateHashMap.put(key, upperLayerFragmentCreate);
+    public void setUpperLayerFragmentCreate(String key, UpperLayerOption upperLayerOption) {
+        this.upperLayerFragmentCreateHashMap.put(key, upperLayerOption);
     }
 
     public void clearUpperLayerFragmentCreate(String key) {

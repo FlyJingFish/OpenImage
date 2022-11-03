@@ -524,9 +524,13 @@ public class OpenImage {
      * @return
      */
     public OpenImage setUpperLayerFragmentCreate(UpperLayerFragmentCreate upperLayerFragmentCreate,Bundle bundle) {
+        return setUpperLayerFragmentCreate(upperLayerFragmentCreate, bundle,false);
+    }
+
+    public OpenImage setUpperLayerFragmentCreate(UpperLayerFragmentCreate upperLayerFragmentCreate,Bundle bundle, boolean followTouch) {
         upperLayerFragmentCreateKey = UUID.randomUUID().toString();
         upperLayerBundle = bundle;
-        ImageLoadUtils.getInstance().setUpperLayerFragmentCreate(upperLayerFragmentCreateKey, upperLayerFragmentCreate);
+        ImageLoadUtils.getInstance().setUpperLayerFragmentCreate(upperLayerFragmentCreateKey, new UpperLayerOption(upperLayerFragmentCreate,followTouch));
         return this;
     }
 
