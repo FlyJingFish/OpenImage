@@ -51,13 +51,15 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
         MessageBean messageBean = messageBeans.get(position);
         int viewType = messageBean.type;
         View.OnClickListener onClickListener = v ->{
-            //添加聊天以外的图片
+            //添加聊天以外的图片，数据不必将除视频或图片之外的数据排除掉，排除掉将不能对应View的点击位置
             String url1= "https://pics4.baidu.com/feed/50da81cb39dbb6fd95aa0c599b8d0d1e962b3708.jpeg?token=bf17224f51a6f4bb389e787f9c487940";
             String url2= "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.tt98.com%2Fd%2Ffile%2Fpic%2F201811082010742%2F5be40536abdd2.jpg&refer=http%3A%2F%2Fimg.tt98.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661701773&t=2d03e79dd2eb007d30a330479093ecf4";
             List<MessageBean> beans = new ArrayList<>();
             MessageBean messageBean1 = new MessageBean(MessageBean.IMAGE,url1,url1);
             MessageBean messageBean2 = new MessageBean(MessageBean.IMAGE,url2,url2);
+            MessageBean messageBean3 = new MessageBean(MessageBean.TEXT,url2,url2);
             beans.add(messageBean1);
+            beans.add(messageBean3);
             beans.add(messageBean2);
 
             List<MessageBean> dataBeans = new ArrayList<>();
