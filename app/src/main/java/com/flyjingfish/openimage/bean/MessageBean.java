@@ -15,6 +15,16 @@ public class MessageBean implements OpenImageUrl {
     public String videoUrl;
     public String coverUrl;
     public String smallCoverUrl;
+
+    public MessageBean() {
+    }
+
+    public MessageBean(int type, String imageUrl, String smallCoverUrl) {
+        this.type = type;
+        this.imageUrl = imageUrl;
+        this.smallCoverUrl = smallCoverUrl;
+    }
+
     @Override
     public String getImageUrl() {
         return type == IMAGE?imageUrl:coverUrl;

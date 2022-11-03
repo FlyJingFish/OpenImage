@@ -22,6 +22,7 @@ import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
@@ -49,38 +50,52 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         MessageBean messageBean = messageBeans.get(position);
         int viewType = messageBean.type;
-        View.OnClickListener onClickListener = v -> OpenImage.with(holder.itemView.getContext()).setClickRecyclerView((RecyclerView) holder.itemView.getParent(), new SourceImageViewIdGet<OpenImageUrl>() {
-                    @Override
-                    public int getImageViewId(OpenImageUrl data, int position1) {
-                        MessageBean msgBean = (MessageBean) data;
-                        if (msgBean.type == MessageBean.IMAGE){
-                            return R.id.iv_image;
-                        }else {
-                            return R.id.iv_video;
-                        }
-                    }
-                })
-                .setAutoScrollScanPosition(MessageActivity.openAutoScroll)
-                .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
-                .setImageUrlList(messageBeans).setImageDiskMode(MyImageLoader.imageDiskMode)
-                .setItemLoadHelper(new ItemLoadHelper() {
-                    @Override
-                    public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
-                        MyImageLoader.getInstance().loadRoundCorner(imageView, imageUrl,10, overrideWidth,overrideHeight,R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder,  new MyImageLoader.OnImageLoadListener() {
-                            @Override
-                            public void onSuccess() {
-                                onLoadCoverImageListener.onLoadImageSuccess();
-                            }
+        View.OnClickListener onClickListener = v ->{
+            //添加聊天以外的图片
+            String url1= "https://pics4.baidu.com/feed/50da81cb39dbb6fd95aa0c599b8d0d1e962b3708.jpeg?token=bf17224f51a6f4bb389e787f9c487940";
+            String url2= "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.tt98.com%2Fd%2Ffile%2Fpic%2F201811082010742%2F5be40536abdd2.jpg&refer=http%3A%2F%2Fimg.tt98.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661701773&t=2d03e79dd2eb007d30a330479093ecf4";
+            List<MessageBean> beans = new ArrayList<>();
+            MessageBean messageBean1 = new MessageBean(MessageBean.IMAGE,url1,url1);
+            MessageBean messageBean2 = new MessageBean(MessageBean.IMAGE,url2,url2);
+            beans.add(messageBean1);
+            beans.add(messageBean2);
 
-                            @Override
-                            public void onFailed() {
-                                onLoadCoverImageListener.onLoadImageFailed();
+            List<MessageBean> dataBeans = new ArrayList<>();
+            dataBeans.addAll(beans);
+            dataBeans.addAll(messageBeans);
+            OpenImage.with(holder.itemView.getContext()).setClickRecyclerView((RecyclerView) holder.itemView.getParent(), new SourceImageViewIdGet<OpenImageUrl>() {
+                        @Override
+                        public int getImageViewId(OpenImageUrl data, int position1) {
+                            MessageBean msgBean = (MessageBean) data;
+                            if (msgBean.type == MessageBean.IMAGE){
+                                return R.id.iv_image;
+                            }else {
+                                return R.id.iv_video;
                             }
-                        });
-                    }
-                }).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
-                .setOpenImageStyle(R.style.DefaultPhotosTheme)
-                .setClickPosition(position).show();
+                        }
+                    })
+                    .setAutoScrollScanPosition(MessageActivity.openAutoScroll)
+                    .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+                    .setImageUrlList(dataBeans).setImageDiskMode(MyImageLoader.imageDiskMode)
+                    .setItemLoadHelper(new ItemLoadHelper() {
+                        @Override
+                        public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
+                            MyImageLoader.getInstance().loadRoundCorner(imageView, imageUrl,10, overrideWidth,overrideHeight,R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder,  new MyImageLoader.OnImageLoadListener() {
+                                @Override
+                                public void onSuccess() {
+                                    onLoadCoverImageListener.onLoadImageSuccess();
+                                }
+
+                                @Override
+                                public void onFailed() {
+                                    onLoadCoverImageListener.onLoadImageFailed();
+                                }
+                            });
+                        }
+                    }).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
+                    .setOpenImageStyle(R.style.DefaultPhotosTheme)
+                    .setClickPosition(position+beans.size(),position).show();
+        } ;
         if (viewType == MessageBean.IMAGE){
             ItemMsgImageBinding binding = ItemMsgImageBinding.bind(holder.itemView);
             binding.ivImage.setOnClickListener(onClickListener);
