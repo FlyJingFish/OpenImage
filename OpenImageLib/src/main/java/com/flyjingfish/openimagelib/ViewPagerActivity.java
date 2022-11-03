@@ -43,6 +43,8 @@ import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
+import com.flyjingfish.openimagelib.listener.OnItemClickListener;
+import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
@@ -82,6 +84,8 @@ public class ViewPagerActivity extends BaseActivity {
     private ShapeImageView.ShapeScaleType srcScaleType;
     private int selectPos;
     private OnSelectMediaListener onSelectMediaListener;
+    private List<OnSelectMediaListener> onSelectMediaListeners = new ArrayList<>();
+    private List<String> onSelectMediaListenerKeys = new ArrayList<>();
     private String onSelectKey;
     private String openCoverKey;
     private String pageTransformersKey;
@@ -233,6 +237,9 @@ public class ViewPagerActivity extends BaseActivity {
                 if (onSelectMediaListener != null) {
                     onSelectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl, openImageBeans.get(showPosition).dataPosition);
                 }
+                for (OnSelectMediaListener selectMediaListener : onSelectMediaListeners) {
+                    selectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl, openImageBeans.get(showPosition).dataPosition);
+                }
                 isFirstBacked = true;
             }
         });
@@ -277,6 +284,25 @@ public class ViewPagerActivity extends BaseActivity {
         });
         setViewTransition();
         addTransitionListener();
+        setUpperLayerOptions();
+    }
+
+    private void setUpperLayerOptions(){
+        photosViewModel.onAddOnSelectMediaListenerLiveData.observe(this, s -> {
+            OnSelectMediaListener onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(s);
+            if (onSelectMediaListener != null){
+                onSelectMediaListeners.add(onSelectMediaListener);
+            }
+            onSelectMediaListenerKeys.add(s);
+        });
+
+        photosViewModel.onRemoveOnSelectMediaListenerLiveData.observe(this, s -> {
+            OnSelectMediaListener onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(s);
+            if (onSelectMediaListener != null){
+                onSelectMediaListeners.remove(onSelectMediaListener);
+            }
+            ImageLoadUtils.getInstance().clearOnItemClickListener(s);
+        });
     }
 
     private void setViewTransition() {
@@ -569,6 +595,10 @@ public class ViewPagerActivity extends BaseActivity {
         if (wechatEffectAnim != null) {
             wechatEffectAnim.cancel();
         }
+        for (String onSelectMediaListenerKey : onSelectMediaListenerKeys) {
+            ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectMediaListenerKey);
+        }
+        onSelectMediaListenerKeys.clear();
     }
 
     @Override

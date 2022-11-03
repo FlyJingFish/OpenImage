@@ -572,6 +572,9 @@ public class OpenImage {
         if (imageFragmentCreateKey != null) {
             intent.putExtra(OpenParams.IMAGE_FRAGMENT_KEY, imageFragmentCreateKey);
         }
+        if (videoFragmentCreateKey != null) {
+            intent.putExtra(OpenParams.VIDEO_FRAGMENT_KEY, videoFragmentCreateKey);
+        }
         if (upperLayerFragmentCreateKey != null) {
             intent.putExtra(OpenParams.UPPER_LAYER_FRAGMENT_KEY, upperLayerFragmentCreateKey);
         }

@@ -39,6 +39,11 @@ public class ImageFragment extends BaseImageFragment<LoadingView> {
     }
 
     @Override
+    protected View getItemClickableView() {
+        return binding.photoView;
+    }
+
+    @Override
     protected LoadingView getLoadingView() {
         return binding.loadingView;
     }

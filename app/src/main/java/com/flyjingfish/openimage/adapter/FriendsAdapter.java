@@ -1,6 +1,7 @@
 package com.flyjingfish.openimage.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.ItemFriendImagesBinding;
 import com.flyjingfish.openimage.databinding.ItemFriendVideoBinding;
+import com.flyjingfish.openimage.openImpl.FriendLayerFragmentCreateImpl;
+import com.flyjingfish.openimage.openImpl.FriendsVideoFragmentCreateImpl;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
@@ -70,6 +73,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<RvBaseHolder> {
         layoutParams.height = height;
         binding.ivImage.setLayoutParams(layoutParams);
         content.setText("视频");
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("ImageItem",data);
 
         View.OnClickListener onClickListener = v -> OpenImage.with(holder.itemView.getContext()).setClickImageView(binding.ivImage)
                 .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
@@ -90,7 +95,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<RvBaseHolder> {
                         });
                     }
                 })
+                .setVideoFragmentCreate(new FriendsVideoFragmentCreateImpl())
                 .setAutoScrollScanPosition(true)
+                .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle)
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
                 .setClickPosition(0).show();
         binding.ivImage.setOnClickListener(onClickListener);

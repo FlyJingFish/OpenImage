@@ -14,6 +14,12 @@ public class PhotosViewModel extends AndroidViewModel {
     MutableLiveData<Boolean> transitionEndLiveData = new MutableLiveData<>();
     MutableLiveData<Float> onTouchScaleLiveData = new MutableLiveData<>();
     MutableLiveData<Float> onTouchCloseLiveData = new MutableLiveData<>();
+    MutableLiveData<String> onAddItemListenerLiveData = new MutableLiveData<>();
+    MutableLiveData<String> onAddItemLongListenerLiveData = new MutableLiveData<>();
+    MutableLiveData<String> onRemoveItemListenerLiveData = new MutableLiveData<>();
+    MutableLiveData<String> onRemoveItemLongListenerLiveData = new MutableLiveData<>();
+    MutableLiveData<String> onAddOnSelectMediaListenerLiveData = new MutableLiveData<>();
+    MutableLiveData<String> onRemoveOnSelectMediaListenerLiveData = new MutableLiveData<>();
 
     public PhotosViewModel(@NonNull Application application) {
         super(application);

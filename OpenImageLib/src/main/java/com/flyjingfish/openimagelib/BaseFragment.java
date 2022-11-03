@@ -20,7 +20,7 @@ import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends BaseInnerFragment {
 
     protected OpenImageDetail imageDetail;
     protected OpenImageUrl openImageUrl;
@@ -31,8 +31,6 @@ public abstract class BaseFragment extends Fragment {
     protected boolean disableClickClose;
     protected ImageDiskMode imageDiskMode;
     protected int errorResId;
-    protected OnItemClickListener onItemClickListener;
-    protected OnItemLongClickListener onItemLongClickListener;
     protected Drawable coverDrawable;
 
     public abstract View getExitImageView();
@@ -66,8 +64,14 @@ public abstract class BaseFragment extends Fragment {
         disableClickClose = getArguments().getBoolean(OpenParams.DISABLE_CLICK_CLOSE,false);
         String onItemCLickKey = getArguments().getString(OpenParams.ON_ITEM_CLICK_KEY);
         String onItemLongCLickKey = getArguments().getString(OpenParams.ON_ITEM_LONG_CLICK_KEY);
-        onItemClickListener = ImageLoadUtils.getInstance().getOnItemClickListener(onItemCLickKey);
-        onItemLongClickListener = ImageLoadUtils.getInstance().getOnItemLongClickListener(onItemLongCLickKey);
+        OnItemClickListener onItemClickListener = ImageLoadUtils.getInstance().getOnItemClickListener(onItemCLickKey);
+        OnItemLongClickListener onItemLongClickListener = ImageLoadUtils.getInstance().getOnItemLongClickListener(onItemLongCLickKey);
+        if (onItemClickListener != null){
+            onItemClickListeners.add(onItemClickListener);
+        }
+        if (onItemLongClickListener != null){
+            onItemLongClickListeners.add(onItemLongClickListener);
+        }
         coverDrawable = ImageLoadUtils.getInstance().getCoverDrawable(getArguments().getString(OpenParams.OPEN_COVER_DRAWABLE));
 
         autoAspectRadio = bundle.getFloat(OpenParams.AUTO_ASPECT_RATIO,0);
@@ -110,8 +114,6 @@ public abstract class BaseFragment extends Fragment {
             coverAnim.cancel();
         }
         itemLoadHelper = null;
-        onItemClickListener = null;
-        onItemLongClickListener = null;
         coverDrawable = null;
         mHandler.removeCallbacksAndMessages(null);
     }

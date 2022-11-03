@@ -1,9 +1,9 @@
 package com.flyjingfish.openimagelib.listener;
 
 
-import com.flyjingfish.openimagelib.BaseUpperLayerFragment;
+import com.flyjingfish.openimagelib.BaseInnerFragment;
 
 
 public interface UpperLayerFragmentCreate {
-    BaseUpperLayerFragment createVideoFragment();
+    BaseInnerFragment createVideoFragment();
 }

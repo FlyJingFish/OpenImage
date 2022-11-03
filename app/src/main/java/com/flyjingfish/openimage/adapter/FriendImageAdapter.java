@@ -90,6 +90,7 @@ public class FriendImageAdapter extends RecyclerView.Adapter<RvBaseHolder> {
                         });
                     }
                 })
+                .disableClickClose()
                 .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle)
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
                 .setClickPosition(position).show();

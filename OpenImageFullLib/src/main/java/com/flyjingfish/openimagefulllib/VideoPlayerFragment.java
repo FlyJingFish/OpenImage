@@ -11,74 +11,94 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.flyjingfish.openimagefulllib.databinding.FragmentVideoBinding;
 import com.flyjingfish.openimagelib.BaseImageFragment;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.widget.LoadingView;
 
 public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
 
-    protected FragmentVideoBinding binding;
     protected String playerKey;
     protected boolean isPlayed;
     protected boolean isLoadImageFinish;
-
+    protected GSYVideoPlayer videoPlayer;
+    private View rootView;
+    private PhotoView smallImageView;
+    private PhotoView photoImageView;
+    private LoadingView loadingView;
     @Override
     protected PhotoView getSmallCoverImageView() {
-        return binding.videoPlayer.getSmallCoverImageView();
+        return smallImageView;
     }
 
     @Override
     protected PhotoView getPhotoView() {
-        return binding.videoPlayer.getCoverImageView();
+        return photoImageView;
+    }
+
+    @Override
+    protected View getItemClickableView() {
+        return videoPlayer;
     }
 
     @Override
     protected LoadingView getLoadingView() {
-        return (LoadingView) binding.videoPlayer.getLoadingView();
+        return loadingView;
     }
 
     @Override
     protected void hideLoading(LoadingView pbLoading) {
         super.hideLoading(pbLoading);
-        binding.videoPlayer.getStartButton().setVisibility(View.VISIBLE);
+        if (videoPlayer.getStartButton() != null){
+            videoPlayer.getStartButton().setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     protected void showLoading(LoadingView pbLoading) {
         super.showLoading(pbLoading);
-        binding.videoPlayer.getStartButton().setVisibility(View.GONE);
+        if (videoPlayer.getStartButton() != null){
+            videoPlayer.getStartButton().setVisibility(View.GONE);
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentVideoBinding.inflate(inflater,container,false);
-        return binding.getRoot();
+        rootView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_video,container,false);
+        OpenImageVideoPlayer videoPlayer = rootView.findViewById(R.id.video_player);
+        this.videoPlayer = videoPlayer;
+        smallImageView = videoPlayer.getSmallCoverImageView();
+        photoImageView = videoPlayer.getCoverImageView();
+        loadingView = (LoadingView) videoPlayer.getLoadingView();
+        return rootView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.videoPlayer.findViewById(R.id.back).setOnClickListener(v -> close());
-        playerKey = binding.videoPlayer.getVideoKey();
-        binding.videoPlayer.goneAllWidget();
+        if (videoPlayer.getBackButton() != null){
+            videoPlayer.getBackButton().setOnClickListener(v -> close());
+        }
+        playerKey = videoPlayer.getVideoKey();
+        videoPlayer.goneAllWidget();
         isPlayed = false;
     }
 
     @Override
     protected void onTouchClose(float scale) {
         super.onTouchClose(scale);
-        binding.videoPlayer.findViewById(R.id.surface_container).setVisibility(View.GONE);
-        binding.videoPlayer.goneAllWidget();
+        if (videoPlayer.getTextureViewContainer() != null){
+            videoPlayer.getTextureViewContainer().setVisibility(View.GONE);
+        }
+        videoPlayer.goneAllWidget();
     }
 
     @Override
     protected void onTouchScale(float scale) {
         super.onTouchScale(scale);
-        binding.videoPlayer.goneAllWidget();
+        videoPlayer.goneAllWidget();
         if (scale == 0){
-            binding.videoPlayer.showAllWidget();
+            videoPlayer.showAllWidget();
         }
     }
 
@@ -109,8 +129,8 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     }
 
     protected void toPlay4Resume(){
-        binding.videoPlayer.playUrl(openImageUrl.getVideoUrl());
-        binding.videoPlayer.startPlayLogic();
+        videoPlayer.playUrl(openImageUrl.getVideoUrl());
+        videoPlayer.startPlayLogic();
     }
 
     @Override
@@ -145,7 +165,9 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
 
     @Override
     public View getExitImageView() {
-        binding.videoPlayer.getThumbImageViewLayout().setVisibility(View.VISIBLE);
+        if (videoPlayer.getThumbImageViewLayout() != null){
+            videoPlayer.getThumbImageViewLayout().setVisibility(View.VISIBLE);
+        }
         return super.getExitImageView();
     }
 }

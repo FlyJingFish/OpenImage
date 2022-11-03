@@ -16,6 +16,8 @@ import androidx.core.view.ViewCompat;
 
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
+import com.flyjingfish.openimagelib.listener.OnItemClickListener;
+import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
 import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
@@ -26,11 +28,14 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
 
     protected PhotoView smallCoverImageView;
     protected PhotoView photoView;
+    private View clickableViewRootView;
     protected T loadingView;
 
     protected abstract PhotoView getSmallCoverImageView();
 
     protected abstract PhotoView getPhotoView();
+
+    protected abstract View getItemClickableView();
 
     protected abstract T getLoadingView();
 
@@ -50,6 +55,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         smallCoverImageView = getSmallCoverImageView();
         photoView = getPhotoView();
         loadingView = getLoadingView();
+        clickableViewRootView = getItemClickableView();
         smallCoverImageView.setSrcScaleType(srcScaleType);
         photoView.setSrcScaleType(srcScaleType);
         photoView.setStartWidth(imageDetail.srcWidth);
@@ -98,6 +104,25 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         }
         loadBigImage();
         setOnListener();
+        updateListener();
+    }
+
+    private void updateListener(){
+        photosViewModel.onAddItemListenerLiveData.observe(getViewLifecycleOwner(), s -> {
+            setOnListener();
+        });
+
+        photosViewModel.onAddItemLongListenerLiveData.observe(getViewLifecycleOwner(), s -> {
+            setOnListener();
+        });
+
+        photosViewModel.onRemoveItemListenerLiveData.observe(getViewLifecycleOwner(), s -> {
+            setOnListener();
+        });
+
+        photosViewModel.onRemoveItemLongListenerLiveData.observe(getViewLifecycleOwner(), s -> {
+            setOnListener();
+        });
     }
 
     protected void setCoverImageView(){
@@ -115,17 +140,44 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
     }
 
     protected void setOnListener(){
-        if (!disableClickClose) {
-            photoView.setOnClickListener(view1 -> close());
+        if (clickableViewRootView != null){
+            setOnListener(clickableViewRootView);
         }
-        if (onItemClickListener != null) {
-            photoView.setOnClickListener(v -> onItemClickListener.onItemClick(this, openImageUrl, showPosition));
+        if (photoView != null){
+            setOnListener(photoView);
         }
-        if (onItemLongClickListener != null) {
-            photoView.setOnLongClickListener(v -> {
-                onItemLongClickListener.onItemLongClick(this, openImageUrl, showPosition);
+        if (smallCoverImageView != null){
+            setOnListener(smallCoverImageView);
+        }
+    }
+
+    private void setOnListener(View clickableViewRootView){
+        boolean isSetOnItemClickListener;
+        if (onItemClickListeners.size() > 0) {
+            clickableViewRootView.setOnClickListener(v -> {
+                for (OnItemClickListener onItemClickListener : onItemClickListeners) {
+                    onItemClickListener.onItemClick(this, openImageUrl, showPosition);
+                }
+            });
+
+            isSetOnItemClickListener = true;
+        }else {
+            clickableViewRootView.setOnClickListener(null);
+            isSetOnItemClickListener = false;
+        }
+        if (onItemLongClickListeners.size() > 0) {
+            clickableViewRootView.setOnLongClickListener(v -> {
+                for (OnItemLongClickListener onItemLongClickListener : onItemLongClickListeners) {
+                    onItemLongClickListener.onItemLongClick(this, openImageUrl, showPosition);
+                }
                 return true;
             });
+        }else {
+            clickableViewRootView.setOnLongClickListener(null);
+        }
+
+        if (!disableClickClose && !isSetOnItemClickListener) {
+            clickableViewRootView.setOnClickListener(view1 -> close());
         }
     }
 
