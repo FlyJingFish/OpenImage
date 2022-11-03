@@ -10,11 +10,11 @@
 
 RecyclerView场景  | 聊天页面
  ------ | ------   
- <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" alt="show" width="405px" height="842px" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203549_1.gif" alt="show" width="405px" height="842px" alt="show" /> |
+ <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" alt="show" width="320px" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203549_1.gif" alt="show" width="320px" alt="show" /> |
  
 打开视频  | 朋友圈 
  ------ | ------   
- <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203923_1.gif" alt="show" width="405px" height="842px" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/friends_demo.gif" alt="show" width="405px" height="842px" alt="show" /> |
+ <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203923_1.gif" alt="show" width="320px" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/friends_demo.gif" alt="show" width="320px" alt="show" /> |
 
 
  
