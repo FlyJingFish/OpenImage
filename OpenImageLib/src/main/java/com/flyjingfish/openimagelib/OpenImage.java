@@ -558,7 +558,7 @@ public class OpenImage {
         if (openImageUrls.size() == 0) {
             throw new IllegalArgumentException("请设置数据");
         }
-        if (itemLoadHelperKey == null) {
+        if (imageDiskMode != ImageDiskMode.CONTAIN_ORIGINAL && itemLoadHelperKey == null) {
             throw new IllegalArgumentException("请设置ItemLoadHelper");
         }
         if (clickDataPosition >= openImageUrls.size()) {
