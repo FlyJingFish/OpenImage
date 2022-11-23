@@ -30,13 +30,12 @@ import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BaseActivity extends AppCompatActivity {
     private static final int CHECK_FINISH = 1009;
-    private static final long CHECK_DELAY_MS = 200;
+    private static final long CHECK_DELAY_MS = 2000;
     protected static final int INDICATOR_TEXT = 0;
     protected static final int INDICATOR_IMAGE = 1;
     protected static final long WECHAT_DURATION = 250;
