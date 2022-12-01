@@ -121,7 +121,12 @@ OpenImage.with(activity)
 
 ```java
 public class ImageEntity implements OpenImageUrl {
-    public String url;
+    public String photoUrl;//图片大图
+    public String smallPhotoUrl;//图片小图
+    public String coverUrl;//视频封面大图
+    public String smallCoverUrl;//视频封面小图
+    public String videoUrl;//视频链接
+    public int resouceType; //0图片1视频 
 
     public ImageEntity(String url) {
         this.url = url;
@@ -132,22 +137,22 @@ public class ImageEntity implements OpenImageUrl {
 
     @Override
     public String getImageUrl() {
-        return url;//大图链接（或视频的封面大图链接）
+        return resouceType ==1:coverUrl:photoUrl;//大图链接（或视频的封面大图链接）
     }
 
     @Override
     public String getVideoUrl() {
-        return null;//视频链接
+        return videoUrl;//视频链接
     }
 
     @Override
-    public String getCoverImageUrl() {
-        return url;//封面小图链接（或视频的封面小图链接）
+    public String getCoverImageUrl() {//这个代表前边列表展示的图片
+        return resouceType ==1:smallCoverUrl:smallPhotoUrl;//封面小图链接（或视频的封面小图链接）
     }
 
     @Override
     public MediaType getType() {
-        return MediaType.IMAGE;//数据是图片还是视频
+        return resouceType ==1:MediaType.VIDEO:MediaType.IMAGE;//数据是图片还是视频
     }
 }
 
