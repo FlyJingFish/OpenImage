@@ -207,7 +207,7 @@ OpenImage.with(activity)
            @Override
            public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
                 //如果使用的Glide缓存模式是ImageDiskMode.RESULT(只保存目标图片大小),必须在加载图片时传入大小，详看Demo
-                GlideApp.with(imageView).load(imageUrl)
+                Glide.with(imageView).load(imageUrl)
                     .override(overrideWidth, overrideHeight)
                     .addListener(new RequestListener<Drawable>() {
                         @Override
