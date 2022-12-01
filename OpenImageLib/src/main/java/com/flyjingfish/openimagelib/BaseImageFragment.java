@@ -31,13 +31,36 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
     private View clickableViewRootView;
     protected T loadingView;
 
+    /**
+     *
+     * @return 返回展示小图（封面图）的PhotoView
+     */
     protected abstract PhotoView getSmallCoverImageView();
 
+    /**
+     *
+     * @return 返回展示大图的PhotoView
+     */
     protected abstract PhotoView getPhotoView();
 
+    /**
+     *
+     * @return 返回用于点击的View，一般就是大图的PhotoView
+     */
     protected abstract View getItemClickableView();
 
+    /**
+     *
+     * @return 返回展示加载中的View
+     */
     protected abstract T getLoadingView();
+
+
+    /**
+     *
+     * @param isLoadImageSuccess 加载大图是否成功
+     */
+    protected abstract void loadImageFinish(boolean isLoadImageSuccess);
 
     protected void showLoading(T pbLoading) {
         pbLoading.setVisibility(View.VISIBLE);
@@ -296,8 +319,6 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             loadingView.setVisibility(View.VISIBLE);
         }
     }
-
-    protected abstract void loadImageFinish(boolean isLoadImageSuccess);
 
     private void loadPrivateImageFinish(boolean isLoadImageSuccess) {
         loadImageFinish(isLoadImageSuccess);

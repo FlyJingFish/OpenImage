@@ -25,6 +25,30 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     private PhotoView smallImageView;
     private PhotoView photoImageView;
     private LoadingView loadingView;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_video,container,false);
+        OpenImageVideoPlayer videoPlayer = rootView.findViewById(R.id.video_player);
+        this.videoPlayer = videoPlayer;
+        smallImageView = videoPlayer.getSmallCoverImageView();
+        photoImageView = videoPlayer.getCoverImageView();
+        loadingView = (LoadingView) videoPlayer.getLoadingView();
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (videoPlayer.getBackButton() != null){
+            videoPlayer.getBackButton().setOnClickListener(v -> close());
+        }
+        playerKey = videoPlayer.getVideoKey();
+        videoPlayer.goneAllWidget();
+        isPlayed = false;
+    }
+
     @Override
     protected PhotoView getSmallCoverImageView() {
         return smallImageView;
@@ -61,29 +85,6 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
         }
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_video,container,false);
-        OpenImageVideoPlayer videoPlayer = rootView.findViewById(R.id.video_player);
-        this.videoPlayer = videoPlayer;
-        smallImageView = videoPlayer.getSmallCoverImageView();
-        photoImageView = videoPlayer.getCoverImageView();
-        loadingView = (LoadingView) videoPlayer.getLoadingView();
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (videoPlayer.getBackButton() != null){
-            videoPlayer.getBackButton().setOnClickListener(v -> close());
-        }
-        playerKey = videoPlayer.getVideoKey();
-        videoPlayer.goneAllWidget();
-        isPlayed = false;
-    }
-
     @Override
     protected void onTouchClose(float scale) {
         super.onTouchClose(scale);
@@ -105,6 +106,12 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     @Override
     protected void loadImageFinish(boolean isLoadImageSuccess) {
         isLoadImageFinish = true;
+        play();
+    }
+
+    @Override
+    protected void onTransitionEnd() {
+        super.onTransitionEnd();
         play();
     }
 
@@ -134,12 +141,6 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     }
 
     @Override
-    protected void onTransitionEnd() {
-        super.onTransitionEnd();
-        play();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         if (playerKey != null) {
@@ -161,13 +162,5 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
         if (playerKey != null) {
             GSYVideoController.cancelByKeyAndDeleteKey(playerKey);
         }
-    }
-
-    @Override
-    public View getExitImageView() {
-        if (videoPlayer.getThumbImageViewLayout() != null){
-            videoPlayer.getThumbImageViewLayout().setVisibility(View.VISIBLE);
-        }
-        return super.getExitImageView();
     }
 }

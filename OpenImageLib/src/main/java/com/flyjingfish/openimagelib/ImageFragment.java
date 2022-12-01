@@ -24,11 +24,6 @@ public class ImageFragment extends BaseImageFragment<LoadingView> {
     }
 
     @Override
-    public View getExitImageView() {
-        return super.getExitImageView();
-    }
-
-    @Override
     protected PhotoView getSmallCoverImageView() {
         return binding.ivCoverFg;
     }
