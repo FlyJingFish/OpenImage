@@ -23,15 +23,11 @@ import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 public class GlideBigImageHelper implements BigImageHelper {
     private static final int MULTIPLES = 2;
-
     @Override
     public void loadImage(Context context, String imageUrl, OnLoadBigImageListener onLoadBigImageListener) {
-        int maxWidth = ScreenUtils.getScreenWidth2Cache(context) * MULTIPLES;
-        int maxHeight = ScreenUtils.getScreenHeight2Cache(context) * MULTIPLES;
         RequestOptions requestOptions = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .fitCenter()
-                .override(maxWidth, maxHeight)
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .format(DecodeFormat.PREFER_RGB_565);
         Glide.with(context)
                 .load(imageUrl).apply(requestOptions).addListener(new RequestListener<Drawable>() {
@@ -48,7 +44,41 @@ public class GlideBigImageHelper implements BigImageHelper {
                 }).into(new CustomTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        onLoadBigImageListener.onLoadImageSuccess(resource);
+                        int maxWidth = ScreenUtils.getScreenWidth2Cache(context)*MULTIPLES;
+                        int maxHeight = ScreenUtils.getScreenHeight2Cache(context)*MULTIPLES;
+                        if (resource.getIntrinsicWidth() > maxWidth && resource.getIntrinsicHeight() > maxHeight){
+                            RequestOptions requestOptions = new RequestOptions()
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .override(maxWidth, maxHeight)
+                                    .fitCenter()
+                                    .format(DecodeFormat.PREFER_RGB_565);
+                            Glide.with(context)
+                                    .load(imageUrl).apply(requestOptions)
+                                    .addListener(new RequestListener<Drawable>() {
+                                        @Override
+                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                            onLoadBigImageListener.onLoadImageFailed();
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                            return false;
+                                        }
+                                    }).into(new CustomTarget<Drawable>() {
+                                        @Override
+                                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                            onLoadBigImageListener.onLoadImageSuccess(resource);
+                                        }
+
+                                        @Override
+                                        public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                                        }
+                                    });
+                        }else {
+                            onLoadBigImageListener.onLoadImageSuccess(resource);
+                        }
                     }
 
                     @Override
@@ -60,15 +90,34 @@ public class GlideBigImageHelper implements BigImageHelper {
 
     @Override
     public void loadImage(Context context, String imageUrl, ImageView imageView) {
-        int maxWidth = ScreenUtils.getScreenWidth2Cache(context) * MULTIPLES;
-        int maxHeight = ScreenUtils.getScreenHeight2Cache(context) * MULTIPLES;
         RequestOptions requestOptions = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .fitCenter()
-                .override(maxWidth, maxHeight)
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .format(DecodeFormat.PREFER_RGB_565);
         Glide.with(context)
-                .load(imageUrl).apply(requestOptions).into(imageView);
+                .load(imageUrl).apply(requestOptions).into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        int maxWidth = ScreenUtils.getScreenWidth2Cache(context)*MULTIPLES;
+                        int maxHeight = ScreenUtils.getScreenHeight2Cache(context)*MULTIPLES;
+                        if (resource.getIntrinsicWidth() > maxWidth && resource.getIntrinsicHeight() > maxHeight){
+                            RequestOptions requestOptions = new RequestOptions()
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .override(maxWidth, maxHeight)
+                                    .fitCenter()
+                                    .format(DecodeFormat.PREFER_RGB_565);
+                            Glide.with(context)
+                                    .load(imageUrl).apply(requestOptions).into(imageView);
+                        }else {
+                            imageView.setImageDrawable(resource);
+                        }
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
     }
 
 
