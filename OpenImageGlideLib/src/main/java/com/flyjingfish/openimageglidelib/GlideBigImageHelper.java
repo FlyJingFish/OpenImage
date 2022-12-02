@@ -19,14 +19,15 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.flyjingfish.openimagelib.listener.BigImageHelper;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
+import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 public class GlideBigImageHelper implements BigImageHelper {
+    private static final int MULTIPLES = 2;
     @Override
     public void loadImage(Context context, String imageUrl, OnLoadBigImageListener onLoadBigImageListener) {
         RequestOptions requestOptions = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                .format(DecodeFormat.PREFER_RGB_565);
+                .override(ScreenUtils.getScreenWidth2Cache(context)*MULTIPLES, ScreenUtils.getScreenHeight2Cache(context)*MULTIPLES);
         Glide.with(context)
                 .load(imageUrl).apply(requestOptions).addListener(new RequestListener<Drawable>() {
                     @Override
@@ -58,8 +59,7 @@ public class GlideBigImageHelper implements BigImageHelper {
     public void loadImage(Context context, String imageUrl, ImageView imageView) {
         RequestOptions requestOptions = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                .format(DecodeFormat.PREFER_RGB_565);
+                .override(ScreenUtils.getScreenWidth2Cache(context)*MULTIPLES, ScreenUtils.getScreenHeight2Cache(context)*MULTIPLES);
         Glide.with(context)
                 .load(imageUrl).apply(requestOptions).into(imageView);
 
