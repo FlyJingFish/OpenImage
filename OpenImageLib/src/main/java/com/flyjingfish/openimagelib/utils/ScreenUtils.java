@@ -34,7 +34,7 @@ public class ScreenUtils {
 
     public static int getScreenHeight2Cache(Context context) {
         if (screenHeight == 0){
-            screenHeight = getScreenWidth(context);
+            screenHeight = getScreenHeight(context);
         }
         return screenHeight;
     }

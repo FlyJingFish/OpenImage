@@ -67,4 +67,11 @@ public class FriendsFragment extends BaseInnerFragment {
             }
         });
     }
+
+    @Override
+    protected void onTouchScale(float scale) {
+        super.onTouchScale(scale);
+        binding.rlTop.setTranslationY(-binding.rlTop.getHeight()*(1-scale)*4);
+        binding.llBottom.setTranslationY(binding.llBottom.getHeight()*(1-scale)*4);
+    }
 }

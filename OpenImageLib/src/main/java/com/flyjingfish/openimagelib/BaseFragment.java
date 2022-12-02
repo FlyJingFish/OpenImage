@@ -42,7 +42,6 @@ public abstract class BaseFragment extends BaseInnerFragment {
     protected ShapeImageView.ShapeScaleType srcScaleType;
     protected AnimatorSet coverAnim;
     protected ItemLoadHelper itemLoadHelper;
-    protected float currentScale = 1f;
     protected float autoAspectRadio;
 
     @Override
@@ -88,15 +87,6 @@ public abstract class BaseFragment extends BaseInnerFragment {
                 onTransitionEnd();
             }
         });
-        photosViewModel.onTouchCloseLiveData.observe(getViewLifecycleOwner(), aFloat -> onTouchClose(aFloat));
-        photosViewModel.onTouchScaleLiveData.observe(getViewLifecycleOwner(), aFloat -> onTouchScale(aFloat));
-    }
-
-    protected void onTouchClose(float scale){
-        currentScale = scale;
-    }
-    protected void onTouchScale(float scale){
-        currentScale = scale;
     }
 
     /**

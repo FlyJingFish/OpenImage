@@ -91,7 +91,7 @@ public class FriendImageAdapter extends RecyclerView.Adapter<RvBaseHolder> {
                     }
                 })
                 .disableClickClose()
-                .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle)
+                .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle,false,false)
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
                 .setClickPosition(position).show();
         binding.ivImage.setOnClickListener(onClickListener);

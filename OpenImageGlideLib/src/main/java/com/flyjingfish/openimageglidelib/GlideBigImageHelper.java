@@ -23,11 +23,16 @@ import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 public class GlideBigImageHelper implements BigImageHelper {
     private static final int MULTIPLES = 2;
+
     @Override
     public void loadImage(Context context, String imageUrl, OnLoadBigImageListener onLoadBigImageListener) {
+        int maxWidth = ScreenUtils.getScreenWidth2Cache(context) * MULTIPLES;
+        int maxHeight = ScreenUtils.getScreenHeight2Cache(context) * MULTIPLES;
         RequestOptions requestOptions = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .override(ScreenUtils.getScreenWidth2Cache(context)*MULTIPLES, ScreenUtils.getScreenHeight2Cache(context)*MULTIPLES);
+                .fitCenter()
+                .override(maxWidth, maxHeight)
+                .format(DecodeFormat.PREFER_RGB_565);
         Glide.with(context)
                 .load(imageUrl).apply(requestOptions).addListener(new RequestListener<Drawable>() {
                     @Override
@@ -38,13 +43,12 @@ public class GlideBigImageHelper implements BigImageHelper {
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        onLoadBigImageListener.onLoadImageSuccess(resource);
                         return false;
                     }
                 }).into(new CustomTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-
+                        onLoadBigImageListener.onLoadImageSuccess(resource);
                     }
 
                     @Override
@@ -52,17 +56,20 @@ public class GlideBigImageHelper implements BigImageHelper {
 
                     }
                 });
-
     }
 
     @Override
     public void loadImage(Context context, String imageUrl, ImageView imageView) {
+        int maxWidth = ScreenUtils.getScreenWidth2Cache(context) * MULTIPLES;
+        int maxHeight = ScreenUtils.getScreenHeight2Cache(context) * MULTIPLES;
         RequestOptions requestOptions = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .override(ScreenUtils.getScreenWidth2Cache(context)*MULTIPLES, ScreenUtils.getScreenHeight2Cache(context)*MULTIPLES);
+                .fitCenter()
+                .override(maxWidth, maxHeight)
+                .format(DecodeFormat.PREFER_RGB_565);
         Glide.with(context)
                 .load(imageUrl).apply(requestOptions).into(imageView);
-
     }
+
 
 }

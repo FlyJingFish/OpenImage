@@ -22,6 +22,7 @@ public class BaseInnerFragment extends Fragment {
     protected List<OnItemLongClickListener> onItemLongClickListeners = new ArrayList<>();
     private List<String> onItemClickListenerKeys = new ArrayList<>();
     private List<String> onItemLongClickListenerKeys = new ArrayList<>();
+    protected float currentScale = 1f;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -56,6 +57,16 @@ public class BaseInnerFragment extends Fragment {
             }
             ImageLoadUtils.getInstance().clearOnItemLongClickListener(s);
         });
+
+        basePhotosViewModel.onTouchCloseLiveData.observe(getViewLifecycleOwner(), aFloat -> onTouchClose(aFloat));
+        basePhotosViewModel.onTouchScaleLiveData.observe(getViewLifecycleOwner(), aFloat -> onTouchScale(aFloat));
+    }
+
+    protected void onTouchClose(float scale){
+        currentScale = scale;
+    }
+    protected void onTouchScale(float scale){
+        currentScale = scale;
     }
 
     protected void addOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener){

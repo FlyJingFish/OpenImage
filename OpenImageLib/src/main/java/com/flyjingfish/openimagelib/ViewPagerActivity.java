@@ -354,7 +354,7 @@ public class ViewPagerActivity extends BaseActivity {
         }
 
         View upperView;
-        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null && upperLayerOption !=null && !upperLayerOption.isFollowTouch()){
+        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null && upperLayerOption !=null && upperLayerOption.isTouchingHide()){
             upperView.setVisibility(View.VISIBLE);
         }
     }
@@ -375,7 +375,7 @@ public class ViewPagerActivity extends BaseActivity {
             }
         }
         View upperView;
-        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null && upperLayerOption !=null && !upperLayerOption.isFollowTouch()){
+        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null && upperLayerOption !=null && upperLayerOption.isTouchingHide()){
             upperView.setVisibility(View.GONE);
         }
     }
