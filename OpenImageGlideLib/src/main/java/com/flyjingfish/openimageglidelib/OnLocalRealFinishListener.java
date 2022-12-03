@@ -1,5 +1,5 @@
 package com.flyjingfish.openimageglidelib;
 
 public interface OnLocalRealFinishListener {
-    void onGoLoad(int[] maxImageSize);
+    void onGoLoad(int[] maxImageSize,boolean isWeb);
 }
