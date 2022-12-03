@@ -483,7 +483,7 @@ public class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     *
+     * 如果以上定义页面样式的方法还不够用，可继承 ViewPagerActivity 页面自己去写页面
      * @param openImageActivityCls 自己定义的大图页面
      * @return
      */
