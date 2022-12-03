@@ -76,6 +76,9 @@ implementation 'com.github.FlyJingFish.OpenImage:OpenImageGlideLib:v1.4.3'
 ```
 
 #### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
+
+**自己定义加载大图时请注意内存溢出问题，详情可看Wiki文档（[点此查看常见问题](https://github.com/FlyJingFish/OpenImage/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)）**
+
 ```
 //OpenImageLib 是基础库，没有引入图片引擎和视频播放器
 //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
