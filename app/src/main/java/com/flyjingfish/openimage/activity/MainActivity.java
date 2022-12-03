@@ -15,6 +15,7 @@ import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     //  "/storage/emulated/0/Tencent/QQ_Images/a62d96cb210ccb9.jpg",
+    //  "content://media/external/images/media/1735525",
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -20,101 +20,50 @@ import com.bumptech.glide.request.transition.Transition;
 import com.flyjingfish.openimagelib.listener.BigImageHelper;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
 
+
 public class GlideBigImageHelper implements BigImageHelper {
-    private static final float MULTIPLES = 1.5f;
+
     @Override
     public void loadImage(Context context, String imageUrl, OnLoadBigImageListener onLoadBigImageListener) {
-        RequestOptions requestOptions = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                .format(DecodeFormat.PREFER_RGB_565);
-        Glide.with(context)
-                .load(imageUrl).apply(requestOptions).addListener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        onLoadBigImageListener.onLoadImageFailed();
-                        return false;
-                    }
+        LoadImageUtils.INSTANCE.loadImage(context, imageUrl, maxImageSize -> {
+            RequestOptions requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .override(maxImageSize[0], maxImageSize[1])
+                    .format(DecodeFormat.PREFER_RGB_565);
+            Glide.with(context)
+                    .load(imageUrl).apply(requestOptions).addListener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            onLoadBigImageListener.onLoadImageFailed();
+                            return false;
+                        }
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                }).into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        int maxSize = (int) (MaxImageUtils.getMaxLoader()/MULTIPLES);
-                        if (resource.getIntrinsicWidth() > maxSize && resource.getIntrinsicHeight() > maxSize){
-                            RequestOptions requestOptions = new RequestOptions()
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .override(maxSize)
-                                    .fitCenter()
-                                    .format(DecodeFormat.PREFER_RGB_565);
-                            Glide.with(context)
-                                    .load(imageUrl).apply(requestOptions)
-                                    .addListener(new RequestListener<Drawable>() {
-                                        @Override
-                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                            onLoadBigImageListener.onLoadImageFailed();
-                                            return false;
-                                        }
-
-                                        @Override
-                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                            return false;
-                                        }
-                                    }).into(new CustomTarget<Drawable>() {
-                                        @Override
-                                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                            onLoadBigImageListener.onLoadImageSuccess(resource);
-                                        }
-
-                                        @Override
-                                        public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                                        }
-                                    });
-                        }else {
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    }).into(new CustomTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                             onLoadBigImageListener.onLoadImageSuccess(resource);
                         }
-                    }
 
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                    }
-                });
+                        }
+                    });
+        });
+
     }
 
     @Override
     public void loadImage(Context context, String imageUrl, ImageView imageView) {
         RequestOptions requestOptions = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                .format(DecodeFormat.PREFER_RGB_565);
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(context)
-                .load(imageUrl).apply(requestOptions).into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        int maxSize = (int) (MaxImageUtils.getMaxLoader()/MULTIPLES);
-                        if (resource.getIntrinsicWidth() > maxSize && resource.getIntrinsicHeight() > maxSize){
-                            RequestOptions requestOptions = new RequestOptions()
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .override(maxSize)
-                                    .fitCenter()
-                                    .format(DecodeFormat.PREFER_RGB_565);
-                            Glide.with(context)
-                                    .load(imageUrl).apply(requestOptions).into(imageView);
-                        }else {
-                            imageView.setImageDrawable(resource);
-                        }
-                    }
+                .load(imageUrl).apply(requestOptions).into(imageView);
 
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
-                });
     }
 
 
