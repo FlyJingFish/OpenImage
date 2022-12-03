@@ -173,50 +173,44 @@ public class ViewPagerActivity extends BaseActivity {
             @NonNull
             @Override
             public Fragment createFragment(int position) {
-                BaseFragment baseFragment = fragmentHashMap.get(position);
-                if (baseFragment == null) {
-                    OpenImageDetail openImageBean = openImageBeans.get(position);
-                    MediaType mediaType = openImageBean.getType();
-                    BaseFragment fragment = null;
-                    if (mediaType == MediaType.VIDEO) {
-                        if (videoFragmentCreate != null) {
-                            fragment = videoFragmentCreate.createVideoFragment();
-                            if (fragment == null) {
-                                throw new IllegalArgumentException(videoFragmentCreate.getClass().getName() + "请重写createVideoFragment");
-                            }
-                        } else {
-                            if (fragment == null) {
-                                throw new IllegalArgumentException("请设置视频播放器fragment --> OpenImageConfig");
-                            }
+                OpenImageDetail openImageBean = openImageBeans.get(position);
+                MediaType mediaType = openImageBean.getType();
+                BaseFragment fragment = null;
+                if (mediaType == MediaType.VIDEO) {
+                    if (videoFragmentCreate != null) {
+                        fragment = videoFragmentCreate.createVideoFragment();
+                        if (fragment == null) {
+                            throw new IllegalArgumentException(videoFragmentCreate.getClass().getName() + "请重写createVideoFragment");
                         }
-
                     } else {
-                        if (imageFragmentCreate != null) {
-                            fragment = imageFragmentCreate.createImageFragment();
-                        } else {
-                            fragment = new ImageFragment();
+                        if (fragment == null) {
+                            throw new IllegalArgumentException("请设置视频播放器fragment --> OpenImageConfig");
                         }
-
                     }
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(OpenParams.IMAGE, openImageBean);
-                    bundle.putInt(OpenParams.SHOW_POSITION, position);
-                    bundle.putInt(OpenParams.ERROR_RES_ID, errorResId);
-                    bundle.putInt(OpenParams.CLICK_POSITION, selectPos);
-                    bundle.putSerializable(OpenParams.IMAGE_DISK_MODE, imageDiskMode);
-                    bundle.putSerializable(OpenParams.SRC_SCALE_TYPE, srcScaleType);
-                    bundle.putString(OpenParams.ITEM_LOAD_KEY, itemLoadKey);
-                    bundle.putBoolean(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
-                    bundle.putString(OpenParams.ON_ITEM_CLICK_KEY, onItemCLickKey);
-                    bundle.putString(OpenParams.ON_ITEM_LONG_CLICK_KEY, onItemLongCLickKey);
-                    bundle.putString(OpenParams.OPEN_COVER_DRAWABLE, openCoverKey);
-                    bundle.putFloat(OpenParams.AUTO_ASPECT_RATIO, autoAspectRadio);
-                    fragment.setArguments(bundle);
-                    fragmentHashMap.put(position, fragment);
-                    baseFragment = fragment;
-                }
 
-                return baseFragment;
+                } else {
+                    if (imageFragmentCreate != null) {
+                        fragment = imageFragmentCreate.createImageFragment();
+                    } else {
+                        fragment = new ImageFragment();
+                    }
+
+                }
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(OpenParams.IMAGE, openImageBean);
+                bundle.putInt(OpenParams.SHOW_POSITION, position);
+                bundle.putInt(OpenParams.ERROR_RES_ID, errorResId);
+                bundle.putInt(OpenParams.CLICK_POSITION, selectPos);
+                bundle.putSerializable(OpenParams.IMAGE_DISK_MODE, imageDiskMode);
+                bundle.putSerializable(OpenParams.SRC_SCALE_TYPE, srcScaleType);
+                bundle.putString(OpenParams.ITEM_LOAD_KEY, itemLoadKey);
+                bundle.putBoolean(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
+                bundle.putString(OpenParams.ON_ITEM_CLICK_KEY, onItemCLickKey);
+                bundle.putString(OpenParams.ON_ITEM_LONG_CLICK_KEY, onItemLongCLickKey);
+                bundle.putString(OpenParams.OPEN_COVER_DRAWABLE, openCoverKey);
+                bundle.putFloat(OpenParams.AUTO_ASPECT_RATIO, autoAspectRadio);
+                fragment.setArguments(bundle);
+                return fragment;
             }
 
             @Override
@@ -536,7 +530,6 @@ public class ViewPagerActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         showPosition = 0;
-        fragmentHashMap.clear();
         mHandler.removeCallbacksAndMessages(null);
         ImageLoadUtils.getInstance().clearItemLoadHelper(itemLoadKey);
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
@@ -699,8 +692,9 @@ public class ViewPagerActivity extends BaseActivity {
     }
 
     private View getCoverView() {
-        BaseFragment baseFragment = fragmentHashMap.get(showPosition);
-        if (baseFragment != null) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("f"+showPosition);
+        if (fragment instanceof BaseFragment) {
+            BaseFragment baseFragment = (BaseFragment) fragment;
             return baseFragment.getExitImageView();
         }
         return null;

@@ -60,7 +60,6 @@ public class BaseActivity extends AppCompatActivity {
     protected final List<OnSelectMediaListener> onSelectMediaListeners = new ArrayList<>();
     protected final List<String> onSelectMediaListenerKeys = new ArrayList<>();
     protected final List<MoreViewOption> moreViewOptions = new ArrayList<>();
-    protected final HashMap<Integer, BaseFragment> fragmentHashMap = new HashMap<>();
     protected final Handler mHandler = new Handler(Looper.getMainLooper());
     protected List<OpenImageDetail> openImageBeans;
     protected PhotosViewModel photosViewModel;
