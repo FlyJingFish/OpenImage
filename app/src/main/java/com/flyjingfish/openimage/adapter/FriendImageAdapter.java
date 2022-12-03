@@ -17,6 +17,7 @@ import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.ItemImageBinding;
 import com.flyjingfish.openimage.openImpl.FriendLayerFragmentCreateImpl;
+import com.flyjingfish.openimage.openImpl.MyBigImageActivity;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
@@ -91,6 +92,7 @@ public class FriendImageAdapter extends RecyclerView.Adapter<RvBaseHolder> {
                     }
                 })
                 .disableClickClose()
+                .setOpenImageActivityCls(MyBigImageActivity.class)
                 .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle,false,false)
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
                 .setClickPosition(position).show();

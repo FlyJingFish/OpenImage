@@ -18,6 +18,7 @@ import com.flyjingfish.openimage.databinding.ItemFriendImagesBinding;
 import com.flyjingfish.openimage.databinding.ItemFriendVideoBinding;
 import com.flyjingfish.openimage.openImpl.FriendLayerFragmentCreateImpl;
 import com.flyjingfish.openimage.openImpl.FriendsVideoFragmentCreateImpl;
+import com.flyjingfish.openimage.openImpl.MyBigImageActivity;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
@@ -95,6 +96,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RvBaseHolder> {
                         });
                     }
                 })
+                .setOpenImageActivityCls(MyBigImageActivity.class)
                 .setVideoFragmentCreate(new FriendsVideoFragmentCreateImpl())
                 .setAutoScrollScanPosition(true)
                 .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle)

@@ -59,6 +59,7 @@ public class ViewPagerActivity extends BaseActivity {
     protected FrameLayout flTouchView;
     protected ViewPager2 viewPager;
     protected TouchCloseLayout rootView;
+    protected View contentView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class ViewPagerActivity extends BaseActivity {
         initStyleConfig();
 
         super.onCreate(savedInstanceState);
-        setContentView(rootView);
+        setContentView(contentView);
 
         initMoreView();
         initViewPager2();
@@ -88,6 +89,7 @@ public class ViewPagerActivity extends BaseActivity {
         flTouchView = binding.flTouchView;
         viewPager = binding.viewPager;
         rootView = binding.getRoot();
+        contentView = rootView;
     }
 
     private void initPhotosViewModel(){

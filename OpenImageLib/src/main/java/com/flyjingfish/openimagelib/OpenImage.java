@@ -483,6 +483,16 @@ public class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     *
+     * @param openImageActivityCls 自己定义的大图页面
+     * @return
+     */
+    public OpenImage setOpenImageActivityCls(Class<?> openImageActivityCls) {
+        this.openImageActivityCls = openImageActivityCls;
+        return this;
+    }
+
+    /**
      * 打开大图页面
      */
     public void show() {

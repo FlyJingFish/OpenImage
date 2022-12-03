@@ -73,6 +73,7 @@ class OpenImage4Params {
     protected Bundle upperLayerBundle;
     protected volatile boolean isMapShareView = true;
     protected String drawableKey;
+    protected Class<?> openImageActivityCls = ViewPagerActivity.class;
 
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV
@@ -91,7 +92,7 @@ class OpenImage4Params {
         if (wechatExitFillInEffect) {
             isAutoScrollScanPosition = false;
         }
-        Intent intent = new Intent(context, ViewPagerActivity.class);
+        Intent intent = new Intent(context, openImageActivityCls);
 
         intent.putExtra(OpenParams.CLICK_POSITION, clickDataPosition);
         if (onselectKey != null) {
