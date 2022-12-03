@@ -1,5 +1,7 @@
 package com.flyjingfish.openimage.openImpl;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +23,10 @@ public class FriendsFragment extends BaseInnerFragment {
 
     private LayoutFriendsBinding binding;
     private ImageItem imageItem;
+    private AnimatorSet hideAnim;
+    private ObjectAnimator hideTopAnim;
+    private ObjectAnimator hideBottomAnim;
+    private boolean isHide;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,16 +54,15 @@ public class FriendsFragment extends BaseInnerFragment {
         if (imageItem != null){
             binding.tvText.setText(imageItem.text);
         }
-        binding.ivBack.setOnClickListener(v -> ((ViewPagerActivity) requireActivity()).close(false));
+        binding.ivBack.setOnClickListener(v -> close());
 
         addOnItemClickListener((fragment, openImageUrl, position) -> {
-            if (binding.rlBottom.getVisibility() == View.VISIBLE){
-                binding.rlBottom.setVisibility(View.GONE);
-                binding.rlTop.setVisibility(View.GONE);
+            if (isHide){
+                clickShowAnim();
             }else {
-                binding.rlBottom.setVisibility(View.VISIBLE);
-                binding.rlTop.setVisibility(View.VISIBLE);
+                clickHideAnim();
             }
+            isHide= !isHide;
         });
 
         addOnSelectMediaListener(new OnSelectMediaListener() {
@@ -68,10 +73,40 @@ public class FriendsFragment extends BaseInnerFragment {
         });
     }
 
+    private void initClickAnim(boolean isHide){
+        if (hideAnim == null){
+            hideTopAnim = ObjectAnimator.ofFloat(binding.rlTop,"translationY",0,-binding.rlTop.getHeight());
+            hideBottomAnim = ObjectAnimator.ofFloat(binding.llBottom,"translationY",0,binding.llBottom.getHeight());
+            hideAnim = new AnimatorSet();
+            hideAnim.playTogether(hideTopAnim, hideBottomAnim);
+            hideAnim.setDuration(240);
+        }
+
+        if (isHide){
+            hideTopAnim.setFloatValues(0,-binding.rlTop.getHeight());
+            hideBottomAnim.setFloatValues(0,binding.llBottom.getHeight());
+        }else {
+            hideTopAnim.setFloatValues(-binding.rlTop.getHeight(),0);
+            hideBottomAnim.setFloatValues(binding.llBottom.getHeight(),0);
+        }
+    }
+
+    private void clickHideAnim(){
+        initClickAnim(true);
+        hideAnim.start();
+    }
+
+    private void clickShowAnim(){
+        initClickAnim(false);
+        hideAnim.start();
+    }
+
     @Override
     protected void onTouchScale(float scale) {
         super.onTouchScale(scale);
-        binding.rlTop.setTranslationY(-binding.rlTop.getHeight()*(1-scale)*4);
-        binding.llBottom.setTranslationY(binding.llBottom.getHeight()*(1-scale)*4);
+        if (!isHide){
+            binding.rlTop.setTranslationY(-binding.rlTop.getHeight()*(1-scale)*4);
+            binding.llBottom.setTranslationY(binding.llBottom.getHeight()*(1-scale)*4);
+        }
     }
 }

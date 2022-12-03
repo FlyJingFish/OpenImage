@@ -51,6 +51,12 @@ public class TouchCloseLayout extends FrameLayout {
         touchScaleYAnim = ObjectAnimator.ofFloat(touchView, "scaleY", 1, 1);
         bgViewAnim = ObjectAnimator.ofFloat(bgView, "alpha", 1, 1);
         touchAnim = new AnimatorSet();
+        touchScaleXAnim.addUpdateListener(animation -> {
+            float scaleX = touchView.getScaleX();
+            if (onTouchCloseListener != null) {
+                onTouchCloseListener.onTouchScale(scaleX);
+            }
+        });
         touchAnim.playTogether(touchXAnim, touchYAnim, touchScaleXAnim, touchScaleYAnim, bgViewAnim);
         touchAnim.setDuration(200);
         touchAnim.addListener(new Animator.AnimatorListener() {
@@ -182,6 +188,11 @@ public class TouchCloseLayout extends FrameLayout {
         if (touchAnim != null) {
             touchAnim.removeAllListeners();
             touchAnim.cancel();
+        }
+
+        if (touchScaleXAnim != null) {
+            touchScaleXAnim.removeAllListeners();
+            touchScaleXAnim.cancel();
         }
 
     }

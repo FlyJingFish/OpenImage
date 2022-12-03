@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.HashMap;
 
 public class PhotosViewModel extends AndroidViewModel {
-    MutableLiveData<Integer> closeViewLiveData = new MutableLiveData<>();
+    MutableLiveData<Boolean> closeViewLiveData = new MutableLiveData<>();
     MutableLiveData<Boolean> transitionEndLiveData = new MutableLiveData<>();
     MutableLiveData<Float> onTouchScaleLiveData = new MutableLiveData<>();
     MutableLiveData<Float> onTouchCloseLiveData = new MutableLiveData<>();

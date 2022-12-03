@@ -89,13 +89,6 @@ public abstract class BaseFragment extends BaseInnerFragment {
         });
     }
 
-    /**
-     * 关闭页面
-     */
-    public void close() {
-        photosViewModel.closeViewLiveData.setValue(1);
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();

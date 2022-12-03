@@ -20,8 +20,8 @@ public class BaseInnerFragment extends Fragment {
     private PhotosViewModel basePhotosViewModel;
     protected List<OnItemClickListener> onItemClickListeners = new ArrayList<>();
     protected List<OnItemLongClickListener> onItemLongClickListeners = new ArrayList<>();
-    private List<String> onItemClickListenerKeys = new ArrayList<>();
-    private List<String> onItemLongClickListenerKeys = new ArrayList<>();
+    private final List<String> onItemClickListenerKeys = new ArrayList<>();
+    private final List<String> onItemLongClickListenerKeys = new ArrayList<>();
     protected float currentScale = 1f;
 
     @Override
@@ -109,6 +109,17 @@ public class BaseInnerFragment extends Fragment {
         if (onSelectMediaListener != null){
             basePhotosViewModel.onRemoveOnSelectMediaListenerLiveData.setValue(onSelectMediaListener.toString());
         }
+    }
+
+    /**
+     * 关闭页面
+     */
+    protected void close() {
+        close(false);
+    }
+
+    protected void close(boolean isTouchClose) {
+        basePhotosViewModel.closeViewLiveData.setValue(isTouchClose);
     }
 
     @Override

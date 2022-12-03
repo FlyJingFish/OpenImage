@@ -1,5 +1,6 @@
 package com.flyjingfish.openimagelib;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Instrumentation;
 import android.app.SharedElementCallback;
@@ -17,15 +18,64 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.flyjingfish.openimagelib.beans.OpenImageDetail;
+import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
+import com.flyjingfish.openimagelib.enums.ImageDiskMode;
+import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
+import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
+import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BaseActivity extends AppCompatActivity {
     private static final int CHECK_FINISH = 1009;
     private static final long CHECK_DELAY_MS = 200;
+    protected static final int INDICATOR_TEXT = 0;
+    protected static final int INDICATOR_IMAGE = 1;
+    protected static final long WECHAT_DURATION = 250;
+    protected static final long WECHAT_DURATION_END_ALPHA = 50;
+    protected int indicatorType;
+    protected int showPosition;
+    protected int selectPos;
+    protected boolean isCallClosed;
+    protected String itemLoadKey;
+    protected String textFormat = "%1$d/%2$d";
+    protected String onSelectKey;
+    protected String openCoverKey;
+    protected String pageTransformersKey;
+    protected String onItemCLickKey;
+    protected String onItemLongCLickKey;
+    protected String moreViewKey;
+    protected String onBackViewKey;
+    protected String videoFragmentCreateKey;
+    protected String imageFragmentCreateKey;
+    protected String upperLayerFragmentCreateKey;
+    protected final List<OnSelectMediaListener> onSelectMediaListeners = new ArrayList<>();
+    protected final List<String> onSelectMediaListenerKeys = new ArrayList<>();
+    protected final List<MoreViewOption> moreViewOptions = new ArrayList<>();
+    protected final HashMap<Integer, BaseFragment> fragmentHashMap = new HashMap<>();
+    protected final Handler mHandler = new Handler(Looper.getMainLooper());
+    protected List<OpenImageDetail> openImageBeans;
+    protected PhotosViewModel photosViewModel;
+    protected OpenImageIndicatorTextBinding indicatorTextBinding;
+    protected ImageIndicatorAdapter imageIndicatorAdapter;
+    protected OpenImageOrientation orientation;
+    protected ImageDiskMode imageDiskMode;
+    protected ShapeImageView.ShapeScaleType srcScaleType;
+    protected OnSelectMediaListener onSelectMediaListener;
+    protected ObjectAnimator wechatEffectAnim;
+    protected LinearLayoutManager imageIndicatorLayoutManager;
+    protected ImageLoadUtils.OnBackView onBackView;
+    protected FontStyle fontStyle;
+    protected Fragment upLayerFragment;
+    protected UpperLayerOption upperLayerOption;
     private final Handler closeHandler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -178,5 +228,38 @@ public class BaseActivity extends AppCompatActivity {
                 return DARK;
             }
         }
+    }
+
+    protected void parseIntent(){
+
+        srcScaleType = (ShapeImageView.ShapeScaleType) getIntent().getSerializableExtra(OpenParams.SRC_SCALE_TYPE);
+        openImageBeans = (List<OpenImageDetail>) getIntent().getSerializableExtra(OpenParams.IMAGES);
+        int clickPosition = getIntent().getIntExtra(OpenParams.CLICK_POSITION, 0);
+
+        imageDiskMode = (ImageDiskMode) getIntent().getSerializableExtra(OpenParams.IMAGE_DISK_MODE);
+
+        itemLoadKey = getIntent().getStringExtra(OpenParams.ITEM_LOAD_KEY);
+        selectPos = 0;
+        for (int i = 0; i < openImageBeans.size(); i++) {
+            OpenImageDetail openImageBean = openImageBeans.get(i);
+            if (openImageBean.dataPosition == clickPosition) {
+                selectPos = i;
+                break;
+            }
+        }
+        showPosition = selectPos;
+        onSelectKey = getIntent().getStringExtra(OpenParams.ON_SELECT_KEY);
+        openCoverKey = getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE);
+        onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(onSelectKey);
+        imageFragmentCreateKey = getIntent().getStringExtra(OpenParams.IMAGE_FRAGMENT_KEY);
+        videoFragmentCreateKey = getIntent().getStringExtra(OpenParams.VIDEO_FRAGMENT_KEY);
+        upperLayerFragmentCreateKey = getIntent().getStringExtra(OpenParams.UPPER_LAYER_FRAGMENT_KEY);
+        upperLayerOption = ImageLoadUtils.getInstance().getUpperLayerFragmentCreate(upperLayerFragmentCreateKey);
+
+        onItemCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_CLICK_KEY);
+        onItemLongCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_LONG_CLICK_KEY);
+        moreViewKey = getIntent().getStringExtra(OpenParams.MORE_VIEW_KEY);
+        onBackViewKey = getIntent().getStringExtra(OpenParams.ON_BACK_VIEW);
+        onBackView = ImageLoadUtils.getInstance().getOnBackView(onBackViewKey);
     }
 }

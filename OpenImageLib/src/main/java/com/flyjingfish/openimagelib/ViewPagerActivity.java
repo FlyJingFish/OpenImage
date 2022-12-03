@@ -4,8 +4,6 @@ import android.animation.ObjectAnimator;
 import android.app.SharedElementCallback;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
@@ -18,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,72 +35,30 @@ import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.databinding.OpenImageActivityViewpagerBinding;
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
 import com.flyjingfish.openimagelib.enums.BackViewType;
-import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
-import com.flyjingfish.openimagelib.listener.OnItemClickListener;
-import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.AttrsUtils;
-import com.flyjingfish.openimagelib.utils.StatusBarHelper;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
+import com.flyjingfish.openimagelib.utils.StatusBarHelper;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ViewPagerActivity extends BaseActivity {
 
-    private OpenImageActivityViewpagerBinding binding;
-    private List<OpenImageDetail> openImageBeans;
-    private int clickPosition;
-    private int showPosition;
-    private final HashMap<Integer, BaseFragment> fragmentHashMap = new HashMap<>();
-    private Handler mHandler = new Handler(Looper.getMainLooper());
-    private PhotosViewModel photosViewModel;
-    private String itemLoadKey;
-    private OpenImageIndicatorTextBinding indicatorTextBinding;
-    private int indicatorType;
-    private String textFormat = "%1$d/%2$d";
-    private static final int INDICATOR_TEXT = 0;
-    private static final int INDICATOR_IMAGE = 1;
-    private static final long WECHAT_DURATION = 250;
-    private static final long WECHAT_DURATION_END_ALPHA = 50;
-    private ImageIndicatorAdapter imageIndicatorAdapter;
-    private OpenImageOrientation orientation;
-    private ImageDiskMode imageDiskMode;
-    private ShapeImageView.ShapeScaleType srcScaleType;
-    private int selectPos;
-    private OnSelectMediaListener onSelectMediaListener;
-    private List<OnSelectMediaListener> onSelectMediaListeners = new ArrayList<>();
-    private List<String> onSelectMediaListenerKeys = new ArrayList<>();
-    private String onSelectKey;
-    private String openCoverKey;
-    private String pageTransformersKey;
-    private ObjectAnimator wechatEffectAnim;
-    private String onItemCLickKey;
-    private String onItemLongCLickKey;
-    private String moreViewKey;
-    private List<MoreViewOption> moreViewOptions = new ArrayList<>();
-    private LinearLayoutManager imageIndicatorLayoutManager;
-    private String onBackViewKey;
-    private ImageLoadUtils.OnBackView onBackView;
-    private FontStyle fontStyle;
-    private boolean isCallClosed;
-    private String videoFragmentCreateKey;
-    private String imageFragmentCreateKey;
-    private String upperLayerFragmentCreateKey;
-    private Fragment upLayerFragment;
-    private UpperLayerOption upperLayerOption;
+    protected View vBg;
+    protected FrameLayout flTouchView;
+    protected ViewPager2 viewPager;
+    protected TouchCloseLayout rootView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,36 +67,98 @@ public class ViewPagerActivity extends BaseActivity {
         getWindow().setAllowEnterTransitionOverlap(true);
         getWindow().setExitTransition(TransitionInflater.from(this)
                 .inflateTransition(R.transition.open_image_exit_transition));
-        binding = OpenImageActivityViewpagerBinding.inflate(getLayoutInflater());
+        initPhotosViewModel();
+        initRootView();
+        parseIntent();
+        initStyleConfig();
 
+        super.onCreate(savedInstanceState);
+        setContentView(rootView);
+
+        initMoreView();
+        initViewPager2();
+        initTouchCloseLayout();
+        setViewTransition();
+        addTransitionListener();
+    }
+
+    protected void initRootView(){
+        OpenImageActivityViewpagerBinding binding = OpenImageActivityViewpagerBinding.inflate(getLayoutInflater());
+        vBg = binding.vBg;
+        flTouchView = binding.flTouchView;
+        viewPager = binding.viewPager;
+        rootView = binding.getRoot();
+    }
+
+    private void initPhotosViewModel(){
         photosViewModel = new ViewModelProvider(this).get(PhotosViewModel.class);
         photosViewModel.closeViewLiveData.observe(this, integer -> close(false));
-        srcScaleType = (ShapeImageView.ShapeScaleType) getIntent().getSerializableExtra(OpenParams.SRC_SCALE_TYPE);
-        openImageBeans = (List<OpenImageDetail>) getIntent().getSerializableExtra(OpenParams.IMAGES);
-        clickPosition = getIntent().getIntExtra(OpenParams.CLICK_POSITION, 0);
-        boolean disEnableTouchClose = getIntent().getBooleanExtra(OpenParams.DISABLE_TOUCH_CLOSE, false);
-        imageDiskMode = (ImageDiskMode) getIntent().getSerializableExtra(OpenParams.IMAGE_DISK_MODE);
-        int errorResId = getIntent().getIntExtra(OpenParams.ERROR_RES_ID, 0);
-        itemLoadKey = getIntent().getStringExtra(OpenParams.ITEM_LOAD_KEY);
-        float touchScaleClose = getIntent().getFloatExtra(OpenParams.TOUCH_CLOSE_SCALE, .76f);
-        selectPos = 0;
-        for (int i = 0; i < openImageBeans.size(); i++) {
-            OpenImageDetail openImageBean = openImageBeans.get(i);
-            if (openImageBean.dataPosition == clickPosition) {
-                selectPos = i;
-                break;
+        photosViewModel.onAddOnSelectMediaListenerLiveData.observe(this, s -> {
+            OnSelectMediaListener onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(s);
+            if (onSelectMediaListener != null){
+                onSelectMediaListeners.add(onSelectMediaListener);
             }
-        }
-        showPosition = selectPos;
-        onSelectKey = getIntent().getStringExtra(OpenParams.ON_SELECT_KEY);
-        openCoverKey = getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE);
-        onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(onSelectKey);
-        imageFragmentCreateKey = getIntent().getStringExtra(OpenParams.IMAGE_FRAGMENT_KEY);
-        videoFragmentCreateKey = getIntent().getStringExtra(OpenParams.VIDEO_FRAGMENT_KEY);
-        upperLayerFragmentCreateKey = getIntent().getStringExtra(OpenParams.UPPER_LAYER_FRAGMENT_KEY);
+            onSelectMediaListenerKeys.add(s);
+        });
+
+        photosViewModel.onRemoveOnSelectMediaListenerLiveData.observe(this, s -> {
+            OnSelectMediaListener onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(s);
+            if (onSelectMediaListener != null){
+                onSelectMediaListeners.remove(onSelectMediaListener);
+            }
+            ImageLoadUtils.getInstance().clearOnItemClickListener(s);
+        });
+    }
+
+    protected void initTouchCloseLayout(){
+        boolean disEnableTouchClose = getIntent().getBooleanExtra(OpenParams.DISABLE_TOUCH_CLOSE, false);
+        float touchScaleClose = getIntent().getFloatExtra(OpenParams.TOUCH_CLOSE_SCALE, .76f);
+        rootView.setTouchCloseScale(touchScaleClose);
+        rootView.setTouchView(flTouchView, vBg);
+        rootView.setDisEnableTouchClose(disEnableTouchClose);
+        rootView.setOrientation(orientation == OpenImageOrientation.VERTICAL ? OpenImageOrientation.HORIZONTAL : OpenImageOrientation.VERTICAL);
+        rootView.setOnTouchCloseListener(new TouchCloseLayout.OnTouchCloseListener() {
+            @Override
+            public void onStartTouch() {
+                if (onBackView != null) {
+                    onBackView.onStartTouchScale(showPosition);
+                }
+                if (fontStyle == FontStyle.FULL_SCREEN) {
+                    StatusBarHelper.cancelFullScreen(ViewPagerActivity.this);
+                }
+                touchHideMoreView();
+            }
+
+            @Override
+            public void onEndTouch() {
+                if (onBackView != null) {
+                    onBackView.onEndTouchScale(showPosition);
+                }
+                if (fontStyle == FontStyle.FULL_SCREEN) {
+                    StatusBarHelper.setFullScreen(ViewPagerActivity.this);
+                }
+                showMoreView();
+            }
+
+            @Override
+            public void onTouchScale(float scale) {
+                photosViewModel.onTouchScaleLiveData.setValue(scale);
+            }
+
+            @Override
+            public void onTouchClose(float scale) {
+                photosViewModel.onTouchCloseLiveData.setValue(scale);
+                close(true);
+            }
+        });
+    }
+
+    protected void initViewPager2(){
+        int errorResId = getIntent().getIntExtra(OpenParams.ERROR_RES_ID, 0);
+        float autoAspectRadio = getIntent().getFloatExtra(OpenParams.AUTO_ASPECT_RATIO,0);
+        boolean disableClickClose = getIntent().getBooleanExtra(OpenParams.DISABLE_CLICK_CLOSE, false);
         VideoFragmentCreate videoCreate = ImageLoadUtils.getInstance().getVideoFragmentCreate(videoFragmentCreateKey);
         ImageFragmentCreate imageCreate = ImageLoadUtils.getInstance().getImageFragmentCreate(imageFragmentCreateKey);
-        upperLayerOption = ImageLoadUtils.getInstance().getUpperLayerFragmentCreate(upperLayerFragmentCreateKey);
         if (videoCreate == null){
             videoCreate = OpenImageConfig.getInstance().getVideoFragmentCreate();
         }
@@ -150,20 +167,7 @@ public class ViewPagerActivity extends BaseActivity {
         }
         VideoFragmentCreate videoFragmentCreate = videoCreate;
         ImageFragmentCreate imageFragmentCreate = imageCreate;
-        boolean disableClickClose = getIntent().getBooleanExtra(OpenParams.DISABLE_CLICK_CLOSE, false);
-        onItemCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_CLICK_KEY);
-        onItemLongCLickKey = getIntent().getStringExtra(OpenParams.ON_ITEM_LONG_CLICK_KEY);
-        moreViewKey = getIntent().getStringExtra(OpenParams.MORE_VIEW_KEY);
-        onBackViewKey = getIntent().getStringExtra(OpenParams.ON_BACK_VIEW);
-        onBackView = ImageLoadUtils.getInstance().getOnBackView(onBackViewKey);
-        float autoAspectRadio = getIntent().getFloatExtra(OpenParams.AUTO_ASPECT_RATIO,0);
-        initStyleConfig();
-
-        super.onCreate(savedInstanceState);
-        setContentView(binding.getRoot());
-
-        initMoreView();
-        binding.viewPager.setAdapter(new FragmentStateAdapter(this) {
+        viewPager.setAdapter(new FragmentStateAdapter(this) {
             @NonNull
             @Override
             public Fragment createFragment(int position) {
@@ -218,7 +222,7 @@ public class ViewPagerActivity extends BaseActivity {
                 return openImageBeans.size();
             }
         });
-        binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             boolean isFirstBacked = false;
 
             @Override
@@ -227,8 +231,8 @@ public class ViewPagerActivity extends BaseActivity {
                 showPosition = position;
                 setIndicatorPosition();
                 showMoreView();
-                if (position != selectPos && binding.viewPager.getOffscreenPageLimit() != 1) {
-                    binding.viewPager.setOffscreenPageLimit(1);
+                if (position != selectPos && viewPager.getOffscreenPageLimit() != 1) {
+                    viewPager.setOffscreenPageLimit(1);
                 }
                 if (isFirstBacked && onBackView != null) {
                     onBackView.onScrollPos(openImageBeans.get(showPosition).viewPosition);
@@ -242,73 +246,14 @@ public class ViewPagerActivity extends BaseActivity {
                 isFirstBacked = true;
             }
         });
-        binding.viewPager.setCurrentItem(selectPos, false);
-        binding.getRoot().setTouchCloseScale(touchScaleClose);
-        binding.getRoot().setTouchView(binding.flTouchView, binding.vBg);
-        binding.getRoot().setDisEnableTouchClose(disEnableTouchClose);
-        binding.getRoot().setOrientation(orientation == OpenImageOrientation.VERTICAL ? OpenImageOrientation.HORIZONTAL : OpenImageOrientation.VERTICAL);
-        binding.getRoot().setOnTouchCloseListener(new TouchCloseLayout.OnTouchCloseListener() {
-            @Override
-            public void onStartTouch() {
-                if (onBackView != null) {
-                    onBackView.onStartTouchScale(showPosition);
-                }
-                if (fontStyle == FontStyle.FULL_SCREEN) {
-                    StatusBarHelper.cancelFullScreen(ViewPagerActivity.this);
-                }
-                touchHideMoreView();
-            }
-
-            @Override
-            public void onEndTouch() {
-                if (onBackView != null) {
-                    onBackView.onEndTouchScale(showPosition);
-                }
-                if (fontStyle == FontStyle.FULL_SCREEN) {
-                    StatusBarHelper.setFullScreen(ViewPagerActivity.this);
-                }
-                showMoreView();
-            }
-
-            @Override
-            public void onTouchScale(float scale) {
-                photosViewModel.onTouchScaleLiveData.setValue(scale);
-            }
-
-            @Override
-            public void onTouchClose(float scale) {
-                photosViewModel.onTouchCloseLiveData.setValue(scale);
-                close(true);
-            }
-        });
-        setViewTransition();
-        addTransitionListener();
-        setUpperLayerOptions();
+        viewPager.setCurrentItem(selectPos, false);
     }
 
-    private void setUpperLayerOptions(){
-        photosViewModel.onAddOnSelectMediaListenerLiveData.observe(this, s -> {
-            OnSelectMediaListener onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(s);
-            if (onSelectMediaListener != null){
-                onSelectMediaListeners.add(onSelectMediaListener);
-            }
-            onSelectMediaListenerKeys.add(s);
-        });
-
-        photosViewModel.onRemoveOnSelectMediaListenerLiveData.observe(this, s -> {
-            OnSelectMediaListener onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(s);
-            if (onSelectMediaListener != null){
-                onSelectMediaListeners.remove(onSelectMediaListener);
-            }
-            ImageLoadUtils.getInstance().clearOnItemClickListener(s);
-        });
+    protected void setViewTransition() {
+        ViewCompat.setTransitionName(viewPager, OpenParams.SHARE_VIEW + selectPos);
     }
 
-    private void setViewTransition() {
-        ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + selectPos);
-    }
-
-    private void initMoreView() {
+    protected void initMoreView() {
         if (moreViewKey != null) {
             List<MoreViewOption> viewOptions = ImageLoadUtils.getInstance().getMoreViewOption(moreViewKey);
             for (MoreViewOption moreViewOption : viewOptions) {
@@ -321,9 +266,9 @@ public class ViewPagerActivity extends BaseActivity {
 
                 if (view != null){
                     if (moreViewOption.isFollowTouch()){
-                        binding.flTouchView.addView(view, moreViewOption.getLayoutParams());
+                        flTouchView.addView(view, moreViewOption.getLayoutParams());
                     }else {
-                        binding.getRoot().addView(view, moreViewOption.getLayoutParams());
+                        rootView.addView(view, moreViewOption.getLayoutParams());
                     }
                     OnLoadViewFinishListener onLoadViewFinishListener = moreViewOption.getOnLoadViewFinishListener();
                     if (onLoadViewFinishListener != null) {
@@ -337,7 +282,7 @@ public class ViewPagerActivity extends BaseActivity {
         }
     }
 
-    private void showMoreView() {
+    protected void showMoreView() {
         if (moreViewOptions.size() > 0) {
             OpenImageDetail openImageDetail = openImageBeans.get(showPosition);
             MediaType mediaType = openImageDetail.getType();
@@ -359,7 +304,7 @@ public class ViewPagerActivity extends BaseActivity {
         }
     }
 
-    private void touchHideMoreView() {
+    protected void touchHideMoreView() {
         if (moreViewOptions.size() > 0) {
             OpenImageDetail openImageDetail = openImageBeans.get(showPosition);
             MediaType mediaType = openImageDetail.getType();
@@ -380,7 +325,7 @@ public class ViewPagerActivity extends BaseActivity {
         }
     }
 
-    private void setIndicatorPosition() {
+    protected void setIndicatorPosition() {
         mHandler.post(() -> {
             if (indicatorType == INDICATOR_IMAGE) {//图片样式
                 if (imageIndicatorAdapter != null) {
@@ -409,7 +354,7 @@ public class ViewPagerActivity extends BaseActivity {
             } else {
                 StatusBarHelper.setStatusBarDarkMode(this);
             }
-            AttrsUtils.setBackgroundResourceOrColor(this, themeRes, R.attr.openImage_background, binding.vBg);
+            AttrsUtils.setBackgroundResourceOrColor(this, themeRes, R.attr.openImage_background, vBg);
             indicatorType = AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_indicator_type);
             orientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_viewPager_orientation));
             if (indicatorType < 2 && openImageBeans.size() > 1) {
@@ -425,7 +370,7 @@ public class ViewPagerActivity extends BaseActivity {
                     RecyclerView recyclerView = new RecyclerView(this);
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     setIndicatorLayoutParams(layoutParams, themeRes);
-                    binding.getRoot().addView(recyclerView, layoutParams);
+                    rootView.addView(recyclerView, layoutParams);
 
                     OpenImageOrientation realOrientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_indicator_image_orientation));
                     imageIndicatorLayoutManager = new LinearLayoutManager(this, realOrientation == OpenImageOrientation.HORIZONTAL ? LinearLayoutManager.HORIZONTAL : LinearLayoutManager.VERTICAL, false);
@@ -436,7 +381,7 @@ public class ViewPagerActivity extends BaseActivity {
                 } else {
                     int textColor = AttrsUtils.getTypeValueColor(this, themeRes, R.attr.openImage_indicator_textColor, Color.WHITE);
                     float textSize = AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_textSize);
-                    indicatorTextBinding = OpenImageIndicatorTextBinding.inflate(getLayoutInflater(), binding.getRoot(), true);
+                    indicatorTextBinding = OpenImageIndicatorTextBinding.inflate(getLayoutInflater(), rootView, true);
                     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
                     setIndicatorLayoutParams(layoutParams, themeRes);
                     indicatorTextBinding.tvShowPos.setLayoutParams(layoutParams);
@@ -462,7 +407,7 @@ public class ViewPagerActivity extends BaseActivity {
             StatusBarHelper.setStatusBarDarkMode(this);
             orientation = OpenImageOrientation.HORIZONTAL;
             if (openImageBeans.size() > 1) {
-                indicatorTextBinding = OpenImageIndicatorTextBinding.inflate(getLayoutInflater(), binding.getRoot(), true);
+                indicatorTextBinding = OpenImageIndicatorTextBinding.inflate(getLayoutInflater(), rootView, true);
                 FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
                 layoutParams.bottomMargin = (int) ScreenUtils.dp2px(this, 10);
                 layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
@@ -478,11 +423,11 @@ public class ViewPagerActivity extends BaseActivity {
                 compositePageTransformer.addTransformer(pageTransformer);
             }
         }
-        binding.viewPager.setPageTransformer(compositePageTransformer);
+        viewPager.setPageTransformer(compositePageTransformer);
 
         int leftRightPadding = getIntent().getIntExtra(OpenParams.GALLERY_EFFECT_WIDTH, 0);
         if (leftRightPadding > 0) {
-            View recyclerView = binding.viewPager.getChildAt(0);
+            View recyclerView = viewPager.getChildAt(0);
             if (recyclerView instanceof RecyclerView) {
                 recyclerView.setPadding((int) ScreenUtils.dp2px(this, leftRightPadding), 0, (int) ScreenUtils.dp2px(this, leftRightPadding), 0);
                 ((RecyclerView) recyclerView).setClipToPadding(false);
@@ -490,9 +435,9 @@ public class ViewPagerActivity extends BaseActivity {
         }
 
         if (orientation == OpenImageOrientation.VERTICAL) {
-            binding.viewPager.setOrientation(ViewPager2.ORIENTATION_VERTICAL);
+            viewPager.setOrientation(ViewPager2.ORIENTATION_VERTICAL);
         } else {
-            binding.viewPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
+            viewPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         }
 
     }
@@ -524,7 +469,7 @@ public class ViewPagerActivity extends BaseActivity {
         }
     }
 
-    private void addTransitionListener() {
+    protected void addTransitionListener() {
         Transition transition = getWindow().getSharedElementEnterTransition();
         if (transition != null) {
             long timeMs = getIntent().getLongExtra(OpenParams.OPEN_ANIM_TIME_MS, 0);
@@ -556,9 +501,9 @@ public class ViewPagerActivity extends BaseActivity {
                                     upLayerFragment.setArguments(upperLayerBundle);
                                 }
                                 if (upperLayerOption.isFollowTouch()){
-                                    binding.flTouchView.addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                                    flTouchView.addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                                 }else {
-                                    binding.getRoot().addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                                    rootView.addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                                 }
                                 transaction.replace(R.id.upper_layer_container,upLayerFragment).commit();
                             }
@@ -629,7 +574,7 @@ public class ViewPagerActivity extends BaseActivity {
             backView = shareExitViewBean.shareExitView;
         }
         if (backViewType == BackViewType.NO_SHARE) {
-            ViewCompat.setTransitionName(binding.viewPager, "");
+            ViewCompat.setTransitionName(viewPager, "");
             setEnterSharedElementCallback(new SharedElementCallback() {
                 @Override
                 public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
@@ -647,7 +592,7 @@ public class ViewPagerActivity extends BaseActivity {
         View shareView = getCoverView();
         final ImageView exitView = backView;
         if (shareView != null) {
-            ViewCompat.setTransitionName(binding.viewPager, "");
+            ViewCompat.setTransitionName(viewPager, "");
             ViewCompat.setTransitionName(shareView, OpenParams.SHARE_VIEW + showPosition);
             if (backViewType == BackViewType.SHARE_WECHAT) {
                 addWechatEffect(shareView);
@@ -677,9 +622,9 @@ public class ViewPagerActivity extends BaseActivity {
             });
         } else {
             if (backViewType == BackViewType.SHARE_WECHAT) {
-                addWechatEffect(binding.viewPager);
+                addWechatEffect(viewPager);
             }
-            ViewCompat.setTransitionName(binding.viewPager, OpenParams.SHARE_VIEW + showPosition);
+            ViewCompat.setTransitionName(viewPager, OpenParams.SHARE_VIEW + showPosition);
             setEnterSharedElementCallback(new SharedElementCallback() {
                 @Override
                 public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
@@ -687,7 +632,7 @@ public class ViewPagerActivity extends BaseActivity {
                     if (names.size() == 0) {
                         return;
                     }
-                    sharedElements.put(OpenParams.SHARE_VIEW + showPosition, binding.viewPager);
+                    sharedElements.put(OpenParams.SHARE_VIEW + showPosition, viewPager);
                 }
             });
         }
@@ -733,7 +678,7 @@ public class ViewPagerActivity extends BaseActivity {
         }
     }
 
-    public void close(boolean isTouchClose) {
+    protected void close(boolean isTouchClose) {
         if (isCallClosed) {
             return;
         }

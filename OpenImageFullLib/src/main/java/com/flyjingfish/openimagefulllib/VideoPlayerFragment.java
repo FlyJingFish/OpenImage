@@ -98,7 +98,7 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     protected void onTouchScale(float scale) {
         super.onTouchScale(scale);
         videoPlayer.goneAllWidget();
-        if (scale == 0){
+        if (scale == 1){
             videoPlayer.showAllWidget();
         }
     }
