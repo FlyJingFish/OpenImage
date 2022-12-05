@@ -254,6 +254,7 @@ OpenImage.with(activity)
         //不想自己的搞得，可直接用 OpenImageGlideLib 或 OpenImageFullLib
         RequestOptions requestOptions = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    //这句是为了加载原图，如果你的原图可能是超大图，请注意内存溢出问题，不想自己的搞得，可直接用 OpenImageGlideLib 或 OpenImageFullLib
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .format(DecodeFormat.PREFER_RGB_565);
         Glide.with(context)
@@ -287,7 +288,6 @@ OpenImage.with(activity)
     public void loadImage(Context context, String imageUrl, ImageView imageView) {
          RequestOptions requestOptions = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .format(DecodeFormat.PREFER_RGB_565);
             Glide.with(context)
                     .load(imageUrl).apply(requestOptions).into(imageView);
