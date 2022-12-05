@@ -250,6 +250,8 @@ OpenImage.with(activity)
  public class BigImageHelperImpl implements BigImageHelper {
     @Override
     public void loadImage(Context context, String imageUrl, OnLoadBigImageListener onLoadBigImageListener) {
+        //这个地方只是示例，如果你的项目存在超大图，请注意需要自行处理（否则可能内存溢出或崩溃）
+        //不想自己的搞得，可直接用 OpenImageGlideLib 或 OpenImageFullLib
         RequestOptions requestOptions = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
@@ -370,7 +372,7 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
    protected void onTouchScale(float scale) {//下拉时回调
        super.onTouchScale(scale);
        binding.videoPlayer.goneAllWidget();
-       if (scale == 0){
+       if (scale == 1){
            binding.videoPlayer.showAllWidget();
        }
    }
