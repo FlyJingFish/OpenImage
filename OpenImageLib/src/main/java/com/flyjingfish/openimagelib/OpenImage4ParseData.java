@@ -392,7 +392,6 @@ class OpenImage4ParseData extends OpenImage4Params {
 
     private void releaseImageLoadUtilMap() {
         ImageLoadUtils.getInstance().clearCanOpenViewPagerActivity(contextKey);
-        ImageLoadUtils.getInstance().clearCanOpenViewPagerActivity(context.toString());
         ImageLoadUtils.getInstance().clearItemLoadHelper(itemLoadHelperKey);
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
         ImageLoadUtils.getInstance().clearCoverDrawable(drawableKey);
