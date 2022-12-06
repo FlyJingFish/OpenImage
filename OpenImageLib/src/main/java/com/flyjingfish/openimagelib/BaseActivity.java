@@ -97,9 +97,9 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ImageLoadUtils.getInstance().setCanOpenViewPagerActivity(clickContextKey,true);
         fixAndroid5_7BugForRemoveListener();
     }
+
     private void fixAndroid5_7BugForRemoveListener() {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
             ImageLoadUtils.getInstance().notifyOnRemoveListener4FixBug();
@@ -132,6 +132,18 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
         super.onStop();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ImageLoadUtils.getInstance().setCanOpenViewPagerActivity(clickContextKey,true);
+    }
+
+    @Override
+    public void finishAfterTransition() {
+        super.finishAfterTransition();
+        ImageLoadUtils.getInstance().setCanOpenViewPagerActivity(clickContextKey,true);
     }
 
     @Override
