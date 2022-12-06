@@ -86,6 +86,7 @@ public class BaseActivity extends AppCompatActivity {
 
         }
     };
+    private String clickContextKey;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,6 +97,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        ImageLoadUtils.getInstance().setCanOpenViewPagerActivity(clickContextKey,true);
         fixAndroid5_7BugForRemoveListener();
     }
     private void fixAndroid5_7BugForRemoveListener() {
@@ -119,18 +121,6 @@ public class BaseActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    @Override
-    public void finish() {
-        OpenImage.isCanOpen = true;
-        super.finish();
-    }
-
-    @Override
-    public void finishAfterTransition() {
-        super.finishAfterTransition();
-        OpenImage.isCanOpen = true;
     }
 
     @Override
@@ -260,5 +250,6 @@ public class BaseActivity extends AppCompatActivity {
         moreViewKey = getIntent().getStringExtra(OpenParams.MORE_VIEW_KEY);
         onBackViewKey = getIntent().getStringExtra(OpenParams.ON_BACK_VIEW);
         onBackView = ImageLoadUtils.getInstance().getOnBackView(onBackViewKey);
+        clickContextKey = getIntent().getStringExtra(OpenParams.CONTEXT_KEY);
     }
 }

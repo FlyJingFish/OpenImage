@@ -47,6 +47,7 @@ public class OpenImage extends OpenImage4ParseData {
     private OpenImage(Context context) {
         if (context instanceof Activity) {
             this.context = context;
+            this.contextKey = context.toString();
         } else {
             throw new IllegalArgumentException("context must be activity");
         }
@@ -277,8 +278,8 @@ public class OpenImage extends OpenImage4ParseData {
      * @return
      */
     public OpenImage setOnSelectMediaListener(OnSelectMediaListener onSelectMediaListener) {
-        onselectKey = UUID.randomUUID().toString();
-        ImageLoadUtils.getInstance().setOnSelectMediaListener(onselectKey, onSelectMediaListener);
+        onSelectKey = UUID.randomUUID().toString();
+        ImageLoadUtils.getInstance().setOnSelectMediaListener(onSelectKey, onSelectMediaListener);
         return this;
     }
 

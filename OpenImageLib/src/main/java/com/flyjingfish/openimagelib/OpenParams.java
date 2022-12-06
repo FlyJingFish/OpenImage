@@ -29,4 +29,5 @@ class OpenParams {
     public static final String IMAGE_FRAGMENT_KEY = "image_fragment";
     public static final String UPPER_LAYER_FRAGMENT_KEY = "upper_layer_fragment";
     public static final String UPPER_LAYER_BUNDLE = "upperLayerBundle";
+    public static final String CONTEXT_KEY = "contextKey";
 }

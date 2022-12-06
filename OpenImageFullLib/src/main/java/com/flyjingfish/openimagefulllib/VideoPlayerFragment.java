@@ -21,10 +21,10 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     protected boolean isPlayed;
     protected boolean isLoadImageFinish;
     protected GSYVideoPlayer videoPlayer;
-    private View rootView;
-    private PhotoView smallImageView;
-    private PhotoView photoImageView;
-    private LoadingView loadingView;
+    protected View rootView;
+    protected PhotoView smallImageView;
+    protected PhotoView photoImageView;
+    protected LoadingView loadingView;
 
     @Nullable
     @Override

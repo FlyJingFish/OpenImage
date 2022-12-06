@@ -42,7 +42,7 @@ import java.util.UUID;
 class OpenImage4ParseData extends OpenImage4Params {
 
     protected void goShow() {
-        if (isCanOpen) {
+        if (ImageLoadUtils.getInstance().isCanOpenViewPagerActivity(contextKey)) {
             Activity activity = ActivityCompatHelper.getActivity(context);
             activity.setExitSharedElementCallback(null);
             show4ParseData();
@@ -341,7 +341,7 @@ class OpenImage4ParseData extends OpenImage4Params {
 
 
     private void postOpen(Intent intent, Pair<View, String> viewPair) {
-        isCanOpen = false;
+        ImageLoadUtils.getInstance().setCanOpenViewPagerActivity(contextKey,false);
         OpenImageUrl openImageUrl = openImageUrls.get(clickDataPosition);
         Handler handler = new Handler(Looper.getMainLooper());
         OpenImageConfig.getInstance().getBigImageHelper().loadImage(context, ImageLoadUtils.getInstance().getImageLoadSuccess(openImageUrl.getImageUrl()) ? openImageUrl.getImageUrl() : openImageUrl.getCoverImageUrl(), new OnLoadBigImageListener() {
@@ -391,9 +391,10 @@ class OpenImage4ParseData extends OpenImage4Params {
     }
 
     private void releaseImageLoadUtilMap() {
-        isCanOpen = true;
+        ImageLoadUtils.getInstance().clearCanOpenViewPagerActivity(contextKey);
+        ImageLoadUtils.getInstance().clearCanOpenViewPagerActivity(context.toString());
         ImageLoadUtils.getInstance().clearItemLoadHelper(itemLoadHelperKey);
-        ImageLoadUtils.getInstance().clearOnSelectMediaListener(onselectKey);
+        ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
         ImageLoadUtils.getInstance().clearCoverDrawable(drawableKey);
         ImageLoadUtils.getInstance().clearPageTransformers(pageTransformersKey);
         ImageLoadUtils.getInstance().clearOnItemClickListener(onItemClickListenerKey);

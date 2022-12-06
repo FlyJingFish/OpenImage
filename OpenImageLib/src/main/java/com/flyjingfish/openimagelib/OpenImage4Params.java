@@ -30,6 +30,7 @@ import java.util.UUID;
 
 class OpenImage4Params {
     protected Context context;
+    protected String contextKey;
     protected final List<OpenImageUrl> openImageUrls = new ArrayList<>();
     protected List<ImageView> imageViews;
     protected RecyclerView recyclerView;
@@ -55,8 +56,7 @@ class OpenImage4Params {
     protected SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet;
     protected SourceImageViewGet<OpenImageUrl> sourceImageViewGet;
     protected int leftRightShowWidthDp;
-    public static boolean isCanOpen = true;
-    protected String onselectKey;
+    protected String onSelectKey;
     protected String pageTransformersKey;
     protected String onItemClickListenerKey;
     protected String onItemLongClickListenerKey;
@@ -95,8 +95,8 @@ class OpenImage4Params {
         Intent intent = new Intent(context, openImageActivityCls);
 
         intent.putExtra(OpenParams.CLICK_POSITION, clickDataPosition);
-        if (onselectKey != null) {
-            intent.putExtra(OpenParams.ON_SELECT_KEY, onselectKey);
+        if (onSelectKey != null) {
+            intent.putExtra(OpenParams.ON_SELECT_KEY, onSelectKey);
         }
         if (pageTransformersKey != null) {
             intent.putExtra(OpenParams.PAGE_TRANSFORMERS, pageTransformersKey);
@@ -135,6 +135,7 @@ class OpenImage4Params {
         intent.putExtra(OpenParams.OPEN_IMAGE_STYLE, openImageStyle);
         intent.putExtra(OpenParams.OPEN_ANIM_TIME_MS, openPageAnimTimeMs);
         intent.putExtra(OpenParams.GALLERY_EFFECT_WIDTH, leftRightShowWidthDp);
+        intent.putExtra(OpenParams.CONTEXT_KEY, contextKey);
         backViewKey = this.toString();
         return intent;
     }

@@ -33,6 +33,7 @@ class ImageLoadUtils {
     private HashMap<String, ImageFragmentCreate> imageFragmentCreateHashMap = new HashMap<>();
     private HashMap<String, VideoFragmentCreate> videoFragmentCreateHashMap = new HashMap<>();
     private HashMap<String, UpperLayerOption> upperLayerFragmentCreateHashMap = new HashMap<>();
+    private HashMap<String, Boolean> canOpenViewPageActivityHashMap = new HashMap<>();
 
     private ImageLoadUtils() {
     }
@@ -223,5 +224,23 @@ class ImageLoadUtils {
 
     public void clearUpperLayerFragmentCreate(String key) {
         this.upperLayerFragmentCreateHashMap.remove(key);
+    }
+
+
+    public boolean isCanOpenViewPagerActivity(String key) {
+        Boolean canOpen = canOpenViewPageActivityHashMap.get(key);
+        if (canOpen == null){
+            canOpen = true;
+            setCanOpenViewPagerActivity(key,true);
+        }
+        return canOpen;
+    }
+
+    public void setCanOpenViewPagerActivity(String key, boolean canOpen) {
+        canOpenViewPageActivityHashMap.put(key, canOpen);
+    }
+
+    public void clearCanOpenViewPagerActivity(String key) {
+        canOpenViewPageActivityHashMap.remove(key);
     }
 }
