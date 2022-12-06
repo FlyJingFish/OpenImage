@@ -130,7 +130,6 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
                     }
                 });
             }
-
             isPlayed = true;
         }
     }

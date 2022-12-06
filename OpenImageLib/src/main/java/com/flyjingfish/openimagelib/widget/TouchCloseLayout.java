@@ -12,7 +12,6 @@ import android.widget.FrameLayout;
 
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 
-
 public class TouchCloseLayout extends FrameLayout {
 
     private AnimatorSet touchAnim;
