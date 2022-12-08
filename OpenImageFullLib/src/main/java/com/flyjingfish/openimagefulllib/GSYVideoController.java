@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GSYVideoController {
-    private static ConcurrentHashMap<String, GSYVideoPlayerManager> GSYVideoPlayerManagerMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, GSYVideoPlayerManager> GSYVideoPlayerManagerMap = new ConcurrentHashMap<>();
 
     public static synchronized GSYVideoPlayerManager getGSYVideoPlayerManager(String key) {
         if (TextUtils.isEmpty(key)) {
