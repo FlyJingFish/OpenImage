@@ -31,8 +31,6 @@ public class OpenImageVideoPlayer extends GSYVideoPlayer {
         changeUiToNormal();
     }
 
-
-
     public PhotoView getCoverImageView() {
         return coverImageView;
     }
@@ -45,15 +43,9 @@ public class OpenImageVideoPlayer extends GSYVideoPlayer {
         return mLoadingProgressBar;
     }
 
-
     @Override
     public int getLayoutId() {
         return R.layout.layout_videos;
     }
 
-    @Override
-    protected void changeUiToPreparingShow() {
-        super.changeUiToPreparingShow();
-        setViewShowState(mThumbImageViewLayout, VISIBLE);
-    }
 }

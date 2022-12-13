@@ -99,7 +99,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RvBaseHolder> {
                 .setOpenImageActivityCls(MyBigImageActivity.class)
                 .setVideoFragmentCreate(new FriendsVideoFragmentCreateImpl())
                 .setAutoScrollScanPosition(true)
-                .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle)
+                .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle,false,false)
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
                 .setClickPosition(0).show();
         binding.ivImage.setOnClickListener(onClickListener);

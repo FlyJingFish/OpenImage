@@ -3,7 +3,6 @@ package com.flyjingfish.openimage.openImpl;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimagefulllib.GSYVideoPlayer;
@@ -39,8 +38,6 @@ public class FriendsVideoPlayer extends GSYVideoPlayer {
         return coverImageView;
     }
 
-
-
     public PhotoView getSmallCoverImageView() {
         return smallCoverImageView;
     }
@@ -51,12 +48,5 @@ public class FriendsVideoPlayer extends GSYVideoPlayer {
     @Override
     public int getLayoutId() {
         return R.layout.layout_friends_player;
-    }
-
-
-    @Override
-    protected void changeUiToPreparingShow() {
-        super.changeUiToPreparingShow();
-        setViewShowState(mThumbImageViewLayout, VISIBLE);
     }
 }

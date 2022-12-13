@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GSYVideoPlayer">
+        <attr name="gsy_showType">
+            <enum name="SCREEN_TYPE_DEFAULT" value="0"/>
+            <enum name="SCREEN_TYPE_16_9" value="1"/>
+            <enum name="SCREEN_TYPE_4_3" value="2"/>
+            <enum name="SCREEN_TYPE_18_9" value="6"/>
+            <enum name="SCREEN_TYPE_FULL" value="4"/>
+            <enum name="SCREEN_MATCH_FULL" value="-4"/>
+            <enum name="SCREEN_TYPE_CUSTOM" value="-5"/>
+        </attr>
+    </declare-styleable>
+</resources>

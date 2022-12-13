@@ -33,8 +33,7 @@ public class GlideBigImageHelper implements BigImageHelper {
                 }else {
                     RequestOptions requestOptions = new RequestOptions()
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .override(maxImageSize[0], maxImageSize[1])
-                            .format(DecodeFormat.PREFER_RGB_565);
+                            .override(maxImageSize[0], maxImageSize[1]);
                     Glide.with(context)
                             .load(imageUrl).apply(requestOptions).addListener(new RequestListener<Drawable>() {
                                 @Override

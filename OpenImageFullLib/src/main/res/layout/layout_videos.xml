@@ -4,14 +4,6 @@
     android:layout_height="match_parent"
     android:id="@+id/rl_video_player_root">
 
-    <FrameLayout
-        android:id="@+id/surface_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
-
-    </FrameLayout>
-
     <RelativeLayout
         android:id="@+id/thumb"
         android:layout_width="match_parent"
@@ -21,6 +13,16 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:scaleType="fitCenter" />
+
+    <FrameLayout
+        android:id="@+id/surface_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+    </FrameLayout>
+
+
 
     <LinearLayout
         android:id="@+id/layout_bottom"

@@ -560,7 +560,7 @@ public class ViewPagerActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private void setExitView() {
+    protected void setExitView() {
         BackViewType backViewType = BackViewType.NO_SHARE;
         ImageView backView = null;
         ExitOnBackView.ShareExitViewBean shareExitViewBean;
