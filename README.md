@@ -1,5 +1,4 @@
 # OpenImage 图片查看大图库
-[![](https://jitpack.io/v/FlyJingFish/OpenImage.svg)](https://jitpack.io/#FlyJingFish/OpenImage)
 
 
 ## 属于你的侵入性低的大图查看器，高仿微信完美的过渡动画，支持自定义视频播放器，也可以自定义加载图片的内核，例如Glide，Picasso或其他的
@@ -45,13 +44,13 @@ RecyclerView场景  | 聊天页面
 
 ### 第一步、Jitpack 引入方法
 
-#### 首先、在项目根目录下的build.gradle添加
+#### 首先、在项目根目录下的build.gradle添加(可跳过此步，1.5.6及之后版本改为Maven Central)
 
 ```gradle
 allprojects {
     repositories {
         ...
-        maven { url "https://www.jitpack.io" }
+        maven { url "https://s01.oss.sonatype.org/content/groups/public" }
     }
 }
 ```
@@ -64,7 +63,7 @@ allprojects {
 
 ```
 //OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
-implementation 'com.github.FlyJingFish.OpenImage:OpenImageFullLib:v1.5.5'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.5.6'
 ```
 #### B、引入只带有图片引擎的版本（只支持查看图片）
 
@@ -72,7 +71,7 @@ implementation 'com.github.FlyJingFish.OpenImage:OpenImageFullLib:v1.5.5'
 
 ```
 //OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-implementation 'com.github.FlyJingFish.OpenImage:OpenImageGlideLib:v1.5.5'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.5.6'
 ```
 
 #### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
@@ -82,7 +81,7 @@ implementation 'com.github.FlyJingFish.OpenImage:OpenImageGlideLib:v1.5.5'
 ```
 //OpenImageLib 是基础库，没有引入图片引擎和视频播放器
 //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
-implementation 'com.github.FlyJingFish.OpenImage:OpenImageLib:v1.5.5'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.5.6'
 
 ```
 
