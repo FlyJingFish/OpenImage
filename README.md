@@ -44,7 +44,7 @@ RecyclerView场景  | 聊天页面
 
 ### 第一步、Jitpack 引入方法
 
-#### 首先、在项目根目录下的build.gradle添加(可跳过此步，1.5.6及之后版本改为Maven Central)
+#### 首先、在项目根目录下的build.gradle添加(可跳过此步，1.5.6及之后版本仓库地址改为Maven Central)
 
 ```gradle
 allprojects {
