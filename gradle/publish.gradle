@@ -1,35 +1,60 @@
-apply plugin: "maven-publish"
+apply plugin: 'maven'
+apply plugin: 'signing'
 
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
 
-                group = PROJ_GROUP
-                artifactId = PROJ_ARTIFACTID
-                version = PROJ_VERSION
+artifacts {
+    archives sourcesJar
+}
 
-                pom {
-                    name = PROJ_NAME
-                    description = PROJ_DESCRIPTION
-                    url = PROJ_VCSURL
-                    licenses {
-                        license {
-                            name = "The Apache License, Version 2.0"
-                            url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-                        }
+signing {
+    sign configurations.archives
+}
+
+group = PROJ_GROUP
+version = PROJ_VERSION
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name PROJ_BASENAME
+                artifactId PROJ_NAME
+                packaging 'aar'
+                description PROJ_DESCRIPTION
+                url PROJ_WEBSITEURL
+
+                scm {
+                    connection PROJ_VCSURL
+                    developerConnection PROJ_VCSURL
+                    url PROJ_WEBSITEURL
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
-                    developers {
-                        developer {
-                            id = DEVELOPER_ID
-                            name = DEVELOPER_NAME
-                        }
-                    }
-                    scm {
-                        connection = PROJ_ISSUETRACKERURL
-                        developerConnection = PROJ_VCSURL
-                        url = PROJ_WEBSITEURL
+                }
+
+                developers {
+                    developer {
+                        id DEVELOPER_ID
+                        name DEVELOPER_NAME
+                        email DEVELOPER_EMAIL
                     }
                 }
             }
