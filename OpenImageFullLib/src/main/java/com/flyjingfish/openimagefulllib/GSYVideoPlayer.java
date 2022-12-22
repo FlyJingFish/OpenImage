@@ -20,6 +20,10 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     private boolean mute;//是否需要静音
     protected int showType = GSYVideoType.getShowType();
 
+    boolean isUserInputResume = true;
+    boolean isUserInputPause = true;
+    boolean isPauseBeforeOnVideoPause = false;
+
     public GSYVideoPlayer(Context context) {
         this(context,null);
     }
@@ -91,6 +95,12 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     }
 
     @Override
+    protected void changeUiToPrepareingClear() {
+        super.changeUiToPrepareingClear();
+        setViewShowState(mThumbImageViewLayout, VISIBLE);
+    }
+
+    @Override
     public void onSurfaceSizeChanged(Surface surface, int width, int height) {
         super.onSurfaceSizeChanged(surface, width, height);
         if (mCurrentState == CURRENT_STATE_PLAYING){
@@ -118,7 +128,12 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
 
     @Override
     public void onVideoResume() {
+        if (isPauseBeforeOnVideoPause){
+            isPauseBeforeOnVideoPause = false;
+            return;
+        }
         if (mCurrentState == CURRENT_STATE_PLAYING && this.getGSYVideoManager() != null && !this.getGSYVideoManager().isPlaying()){
+            isUserInputPause = false;
             setStateAndUi(CURRENT_STATE_PAUSE);
         }
         boolean seek = true;
@@ -126,7 +141,29 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
             long currentPosition = this.getGSYVideoManager().getCurrentPosition();
             seek = currentPosition < mCurrentPosition;
         }
+        isUserInputResume = false;
         super.onVideoResume(seek);
+    }
+
+    @Override
+    public void onVideoPause() {
+        isUserInputPause = false;
+        if (mCurrentState == CURRENT_STATE_PAUSE){
+            isPauseBeforeOnVideoPause = true;
+        }
+        super.onVideoPause();
+    }
+
+    @Override
+    protected void resolveUIState(int state) {
+        if ((!isUserInputResume && state == CURRENT_STATE_PLAYING)||(!isUserInputPause && state == CURRENT_STATE_PAUSE)){
+            isUserInputResume = true;
+            isUserInputPause = true;
+            return;
+        }
+        isUserInputResume = true;
+        isUserInputPause = true;
+        super.resolveUIState(state);
     }
 
     public int getShowType() {
