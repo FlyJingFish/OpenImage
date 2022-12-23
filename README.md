@@ -66,6 +66,8 @@ allprojects {
 
 **你可以选择下面三种的其中一种，在module下的build.gradle添加。**
 
+<img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/warning_maven_central.svg"/>
+
 #### A、直接引入完整版（同时支持查看图片和视频）
 
 请注意如果使用以下导入方式，如果你的项目组存在**Glide**请升级至4.12.0或者更高的版本，如果存在**GSYVideoPlayer**请升级至8.3.3或者更高的版本，否则会冲突
@@ -97,8 +99,6 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.5.7'
 ### 第二步. 简单一步调用即可
 
 **你可以选择下面两种图片数据的其中一种（注意OpenImage对象不可以重复使用哦～每次打开大图时务必重新开始写，否则会出现问题～）**
-
-<img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/warning_maven_central.svg"/>
 
 #### A、直接将数据转化为 String 的List (这个方式适合只看图片或视频，不可显示混合数据)
 
