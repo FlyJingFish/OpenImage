@@ -251,10 +251,10 @@ OpenImage.with(activity)
     @Override
     public void loadImage(Context context, String imageUrl, OnLoadBigImageListener onLoadBigImageListener) {
         //这个地方只是示例，如果你的项目存在超大图，请注意需要自行处理（否则可能内存溢出或崩溃）
-        //不想自己的搞得，可直接用 OpenImageGlideLib 或 OpenImageFullLib
+        //不想自己搞的，可直接用 OpenImageGlideLib 或 OpenImageFullLib
         RequestOptions requestOptions = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    //这句是为了加载原图，如果你的原图可能是超大图，请注意内存溢出问题，不想自己的搞得，可直接用 OpenImageGlideLib 或 OpenImageFullLib
+                    //这句是为了加载原图，如果你的原图可能是超大图，请注意内存溢出问题，不想自己搞的，可直接用 OpenImageGlideLib 或 OpenImageFullLib
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .format(DecodeFormat.PREFER_RGB_565);
         Glide.with(context)
