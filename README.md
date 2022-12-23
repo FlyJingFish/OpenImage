@@ -3,7 +3,7 @@
 
 ## 属于你的侵入性低的大图查看器，高仿微信完美的过渡动画，支持自定义视频播放器，也可以自定义加载图片的内核，例如Glide，Picasso或其他的
 
-## [点此下载apk](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk)
+## [点此下载apk](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk?raw=true)
 
 ## 效果演示
  
@@ -557,7 +557,7 @@ Glide 的混淆规则：
 
  <img src="/screenshot/Screenshot_20220731_203125_com.flyjingfish.openim.jpg" width="320" alt="show" />
  
-## [点此下载apk](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk)
+## [点此下载apk](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk?raw=true)
  
 ### 常见问题
 
