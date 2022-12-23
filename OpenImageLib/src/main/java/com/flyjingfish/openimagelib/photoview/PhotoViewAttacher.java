@@ -627,14 +627,14 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private void resetMatrix() {
         Drawable drawable = mImageView.getDrawable();
         ShapeImageView.ShapeScaleType autoScaleType = null;
-        if (drawable != null && (mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP || mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_END_CENTER_CROP)){
+        if (drawable != null && (mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP || mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_END_CENTER_CROP)) {
             final int drawableWidth = drawable.getIntrinsicWidth();
             final int drawableHeight = drawable.getIntrinsicHeight();
             float imageHeightWidthRatio = drawableHeight * 1f / drawableWidth;
             float viewHeightWidthRatio = mStartHeight / mStartWidth;
-            float ratio = imageHeightWidthRatio/viewHeightWidthRatio;
+            float ratio = imageHeightWidthRatio / viewHeightWidthRatio;
             if (ratio >= mAutoCropHeightWidthRatio) {
-                autoScaleType = mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP?ShapeImageView.ShapeScaleType.START_CROP:ShapeImageView.ShapeScaleType.END_CROP;
+                autoScaleType = mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP ? ShapeImageView.ShapeScaleType.START_CROP : ShapeImageView.ShapeScaleType.END_CROP;
             } else {
                 autoScaleType = ShapeImageView.ShapeScaleType.CENTER_CROP;
             }
@@ -739,11 +739,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         float imageHeightWidthRatio = drawableHeight * 1f / drawableWidth;
         float viewHeightWidthRatio = mStartHeight / mStartWidth;
-        float ratio = imageHeightWidthRatio/viewHeightWidthRatio;
+        float ratio = imageHeightWidthRatio / viewHeightWidthRatio;
         ShapeImageView.ShapeScaleType autoScaleType = null;
-        if (mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP || mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_END_CENTER_CROP){
+        if (mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP || mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_END_CENTER_CROP) {
             if (ratio >= mAutoCropHeightWidthRatio) {
-                autoScaleType = mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP?ShapeImageView.ShapeScaleType.START_CROP:ShapeImageView.ShapeScaleType.END_CROP;
+                autoScaleType = mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP ? ShapeImageView.ShapeScaleType.START_CROP : ShapeImageView.ShapeScaleType.END_CROP;
             } else {
                 autoScaleType = ShapeImageView.ShapeScaleType.CENTER_CROP;
             }
@@ -768,7 +768,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             } else if (mSrcScaleType == ShapeImageView.ShapeScaleType.END_CROP || autoScaleType == ShapeImageView.ShapeScaleType.END_CROP) {
                 mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale),
                         (viewHeight - drawableHeight * scale));
-            }else if (autoScaleType == ShapeImageView.ShapeScaleType.CENTER_CROP){
+            } else if (autoScaleType == ShapeImageView.ShapeScaleType.CENTER_CROP) {
                 mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
                         (viewHeight - drawableHeight * scale) / 2F);
             }
@@ -793,7 +793,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst;
             if (isExitMode) {
-                if (isBigImage && (mSrcScaleType == ShapeImageView.ShapeScaleType.START_CROP || mSrcScaleType == ShapeImageView.ShapeScaleType.END_CROP || autoScaleType == ShapeImageView.ShapeScaleType.START_CROP || autoScaleType == ShapeImageView.ShapeScaleType.END_CROP)) {
+                if (isBigImage && (mSrcScaleType == ShapeImageView.ShapeScaleType.START_CROP || mSrcScaleType == ShapeImageView.ShapeScaleType.END_CROP || autoScaleType == ShapeImageView.ShapeScaleType.START_CROP || autoScaleType == ShapeImageView.ShapeScaleType.END_CROP || autoScaleType == ShapeImageView.ShapeScaleType.CENTER_CROP)) {
                     mTempDst = new RectF(0, 0, viewWidth, viewWidth * scaleImageHW);
                 } else {
                     mTempDst = new RectF(0, 0, viewWidth, viewHeight);
@@ -1196,7 +1196,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             screenOrientationEvent.unRegisterDisplayListener();
         }
     }
+
     private float mAutoCropHeightWidthRatio;
+
     public void setAutoCropHeightWidthRatio(float autoCropHeightWidthRatio) {
         this.mAutoCropHeightWidthRatio = autoCropHeightWidthRatio;
     }
