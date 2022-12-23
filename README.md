@@ -44,9 +44,9 @@ RecyclerView场景  | 聊天页面
 
 #### 前言
 
-**1、建议使用Glide效果更好，另外建议开启原图缓存（有些版本是自动缓存原图的）Glide通过设置diskCacheStrategy 为DiskCacheStrategy.ALL或DiskCacheStrategy.DATA**
+1、建议使用Glide效果更好，另外建议开启原图缓存（有些版本是自动缓存原图的）Glide通过设置diskCacheStrategy 为DiskCacheStrategy.ALL或DiskCacheStrategy.DATA
 
-**2、如果您不缓存原图请注意设置 setImageDiskMode 为 RESULT（只缓存显示大小的图） 或 NONE（无任何缓存），下边会提及这项设置**
+2、如果您不缓存原图请注意设置 setImageDiskMode 为 RESULT（只缓存显示大小的图） 或 NONE（无任何缓存），下边会提及这项设置
 
 #### 首先、在项目根目录下的build.gradle添加(1.5.6及之后版本仓库地址改为Maven Central)
 
