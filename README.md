@@ -98,7 +98,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.5.7'
 
 **你可以选择下面两种图片数据的其中一种（注意OpenImage对象不可以重复使用哦～每次打开大图时务必重新开始写，否则会出现问题～）**
 
-#### A、直接将数据转化为 String 的List
+#### A、直接将数据转化为 String 的List (这个方式适合只看看图片或视频，不可显示混合数据)
 
 ```java
 
@@ -126,7 +126,7 @@ OpenImage.with(activity)
        .show();
 ```
 
-#### B、在您的数据实体类上实现OpenImageUrl接口
+#### B、在您的数据实体类上实现OpenImageUrl接口(这个方式适合显示图片和视频的混合数据，建议使用这个方式)
 
 **PS:列表中展示的图片链接和展示大图时所用链接是不同时，这种方式可以有更好的过渡效果**
 
