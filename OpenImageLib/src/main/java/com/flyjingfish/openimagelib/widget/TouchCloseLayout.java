@@ -6,11 +6,16 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.LayoutDirection;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import androidx.core.text.TextUtilsCompat;
+
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
+
+import java.util.Locale;
 
 public class TouchCloseLayout extends FrameLayout {
 
@@ -22,6 +27,7 @@ public class TouchCloseLayout extends FrameLayout {
     private OnTouchCloseListener onTouchCloseListener;
     private ObjectAnimator bgViewAnim;
     private float scale;
+    private final boolean isRtl;
 
     public TouchCloseLayout(Context context) {
         this(context, null);
@@ -29,6 +35,7 @@ public class TouchCloseLayout extends FrameLayout {
 
     public TouchCloseLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        isRtl = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL;
     }
 
     private float startDragX;
@@ -108,7 +115,7 @@ public class TouchCloseLayout extends FrameLayout {
                 int endY = (int) ev.getY();
                 int disX = Math.abs(endX - startX);
                 int disY = Math.abs(endY - startY);
-                if ((orientation == OpenImageOrientation.HORIZONTAL && disX > disY && endX > startX) || (orientation == OpenImageOrientation.VERTICAL && disY > disX && endY > startY)) {
+                if ((orientation == OpenImageOrientation.HORIZONTAL && disX > disY && (isRtl?endX < startX:endX > startX)) || (orientation == OpenImageOrientation.VERTICAL && disY > disX && endY > startY)) {
                     if (onTouchCloseListener != null){
                         onTouchCloseListener.onStartTouch();
                     }
@@ -138,7 +145,7 @@ public class TouchCloseLayout extends FrameLayout {
                 touchView.setTranslationY(moveY);
                 touchView.setTranslationX(moveX);
                 if (orientation == OpenImageOrientation.HORIZONTAL) {
-                    scale = (getWidth() - Math.abs(moveX)) / getWidth();
+                    scale = (getWidth() - (isRtl?-1:1)*moveX) / getWidth();
                 } else {
                     scale = (getHeight() - moveY) / getHeight();
                 }
