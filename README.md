@@ -38,17 +38,19 @@ RecyclerView场景  | 聊天页面
 
 9，支持自定义大图切换效果（PageTransformer）
 
-## 使用步骤
-
-### 第一步、选择适合你的库
-
-#### 前言
+## 前言
 
 1、建议使用Glide效果更好，另外建议开启原图缓存（有些版本是自动缓存原图的）Glide通过设置diskCacheStrategy 为DiskCacheStrategy.ALL或DiskCacheStrategy.DATA
 
 2、如果您不缓存原图请注意设置 setImageDiskMode 为 RESULT（只缓存显示大小的图） 或 NONE（无任何缓存），下边会提及这项设置
 
 3、当然如果您加载的是本地图片可直接忽略上述两点
+
+## 使用步骤
+
+### 第一步、选择适合你的库
+
+
 
 #### 首先、在项目根目录下的build.gradle添加(1.5.6及之后版本仓库地址改为Maven Central)
 
