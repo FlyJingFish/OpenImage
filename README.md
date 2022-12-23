@@ -88,7 +88,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.5.7'
 
 ### 第二步. 简单一步调用即可
 
-**你可以选择下面两种图片数据的其中一种**
+**你可以选择下面两种图片数据的其中一种（注意OpenImage对象不可以重复使用哦～每次打开大图时务必重新开始写，否则会出现问题～）**
 
 #### A、直接将数据转化为 String 的List
 
