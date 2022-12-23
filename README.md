@@ -203,7 +203,7 @@ OpenImage.with(activity)
         .setImageUrlList(datas)
         //点击的ImageView所在数据的位置
         .setClickPosition(position)
-        //可不设置,默认ImageDiskMode.CONTAIN_ORIGINAL，如果Glide不缓存原图，请设置其他参数
+        //可不设置,默认ImageDiskMode.CONTAIN_ORIGINAL(图片硬盘缓存包含原图)，如果你设置了Glide（或其他图片引擎）不缓存原图，请设置其他类型
         .setImageDiskMode(ImageDiskMode.CONTAIN_ORIGINAL)
         //可不设置（setImageDiskMode设置为RESULT或NONE时必须设置）
         .setItemLoadHelper(new ItemLoadHelper() {
