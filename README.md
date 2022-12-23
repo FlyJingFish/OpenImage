@@ -264,6 +264,8 @@ OpenImage.with(activity)
             
             }
         })
+        //设置切换大图时的效果（可不设置，本库中目前只有这一个，如需其他效果可参照ScaleInTransformer自行定义效果）
+        .addPageTransformer(new ScaleInTransformer())
        //开始展示大图
        .show();
 ```
