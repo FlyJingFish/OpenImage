@@ -188,25 +188,25 @@ OpenImage.with(activity)
 
 ```java
 
-//在点击时调用（以下以RecyclerView为例介绍）
+//在点击时调用，按需使用即可（以下以RecyclerView为例介绍）
 OpenImage.with(activity)
-        //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView）
-        .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
+         //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView）
+         .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
            @Override
            public int getImageViewId(OpenImageUrl data, int position) {
                return R.id.iv_image;//点击的ImageView的Id
            }
-       })
-       //点击的ImageView的ScaleType类型（如果设置不对，打开的动画效果将是错误的）
-       .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
-       //RecyclerView的数据
-       .setImageUrlList(datas)
-       //点击的ImageView所在数据的位置
-       .setClickPosition(position)
-       //可不设置,默认ImageDiskMode.CONTAIN_ORIGINAL，如果Glide不缓存原图，请设置其他参数
-       .setImageDiskMode(ImageDiskMode.CONTAIN_ORIGINAL)
-       //可不设置（setImageDiskMode设置为RESULT或NONE时必须设置）
-       .setItemLoadHelper(new ItemLoadHelper() {
+        })
+        //点击的ImageView的ScaleType类型（如果设置不对，打开的动画效果将是错误的）
+        .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+        //RecyclerView的数据
+        .setImageUrlList(datas)
+        //点击的ImageView所在数据的位置
+        .setClickPosition(position)
+        //可不设置,默认ImageDiskMode.CONTAIN_ORIGINAL，如果Glide不缓存原图，请设置其他参数
+        .setImageDiskMode(ImageDiskMode.CONTAIN_ORIGINAL)
+        //可不设置（setImageDiskMode设置为RESULT或NONE时必须设置）
+        .setItemLoadHelper(new ItemLoadHelper() {
            @Override
            public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
                 //如果使用的Glide缓存模式是ImageDiskMode.RESULT(只保存目标图片大小),必须在加载图片时传入大小，详看Demo
@@ -226,9 +226,44 @@ OpenImage.with(activity)
                     }
                 }).into(imageView);
            }
-       })
-       //可不设置（定制页面样式，详细可看Wiki文档）
-       .setOpenImageStyle(R.style.DefaultPhotosTheme)
+        })
+        //可不设置（定制页面样式，详细可看Wiki文档）
+        .setOpenImageStyle(R.style.DefaultPhotosTheme)
+        //设置显示在页面上层的fragment（可不设置）
+        .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle,false,false)
+        //设置自定义的视频播放fragment页面（可不设置）
+        .setVideoFragmentCreate(new VideoFragmentCreateImpl())
+        //设置加载失败时显示的图片（可不设置）
+        .setErrorResId(R.mipmap.ic_launcher)
+        //设置退出页面时，如果页面无对应的ImageView则回到点击位置（类似微信聊天页面的效果）（可不设置）
+        .setWechatExitFillInEffect(true)
+        //设置自定义的大图外壳页面（可不设置）
+        .setOpenImageActivityCls(MyBigImageActivity.class)
+        //设置切换图片时前一页面跟随滚动（可不设置）
+        .setAutoScrollScanPosition(true)
+        //设置画廊效果，参数为左右两侧漏出的宽度（可不设置）
+        .setGalleryEffect(10)
+        //设置切换图片监听（可不设置）
+        .setOnSelectMediaListener(new OnSelectMediaListener() {
+            @Override
+            public void onSelect(OpenImageUrl openImageUrl, int position) {
+
+            }
+        })
+        //设置点击监听（可不设置）
+        .setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseFragment fragment, OpenImageUrl openImageUrl, int position) {
+    
+            }
+        })
+        //设置长按图片监听（可不设置）
+        .setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(BaseFragment fragment, OpenImageUrl openImageUrl, int position) {
+            
+            }
+        })
        //开始展示大图
        .show();
 ```
