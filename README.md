@@ -212,6 +212,9 @@ OpenImage.with(activity)
         .setImageUrlList(datas)
         //点击的ImageView所在数据的位置
         .setClickPosition(position)
+        //clickDataPosition 点击的数据所在位置 clickViewPosition 点击的视图所在位置（和上边方法二选一，详细使用方法可看wiki文档）
+        //这个方法主要是针对的是像聊天页面那种图文混合的数据，可以看 "聊天页面" Demo
+        .setClickPosition(clickDataPosition, clickViewPosition)
         //可不设置,默认ImageDiskMode.CONTAIN_ORIGINAL(图片硬盘缓存包含原图)，如果你设置了Glide（或其他图片引擎）不缓存原图，请设置其他类型
         .setImageDiskMode(ImageDiskMode.CONTAIN_ORIGINAL)
         //可不设置（setImageDiskMode设置为RESULT或NONE时必须设置）
@@ -277,8 +280,8 @@ OpenImage.with(activity)
         })
         //设置切换大图时的效果（可不设置，本库中目前只有这一个，如需其他效果可参照ScaleInTransformer自行定义效果）
         .addPageTransformer(new ScaleInTransformer())
-       //开始展示大图
-       .show();
+        //开始展示大图
+        .show();
 ```
 ### 额外步骤
 
