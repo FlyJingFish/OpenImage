@@ -246,7 +246,7 @@ OpenImage.with(activity)
         .setErrorResId(R.mipmap.ic_launcher)
         //设置退出页面时，如果页面无对应的ImageView则回到点击位置（类似微信聊天页面的效果）（可不设置）
         .setWechatExitFillInEffect(true)
-        //设置true后关闭时，将看不到正在查看的图片（可不设置）
+        //设置true后关闭时，将看不到前一页面正在查看的图片（可不设置）
         .setShowSrcImageView(true)
         //设置自定义的大图外壳页面（可不设置）
         .setOpenImageActivityCls(MyBigImageActivity.class)
