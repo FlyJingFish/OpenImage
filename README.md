@@ -286,7 +286,7 @@ OpenImage.with(activity)
 ### 额外步骤
 
 #### A、如果您引用的库是 OpenImageLib 您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
-**（如果您使用的是OpenImageFullLib或OpenImageGlideLib则不需要这一步）**
+**（如果您使用的是 OpenImageFullLib 或 OpenImageGlideLib 则不需要这一步）**
 
 ```java
  public class MyApplication extends Application {
@@ -349,7 +349,7 @@ OpenImage.with(activity)
 ```
 
 #### B、如果您引用的库是 OpenImageLib 或 OpenImageGlideLib 需要查看视频的功能，需要以下步骤
-**（如果您使用的是OpenImageFullLib则不需要这一步）**
+**（如果您使用的是 OpenImageFullLib 则不需要这一步）**
 
 ```java
 
