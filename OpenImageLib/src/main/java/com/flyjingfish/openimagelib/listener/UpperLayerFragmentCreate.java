@@ -5,5 +5,5 @@ import com.flyjingfish.openimagelib.BaseInnerFragment;
 
 
 public interface UpperLayerFragmentCreate {
-    BaseInnerFragment createVideoFragment();
+    BaseInnerFragment createLayerFragment();
 }

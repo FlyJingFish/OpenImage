@@ -6,7 +6,7 @@ import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
 
 public class FriendLayerFragmentCreateImpl implements UpperLayerFragmentCreate {
     @Override
-    public BaseInnerFragment createVideoFragment() {
+    public BaseInnerFragment createLayerFragment() {
         return new FriendsFragment();
     }
 }

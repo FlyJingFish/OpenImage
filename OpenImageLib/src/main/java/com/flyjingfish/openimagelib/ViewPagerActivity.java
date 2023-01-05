@@ -486,7 +486,7 @@ public class ViewPagerActivity extends BaseActivity {
                         if (upperLayerOption != null && ViewPagerActivity.this.getLifecycle().getCurrentState() != Lifecycle.State.DESTROYED){
                             UpperLayerFragmentCreate upperLayerCreate = upperLayerOption.getUpperLayerFragmentCreate();
                             if (upperLayerCreate != null){
-                                upLayerFragment = upperLayerCreate.createVideoFragment();
+                                upLayerFragment = upperLayerCreate.createLayerFragment();
                             }
                             if (upLayerFragment != null){
                                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
