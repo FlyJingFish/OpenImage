@@ -562,7 +562,7 @@ public class ViewPagerActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && canFragmentBack()) {
             close(false);
             return true;
         }
@@ -705,7 +705,7 @@ public class ViewPagerActivity extends BaseActivity {
     }
 
     private View getCoverView() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag("f"+showPosition);
+        Fragment fragment = getCurrentFragment();
         if (fragment instanceof BaseFragment) {
             BaseFragment baseFragment = (BaseFragment) fragment;
             return baseFragment.getExitImageView();
@@ -713,4 +713,16 @@ public class ViewPagerActivity extends BaseActivity {
         return null;
     }
 
+    private Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentByTag("f"+showPosition);
+    }
+
+    public boolean canFragmentBack(){
+        Fragment fragment = getCurrentFragment();
+        if (fragment instanceof BaseFragment) {
+            BaseFragment baseFragment = (BaseFragment) fragment;
+            return baseFragment.onKeyBackDown();
+        }
+        return true;
+    }
 }

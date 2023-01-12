@@ -9,7 +9,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
@@ -101,5 +100,9 @@ public abstract class BaseFragment extends BaseInnerFragment {
         itemLoadHelper = null;
         coverDrawable = null;
         mHandler.removeCallbacksAndMessages(null);
+    }
+
+    public boolean onKeyBackDown(){
+        return true;
     }
 }

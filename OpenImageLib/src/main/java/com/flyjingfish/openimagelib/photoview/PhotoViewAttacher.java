@@ -289,7 +289,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         });
 
         screenOrientationEvent = new ScreenOrientationEvent(mImageView.getContext());
-        screenOrientationEvent.registerDisplayListener(() -> mScreenOrientationChange = true);
+        registerDisplayListener();
     }
 
     public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
@@ -1230,11 +1230,33 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
     }
 
-    public void release() {
+    public void unRegisterDisplayListener() {
 //        mHandler.removeCallbacksAndMessages(null);
         if (screenOrientationEvent != null) {
             screenOrientationEvent.unRegisterDisplayListener();
         }
+    }
+
+    public void registerDisplayListener(){
+        if (screenOrientationEvent != null) {
+            screenOrientationEvent.unRegisterDisplayListener();
+            screenOrientationEvent.registerDisplayListener(onOrientationListener);
+        }
+    }
+
+    private ScreenOrientationEvent.OnOrientationListener onOrientationListener = new ScreenOrientationEvent.OnOrientationListener() {
+        @Override
+        public void onOrientationChanged() {
+            mScreenOrientationChange = true;
+        }
+    };
+
+    public boolean isScreenOrientationChange() {
+        return mScreenOrientationChange;
+    }
+
+    public void setScreenOrientationChange(boolean screenOrientationChange) {
+        this.mScreenOrientationChange = screenOrientationChange;
     }
 
     private float mAutoCropHeightWidthRatio;

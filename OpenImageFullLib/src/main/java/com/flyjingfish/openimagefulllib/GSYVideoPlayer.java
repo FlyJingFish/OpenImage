@@ -24,6 +24,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     boolean isUserInputPause = true;
     boolean isPauseBeforeOnVideoPause = false;
     boolean isLossTransientAudio = false;
+    boolean isHideCover = false;
 
     public GSYVideoPlayer(Context context) {
         this(context,null);
@@ -86,25 +87,32 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     protected void changeUiToPlayingShow() {
         super.changeUiToPlayingShow();
-        setViewShowState(mThumbImageViewLayout, VISIBLE);
+        if (!isHideCover){
+            setViewShowState(mThumbImageViewLayout, VISIBLE);
+        }
     }
 
     @Override
     protected void changeUiToPreparingShow() {
         super.changeUiToPreparingShow();
-        setViewShowState(mThumbImageViewLayout, VISIBLE);
+        if (!isHideCover){
+            setViewShowState(mThumbImageViewLayout, VISIBLE);
+        }
     }
 
     @Override
     protected void changeUiToPrepareingClear() {
         super.changeUiToPrepareingClear();
-        setViewShowState(mThumbImageViewLayout, VISIBLE);
+        if (!isHideCover){
+            setViewShowState(mThumbImageViewLayout, VISIBLE);
+        }
     }
 
     @Override
     public void onSurfaceSizeChanged(Surface surface, int width, int height) {
         super.onSurfaceSizeChanged(surface, width, height);
         if (mCurrentState == CURRENT_STATE_PLAYING){
+            isHideCover = true;
             setViewShowState(mThumbImageViewLayout, INVISIBLE);
         }
     }

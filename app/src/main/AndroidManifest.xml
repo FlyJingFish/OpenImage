@@ -52,8 +52,7 @@
         <activity
             android:name=".activity.MessageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="true">
         </activity>
         <activity
             android:name=".activity.RecyclerViewActivity"

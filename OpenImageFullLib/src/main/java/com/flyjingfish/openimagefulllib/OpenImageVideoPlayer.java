@@ -3,6 +3,7 @@ package com.flyjingfish.openimagefulllib;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
@@ -23,6 +24,7 @@ public class OpenImageVideoPlayer extends GSYVideoPlayer {
         coverImageView = new PhotoView(context);
         coverImageView.setId(R.id.iv_video_player_cover);
         mThumbImageView = coverImageView;
+        coverImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         resolveThumbImage(mThumbImageView);
         smallCoverImageView = findViewById(R.id.iv_small_cover);
         if (mTopContainer != null){
@@ -45,7 +47,7 @@ public class OpenImageVideoPlayer extends GSYVideoPlayer {
 
     @Override
     public int getLayoutId() {
-        return R.layout.layout_videos;
+        return R.layout.open_image_layout_videos;
     }
 
 }

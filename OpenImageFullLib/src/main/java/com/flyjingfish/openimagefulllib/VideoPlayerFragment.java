@@ -14,6 +14,8 @@ import androidx.lifecycle.LifecycleOwner;
 import com.flyjingfish.openimagelib.BaseImageFragment;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.widget.LoadingView;
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
+import com.shuyu.gsyvideoplayer.utils.GSYVideoHelper;
 
 public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
 
@@ -25,11 +27,12 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     protected PhotoView smallImageView;
     protected PhotoView photoImageView;
     protected LoadingView loadingView;
+    private GSYVideoHelper gsyVideoHelper;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_video,container,false);
+        rootView = inflater.inflate(R.layout.open_image_fragment_video,container,false);
         OpenImageVideoPlayer videoPlayer = rootView.findViewById(R.id.video_player);
         this.videoPlayer = videoPlayer;
         smallImageView = videoPlayer.getSmallCoverImageView();
@@ -135,6 +138,31 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     }
 
     protected void toPlay4Resume(){
+        GSYVideoHelper.GSYVideoHelperBuilder builder = new GSYVideoHelper.GSYVideoHelperBuilder();
+        builder.setHideActionBar(true);
+        builder.setHideStatusBar(true);
+        builder.setUrl(openImageUrl.getVideoUrl());
+        builder.setEnlargeImageRes(R.drawable.video_enlarge);
+        builder.setShrinkImageRes(R.drawable.video_shrink);
+        builder.setAutoFullWithSize(true);
+        builder.setShowFullAnimation(true);
+        builder.setLockLand(true);
+        gsyVideoHelper = new GSYVideoHelper(requireContext(),videoPlayer);
+        gsyVideoHelper.setGsyVideoOptionBuilder(builder);
+        builder.setVideoAllCallBack(new GSYSampleCallBack(){
+            @Override
+            public void onQuitFullscreen(String url, Object... objects) {
+                super.onQuitFullscreen(url, objects);
+                videoPlayer.getBackButton().setVisibility(View.VISIBLE);
+            }
+        });
+//        gsyVideoHelper.startPlay();
+        if (videoPlayer.getFullscreenButton() != null){
+            videoPlayer.getFullscreenButton().setOnClickListener(v -> {
+                photoImageView.getAttacher().setScreenOrientationChange(true);
+                gsyVideoHelper.doFullBtnLogic();
+            });
+        }
         videoPlayer.playUrl(openImageUrl.getVideoUrl());
         videoPlayer.startPlayLogic();
     }
@@ -161,5 +189,13 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
         if (playerKey != null) {
             GSYVideoController.cancelByKeyAndDeleteKey(playerKey);
         }
+    }
+
+    @Override
+    public boolean onKeyBackDown() {
+        if (gsyVideoHelper != null){
+            return gsyVideoHelper.isFull();
+        }
+        return super.onKeyBackDown();
     }
 }
