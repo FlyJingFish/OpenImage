@@ -74,6 +74,7 @@ class OpenImage4Params {
     protected volatile boolean isMapShareView = true;
     protected String drawableKey;
     protected Class<?> openImageActivityCls = ViewPagerActivity.class;
+    protected boolean isNoneClickView = false;
 
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV
@@ -136,6 +137,7 @@ class OpenImage4Params {
         intent.putExtra(OpenParams.OPEN_ANIM_TIME_MS, openPageAnimTimeMs);
         intent.putExtra(OpenParams.GALLERY_EFFECT_WIDTH, leftRightShowWidthDp);
         intent.putExtra(OpenParams.CONTEXT_KEY, contextKey);
+        intent.putExtra(OpenParams.NONE_CLICK_VIEW, isNoneClickView);
         backViewKey = this.toString();
         return intent;
     }

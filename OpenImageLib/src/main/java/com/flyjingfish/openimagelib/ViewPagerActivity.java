@@ -79,8 +79,12 @@ public class ViewPagerActivity extends BaseActivity {
         initMoreView();
         initViewPager2();
         initTouchCloseLayout();
-        setViewTransition();
-        addTransitionListener();
+        if (isNoneClickView){
+            onShareTransitionEnd();
+        }else {
+            setViewTransition();
+            addTransitionListener();
+        }
     }
 
     protected void initRootView(){
@@ -209,6 +213,7 @@ public class ViewPagerActivity extends BaseActivity {
                 bundle.putString(OpenParams.ON_ITEM_LONG_CLICK_KEY, onItemLongCLickKey);
                 bundle.putString(OpenParams.OPEN_COVER_DRAWABLE, openCoverKey);
                 bundle.putFloat(OpenParams.AUTO_ASPECT_RATIO, autoAspectRadio);
+                bundle.putBoolean(OpenParams.NONE_CLICK_VIEW, isNoneClickView);
                 fragment.setArguments(bundle);
                 return fragment;
             }
@@ -479,33 +484,9 @@ public class ViewPagerActivity extends BaseActivity {
 
                 @Override
                 public void onTransitionEnd(Transition transition) {
-                    photosViewModel.transitionEndLiveData.setValue(true);
                     transition.removeListener(this);
-                    mHandler.post(() -> {
 
-                        if (upperLayerOption != null && ViewPagerActivity.this.getLifecycle().getCurrentState() != Lifecycle.State.DESTROYED){
-                            UpperLayerFragmentCreate upperLayerCreate = upperLayerOption.getUpperLayerFragmentCreate();
-                            if (upperLayerCreate != null){
-                                upLayerFragment = upperLayerCreate.createLayerFragment();
-                            }
-                            if (upLayerFragment != null){
-                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                FrameLayout frameLayout = new FrameLayout(ViewPagerActivity.this);
-                                frameLayout.setId(R.id.upper_layer_container);
-                                Bundle upperLayerBundle = getIntent().getBundleExtra(OpenParams.UPPER_LAYER_BUNDLE);
-                                if (upperLayerBundle != null){
-                                    upLayerFragment.setArguments(upperLayerBundle);
-                                }
-                                if (upperLayerOption.isFollowTouch()){
-                                    flTouchView.addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                                }else {
-                                    rootView.addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                                }
-                                transaction.replace(R.id.upper_layer_container,upLayerFragment).commit();
-                            }
-                        }
-                    });
-
+                    onShareTransitionEnd();
                 }
 
                 @Override
@@ -524,6 +505,34 @@ public class ViewPagerActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    private void onShareTransitionEnd(){
+        photosViewModel.transitionEndLiveData.setValue(true);
+        mHandler.post(() -> {
+
+            if (upperLayerOption != null && ViewPagerActivity.this.getLifecycle().getCurrentState() != Lifecycle.State.DESTROYED){
+                UpperLayerFragmentCreate upperLayerCreate = upperLayerOption.getUpperLayerFragmentCreate();
+                if (upperLayerCreate != null){
+                    upLayerFragment = upperLayerCreate.createLayerFragment();
+                }
+                if (upLayerFragment != null){
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    FrameLayout frameLayout = new FrameLayout(ViewPagerActivity.this);
+                    frameLayout.setId(R.id.upper_layer_container);
+                    Bundle upperLayerBundle = getIntent().getBundleExtra(OpenParams.UPPER_LAYER_BUNDLE);
+                    if (upperLayerBundle != null){
+                        upLayerFragment.setArguments(upperLayerBundle);
+                    }
+                    if (upperLayerOption.isFollowTouch()){
+                        flTouchView.addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    }else {
+                        rootView.addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    }
+                    transaction.replace(R.id.upper_layer_container,upLayerFragment).commit();
+                }
+            }
+        });
     }
 
     @Override
@@ -674,6 +683,10 @@ public class ViewPagerActivity extends BaseActivity {
     }
 
     protected void close(boolean isTouchClose) {
+        if (isNoneClickView){
+            finish();
+            return;
+        }
         if (isCallClosed) {
             return;
         }

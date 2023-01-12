@@ -710,6 +710,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     private boolean isExitMode = false;
+    private boolean isNoneClickView = false;
     private float exitFloat = 1f;
 
     public void setExitFloat(float exitFloat) {
@@ -718,6 +719,14 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setExitMode(boolean exitMode) {
         isExitMode = exitMode;
+    }
+
+    public boolean isNoneClickView() {
+        return isNoneClickView;
+    }
+
+    public void setNoneClickView(boolean noneClickView) {
+        isNoneClickView = noneClickView;
     }
 
     /**
@@ -792,7 +801,38 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst;
-            if (isExitMode) {
+            if (isNoneClickView){
+                if (OpenImageConfig.getInstance().isReadMode()) {
+                    boolean bigImageRule = maxScale * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * Math.max(viewWidth, viewHeight);
+                    if (bigImageRule) {
+                        mTempDst = new RectF(0, 0, viewWidth, viewWidth * scaleImageHW);
+                        isBigImage = true;
+                    }else {
+                        if (scaleImageHW > 1) {
+                            if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
+                                mMinScale = DEFAULT_MIN_SCALE;
+                                //设置中等缩放为适宽的缩放
+                                mMidScale = widthScale / heightScale;
+                                mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+                            }
+                        } else {
+                            if (maxScale * drawableWidth > DEFAULT_MID_SCALE * viewWidth) {
+                                mMinScale = DEFAULT_MIN_SCALE;
+                                //设置中等缩放为适宽的缩放
+                                mMidScale = heightScale / widthScale;
+                                mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+                            }
+                        }
+                        mTempDst = new RectF(0, 0, viewWidth, viewHeight);
+                    }
+                } else {
+                    mTempDst = new RectF(0, 0, viewWidth, viewHeight);
+                }
+
+                if ((int) mBaseRotation % 180 != 0) {
+                    mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
+                }
+            }else if (isExitMode) {
                 if (isBigImage && (mSrcScaleType == ShapeImageView.ShapeScaleType.START_CROP || mSrcScaleType == ShapeImageView.ShapeScaleType.END_CROP || autoScaleType == ShapeImageView.ShapeScaleType.START_CROP || autoScaleType == ShapeImageView.ShapeScaleType.END_CROP || autoScaleType == ShapeImageView.ShapeScaleType.CENTER_CROP)) {
                     mTempDst = new RectF(0, 0, viewWidth, viewWidth * scaleImageHW);
                 } else {

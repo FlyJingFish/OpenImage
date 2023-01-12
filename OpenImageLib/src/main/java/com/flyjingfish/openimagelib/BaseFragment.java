@@ -32,6 +32,7 @@ public abstract class BaseFragment extends BaseInnerFragment {
     protected ImageDiskMode imageDiskMode;
     protected int errorResId;
     protected Drawable coverDrawable;
+    protected boolean isNoneClickView;
 
     public abstract View getExitImageView();
     protected void onTransitionEnd(){}
@@ -74,6 +75,7 @@ public abstract class BaseFragment extends BaseInnerFragment {
         coverDrawable = ImageLoadUtils.getInstance().getCoverDrawable(getArguments().getString(OpenParams.OPEN_COVER_DRAWABLE));
 
         autoAspectRadio = bundle.getFloat(OpenParams.AUTO_ASPECT_RATIO,0);
+        isNoneClickView = bundle.getBoolean(OpenParams.NONE_CLICK_VIEW,false);
     }
 
 

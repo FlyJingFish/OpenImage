@@ -283,6 +283,11 @@ public class PhotoView extends AppCompatImageView {
         attacher.setExitMode(mode);
     }
 
+
+    public void setNoneClickView(boolean noneClickView) {
+        attacher.setNoneClickView(noneClickView);
+    }
+
     public void setExitFloat(float exitFloat) {
         attacher.setExitFloat(exitFloat);
     }

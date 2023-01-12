@@ -174,6 +174,15 @@ public class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 如果实在没有可以传的View 可调用这个方法
+     * @return
+     */
+    public OpenImage setNoneClickView() {
+        isNoneClickView = true;
+        return this;
+    }
+
+    /**
      * 如果数据下标 和 RecyclerView、ViewPager2、ListView、GridView 的所在位置一致 可调用这个
      *
      * @param clickPosition 点击的图片和View所在的位置

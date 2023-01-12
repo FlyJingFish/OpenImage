@@ -74,7 +74,7 @@ public class BaseActivity extends AppCompatActivity {
     protected FontStyle fontStyle;
     protected Fragment upLayerFragment;
     protected UpperLayerOption upperLayerOption;
-    private final Handler closeHandler = new Handler(Looper.getMainLooper()){
+    protected final Handler closeHandler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -85,7 +85,8 @@ public class BaseActivity extends AppCompatActivity {
 
         }
     };
-    private String clickContextKey;
+    protected String clickContextKey;
+    protected boolean isNoneClickView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,12 +101,12 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void fixAndroid5_7BugForRemoveListener() {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+        if (!isNoneClickView && Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
             ImageLoadUtils.getInstance().notifyOnRemoveListener4FixBug();
         }
     }
     private void fixAndroid5_7Bug() {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+        if (!isNoneClickView && Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
             setEnterSharedElementCallback(new SharedElementCallback() {
                 @Override
                 public void onSharedElementStart(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
@@ -154,7 +155,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @SuppressLint("DiscouragedPrivateApi")
     private void fixSharedAnimMemoryLeaks() {
-        if (OpenImageConfig.getInstance().isFixSharedAnimMemoryLeaks()){
+        if (!isNoneClickView && OpenImageConfig.getInstance().isFixSharedAnimMemoryLeaks()){
             try {
                 Method method = TransitionManager.class.getDeclaredMethod("getRunningTransitions");
                 method.setAccessible(true);
@@ -262,5 +263,6 @@ public class BaseActivity extends AppCompatActivity {
         onBackViewKey = getIntent().getStringExtra(OpenParams.ON_BACK_VIEW);
         onBackView = ImageLoadUtils.getInstance().getOnBackView(onBackViewKey);
         clickContextKey = getIntent().getStringExtra(OpenParams.CONTEXT_KEY);
+        isNoneClickView = getIntent().getBooleanExtra(OpenParams.NONE_CLICK_VIEW,false);
     }
 }

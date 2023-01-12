@@ -53,7 +53,10 @@ class OpenImage4ParseData extends OpenImage4Params {
         Intent intent = inputIntentData();
         ArrayList<OpenImageDetail> openImageDetails;
         Pair<View, String> viewPair;
-        if (recyclerView != null) {
+        if (isNoneClickView){
+            openImageDetails = new ArrayList<>();
+            viewPair = initShareView(openImageDetails);
+        }else if (recyclerView != null) {
             if (sourceImageViewIdGet == null) {
                 throw new IllegalArgumentException("sourceImageViewIdGet 不能为null");
             }
@@ -315,7 +318,7 @@ class OpenImage4ParseData extends OpenImage4Params {
                 openImageDetail.srcHeight = shareViewHeight;
                 openImageDetails.add(openImageDetail);
             }
-        } else {
+        } else if (srcViewType == SrcViewType.IV){
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
                 OpenImageDetail openImageDetail = new OpenImageDetail();
@@ -333,6 +336,15 @@ class OpenImage4ParseData extends OpenImage4Params {
                 if (clickViewPosition == i) {
                     pair = Pair.create(shareView, shareName);
                 }
+            }
+        }else {
+            for (int i = 0; i < openImageUrls.size(); i++) {
+                OpenImageUrl imageBean = openImageUrls.get(i);
+                OpenImageDetail openImageDetail = new OpenImageDetail();
+                openImageDetail.openImageUrl = imageBean;
+                openImageDetail.dataPosition = i;
+                openImageDetail.viewPosition = i;
+                openImageDetails.add(openImageDetail);
             }
         }
 
@@ -365,7 +377,7 @@ class OpenImage4ParseData extends OpenImage4Params {
 
     private void startActivity(Intent intent, Pair<View, String> viewPair, String drawableKey) {
         if (!isStartActivity) {
-            if (ActivityCompatHelper.assertValidRequest(context)) {
+            if (ActivityCompatHelper.assertValidRequest(context) && viewPair != null && !isNoneClickView) {
                 this.drawableKey = drawableKey;
                 View shareElementView = viewPair.first;
                 String shareElementName = viewPair.second;
@@ -380,6 +392,9 @@ class OpenImage4ParseData extends OpenImage4Params {
                 } catch (Exception ignored) {
                     releaseImageLoadUtilMap();
                 }
+                release();
+            }else if (ActivityCompatHelper.assertValidRequest(context) && isNoneClickView) {
+                context.startActivity(intent);
                 release();
             } else {
                 releaseImageLoadUtilMap();

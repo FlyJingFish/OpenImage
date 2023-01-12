@@ -95,7 +95,8 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         } else {
             photoView.setZoomable(true);
         }
-
+        photoView.setNoneClickView(isNoneClickView);
+        smallCoverImageView.setNoneClickView(isNoneClickView);
         showLoading(loadingView);
         loadingView.setVisibility(View.GONE);
         if (ImageLoadUtils.getInstance().getImageLoadSuccess(imageDetail.getImageUrl())
