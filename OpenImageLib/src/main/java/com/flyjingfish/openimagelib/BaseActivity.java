@@ -85,8 +85,12 @@ public class BaseActivity extends AppCompatActivity {
 
         }
     };
-    protected String clickContextKey;
-    protected boolean isNoneClickView;
+    private String clickContextKey;
+    private boolean isNoneClickView;
+
+    public boolean isNoneClickView() {
+        return isNoneClickView;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

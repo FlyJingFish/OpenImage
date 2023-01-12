@@ -79,7 +79,7 @@ public class ViewPagerActivity extends BaseActivity {
         initMoreView();
         initViewPager2();
         initTouchCloseLayout();
-        if (isNoneClickView){
+        if (isNoneClickView()){
             onShareTransitionEnd();
         }else {
             setViewTransition();
@@ -213,7 +213,7 @@ public class ViewPagerActivity extends BaseActivity {
                 bundle.putString(OpenParams.ON_ITEM_LONG_CLICK_KEY, onItemLongCLickKey);
                 bundle.putString(OpenParams.OPEN_COVER_DRAWABLE, openCoverKey);
                 bundle.putFloat(OpenParams.AUTO_ASPECT_RATIO, autoAspectRadio);
-                bundle.putBoolean(OpenParams.NONE_CLICK_VIEW, isNoneClickView);
+                bundle.putBoolean(OpenParams.NONE_CLICK_VIEW, isNoneClickView());
                 fragment.setArguments(bundle);
                 return fragment;
             }
@@ -683,7 +683,7 @@ public class ViewPagerActivity extends BaseActivity {
     }
 
     protected void close(boolean isTouchClose) {
-        if (isNoneClickView){
+        if (isNoneClickView()){
             finish();
             return;
         }
