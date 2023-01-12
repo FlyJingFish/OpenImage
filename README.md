@@ -201,9 +201,9 @@ OpenImage.with(activity)
 OpenImage.with(activity)
         //打开大图页面时没有点击的ImageView则用这个
         .setNoneClickView()
-        //RecyclerView的数据
+        //图片的数据
         .setImageUrlList(datas)
-        //点击的ImageView所在数据的位置
+        //默认展示数据的位置
         .setClickPosition(position)
         //开始展示大图
         .show();
