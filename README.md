@@ -3,7 +3,9 @@
 
 ## 属于你的侵入性低的大图查看器，高仿微信完美的过渡动画，支持自定义视频播放器，也可以自定义加载图片的内核，例如Glide，Picasso或其他的
 
-## [点此下载apk](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk?raw=true)
+## [点此下载apk,也可扫下边二维码下载](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk?raw=true)
+
+<img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/download_qrcode.png" alt="show" width="200px" alt="show" />
 
 ## 效果演示
  
