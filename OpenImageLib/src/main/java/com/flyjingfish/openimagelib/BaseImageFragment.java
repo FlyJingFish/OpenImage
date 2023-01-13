@@ -97,8 +97,6 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         }
         photoView.setNoneClickView(isNoneClickView);
         smallCoverImageView.setNoneClickView(isNoneClickView);
-//        photoView.addLifecycleEventObserver(getViewLifecycleOwner());
-//        smallCoverImageView.addLifecycleEventObserver(getViewLifecycleOwner());
         showLoading(loadingView);
         loadingView.setVisibility(View.GONE);
         if (ImageLoadUtils.getInstance().getImageLoadSuccess(imageDetail.getImageUrl())
