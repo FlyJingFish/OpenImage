@@ -735,4 +735,20 @@ public class ViewPagerActivity extends BaseActivity {
         }
         return canLayerBack && canImageBack;
     }
+
+    public View getBgView() {
+        return vBg;
+    }
+
+    public FrameLayout getTouchView() {
+        return flTouchView;
+    }
+
+    public ViewPager2 getViewPager() {
+        return viewPager;
+    }
+
+    public TouchCloseLayout getRootView() {
+        return rootView;
+    }
 }
