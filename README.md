@@ -518,6 +518,10 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
 
 [点此查看更多使用说明](https://github.com/FlyJingFish/OpenImage/wiki)
 
+## 更新日志
+
+[点此查看更新日志](https://github.com/FlyJingFish/OpenImage/blob/master/update_record.md)
+
 # 混淆
 
 ### 一，如果您使用的是 OpenImageFullLib 需要遵循以下三方库的规则
