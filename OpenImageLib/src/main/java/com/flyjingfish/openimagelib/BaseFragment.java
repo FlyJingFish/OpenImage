@@ -102,7 +102,4 @@ public abstract class BaseFragment extends BaseInnerFragment {
         mHandler.removeCallbacksAndMessages(null);
     }
 
-    public boolean onKeyBackDown(){
-        return true;
-    }
 }

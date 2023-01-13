@@ -21,6 +21,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 
 import androidx.annotation.NonNull;
@@ -65,16 +66,6 @@ public class PhotoView extends AppCompatImageView {
             setScaleType(pendingScaleType);
             pendingScaleType = null;
         }
-        ((LifecycleOwner) getContext()).getLifecycle().addObserver(new LifecycleEventObserver() {
-            @Override
-            public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
-                if (event ==  Lifecycle.Event.ON_DESTROY){
-                    if (attacher != null){
-                        attacher.unRegisterDisplayListener();
-                    }
-                }
-            }
-        });
     }
 
     /**
@@ -280,21 +271,21 @@ public class PhotoView extends AppCompatImageView {
         attacher.setOnSingleFlingListener(onSingleFlingListener);
     }
 
-//    @Override
-//    protected void onDetachedFromWindow() {
-//        super.onDetachedFromWindow();
-//        if (attacher != null){
-//            attacher.unRegisterDisplayListener();
-//        }
-//    }
-//
-//    @Override
-//    protected void onAttachedToWindow() {
-//        super.onAttachedToWindow();
-//        if (attacher != null){
-//            attacher.registerDisplayListener();
-//        }
-//    }
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (attacher != null){
+            attacher.unRegisterDisplayListener();
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (attacher != null){
+            attacher.registerDisplayListener();
+        }
+    }
 
     public void setStartWidth(float mStartWidth) {
         attacher.setStartWidth(mStartWidth);

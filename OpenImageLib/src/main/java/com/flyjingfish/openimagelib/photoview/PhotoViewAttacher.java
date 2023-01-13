@@ -1231,7 +1231,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void unRegisterDisplayListener() {
-//        mHandler.removeCallbacksAndMessages(null);
         if (screenOrientationEvent != null) {
             screenOrientationEvent.unRegisterDisplayListener();
         }
@@ -1244,7 +1243,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
     }
 
-    private ScreenOrientationEvent.OnOrientationListener onOrientationListener = new ScreenOrientationEvent.OnOrientationListener() {
+    private final ScreenOrientationEvent.OnOrientationListener onOrientationListener = new ScreenOrientationEvent.OnOrientationListener() {
         @Override
         public void onOrientationChanged() {
             mScreenOrientationChange = true;

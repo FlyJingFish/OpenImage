@@ -28,7 +28,7 @@ public class OpenImageVideoPlayer extends GSYVideoPlayer {
         resolveThumbImage(mThumbImageView);
         smallCoverImageView = findViewById(R.id.iv_small_cover);
         if (mTopContainer != null){
-            mTopContainer.setPadding(0, ScreenUtils.getStatusBarHeight(context), 0, 0);
+            mTopContainer.setPadding(0, ScreenUtils.getStatusBarHeight(context)+mTopContainer.getPaddingTop(), 0, 0);
         }
         changeUiToNormal();
     }

@@ -27,7 +27,7 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     protected PhotoView smallImageView;
     protected PhotoView photoImageView;
     protected LoadingView loadingView;
-    private GSYVideoHelper gsyVideoHelper;
+    private OpenImageGSYVideoHelper gsyVideoHelper;
 
     @Nullable
     @Override
@@ -44,9 +44,7 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (videoPlayer.getBackButton() != null){
-            videoPlayer.getBackButton().setOnClickListener(v -> close());
-        }
+        setBackListener();
         playerKey = videoPlayer.getVideoKey();
         videoPlayer.goneAllWidget();
         isPlayed = false;
@@ -138,32 +136,16 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     }
 
     protected void toPlay4Resume(){
-        GSYVideoHelper.GSYVideoHelperBuilder builder = new GSYVideoHelper.GSYVideoHelperBuilder();
-        builder.setHideActionBar(true);
-        builder.setHideStatusBar(true);
-        builder.setUrl(openImageUrl.getVideoUrl());
-        builder.setEnlargeImageRes(R.drawable.video_enlarge);
-        builder.setShrinkImageRes(R.drawable.video_shrink);
-        builder.setAutoFullWithSize(true);
-        builder.setShowFullAnimation(true);
-        builder.setLockLand(true);
-        gsyVideoHelper = new GSYVideoHelper(requireContext(),videoPlayer);
-        gsyVideoHelper.setGsyVideoOptionBuilder(builder);
-        builder.setVideoAllCallBack(new GSYSampleCallBack(){
-            @Override
-            public void onQuitFullscreen(String url, Object... objects) {
-                super.onQuitFullscreen(url, objects);
-                videoPlayer.getBackButton().setVisibility(View.VISIBLE);
-            }
-        });
-//        gsyVideoHelper.startPlay();
-        if (videoPlayer.getFullscreenButton() != null){
-            videoPlayer.getFullscreenButton().setOnClickListener(v -> {
-                photoImageView.getAttacher().setScreenOrientationChange(true);
-                gsyVideoHelper.doFullBtnLogic();
+        gsyVideoHelper = videoPlayer.playUrl(openImageUrl.getVideoUrl());
+        if (gsyVideoHelper.getGsyVideoOptionBuilder() != null){
+            gsyVideoHelper.getGsyVideoOptionBuilder().setVideoAllCallBack(new GSYSampleCallBack(){
+                @Override
+                public void onQuitFullscreen(String url, Object... objects) {
+                    super.onQuitFullscreen(url, objects);
+                    setBackListener();
+                }
             });
         }
-        videoPlayer.playUrl(openImageUrl.getVideoUrl());
         videoPlayer.startPlayLogic();
     }
 
@@ -194,8 +176,18 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     @Override
     public boolean onKeyBackDown() {
         if (gsyVideoHelper != null){
-            return gsyVideoHelper.isFull();
+            boolean isFull = gsyVideoHelper.isFull();
+            if (isFull){
+                gsyVideoHelper.doFullBtnLogic();
+            }
+            return !isFull;
         }
         return super.onKeyBackDown();
+    }
+
+    protected void setBackListener(){
+        if (videoPlayer.getBackButton() != null){
+            videoPlayer.getBackButton().setOnClickListener(v -> close());
+        }
     }
 }

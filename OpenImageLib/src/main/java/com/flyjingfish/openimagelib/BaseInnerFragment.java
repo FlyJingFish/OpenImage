@@ -137,4 +137,8 @@ public class BaseInnerFragment extends Fragment {
         onItemClickListenerKeys.clear();
         onItemLongClickListenerKeys.clear();
     }
+
+    public boolean onKeyBackDown(){
+        return true;
+    }
 }

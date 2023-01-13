@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.Surface;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.flyjingfish.openimagelib.photoview.PhotoView;
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoViewBridge;
@@ -25,6 +28,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     boolean isPauseBeforeOnVideoPause = false;
     boolean isLossTransientAudio = false;
     boolean isHideCover = false;
+    protected OpenImageGSYVideoHelper gsyVideoHelper;
 
     public GSYVideoPlayer(Context context) {
         this(context,null);
@@ -48,8 +52,42 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     public String getVideoKey() {
         return pageContextKey + "$" + uUKey;
     }
-    public void playUrl(String videoUrl) {
-        setUp(videoUrl, true, "");
+
+    public OpenImageGSYVideoHelper playUrl(String videoUrl) {
+        OpenImageGSYVideoHelper.GSYVideoHelperBuilder builder = new OpenImageGSYVideoHelper.GSYVideoHelperBuilder();
+        builder.setHideActionBar(true);
+        builder.setHideStatusBar(true);
+        builder.setHideKey(true);
+        builder.setUrl(videoUrl);
+        builder.setEnlargeImageRes(R.drawable.video_enlarge);
+        builder.setShrinkImageRes(R.drawable.video_shrink);
+        builder.setAutoFullWithSize(true);
+        builder.setShowFullAnimation(true);
+        builder.setLockLand(true);
+        builder.setCacheWithPlay(true);
+        return playUrl(builder);
+    }
+
+    public OpenImageGSYVideoHelper playUrl(OpenImageGSYVideoHelper.GSYVideoHelperBuilder builder) {
+        gsyVideoHelper = new OpenImageGSYVideoHelper(getContext(),this);
+        gsyVideoHelper.setGsyVideoOptionBuilder(builder);
+
+        if (getFullscreenButton() != null){
+            getFullscreenButton().setOnClickListener(v -> {
+                if (mThumbImageView instanceof PhotoView){
+                    PhotoView photoImageView = (PhotoView) mThumbImageView;
+                    photoImageView.getAttacher().setScreenOrientationChange(true);
+                }
+                gsyVideoHelper.doFullBtnLogic();
+            });
+        }
+        gsyVideoHelper.readyPlay();
+        return gsyVideoHelper;
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
     }
 
     @Override

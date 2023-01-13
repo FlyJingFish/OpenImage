@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -562,8 +563,10 @@ public class ViewPagerActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && canFragmentBack()) {
-            close(false);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (canFragmentBack()){
+                close(false);
+            }
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -718,11 +721,18 @@ public class ViewPagerActivity extends BaseActivity {
     }
 
     public boolean canFragmentBack(){
-        Fragment fragment = getCurrentFragment();
-        if (fragment instanceof BaseFragment) {
-            BaseFragment baseFragment = (BaseFragment) fragment;
-            return baseFragment.onKeyBackDown();
+        boolean canLayerBack = true;
+        boolean canImageBack = true;
+        //首先判断最上层
+        if (upLayerFragment != null){
+            canLayerBack = upLayerFragment.onKeyBackDown();
         }
-        return true;
+        //其次判断下层图片页面
+        Fragment fragment = getCurrentFragment();
+        if (fragment instanceof BaseInnerFragment) {
+            BaseInnerFragment baseFragment = (BaseInnerFragment) fragment;
+            canImageBack = baseFragment.onKeyBackDown();
+        }
+        return canLayerBack && canImageBack;
     }
 }

@@ -30,10 +30,6 @@ public class FriendsVideoPlayer extends GSYVideoPlayer {
         mTextureViewContainer.setOnTouchListener(null);
     }
 
-    public void playUrl(String videoUrl) {
-        setUp(videoUrl, true, "");
-    }
-
     public PhotoView getCoverImageView() {
         return coverImageView;
     }

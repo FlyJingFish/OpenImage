@@ -72,7 +72,7 @@ public class BaseActivity extends AppCompatActivity {
     protected LinearLayoutManager imageIndicatorLayoutManager;
     protected ImageLoadUtils.OnBackView onBackView;
     protected FontStyle fontStyle;
-    protected Fragment upLayerFragment;
+    protected BaseInnerFragment upLayerFragment;
     protected UpperLayerOption upperLayerOption;
     protected final Handler closeHandler = new Handler(Looper.getMainLooper()){
         @Override

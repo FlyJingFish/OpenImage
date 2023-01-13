@@ -30,6 +30,7 @@
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:background="#99000000"
+        android:layout_marginBottom="20dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="invisible">
@@ -61,14 +62,14 @@
             android:id="@+id/total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
             android:text="00:00"
             android:textColor="#ffffff" />
         <ImageView
             android:id="@+id/fullscreen"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="10dp"
+            android:layout_marginEnd="6dp"
             android:src="@drawable/video_enlarge"/>
     </LinearLayout>
 
@@ -92,7 +93,7 @@
     <LinearLayout
         android:id="@+id/layout_top"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/video_title_bg"
         android:gravity="center_vertical">
@@ -101,13 +102,8 @@
             android:id="@+id/back"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:paddingStart="10dp"
-            android:scaleType="centerInside"
+            android:padding="16dp"
             android:src="@drawable/video_back" />
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
     </LinearLayout>
 
 
