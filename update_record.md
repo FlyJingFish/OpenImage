@@ -1,5 +1,9 @@
 # OpenImage 更新日志
 
+## 1.6.1
+
+1、针对 1.6.0 第1点中的debug模式判断方法修改，改为根据使用者的开发配置来判定是否是debug模式
+
 ## 1.6.0
 
 1、修改OpenImage.show() 时校验setClickPosition改为只在Debug模式下抛异常，正式环境默认采取无ClickView的模式打开大图
