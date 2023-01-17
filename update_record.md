@@ -1,5 +1,9 @@
 # OpenImage 更新日志
 
+## 1.6.0
+
+1、修改OpenImage.show() 时校验setClickPosition改为只在Debug模式下抛异常，正式环境默认采取无ClickView的模式打开大图
+
 
 ## 1.5.9
 
