@@ -188,9 +188,7 @@ public class ViewPagerActivity extends BaseActivity {
                             throw new IllegalArgumentException(videoFragmentCreate.getClass().getName() + "请重写createVideoFragment");
                         }
                     } else {
-                        if (fragment == null) {
-                            throw new IllegalArgumentException("请设置视频播放器fragment --> OpenImageConfig");
-                        }
+                        throw new IllegalArgumentException("请设置视频播放器fragment --> https://github.com/FlyJingFish/OpenImage/wiki");
                     }
 
                 } else {

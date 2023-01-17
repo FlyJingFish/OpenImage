@@ -69,8 +69,8 @@ class OpenImage4ParseData extends OpenImage4Params {
 
             openImageDetails = new ArrayList<>();
             viewPair = initShareView(openImageDetails);
-            if (viewPair == null) {
-                throw new IllegalArgumentException("请确保是否调用了setClickPosition并且参数设置正确");
+            if (checkIllegalException4ShareView(viewPair,"请确保是否调用了setClickPosition并且参数设置正确，或 SourceImageViewIdGet 返回的 ImageView 的Id正确")){
+                return;
             }
             View shareViewClick = viewPair.first;
             if (shareViewClick instanceof ShapeImageView) {
@@ -100,8 +100,8 @@ class OpenImage4ParseData extends OpenImage4Params {
             openImageDetails = new ArrayList<>();
 
             viewPair = initShareView(openImageDetails);
-            if (viewPair == null) {
-                throw new IllegalArgumentException("请确保是否调用了setClickPosition并且参数设置正确");
+            if (checkIllegalException4ShareView(viewPair,"请确保是否调用了setClickPosition并且参数设置正确，或 SourceImageViewIdGet 返回的 ImageView 的Id正确")){
+                return;
             }
             View shareViewClick = viewPair.first;
             if (shareViewClick instanceof ShapeImageView) {
@@ -124,16 +124,13 @@ class OpenImage4ParseData extends OpenImage4Params {
             if (sourceImageViewIdGet == null) {
                 throw new IllegalArgumentException("sourceImageViewIdGet 不能为null");
             }
-            if (clickDataPosition >= openImageUrls.size()) {
-                throw new IllegalArgumentException("clickDataPosition 不能 >= OpenImageUrl 数据 size");
-            }
 
             srcViewType = SrcViewType.VP2;
             openImageDetails = new ArrayList<>();
 
             viewPair = initShareView(openImageDetails);
-            if (viewPair == null) {
-                throw new IllegalArgumentException("请确保是否调用了setClickPosition并且参数设置正确");
+            if (checkIllegalException4ShareView(viewPair,"请确保是否调用了setClickPosition并且参数设置正确，或 SourceImageViewIdGet 返回的 ImageView 的Id正确")){
+                return;
             }
 
             View shareViewClick = viewPair.first;
@@ -155,16 +152,13 @@ class OpenImage4ParseData extends OpenImage4Params {
             if (sourceImageViewGet == null) {
                 throw new IllegalArgumentException("sourceImageViewGet 不能为null");
             }
-            if (clickDataPosition >= openImageUrls.size()) {
-                throw new IllegalArgumentException("clickDataPosition 不能 >= OpenImageUrl 数据 size");
-            }
 
             srcViewType = SrcViewType.VP;
             openImageDetails = new ArrayList<>();
 
             viewPair = initShareView(openImageDetails);
-            if (viewPair == null) {
-                throw new IllegalArgumentException("请确保是否调用了setClickPosition并且参数设置正确");
+            if (checkIllegalException4ShareView(viewPair,"请确保是否调用了setClickPosition并且参数设置正确，SourceImageViewGet 返回的 ImageView 不能为null")){
+                return;
             }
             View shareViewClick = viewPair.first;
             if (shareViewClick instanceof ShapeImageView) {
@@ -181,21 +175,12 @@ class OpenImage4ParseData extends OpenImage4Params {
                 }
             });
         } else if (imageViews != null && imageViews.size() > 0) {
-            if (imageViews.size() != openImageUrls.size()) {
-                throw new IllegalArgumentException("所传ImageView个数需与数据个数一致");
-            }
-            if (clickDataPosition != clickViewPosition) {
-                throw new IllegalArgumentException("clickDataPosition 和 clickViewPosition不能不相等");
-            }
-            if (clickViewPosition >= imageViews.size()) {
-                throw new IllegalArgumentException("clickViewPosition不能 >= ImageView 的个数");
-            }
             srcViewType = SrcViewType.IV;
             openImageDetails = new ArrayList<>();
 
             viewPair = initShareView(openImageDetails);
-            if (viewPair == null) {
-                throw new IllegalArgumentException("请确保是否调用了setClickPosition并且参数设置正确");
+            if (checkIllegalException4ShareView(viewPair,"请确保是否调用了setClickPosition并且参数设置正确，或所传ImageView个数是否正确")){
+                return;
             }
 
             View shareViewClick = viewPair.first;
@@ -212,9 +197,33 @@ class OpenImage4ParseData extends OpenImage4Params {
         postOpen(intent, viewPair);
     }
 
+    private boolean checkIllegalException4ShareView(Pair<View, String> viewPair,String str){
+        if (viewPair == null){
+            if (BuildConfig.DEBUG){
+                throw new IllegalArgumentException(str);
+            }else {
+                isNoneClickView = true;
+                show4ParseData();
+                return true;
+            }
+        }else {
+            return false;
+        }
+
+    }
+
     private Pair<View, String> initShareView(ArrayList<OpenImageDetail> openImageDetails) {
         Pair<View, String> pair = null;
-        if (srcViewType == SrcViewType.RV || srcViewType == SrcViewType.AB_LIST) {
+        if (isNoneClickView){
+            for (int i = 0; i < openImageUrls.size(); i++) {
+                OpenImageUrl imageBean = openImageUrls.get(i);
+                OpenImageDetail openImageDetail = new OpenImageDetail();
+                openImageDetail.openImageUrl = imageBean;
+                openImageDetail.dataPosition = i;
+                openImageDetail.viewPosition = i;
+                openImageDetails.add(openImageDetail);
+            }
+        }else if (srcViewType == SrcViewType.RV || srcViewType == SrcViewType.AB_LIST) {
             int[] position = getVisiblePosition();
             int firstPos = position[0];
             int lastPos = position[1];
@@ -233,7 +242,7 @@ class OpenImage4ParseData extends OpenImage4Params {
                         if (view != null) {
                             ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(imageBean, i));
                             if (shareView == null) {
-                                throw new NullPointerException("请确保 SourceImageViewIdGet 返回的 ImageView 的Id正确");
+                                return null;
                             }
                             autoSetScaleType(shareView);
                             String shareName = OpenParams.SHARE_VIEW + openImageDetails.size();
@@ -272,7 +281,7 @@ class OpenImage4ParseData extends OpenImage4Params {
                         if (view != null) {
                             ImageView shareView = view.findViewById(sourceImageViewIdGet.getImageViewId(imageBean, i));
                             if (shareView == null) {
-                                throw new NullPointerException("请确保 SourceImageViewIdGet 返回的 ImageView 的Id正确");
+                                return null;
                             }
                             autoSetScaleType(shareView);
                             String shareName = OpenParams.SHARE_VIEW + openImageDetails.size();
@@ -301,7 +310,7 @@ class OpenImage4ParseData extends OpenImage4Params {
         } else if (srcViewType == SrcViewType.VP) {
             ImageView shareView = sourceImageViewGet.getImageView(openImageUrls.get(clickDataPosition), clickDataPosition);
             if (shareView == null) {
-                throw new NullPointerException("请确保 SourceImageViewGet 返回的 ImageView 不能为null");
+                return null;
             }
             autoSetScaleType(shareView);
             String shareName = OpenParams.SHARE_VIEW + clickDataPosition;
@@ -325,17 +334,19 @@ class OpenImage4ParseData extends OpenImage4Params {
                 openImageDetail.openImageUrl = imageBean;
                 openImageDetail.dataPosition = i;
                 openImageDetail.viewPosition = i;
-                ImageView shareView = imageViews.get(i);
-                autoSetScaleType(shareView);
-                String shareName = OpenParams.SHARE_VIEW + i;
-                int shareViewWidth = shareView.getWidth();
-                int shareViewHeight = shareView.getHeight();
-                openImageDetail.srcWidth = shareViewWidth;
-                openImageDetail.srcHeight = shareViewHeight;
-                openImageDetails.add(openImageDetail);
-                if (clickViewPosition == i) {
-                    pair = Pair.create(shareView, shareName);
+                if (i < imageViews.size()){
+                    ImageView shareView = imageViews.get(i);
+                    autoSetScaleType(shareView);
+                    String shareName = OpenParams.SHARE_VIEW + i;
+                    int shareViewWidth = shareView.getWidth();
+                    int shareViewHeight = shareView.getHeight();
+                    openImageDetail.srcWidth = shareViewWidth;
+                    openImageDetail.srcHeight = shareViewHeight;
+                    if (clickViewPosition == i) {
+                        pair = Pair.create(shareView, shareName);
+                    }
                 }
+                openImageDetails.add(openImageDetail);
             }
         }else {
             for (int i = 0; i < openImageUrls.size(); i++) {
