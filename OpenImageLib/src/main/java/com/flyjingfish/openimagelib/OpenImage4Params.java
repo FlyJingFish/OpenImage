@@ -84,10 +84,10 @@ class OpenImage4Params {
         if (openImageUrls.size() == 0) {
             throw new IllegalArgumentException("请设置数据");
         }
-        if (imageDiskMode != ImageDiskMode.CONTAIN_ORIGINAL && itemLoadHelperKey == null && BuildConfig.DEBUG) {
+        if (imageDiskMode != ImageDiskMode.CONTAIN_ORIGINAL && itemLoadHelperKey == null && ActivityCompatHelper.isApkInDebug(context)) {
             throw new IllegalArgumentException("请设置ItemLoadHelper");
         }
-        if (clickDataPosition >= openImageUrls.size() && BuildConfig.DEBUG) {
+        if (clickDataPosition >= openImageUrls.size() && ActivityCompatHelper.isApkInDebug(context)) {
             throw new IllegalArgumentException("clickDataPosition不能 >= OpenImageUrl 的个数");
         }
         if (wechatExitFillInEffect) {

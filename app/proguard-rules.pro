@@ -19,3 +19,33 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.shuyu.gsyvideoplayer.video.** { *; }
+-dontwarn com.shuyu.gsyvideoplayer.video.**
+-keep class com.shuyu.gsyvideoplayer.video.base.** { *; }
+-dontwarn com.shuyu.gsyvideoplayer.video.base.**
+-keep class com.shuyu.gsyvideoplayer.utils.** { *; }
+-dontwarn com.shuyu.gsyvideoplayer.utils.**
+-keep class tv.danmaku.ijk.** { *; }
+-dontwarn tv.danmaku.ijk.**
+
+-keep public class * extends android.view.View{
+    *** get*();
+    void set*(***);
+    public <init>(android.content.Context);
+    public <init>(android.content.Context, java.lang.Boolean);
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep class * extends com.bumptech.glide.module.AppGlideModule {
+ <init>(...);
+}
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+-keep class com.bumptech.glide.load.data.ParcelFileDescriptorRewinder$InternalRewinder {
+  *** rewind();
+}

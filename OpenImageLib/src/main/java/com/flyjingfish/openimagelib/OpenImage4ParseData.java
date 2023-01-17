@@ -199,7 +199,7 @@ class OpenImage4ParseData extends OpenImage4Params {
 
     private boolean checkIllegalException4ShareView(Pair<View, String> viewPair,String str){
         if (viewPair == null){
-            if (BuildConfig.DEBUG){
+            if (ActivityCompatHelper.isApkInDebug(context)){
                 throw new IllegalArgumentException(str);
             }else {
                 isNoneClickView = true;

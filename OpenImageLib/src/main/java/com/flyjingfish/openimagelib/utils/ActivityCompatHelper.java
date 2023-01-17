@@ -4,6 +4,7 @@ package com.flyjingfish.openimagelib.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.pm.ApplicationInfo;
 import android.view.Window;
 
 import androidx.fragment.app.Fragment;
@@ -80,5 +81,14 @@ public class ActivityCompatHelper {
             return (FragmentActivity) context;
         }
         return null;
+    }
+
+    public static boolean isApkInDebug(Context context) {
+        try {
+            ApplicationInfo info = context.getApplicationInfo();
+            return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        } catch (Exception e) {
+            return true;
+        }
     }
 }

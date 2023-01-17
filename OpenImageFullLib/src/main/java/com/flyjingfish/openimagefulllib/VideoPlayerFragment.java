@@ -15,7 +15,6 @@ import com.flyjingfish.openimagelib.BaseImageFragment;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.widget.LoadingView;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
-import com.shuyu.gsyvideoplayer.utils.GSYVideoHelper;
 
 public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
 

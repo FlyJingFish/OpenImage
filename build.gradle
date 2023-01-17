@@ -3,6 +3,7 @@ buildscript {
     repositories {
         google()
         maven { url 'https://jitpack.io' }
+//        maven { url 'https://s01.oss.sonatype.org/content/repositories/iogithubflyjingfish-1043' }
         mavenCentral()
     }
     dependencies {
@@ -16,6 +17,7 @@ allprojects {
     repositories {
         google()
         maven { url 'https://jitpack.io' }
+//        maven { url 'https://s01.oss.sonatype.org/content/repositories/iogithubflyjingfish-1043' }
         mavenCentral()
     }
 }
