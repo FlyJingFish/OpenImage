@@ -215,7 +215,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
 
     @Override
     protected void resolveUIState(int state) {
-        if ((!isUserInputResume && state == CURRENT_STATE_PLAYING)||(!isUserInputPause && state == CURRENT_STATE_PAUSE)){
+        if ((!isUserInputResume && state == CURRENT_STATE_PLAYING && (mLoadingProgressBar == null || mLoadingProgressBar.getVisibility() != VISIBLE))||(!isUserInputPause && state == CURRENT_STATE_PAUSE)){
             isUserInputResume = true;
             isUserInputPause = true;
             return;
