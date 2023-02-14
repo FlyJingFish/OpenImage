@@ -528,7 +528,7 @@ public class ViewPagerActivity extends BaseActivity {
                     }else {
                         rootView.addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                     }
-                    transaction.replace(R.id.upper_layer_container,upLayerFragment).commit();
+                    transaction.replace(R.id.upper_layer_container,upLayerFragment).commitAllowingStateLoss();
                 }
             }
         });
