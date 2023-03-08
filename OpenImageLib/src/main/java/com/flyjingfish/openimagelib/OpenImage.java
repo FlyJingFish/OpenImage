@@ -499,7 +499,6 @@ public final class OpenImage extends OpenImage4ParseData {
      * @return
      */
     public OpenImage setOpenImageActivityCls(Class<?> openImageActivityCls) {
-        this.openImageActivityCls = openImageActivityCls;
         return setOpenImageActivityCls(openImageActivityCls,null,null);
     }
 
