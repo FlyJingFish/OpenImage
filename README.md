@@ -2,7 +2,7 @@
 
 [![Maven central](https://img.shields.io/maven-central/v/io.github.FlyJingFish.OpenImage/OpenImageLib)](https://central.sonatype.dev/search?q=io.github.FlyJingFish.OpenImage)
 [![GitHub stars](https://img.shields.io/github/stars/FlyJingFish/OpenImage.svg)](https://github.com/FlyJingFish/OpenImage/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/FlyJingFish/OpenImage.svg)](https://github.com/FlyJingFish/OpenImage/forks)
+[![GitHub forks](https://img.shields.io/github/forks/FlyJingFish/OpenImage.svg)](https://github.com/FlyJingFish/OpenImage/network/members)
 [![GitHub issues](https://img.shields.io/github/issues/FlyJingFish/OpenImage.svg)](https://github.com/FlyJingFish/OpenImage/issues)
 [![GitHub license](https://img.shields.io/github/license/FlyJingFish/OpenImage.svg)](https://github.com/FlyJingFish/OpenImage/blob/master/LICENSE)
 
