@@ -1,5 +1,11 @@
 # OpenImage 更新日志
 
+## 1.6.3
+
+1、OpenImage 新增重载 setOpenImageActivityCls 方法，可给大图页面传数据
+
+2、当 OpenImage 设置 setNoneClickView 时 默认渐现渐隐动画
+
 ## 1.6.2
 
 1、修复Layer相关bug

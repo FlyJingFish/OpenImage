@@ -1,6 +1,7 @@
 package com.flyjingfish.openimagelib;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.Instrumentation;
 import android.app.SharedElementCallback;
 import android.content.Intent;
@@ -405,7 +406,7 @@ class OpenImage4ParseData extends OpenImage4Params {
                 }
                 release();
             }else if (ActivityCompatHelper.assertValidRequest(context) && isNoneClickView) {
-                context.startActivity(intent);
+                context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context).toBundle());
                 release();
             } else {
                 releaseImageLoadUtilMap();

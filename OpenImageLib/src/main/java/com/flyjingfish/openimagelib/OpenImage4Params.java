@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
@@ -74,6 +75,8 @@ class OpenImage4Params {
     protected volatile boolean isMapShareView = true;
     protected String drawableKey;
     protected Class<?> openImageActivityCls = ViewPagerActivity.class;
+    protected Bundle openImageActivityClsBundle;
+    protected String openImageActivityClsBundleKey;
     protected boolean isNoneClickView = false;
 
     protected enum SrcViewType {
@@ -124,6 +127,9 @@ class OpenImage4Params {
             moreViewOptionKey = UUID.randomUUID().toString();
             intent.putExtra(OpenParams.MORE_VIEW_KEY, moreViewOptionKey);
             ImageLoadUtils.getInstance().setMoreViewOption(moreViewOptionKey, moreViewOptions);
+        }
+        if (openImageActivityClsBundle != null && !TextUtils.isEmpty(openImageActivityClsBundleKey)) {
+            intent.putExtra(openImageActivityClsBundleKey, openImageActivityClsBundle);
         }
         intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);

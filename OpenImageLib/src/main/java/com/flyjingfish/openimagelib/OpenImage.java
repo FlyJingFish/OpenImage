@@ -3,6 +3,7 @@ package com.flyjingfish.openimagelib;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -39,7 +40,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class OpenImage extends OpenImage4ParseData {
+public final class OpenImage extends OpenImage4ParseData {
     public static OpenImage with(Context context) {
         return new OpenImage(context);
     }
@@ -499,6 +500,23 @@ public class OpenImage extends OpenImage4ParseData {
      */
     public OpenImage setOpenImageActivityCls(Class<?> openImageActivityCls) {
         this.openImageActivityCls = openImageActivityCls;
+        return setOpenImageActivityCls(openImageActivityCls,null,null);
+    }
+
+    /**
+     * 如果以上定义页面样式的方法还不够用，可继承 ViewPagerActivity 页面自己去写页面
+     * @param openImageActivityCls 自己定义的大图页面
+     * @param bundleKey 传给页面的数据 key [ bundle = getIntent().getBundleExtra(bundleKey) ]
+     * @param bundle 传给页面的数据
+     * @return
+     */
+    public OpenImage setOpenImageActivityCls(Class<?> openImageActivityCls,String bundleKey,Bundle bundle) {
+        this.openImageActivityCls = openImageActivityCls;
+        this.openImageActivityClsBundleKey = bundleKey;
+        if (bundle != null && TextUtils.isEmpty(bundleKey)){
+            throw new IllegalArgumentException("bundleKey 不能为 null");
+        }
+        this.openImageActivityClsBundle = bundle;
         return this;
     }
 

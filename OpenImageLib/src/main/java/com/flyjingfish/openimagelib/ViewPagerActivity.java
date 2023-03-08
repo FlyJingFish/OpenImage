@@ -5,6 +5,9 @@ import android.app.SharedElementCallback;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -67,8 +70,8 @@ public class ViewPagerActivity extends BaseActivity {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         getWindow().setAllowEnterTransitionOverlap(true);
-        getWindow().setExitTransition(TransitionInflater.from(this)
-                .inflateTransition(R.transition.open_image_exit_transition));
+        getWindow().setEnterTransition(new Fade());
+        getWindow().setExitTransition(new Fade());
         initPhotosViewModel();
         initRootView();
         parseIntent();
@@ -685,7 +688,7 @@ public class ViewPagerActivity extends BaseActivity {
 
     protected void close(boolean isTouchClose) {
         if (isNoneClickView()){
-            finish();
+            finishAfterTransition();
             return;
         }
         if (isCallClosed) {
