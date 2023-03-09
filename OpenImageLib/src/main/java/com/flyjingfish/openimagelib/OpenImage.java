@@ -14,6 +14,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -498,7 +499,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @param openImageActivityCls 自己定义的大图页面
      * @return
      */
-    public OpenImage setOpenImageActivityCls(Class<?> openImageActivityCls) {
+    public OpenImage setOpenImageActivityCls(Class<? extends ViewPagerActivity> openImageActivityCls) {
         return setOpenImageActivityCls(openImageActivityCls,null,null);
     }
 
@@ -509,7 +510,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @param bundle 传给页面的数据
      * @return
      */
-    public OpenImage setOpenImageActivityCls(Class<?> openImageActivityCls,String bundleKey,Bundle bundle) {
+    public OpenImage setOpenImageActivityCls(Class<? extends ViewPagerActivity> openImageActivityCls,String bundleKey,Bundle bundle) {
         this.openImageActivityCls = openImageActivityCls;
         this.openImageActivityClsBundleKey = bundleKey;
         if (bundle != null && TextUtils.isEmpty(bundleKey)){
