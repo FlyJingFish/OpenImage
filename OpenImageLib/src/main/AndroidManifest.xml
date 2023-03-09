@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name=".ViewPagerActivity"
+            android:name=".OpenImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:theme="@style/Theme.OpenImageTheme">

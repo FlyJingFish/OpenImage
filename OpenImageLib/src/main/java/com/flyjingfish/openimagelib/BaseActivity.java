@@ -141,13 +141,13 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-        ImageLoadUtils.getInstance().setCanOpenViewPagerActivity(clickContextKey,true);
+        ImageLoadUtils.getInstance().setCanOpenOpenImageActivity(clickContextKey,true);
     }
 
     @Override
     public void finishAfterTransition() {
         super.finishAfterTransition();
-        ImageLoadUtils.getInstance().setCanOpenViewPagerActivity(clickContextKey,true);
+        ImageLoadUtils.getInstance().setCanOpenOpenImageActivity(clickContextKey,true);
     }
 
     @Override

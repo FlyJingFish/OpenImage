@@ -1,5 +1,11 @@
 # OpenImage 更新日志
 
+## 1.6.4
+
+1、修改 ViewPagerActivity 类名为 OpenImageActivity
+
+2、修改 OpenImage 的 setOpenImageActivityCls 方法，限制页面必须继承 OpenImageActivity
+
 ## 1.6.3
 
 1、OpenImage 新增重载 setOpenImageActivityCls 方法，可给自定义大图页面传数据

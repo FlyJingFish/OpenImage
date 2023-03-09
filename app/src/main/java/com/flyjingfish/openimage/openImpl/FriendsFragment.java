@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import com.flyjingfish.openimage.bean.ImageItem;
 import com.flyjingfish.openimage.databinding.LayoutFriendsBinding;
 import com.flyjingfish.openimagelib.BaseInnerFragment;
-import com.flyjingfish.openimagelib.ViewPagerActivity;
+import com.flyjingfish.openimagelib.OpenImageActivity;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
@@ -56,9 +56,9 @@ public class FriendsFragment extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Activity activity = requireActivity();
-        if (activity instanceof ViewPagerActivity){
-            ViewPagerActivity viewPagerActivity = (ViewPagerActivity) activity;
-            View bgView = viewPagerActivity.getBgView();
+        if (activity instanceof OpenImageActivity){
+            OpenImageActivity openImageActivity = (OpenImageActivity) activity;
+            View bgView = openImageActivity.getBgView();
             bgView.setBackgroundColor(bgColor);
         }
         if (imageItem != null){
@@ -86,9 +86,9 @@ public class FriendsFragment extends BaseInnerFragment {
     private void initClickAnim(boolean isHide){
         if (hideAnim == null){
             Activity activity = requireActivity();
-            if (activity instanceof ViewPagerActivity){
-                ViewPagerActivity viewPagerActivity = (ViewPagerActivity) activity;
-                View bgView = viewPagerActivity.getBgView();
+            if (activity instanceof OpenImageActivity){
+                OpenImageActivity openImageActivity = (OpenImageActivity) activity;
+                View bgView = openImageActivity.getBgView();
                 bgAnim = ObjectAnimator.ofInt(bgView,"backgroundColor", Color.BLACK,bgColor);
                 bgAnim.setDuration(3000);
                 bgAnim.setEvaluator(new android.animation.ArgbEvaluator());

@@ -14,7 +14,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -495,22 +494,22 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 如果以上定义页面样式的方法还不够用，可继承 ViewPagerActivity 页面自己去写页面
+     * 如果以上定义页面样式的方法还不够用，可继承 OpenImageActivity 页面自己去写页面
      * @param openImageActivityCls 自己定义的大图页面
      * @return
      */
-    public OpenImage setOpenImageActivityCls(Class<? extends ViewPagerActivity> openImageActivityCls) {
+    public OpenImage setOpenImageActivityCls(Class<? extends OpenImageActivity> openImageActivityCls) {
         return setOpenImageActivityCls(openImageActivityCls,null,null);
     }
 
     /**
-     * 如果以上定义页面样式的方法还不够用，可继承 ViewPagerActivity 页面自己去写页面
+     * 如果以上定义页面样式的方法还不够用，可继承 OpenImageActivity 页面自己去写页面
      * @param openImageActivityCls 自己定义的大图页面
      * @param bundleKey 传给页面的数据 key [ bundle = getIntent().getBundleExtra(bundleKey) ]
      * @param bundle 传给页面的数据
      * @return
      */
-    public OpenImage setOpenImageActivityCls(Class<? extends ViewPagerActivity> openImageActivityCls,String bundleKey,Bundle bundle) {
+    public OpenImage setOpenImageActivityCls(Class<? extends OpenImageActivity> openImageActivityCls, String bundleKey, Bundle bundle) {
         this.openImageActivityCls = openImageActivityCls;
         this.openImageActivityClsBundleKey = bundleKey;
         if (bundle != null && TextUtils.isEmpty(bundleKey)){

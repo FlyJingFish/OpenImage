@@ -1,9 +1,9 @@
 package com.flyjingfish.openimage.openImpl;
 
 import com.flyjingfish.openimage.databinding.MyActivityViewpagerBinding;
-import com.flyjingfish.openimagelib.ViewPagerActivity;
+import com.flyjingfish.openimagelib.OpenImageActivity;
 
-public class MyBigImageActivity extends ViewPagerActivity {
+public class MyBigImageActivity extends OpenImageActivity {
 
     @Override
     protected void initRootView() {

@@ -227,20 +227,20 @@ class ImageLoadUtils {
     }
 
 
-    public boolean isCanOpenViewPagerActivity(String key) {
+    public boolean isCanOpenOpenImageActivity(String key) {
         Boolean canOpen = canOpenViewPageActivityHashMap.get(key);
         if (canOpen == null){
             canOpen = true;
-            setCanOpenViewPagerActivity(key,true);
+            setCanOpenOpenImageActivity(key,true);
         }
         return canOpen;
     }
 
-    public void setCanOpenViewPagerActivity(String key, boolean canOpen) {
+    public void setCanOpenOpenImageActivity(String key, boolean canOpen) {
         canOpenViewPageActivityHashMap.put(key, canOpen);
     }
 
-    public void clearCanOpenViewPagerActivity(String key) {
+    public void clearCanOpenOpenImageActivity(String key) {
         canOpenViewPageActivityHashMap.remove(key);
     }
 }

@@ -5,12 +5,8 @@ import android.app.SharedElementCallback;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.transition.Explode;
 import android.transition.Fade;
-import android.transition.Slide;
 import android.transition.Transition;
-import android.transition.TransitionInflater;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -57,7 +53,7 @@ import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 import java.util.List;
 import java.util.Map;
 
-public class ViewPagerActivity extends BaseActivity {
+public class OpenImageActivity extends BaseActivity {
 
     protected View vBg;
     protected FrameLayout flTouchView;
@@ -134,7 +130,7 @@ public class ViewPagerActivity extends BaseActivity {
                     onBackView.onStartTouchScale(showPosition);
                 }
                 if (fontStyle == FontStyle.FULL_SCREEN) {
-                    StatusBarHelper.cancelFullScreen(ViewPagerActivity.this);
+                    StatusBarHelper.cancelFullScreen(OpenImageActivity.this);
                 }
                 touchHideMoreView();
             }
@@ -145,7 +141,7 @@ public class ViewPagerActivity extends BaseActivity {
                     onBackView.onEndTouchScale(showPosition);
                 }
                 if (fontStyle == FontStyle.FULL_SCREEN) {
-                    StatusBarHelper.setFullScreen(ViewPagerActivity.this);
+                    StatusBarHelper.setFullScreen(OpenImageActivity.this);
                 }
                 showMoreView();
             }
@@ -513,14 +509,14 @@ public class ViewPagerActivity extends BaseActivity {
         photosViewModel.transitionEndLiveData.setValue(true);
         mHandler.post(() -> {
 
-            if (upperLayerOption != null && ViewPagerActivity.this.getLifecycle().getCurrentState() != Lifecycle.State.DESTROYED){
+            if (upperLayerOption != null && OpenImageActivity.this.getLifecycle().getCurrentState() != Lifecycle.State.DESTROYED){
                 UpperLayerFragmentCreate upperLayerCreate = upperLayerOption.getUpperLayerFragmentCreate();
                 if (upperLayerCreate != null){
                     upLayerFragment = upperLayerCreate.createLayerFragment();
                 }
                 if (upLayerFragment != null){
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    FrameLayout frameLayout = new FrameLayout(ViewPagerActivity.this);
+                    FrameLayout frameLayout = new FrameLayout(OpenImageActivity.this);
                     frameLayout.setId(R.id.upper_layer_container);
                     Bundle upperLayerBundle = getIntent().getBundleExtra(OpenParams.UPPER_LAYER_BUNDLE);
                     if (upperLayerBundle != null){
@@ -700,7 +696,7 @@ public class ViewPagerActivity extends BaseActivity {
         touchHideMoreView();
         setExitView();
         if (!isTouchClose && fontStyle == FontStyle.FULL_SCREEN) {
-            StatusBarHelper.cancelFullScreen(ViewPagerActivity.this);
+            StatusBarHelper.cancelFullScreen(OpenImageActivity.this);
             mHandler.postDelayed(this::finishAfterTransition, 100);
         } else {
             finishAfterTransition();

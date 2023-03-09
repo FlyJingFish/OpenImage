@@ -14,8 +14,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
-import com.flyjingfish.openimagelib.ViewPagerActivity;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
