@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ListViewActivity extends AppCompatActivity {
+public class ListViewActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
     public static ExecutorService cThreadPool = Executors.newFixedThreadPool(5);;
     private LayoutListviewBinding binding;

@@ -37,7 +37,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewActivity extends AppCompatActivity {
+public class RecyclerViewActivity extends BaseActivity {
 
     private ActivityRecyclerviewBinding binding;
 

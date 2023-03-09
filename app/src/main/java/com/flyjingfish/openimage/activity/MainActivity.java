@@ -1,8 +1,9 @@
 package com.flyjingfish.openimage.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.flyjingfish.openimage.MyApplication;
@@ -12,10 +13,16 @@ import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private ActivityMainBinding binding;
     //  "/storage/emulated/0/Tencent/QQ_Images/a62d96cb210ccb9.jpg",
     //  "content://media/external/images/media/1735525",
+
+    @Override
+    public boolean isShowBack() {
+        return false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,14 +59,20 @@ public class MainActivity extends AppCompatActivity {
         });
         binding.btnClearGlideCache.setOnClickListener(v -> clearCache());
 
-        binding.btnFriends.setOnClickListener(v -> startActivity(new Intent(this,FriendsActivity.class)));
-        binding.btnListview.setOnClickListener(v -> startActivity(new Intent(this, ListViewActivity.class)));
-        binding.btnGridview.setOnClickListener(v -> startActivity(new Intent(this, GridViewActivity.class)));
-        binding.btnMessage.setOnClickListener(v -> startActivity(new Intent(this, MessageActivity.class)));
-        binding.btnRecyclerview.setOnClickListener(v -> startActivity(new Intent(this, RecyclerViewActivity.class)));
-        binding.btnIvs.setOnClickListener(v -> startActivity(new Intent(this, ImagesActivity.class)));
-        binding.btnViewPager.setOnClickListener(v -> startActivity(new Intent(this, ViewPagerDemoActivity.class)));
-        binding.btnScaleType.setOnClickListener(v -> startActivity(new Intent(this, ScaleTypeActivity.class)));
+        binding.btnFriends.setOnClickListener(v -> jump(v,FriendsActivity.class));
+        binding.btnListview.setOnClickListener(v -> jump(v, ListViewActivity.class));
+        binding.btnGridview.setOnClickListener(v -> jump(v, GridViewActivity.class));
+        binding.btnMessage.setOnClickListener(v -> jump(v, MessageActivity.class));
+        binding.btnRecyclerview.setOnClickListener(v -> jump(v, RecyclerViewActivity.class));
+        binding.btnIvs.setOnClickListener(v -> jump(v, ImagesActivity.class));
+        binding.btnViewPager.setOnClickListener(v -> jump(v, ViewPagerDemoActivity.class));
+        binding.btnScaleType.setOnClickListener(v -> jump(v, ScaleTypeActivity.class));
+    }
+
+    private void jump(View v, Class<?> cls){
+        Intent intent = new Intent(this,cls);
+        intent.putExtra(TITLE, ((TextView) v).getText().toString());
+        startActivity(intent);
     }
 
     private void clearCache(){

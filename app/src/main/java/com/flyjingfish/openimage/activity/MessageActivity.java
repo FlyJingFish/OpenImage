@@ -19,7 +19,7 @@ import com.flyjingfish.openimage.databinding.ActivityMessageBinding;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MessageActivity extends AppCompatActivity {
+public class MessageActivity extends BaseActivity {
     private ActivityMessageBinding binding;
     private MenuItem wechatEffect;
     private MenuItem autoScroll;

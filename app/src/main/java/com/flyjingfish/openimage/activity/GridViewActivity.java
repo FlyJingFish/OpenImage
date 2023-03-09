@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class GridViewActivity extends AppCompatActivity {
+public class GridViewActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
     public static ExecutorService cThreadPool = Executors.newFixedThreadPool(5);;
     private ActivityGridviewBinding binding;

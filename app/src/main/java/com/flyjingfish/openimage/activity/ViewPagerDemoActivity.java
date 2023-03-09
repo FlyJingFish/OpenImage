@@ -40,7 +40,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewPagerDemoActivity extends AppCompatActivity {
+public class ViewPagerDemoActivity extends BaseActivity {
 
     private ActivityViewPagerDemoBinding binding;
 

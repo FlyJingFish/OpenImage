@@ -19,7 +19,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendsActivity extends AppCompatActivity {
+public class FriendsActivity extends BaseActivity {
     private ActivityFirendsBinding binding;
 
     @Override

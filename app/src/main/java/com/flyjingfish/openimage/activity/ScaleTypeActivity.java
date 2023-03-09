@@ -23,7 +23,7 @@ import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 
-public class ScaleTypeActivity extends AppCompatActivity {
+public class ScaleTypeActivity extends BaseActivity {
 
     private ActivityScaleTypeBinding binding;
     private ImageEntity itemData;

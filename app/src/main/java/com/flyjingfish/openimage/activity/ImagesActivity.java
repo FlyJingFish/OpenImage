@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ImagesActivity extends AppCompatActivity {
+public class ImagesActivity extends BaseActivity {
 
     private ActivityImagesBinding binding;
 
