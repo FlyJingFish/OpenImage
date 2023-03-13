@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
-
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.MediaType;
@@ -56,7 +55,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * @param openImageUrls 图片数据组
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setImageUrlList(List<? extends OpenImageUrl> openImageUrls) {
         this.openImageUrls.addAll(openImageUrls);
@@ -65,7 +64,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * @param openImageUrl 单个图片数据可设置这个
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setImageUrl(OpenImageUrl openImageUrl) {
         return setImageUrlList(new ArrayList<>(Arrays.asList(openImageUrl)));
@@ -74,7 +73,7 @@ public final class OpenImage extends OpenImage4ParseData {
     /**
      * @param openImageUrls 图片String数据组
      * @param mediaType     图片还是视频
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setImageUrlList(List<String> openImageUrls, MediaType mediaType) {
         List<SingleImageUrl> list = new ArrayList<>();
@@ -88,7 +87,7 @@ public final class OpenImage extends OpenImage4ParseData {
     /**
      * @param openImageUrl 单个String图片数据可设置这个
      * @param mediaType    图片还是视频
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setImageUrl(String openImageUrl, MediaType mediaType) {
         return setImageUrlList(new ArrayList<>(Arrays.asList(new SingleImageUrl(openImageUrl, mediaType))));
@@ -97,7 +96,7 @@ public final class OpenImage extends OpenImage4ParseData {
     /**
      * @param recyclerView         展示数据的RecyclerView
      * @param sourceImageViewIdGet 展示数据的RecyclerView 的图片Id
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setClickRecyclerView(RecyclerView recyclerView, SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet) {
         this.recyclerView = recyclerView;
@@ -108,7 +107,7 @@ public final class OpenImage extends OpenImage4ParseData {
     /**
      * @param viewPager2           展示数据的ViewPager2
      * @param sourceImageViewIdGet 展示数据的ViewPager2 的图片Id
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setClickViewPager2(ViewPager2 viewPager2, SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet) {
         this.viewPager2 = viewPager2;
@@ -119,7 +118,7 @@ public final class OpenImage extends OpenImage4ParseData {
     /**
      * @param viewPager          展示数据的ViewPager
      * @param sourceImageViewGet 展示数据的ViewPager 的图片ImageView
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setClickViewPager(ViewPager viewPager, SourceImageViewGet<OpenImageUrl> sourceImageViewGet) {
         this.viewPager = viewPager;
@@ -130,7 +129,7 @@ public final class OpenImage extends OpenImage4ParseData {
     /**
      * @param gridView             展示数据的GridView
      * @param sourceImageViewIdGet 展示数据的GridView 的图片Id
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setClickGridView(GridView gridView, SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet) {
         this.absListView = gridView;
@@ -141,7 +140,7 @@ public final class OpenImage extends OpenImage4ParseData {
     /**
      * @param listView             展示数据的ListView
      * @param sourceImageViewIdGet 展示数据的ListView 的图片Id
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setClickListView(ListView listView, SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet) {
         this.absListView = listView;
@@ -151,7 +150,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * @param imageViews 自己传展示数据的ImageView组
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setClickImageViews(ImageView[] imageViews) {
         return setClickImageViews(new ArrayList<>(Arrays.asList(imageViews)));
@@ -159,7 +158,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * @param imageView 自己传展示数据的单个ImageView
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setClickImageView(ImageView imageView) {
         return setClickImageViews(new ArrayList<>(Arrays.asList(imageView)));
@@ -167,7 +166,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * @param imageViews 自己传展示数据的ImageView组
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setClickImageViews(List<ImageView> imageViews) {
         this.imageViews = imageViews;
@@ -175,8 +174,9 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 如果实在没有可以传的View 可调用这个方法
-     * @return
+     * 如果没有可以传的点击 View 可调用这个方法
+     *
+     * @return {@link OpenImage}
      */
     public OpenImage setNoneClickView() {
         isNoneClickView = true;
@@ -187,7 +187,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * 如果数据下标 和 RecyclerView、ViewPager2、ListView、GridView 的所在位置一致 可调用这个
      *
      * @param clickPosition 点击的图片和View所在的位置
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setClickPosition(int clickPosition) {
         return setClickPosition(clickPosition, clickPosition);
@@ -198,7 +198,7 @@ public final class OpenImage extends OpenImage4ParseData {
      *
      * @param clickDataPosition 点击的图片所在数据的位置
      * @param clickViewPosition 点击的图片View在RecyclerView或ListView或GridView的位置
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setClickPosition(int clickDataPosition, int clickViewPosition) {
         this.clickDataPosition = clickDataPosition;
@@ -207,9 +207,11 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 使用普通 ImageView 时调用这个，请一定仔细核对是否设置正确，如果不正确将使显示效果不正常
+     *
      * @param srcImageViewScaleType 点击的ImageView显示模式
      * @param autoSetScaleType      如果点击的ImageView与您所设置scaleType不相同，则自动设置
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setSrcImageViewScaleType(ImageView.ScaleType srcImageViewScaleType, boolean autoSetScaleType) {
         this.srcImageViewScaleType = srcImageViewScaleType;
@@ -220,9 +222,9 @@ public final class OpenImage extends OpenImage4ParseData {
     /**
      * 使用ShapeImageView时调用这个
      *
-     * @param srcImageViewShapeScaleType 点击的ShapeImageView显示模式
-     * @param autoSetScaleType           如果点击的ShapeImageView与您所设置scaleType不相同，则自动设置
-     * @return
+     * @param srcImageViewShapeScaleType 点击的{@link ShapeImageView}显示模式
+     * @param autoSetScaleType           如果点击的{@link ShapeImageView}与您所设置scaleType不相同，则自动设置
+     * @return {@link OpenImage}
      */
     public OpenImage setSrcImageViewScaleType(ShapeImageView.ShapeScaleType srcImageViewShapeScaleType, boolean autoSetScaleType) {
         this.srcImageViewShapeScaleType = srcImageViewShapeScaleType;
@@ -231,8 +233,8 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * @param imageDiskMode 点击的ImageView图片所缓存的模式（建议缓存原图）
-     * @return
+     * @param imageDiskMode {@link ImageDiskMode} 点击的ImageView图片所缓存的模式（建议缓存原图）
+     * @return {@link OpenImage}
      */
     public OpenImage setImageDiskMode(ImageDiskMode imageDiskMode) {
         this.imageDiskMode = imageDiskMode;
@@ -240,15 +242,20 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 加载大图失败后
+     * <p>加载大图失败后:
+     * <ul>
+     *  <li>如果设置此选项则展示这个 errorResId 图片
+     *  <li>如果不设置
+     *      <ul>
+     *          <li> 有缓存则 "可能" 展示缓存图片
+     *          <li> 没有缓存图片 "可能" 展示上一页面的加载失败图片，"也可能" 没有任何显示
+     *      </ul>
+     *  </li>
+     * </ul>
+     * <p> 所以建议设置此项
      * <p>
-     * 一,如果设置此选项则展示这个errorResId图片
-     * 二,如果不设置
-     * 1> 有缓存则展示缓存图片
-     * 2> 没有缓存图片就展示上个页面小图的加载失败图片（可在ItemLoadHelper.loadImage中设置加载失败图片）
-     *
      * @param errorResId 大图加载失败后显示的图片
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setErrorResId(@DrawableRes int errorResId) {
         this.errorResId = errorResId;
@@ -257,7 +264,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * @param itemLoadHelper 图片加载器，当图片缓存模式不包含原图时，请设置和前一页面加载图片一样的配置
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setItemLoadHelper(ItemLoadHelper itemLoadHelper) {
         itemLoadHelperKey = UUID.randomUUID().toString();
@@ -267,7 +274,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * @param openImageStyle 查看图片显示设置StyleId
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setOpenImageStyle(@StyleRes int openImageStyle) {
         this.openImageStyle = openImageStyle;
@@ -276,7 +283,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * @param openPageAnimTimeMs 打开页面动画的时间
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setOpenPageAnimTimeMs(long openPageAnimTimeMs) {
         this.openPageAnimTimeMs = openPageAnimTimeMs;
@@ -285,7 +292,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * @param onSelectMediaListener 回调查看图片所在数据的位置
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setOnSelectMediaListener(OnSelectMediaListener onSelectMediaListener) {
         onSelectKey = UUID.randomUUID().toString();
@@ -297,7 +304,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * 只对传入RecyclerView，ViewPager，ViewPager2， ListView, GridView 有效
      *
      * @param autoScrollScanPosition 自动滑向最后看的图片的位置
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setAutoScrollScanPosition(boolean autoScrollScanPosition) {
         isAutoScrollScanPosition = autoScrollScanPosition;
@@ -306,7 +313,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * @param pageTransformer ViewPager的页面切换效果
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage addPageTransformer(ViewPager2.PageTransformer... pageTransformer) {
         pageTransformersKey = UUID.randomUUID().toString();
@@ -316,7 +323,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * @param leftRightShowWidthDp 可设置画廊效果，左右漏出的宽度，单位dp
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setGalleryEffect(int leftRightShowWidthDp) {
         this.leftRightShowWidthDp = leftRightShowWidthDp;
@@ -329,7 +336,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * (只对父容器是RecyclerView, ViewPager2，ListView, GridView 时有效)
      *
      * @param wechatExitFillInEffect 是否设置微信补位效果
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setWechatExitFillInEffect(boolean wechatExitFillInEffect) {
         this.wechatExitFillInEffect = wechatExitFillInEffect;
@@ -339,8 +346,8 @@ public final class OpenImage extends OpenImage4ParseData {
     /**
      * 设置点击图片监听
      *
-     * @param onItemClickListener
-     * @return
+     * @param onItemClickListener 点击 item 监听类
+     * @return {@link OpenImage}
      */
     public OpenImage setOnItemClickListener(OnItemClickListener onItemClickListener) {
         onItemClickListenerKey = UUID.randomUUID().toString();
@@ -351,8 +358,8 @@ public final class OpenImage extends OpenImage4ParseData {
     /**
      * 设置长按图片监听
      *
-     * @param onItemLongClickListener
-     * @return
+     * @param onItemLongClickListener 长按 item 监听类
+     * @return {@link OpenImage}
      */
     public OpenImage setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
         onItemLongClickListenerKey = UUID.randomUUID().toString();
@@ -363,7 +370,7 @@ public final class OpenImage extends OpenImage4ParseData {
     /**
      * 禁用点击图片关闭页面功能
      *
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage disableClickClose() {
         disableClickClose = true;
@@ -377,7 +384,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @param layoutParams             要添加到页面布局的参数
      * @param moreViewShowType         展示类型
      * @param onLoadViewFinishListener 加载完毕View后回调
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage addMoreView(@LayoutRes int layoutRes, @NonNull FrameLayout.LayoutParams layoutParams, MoreViewShowType moreViewShowType, OnLoadViewFinishListener onLoadViewFinishListener) {
         return addMoreView(layoutRes, layoutParams, moreViewShowType, false, onLoadViewFinishListener);
@@ -389,7 +396,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @param layoutView       添加的View
      * @param layoutParams     要添加到页面布局的参数
      * @param moreViewShowType 展示类型
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage addMoreView(View layoutView, @NonNull FrameLayout.LayoutParams layoutParams, MoreViewShowType moreViewShowType) {
         return addMoreView(layoutView, layoutParams, moreViewShowType, false);
@@ -401,7 +408,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @param moreViewShowType         展示类型
      * @param followTouch              是否跟随图片拖动
      * @param onLoadViewFinishListener 加载完毕View后回调
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage addMoreView(@LayoutRes int layoutRes, @NonNull FrameLayout.LayoutParams layoutParams, MoreViewShowType moreViewShowType, boolean followTouch, OnLoadViewFinishListener onLoadViewFinishListener) {
         MoreViewOption moreViewOption = new MoreViewOption(layoutRes, layoutParams, moreViewShowType, followTouch, onLoadViewFinishListener);
@@ -414,7 +421,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @param layoutParams     要添加到页面布局的参数
      * @param moreViewShowType 展示类型
      * @param followTouch      是否跟随图片拖动
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage addMoreView(View layoutView, @NonNull FrameLayout.LayoutParams layoutParams, MoreViewShowType moreViewShowType, boolean followTouch) {
         MoreViewOption moreViewOption = new MoreViewOption(layoutView, layoutParams, moreViewShowType, followTouch);
@@ -424,7 +431,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * @param showSrcImageView 退出时，前一页面的ImageView是否可见
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setShowSrcImageView(boolean showSrcImageView) {
         this.showSrcImageView = showSrcImageView;
@@ -432,10 +439,10 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 调用这个方法将使 OpenImageConfig 的配置失效
+     * 调用这个方法将覆盖 {@link OpenImageConfig#setImageFragmentCreate}  的配置
      *
      * @param imageFragmentCreate 用于自定义图片展示页面
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setImageFragmentCreate(ImageFragmentCreate imageFragmentCreate) {
         imageFragmentCreateKey = UUID.randomUUID().toString();
@@ -444,10 +451,10 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 调用这个方法将使 OpenImageConfig 的配置失效
+     * 调用这个方法将覆盖 {@link OpenImageConfig#setVideoFragmentCreate} 的配置
      *
      * @param videoFragmentCreate 用于自定义视频展示页面
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setVideoFragmentCreate(VideoFragmentCreate videoFragmentCreate) {
         videoFragmentCreateKey = UUID.randomUUID().toString();
@@ -460,7 +467,7 @@ public final class OpenImage extends OpenImage4ParseData {
      *
      * @param upperLayerFragmentCreate 用于创建覆盖在页面上方的Fragment
      * @param bundle                   传入数据
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setUpperLayerFragmentCreate(UpperLayerFragmentCreate upperLayerFragmentCreate, Bundle bundle) {
         return setUpperLayerFragmentCreate(upperLayerFragmentCreate, bundle, false);
@@ -472,47 +479,48 @@ public final class OpenImage extends OpenImage4ParseData {
      * @param upperLayerFragmentCreate 用于创建覆盖在页面上方的Fragment
      * @param bundle                   传入数据
      * @param followTouch              是否跟随拖动
-     * @return
+     * @return {@link OpenImage}
      */
     public OpenImage setUpperLayerFragmentCreate(UpperLayerFragmentCreate upperLayerFragmentCreate, Bundle bundle, boolean followTouch) {
-        return setUpperLayerFragmentCreate(upperLayerFragmentCreate, bundle, followTouch,true);
+        return setUpperLayerFragmentCreate(upperLayerFragmentCreate, bundle, followTouch, true);
     }
 
     /**
-     * 这是可以显示在页面上方的Fragment
-     *
      * @param upperLayerFragmentCreate 用于创建覆盖在页面上方的Fragment
      * @param bundle                   传入数据
      * @param followTouch              是否跟随拖动
-     * @return
+     * @param touchingHide             拖动图片时是否隐藏Fragment页面
+     * @return {@link OpenImage}
      */
-    public OpenImage setUpperLayerFragmentCreate(UpperLayerFragmentCreate upperLayerFragmentCreate, Bundle bundle, boolean followTouch,boolean touchingHide) {
+    public OpenImage setUpperLayerFragmentCreate(UpperLayerFragmentCreate upperLayerFragmentCreate, Bundle bundle, boolean followTouch, boolean touchingHide) {
         upperLayerFragmentCreateKey = UUID.randomUUID().toString();
         upperLayerBundle = bundle;
-        ImageLoadUtils.getInstance().setUpperLayerFragmentCreate(upperLayerFragmentCreateKey, new UpperLayerOption(upperLayerFragmentCreate, followTouch,touchingHide));
+        ImageLoadUtils.getInstance().setUpperLayerFragmentCreate(upperLayerFragmentCreateKey, new UpperLayerOption(upperLayerFragmentCreate, followTouch, touchingHide));
         return this;
     }
 
     /**
      * 如果以上定义页面样式的方法还不够用，可继承 OpenImageActivity 页面自己去写页面
-     * @param openImageActivityCls 自己定义的大图页面
-     * @return
+     *
+     * @param openImageActivityCls 自己定义的大图页面，必须继承 {@link OpenImageActivity}
+     * @return {@link OpenImage}
      */
     public OpenImage setOpenImageActivityCls(Class<? extends OpenImageActivity> openImageActivityCls) {
-        return setOpenImageActivityCls(openImageActivityCls,null,null);
+        return setOpenImageActivityCls(openImageActivityCls, null, null);
     }
 
     /**
      * 如果以上定义页面样式的方法还不够用，可继承 OpenImageActivity 页面自己去写页面
-     * @param openImageActivityCls 自己定义的大图页面
-     * @param bundleKey 传给页面的数据 key [ bundle = getIntent().getBundleExtra(bundleKey) ]
-     * @param bundle 传给页面的数据
-     * @return
+     *
+     * @param openImageActivityCls 自己定义的大图页面，必须继承 {@link OpenImageActivity}
+     * @param bundleKey            传给页面的数据 key [ bundle = getIntent().getBundleExtra(bundleKey) ]
+     * @param bundle               传给页面的数据
+     * @return {@link OpenImage}
      */
     public OpenImage setOpenImageActivityCls(Class<? extends OpenImageActivity> openImageActivityCls, String bundleKey, Bundle bundle) {
         this.openImageActivityCls = openImageActivityCls;
         this.openImageActivityClsBundleKey = bundleKey;
-        if (bundle != null && TextUtils.isEmpty(bundleKey)){
+        if (bundle != null && TextUtils.isEmpty(bundleKey)) {
             throw new IllegalArgumentException("bundleKey 不能为 null");
         }
         this.openImageActivityClsBundle = bundle;
@@ -525,7 +533,6 @@ public final class OpenImage extends OpenImage4ParseData {
     public void show() {
         goShow();
     }
-
 
 
 }

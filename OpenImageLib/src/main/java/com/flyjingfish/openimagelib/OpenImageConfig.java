@@ -47,6 +47,10 @@ public class OpenImageConfig {
         return imageFragmentCreate;
     }
 
+    /**
+     * 这里是设置用于创建公共图片展示页面的类，设置后你可不必每次调用 {@link OpenImage#setImageFragmentCreate}
+     * @param imageFragmentCreate 用于自定义图片展示页面
+     */
     public void setImageFragmentCreate(ImageFragmentCreate imageFragmentCreate) {
         this.imageFragmentCreate = imageFragmentCreate;
     }
@@ -55,6 +59,10 @@ public class OpenImageConfig {
         return videoFragmentCreate;
     }
 
+    /**
+     * 这里是设置用于创建公共视频展示页面的类，设置后你可不必每次调用 {@link OpenImage#setVideoFragmentCreate}
+     * @param videoFragmentCreate 用于自定义视频展示页面
+     */
     public void setVideoFragmentCreate(VideoFragmentCreate videoFragmentCreate) {
         this.videoFragmentCreate = videoFragmentCreate;
     }
