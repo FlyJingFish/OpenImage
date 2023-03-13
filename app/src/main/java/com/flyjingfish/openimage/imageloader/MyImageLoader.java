@@ -19,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.flyjingfish.openimage.GlideApp;
 import com.flyjingfish.openimage.MyApplication;
+import com.flyjingfish.openimageglidelib.BitmapUtils;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
@@ -140,6 +141,11 @@ public class MyImageLoader {
             }
             requestBuilder.into(iv);
         }else if (loader_os_type == PICASSO){
+            boolean isWeb = BitmapUtils.isWeb(url);
+            if (!isWeb) {
+                boolean isContent = BitmapUtils.isContent(url);
+                url = (isContent?"":"file://")+url;
+            }
             RequestCreator requestCreator = Picasso.get().load(url);
             if (isBlur || isCircle || radiusDp != -1) {
                 List<com.squareup.picasso.Transformation> transformations = new ArrayList<>();
@@ -165,6 +171,8 @@ public class MyImageLoader {
             } else if (w > 0 && h > 0) {
                 requestCreator.centerCrop();
                 requestCreator.resize(w, h);
+            }else {
+                requestCreator.resize(1000,1000).centerInside();
             }
             if (imageDiskMode == ImageDiskMode.NONE){
                 requestCreator.networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE);

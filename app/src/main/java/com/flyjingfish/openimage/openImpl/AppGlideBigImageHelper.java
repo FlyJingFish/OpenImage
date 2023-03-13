@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimageglidelib.GlideBigImageHelper;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
-import com.squareup.picasso.Picasso;
 
 public class AppGlideBigImageHelper extends GlideBigImageHelper {
     @Override
@@ -24,7 +23,7 @@ public class AppGlideBigImageHelper extends GlideBigImageHelper {
         if (MyImageLoader.loader_os_type == MyImageLoader.GLIDE){
             super.loadImage(context, imageUrl, imageView);
         }else {
-            Picasso.get().load(imageUrl).into(imageView);
+            new PicassoLoader(context, imageUrl, imageView).load();
         }
 
     }

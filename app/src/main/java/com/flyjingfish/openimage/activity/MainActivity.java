@@ -17,6 +17,7 @@ public class MainActivity extends BaseActivity {
     private ActivityMainBinding binding;
     //  "/storage/emulated/0/Tencent/QQ_Images/a62d96cb210ccb9.jpg",
     //  "content://media/external/images/media/1735525",
+    //  "/storage/emulated/0/Tencent/QQ_Images/7ff9ceb717b1dafc.jpg",
 
     @Override
     public boolean isShowBack() {
