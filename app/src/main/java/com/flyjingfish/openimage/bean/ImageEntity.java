@@ -5,7 +5,7 @@ import com.flyjingfish.openimagelib.enums.MediaType;
 
 public class ImageEntity implements OpenImageUrl {
     public String url;
-
+    public TestBean testBean;
     public ImageEntity(String url) {
         this.url = url;
     }

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.flyjingfish.openimage.DataUtils;
 import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimage.bean.ImageEntity;
+import com.flyjingfish.openimage.bean.TestBean;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.ActivityRecyclerviewBinding;
@@ -91,6 +92,8 @@ public class RecyclerViewActivity extends BaseActivity {
                 JSONArray jsonArray = new JSONArray(response1);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     ImageEntity itemData = new ImageEntity();
+                    itemData.testBean = new TestBean();
+                    itemData.testBean.test="11";
                     String url = jsonArray.getString(i);
                     itemData.url = url;
                     datas.add(itemData);
