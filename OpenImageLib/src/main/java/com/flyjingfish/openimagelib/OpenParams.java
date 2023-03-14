@@ -1,8 +1,8 @@
 package com.flyjingfish.openimagelib;
 
 class OpenParams {
-    public static final String IMAGES = "images";
-    public static final String IMAGE = "image";
+    public static final String IMAGES = "open_data_images";
+    public static final String IMAGE = "open_data_image";
     public static final String SHOW_POSITION = "show_position";
     public static final String CLICK_POSITION = "click_position";
     public static final String SHARE_VIEW = "open_image_share_view";
