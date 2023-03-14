@@ -1,5 +1,11 @@
 # OpenImage 更新日志
 
+## 1.6.5
+
+1、完善方法说明
+
+2、修复 使用 setNoneClickView 时，数据问题
+
 ## 1.6.4
 
 1、修改 ViewPagerActivity 类名为 OpenImageActivity
