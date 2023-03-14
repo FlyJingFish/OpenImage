@@ -156,7 +156,7 @@ public class ImageEntity implements OpenImageUrl {
 
     @Override
     public String getImageUrl() {
-        return resouceType ==1:coverUrl:photoUrl;//大图链接（或视频的封面大图链接）
+        return resouceType == 1 ? coverUrl : photoUrl;//大图链接（或视频的封面大图链接）
     }
 
     @Override
@@ -166,12 +166,12 @@ public class ImageEntity implements OpenImageUrl {
 
     @Override
     public String getCoverImageUrl() {//这个代表前边列表展示的图片
-        return resouceType ==1:smallCoverUrl:smallPhotoUrl;//封面小图链接（或视频的封面小图链接）
+        return resouceType == 1 ? smallCoverUrl : smallPhotoUrl;//封面小图链接（或视频的封面小图链接）
     }
 
     @Override
     public MediaType getType() {
-        return resouceType ==1:MediaType.VIDEO:MediaType.IMAGE;//数据是图片还是视频
+        return resouceType == 1 ? MediaType.VIDEO : MediaType.IMAGE;//数据是图片还是视频
     }
 }
 
