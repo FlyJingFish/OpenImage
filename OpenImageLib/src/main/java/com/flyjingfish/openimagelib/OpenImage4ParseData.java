@@ -218,11 +218,13 @@ class OpenImage4ParseData extends OpenImage4Params {
         if (isNoneClickView){
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
-                OpenImageDetail openImageDetail = new OpenImageDetail();
-                openImageDetail.openImageUrl = imageBean;
-                openImageDetail.dataPosition = i;
-                openImageDetail.viewPosition = i;
-                openImageDetails.add(openImageDetail);
+                if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
+                    OpenImageDetail openImageDetail = new OpenImageDetail();
+                    openImageDetail.openImageUrl = imageBean;
+                    openImageDetail.dataPosition = i;
+                    openImageDetail.viewPosition = i;
+                    openImageDetails.add(openImageDetail);
+                }
             }
         }else if (srcViewType == SrcViewType.RV || srcViewType == SrcViewType.AB_LIST) {
             int[] position = getVisiblePosition();
@@ -352,11 +354,13 @@ class OpenImage4ParseData extends OpenImage4Params {
         }else {
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
-                OpenImageDetail openImageDetail = new OpenImageDetail();
-                openImageDetail.openImageUrl = imageBean;
-                openImageDetail.dataPosition = i;
-                openImageDetail.viewPosition = i;
-                openImageDetails.add(openImageDetail);
+                if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
+                    OpenImageDetail openImageDetail = new OpenImageDetail();
+                    openImageDetail.openImageUrl = imageBean;
+                    openImageDetail.dataPosition = i;
+                    openImageDetail.viewPosition = i;
+                    openImageDetails.add(openImageDetail);
+                }
             }
         }
 

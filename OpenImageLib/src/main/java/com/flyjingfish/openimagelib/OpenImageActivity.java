@@ -53,7 +53,7 @@ import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 import java.util.List;
 import java.util.Map;
 
-public class OpenImageActivity extends BaseActivity {
+public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.OnTouchCloseListener{
 
     protected View vBg;
     protected FrameLayout flTouchView;
@@ -87,6 +87,9 @@ public class OpenImageActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 重写这个方法来设置 contentView
+     */
     protected void initRootView(){
         OpenImageActivityViewpagerBinding binding = OpenImageActivityViewpagerBinding.inflate(getLayoutInflater());
         vBg = binding.vBg;
@@ -123,40 +126,54 @@ public class OpenImageActivity extends BaseActivity {
         rootView.setTouchView(flTouchView, vBg);
         rootView.setDisEnableTouchClose(disEnableTouchClose);
         rootView.setOrientation(orientation == OpenImageOrientation.VERTICAL ? OpenImageOrientation.HORIZONTAL : OpenImageOrientation.VERTICAL);
-        rootView.setOnTouchCloseListener(new TouchCloseLayout.OnTouchCloseListener() {
-            @Override
-            public void onStartTouch() {
-                if (onBackView != null) {
-                    onBackView.onStartTouchScale(showPosition);
-                }
-                if (fontStyle == FontStyle.FULL_SCREEN) {
-                    StatusBarHelper.cancelFullScreen(OpenImageActivity.this);
-                }
-                touchHideMoreView();
-            }
+        rootView.setOnTouchCloseListener(this);
+    }
 
-            @Override
-            public void onEndTouch() {
-                if (onBackView != null) {
-                    onBackView.onEndTouchScale(showPosition);
-                }
-                if (fontStyle == FontStyle.FULL_SCREEN) {
-                    StatusBarHelper.setFullScreen(OpenImageActivity.this);
-                }
-                showMoreView();
-            }
+    /**
+     * 开始拖动图片或视频
+     */
+    @Override
+    public void onStartTouch() {
+        if (onBackView != null) {
+            onBackView.onStartTouchScale(showPosition);
+        }
+        if (fontStyle == FontStyle.FULL_SCREEN) {
+            StatusBarHelper.cancelFullScreen(OpenImageActivity.this);
+        }
+        touchHideMoreView();
+    }
 
-            @Override
-            public void onTouchScale(float scale) {
-                photosViewModel.onTouchScaleLiveData.setValue(scale);
-            }
+    /**
+     * 停止拖动图片或视频
+     */
+    @Override
+    public void onEndTouch() {
+        if (onBackView != null) {
+            onBackView.onEndTouchScale(showPosition);
+        }
+        if (fontStyle == FontStyle.FULL_SCREEN) {
+            StatusBarHelper.setFullScreen(OpenImageActivity.this);
+        }
+        showMoreView();
+    }
 
-            @Override
-            public void onTouchClose(float scale) {
-                photosViewModel.onTouchCloseLiveData.setValue(scale);
-                close(true);
-            }
-        });
+    /**
+     * 正在拖动图片或视频
+     * @param scale 图片或视频缩放比例
+     */
+    @Override
+    public void onTouchScale(float scale) {
+        photosViewModel.onTouchScaleLiveData.setValue(scale);
+    }
+
+    /**
+     * 停止拖动图片或视频并关闭页面
+     * @param scale 图片或视频缩放比例
+     */
+    @Override
+    public void onTouchClose(float scale) {
+        photosViewModel.onTouchCloseLiveData.setValue(scale);
+        close(true);
     }
 
     protected void initViewPager2(){
@@ -324,6 +341,9 @@ public class OpenImageActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 设置显示指示器位置
+     */
     protected void setIndicatorPosition() {
         mHandler.post(() -> {
             if (indicatorType == INDICATOR_IMAGE) {//图片样式
@@ -682,6 +702,10 @@ public class OpenImageActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 关闭页面
+     * @param isTouchClose 是否是拖动关闭
+     */
     protected void close(boolean isTouchClose) {
         if (isNoneClickView()){
             finishAfterTransition();

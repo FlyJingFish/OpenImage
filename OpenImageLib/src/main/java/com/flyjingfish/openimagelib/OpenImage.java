@@ -32,16 +32,24 @@ import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
+import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * 打开大图类
+ */
 public final class OpenImage extends OpenImage4ParseData {
     public static OpenImage with(Context context) {
         return new OpenImage(context);
+    }
+
+    private OpenImage() {
     }
 
     private OpenImage(Context context) {
@@ -54,6 +62,8 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     *
+     * 设置数据
      * @param openImageUrls 图片数据组
      * @return {@link OpenImage}
      */
@@ -63,14 +73,16 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 设置数据
      * @param openImageUrl 单个图片数据可设置这个
      * @return {@link OpenImage}
      */
     public OpenImage setImageUrl(OpenImageUrl openImageUrl) {
-        return setImageUrlList(new ArrayList<>(Arrays.asList(openImageUrl)));
+        return setImageUrlList(new ArrayList<>(Collections.singletonList(openImageUrl)));
     }
 
     /**
+     * 设置数据
      * @param openImageUrls 图片String数据组
      * @param mediaType     图片还是视频
      * @return {@link OpenImage}
@@ -85,15 +97,18 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 设置数据
      * @param openImageUrl 单个String图片数据可设置这个
      * @param mediaType    图片还是视频
      * @return {@link OpenImage}
      */
     public OpenImage setImageUrl(String openImageUrl, MediaType mediaType) {
-        return setImageUrlList(new ArrayList<>(Arrays.asList(new SingleImageUrl(openImageUrl, mediaType))));
+        return setImageUrlList(new ArrayList<>(Collections.singletonList(new SingleImageUrl(openImageUrl, mediaType))));
     }
 
     /**
+     * 设置点击的ImageView所在容器
+     *
      * @param recyclerView         展示数据的RecyclerView
      * @param sourceImageViewIdGet 展示数据的RecyclerView 的图片Id
      * @return {@link OpenImage}
@@ -105,6 +120,8 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 设置点击的ImageView所在容器
+     *
      * @param viewPager2           展示数据的ViewPager2
      * @param sourceImageViewIdGet 展示数据的ViewPager2 的图片Id
      * @return {@link OpenImage}
@@ -116,6 +133,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 设置点击的ImageView所在容器
      * @param viewPager          展示数据的ViewPager
      * @param sourceImageViewGet 展示数据的ViewPager 的图片ImageView
      * @return {@link OpenImage}
@@ -127,6 +145,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 设置点击的ImageView所在容器
      * @param gridView             展示数据的GridView
      * @param sourceImageViewIdGet 展示数据的GridView 的图片Id
      * @return {@link OpenImage}
@@ -138,6 +157,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 设置点击的ImageView所在容器
      * @param listView             展示数据的ListView
      * @param sourceImageViewIdGet 展示数据的ListView 的图片Id
      * @return {@link OpenImage}
@@ -149,6 +169,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 设置点击的ImageView数组
      * @param imageViews 自己传展示数据的ImageView组
      * @return {@link OpenImage}
      */
@@ -157,14 +178,16 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 设置点击的ImageView
      * @param imageView 自己传展示数据的单个ImageView
      * @return {@link OpenImage}
      */
     public OpenImage setClickImageView(ImageView imageView) {
-        return setClickImageViews(new ArrayList<>(Arrays.asList(imageView)));
+        return setClickImageViews(new ArrayList<>(Collections.singletonList(imageView)));
     }
 
     /**
+     * 设置点击的ImageView集合
      * @param imageViews 自己传展示数据的ImageView组
      * @return {@link OpenImage}
      */
@@ -233,6 +256,17 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 设置您应用内图片加载引擎设置的硬盘缓存模式，例如你设置的硬盘缓存模式是
+     *
+     * <p>例如你设置的硬盘缓存模式是:
+     * <ul>
+     *  <li> 缓存包含原图，那你应该设置{@link ImageDiskMode#CONTAIN_ORIGINAL}
+     *      <ul> <li>(例如Glide设置diskCacheStrategy()为DiskCacheStrategy.ALL或DiskCacheStrategy.DATA)</li></ul>
+     *  <li> 缓存只保存目标图片大小的，那你应该设置{@link ImageDiskMode#RESULT}
+     *      <ul> <li>(例如Glide设置diskCacheStrategy()为DiskCacheStrategy.RESOURCE)</li></ul>
+     *  <li> 没有任何缓存，那你应该设置{@link ImageDiskMode#NONE}
+     *      <ul> <li>(例如Glide设置diskCacheStrategy()为DiskCacheStrategy.NONE)</li></ul>
+     * </ul>
      * @param imageDiskMode {@link ImageDiskMode} 点击的ImageView图片所缓存的模式（建议缓存原图）
      * @return {@link OpenImage}
      */
@@ -291,6 +325,8 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 设置 item 切换监听器
+     *
      * @param onSelectMediaListener 回调查看图片所在数据的位置
      * @return {@link OpenImage}
      */
@@ -378,7 +414,8 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 添加View 到大图页面，此方法可多次调用，添加多个View
+     * 添加View 到大图页面，此方法可多次调用，添加多个View，可以联合 {@link OpenImage#setOnSelectMediaListener} 使用，
+     * 获取正在显示的图片或视频（即您传入的数据 {@link OpenImageUrl}）
      *
      * @param layoutRes                添加的布局xml id
      * @param layoutParams             要添加到页面布局的参数
@@ -391,7 +428,8 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 添加View 到大图页面，此方法可多次调用，添加多个View
+     * 添加View 到大图页面，此方法可多次调用，添加多个View，可以联合 {@link OpenImage#setOnSelectMediaListener} 使用，
+     * 获取正在显示的图片或视频（即您传入的数据 {@link OpenImageUrl}）
      *
      * @param layoutView       添加的View
      * @param layoutParams     要添加到页面布局的参数
@@ -403,6 +441,9 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 添加View 到大图页面，此方法可多次调用，添加多个View，可以联合 {@link OpenImage#setOnSelectMediaListener} 使用，
+     * 获取正在显示的图片或视频（即您传入的数据 {@link OpenImageUrl}）
+     *
      * @param layoutRes                添加的布局xml id
      * @param layoutParams             要添加到页面布局的参数
      * @param moreViewShowType         展示类型
@@ -417,6 +458,10 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     *
+     * 添加View 到大图页面，此方法可多次调用，添加多个View，可以联合 {@link OpenImage#setOnSelectMediaListener} 使用，
+     * 获取正在显示的图片或视频（即您传入的数据 {@link OpenImageUrl}）
+     *
      * @param layoutView       添加的View
      * @param layoutParams     要添加到页面布局的参数
      * @param moreViewShowType 展示类型
@@ -439,7 +484,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 调用这个方法将覆盖 {@link OpenImageConfig#setImageFragmentCreate}  的配置
+     * 调用这个方法将覆盖 {@link OpenImageConfig#setImageFragmentCreate}  的配置，用于解决在app内多种不同需求的场景
      *
      * @param imageFragmentCreate 用于自定义图片展示页面
      * @return {@link OpenImage}
@@ -451,7 +496,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 调用这个方法将覆盖 {@link OpenImageConfig#setVideoFragmentCreate} 的配置
+     * 调用这个方法将覆盖 {@link OpenImageConfig#setVideoFragmentCreate} 的配置，用于解决在app内多种不同需求的场景
      *
      * @param videoFragmentCreate 用于自定义视频展示页面
      * @return {@link OpenImage}
@@ -486,6 +531,8 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 这是可以显示在页面上方的Fragment
+     *
      * @param upperLayerFragmentCreate 用于创建覆盖在页面上方的Fragment
      * @param bundle                   传入数据
      * @param followTouch              是否跟随拖动
@@ -528,9 +575,14 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 打开大图页面
+     * 打开大图页面，只可以调用一次哦～切勿多次调用
      */
     public void show() {
+        if (!isCallShow){
+            isCallShow = true;
+        }else if (ActivityCompatHelper.isApkInDebug(context)){
+            throw new UnsupportedOperationException("不可以多次调用 show 方法");
+        }
         goShow();
     }
 

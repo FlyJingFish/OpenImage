@@ -2,7 +2,16 @@ package com.flyjingfish.openimagelib.enums;
 
 
 public enum ImageDiskMode {
-    CONTAIN_ORIGINAL,//包含原图
-    RESULT,//只保存目标图片大小，如果选择这个可能出现小图扩大到大图的效果
+    /**
+     * 硬盘缓存：包含原图
+     */
+    CONTAIN_ORIGINAL,
+    /**
+     * 硬盘缓存：只保存目标图片大小，如果选择这个可能出现小图扩大到大图的效果
+     */
+    RESULT,
+    /**
+     * 硬盘缓存：没有缓存
+     */
     NONE//没有缓存
 }

@@ -6,6 +6,9 @@ import com.flyjingfish.openimagelib.listener.BigImageHelper;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 
+/**
+ * 全局设置类
+ */
 public class OpenImageConfig {
     private static volatile OpenImageConfig mInstance;
     private BigImageHelper bigImageHelper;
@@ -39,6 +42,10 @@ public class OpenImageConfig {
         return bigImageHelper;
     }
 
+    /**
+     * 设置大图加载类
+     * @param bigImageHelper 大图加载类
+     */
     public void setBigImageHelper(BigImageHelper bigImageHelper) {
         this.bigImageHelper = bigImageHelper;
     }
@@ -49,6 +56,7 @@ public class OpenImageConfig {
 
     /**
      * 这里是设置用于创建公共图片展示页面的类，设置后你可不必每次调用 {@link OpenImage#setImageFragmentCreate}
+     *
      * @param imageFragmentCreate 用于自定义图片展示页面
      */
     public void setImageFragmentCreate(ImageFragmentCreate imageFragmentCreate) {
@@ -61,6 +69,7 @@ public class OpenImageConfig {
 
     /**
      * 这里是设置用于创建公共视频展示页面的类，设置后你可不必每次调用 {@link OpenImage#setVideoFragmentCreate}
+     *
      * @param videoFragmentCreate 用于自定义视频展示页面
      */
     public void setVideoFragmentCreate(VideoFragmentCreate videoFragmentCreate) {
@@ -71,6 +80,10 @@ public class OpenImageConfig {
         return isReadMode;
     }
 
+    /**
+     * 是否开启阅读模式，开启后如果是长图，图片将展示第一屏。判定长图比例可通过{@link OpenImageConfig#setReadModeRule}来设置
+     * @param readMode 是否阅读模式
+     */
     public void setReadMode(boolean readMode) {
         isReadMode = readMode;
     }
@@ -79,6 +92,10 @@ public class OpenImageConfig {
         return readModeRule;
     }
 
+    /**
+     * 设置判断是否是长图的比例
+     * @param readModeRule 判定是否是长图的比例
+     */
     public void setReadModeRule(float readModeRule) {
         this.readModeRule = readModeRule;
     }
@@ -88,7 +105,7 @@ public class OpenImageConfig {
     }
 
     /**
-     *
+     * 开启或关闭 拖动关闭功能
      * @param disEnableTouchClose 是否关闭拖动关闭功能
      */
     public void setDisEnableTouchClose(boolean disEnableTouchClose) {
@@ -112,7 +129,7 @@ public class OpenImageConfig {
     }
 
     /**
-     *
+     * 修复共享元素内存泄漏的bug，默认修复，你可设置为不修复
      * @param fixSharedAnimMemoryLeaks 是否修复共享元素内存泄漏的bug
      */
     public void setFixSharedAnimMemoryLeaks(boolean fixSharedAnimMemoryLeaks) {

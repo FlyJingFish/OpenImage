@@ -78,6 +78,7 @@ class OpenImage4Params {
     protected Bundle openImageActivityClsBundle;
     protected String openImageActivityClsBundleKey;
     protected boolean isNoneClickView = false;
+    protected boolean isCallShow = false;
 
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV
