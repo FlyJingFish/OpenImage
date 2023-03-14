@@ -147,13 +147,6 @@ public class ImageEntity implements OpenImageUrl {
     public String videoUrl;//视频链接
     public int resouceType; //0图片1视频 
 
-    public ImageEntity(String url) {
-        this.url = url;
-    }
-
-    public ImageEntity() {
-    }
-
     @Override
     public String getImageUrl() {
         return resouceType == 1 ? coverUrl : photoUrl;//大图链接（或视频的封面大图链接）
