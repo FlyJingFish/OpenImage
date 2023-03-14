@@ -87,6 +87,8 @@ public class BaseActivity extends AppCompatActivity {
     };
     private String clickContextKey;
     private boolean isNoneClickView;
+    private String dataKey;
+    protected String contextKey;
 
     public boolean isNoneClickView() {
         return isNoneClickView;
@@ -95,6 +97,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        contextKey = this.toString();
         fixAndroid5_7Bug();
     }
 
@@ -155,6 +158,8 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         setEnterSharedElementCallback((SharedElementCallback) null);
         fixSharedAnimMemoryLeaks();
+        ImageLoadUtils.getInstance().clearOpenImageDetailData(dataKey);
+        ImageLoadUtils.getInstance().clearOpenImageDetail(contextKey);
     }
 
     @SuppressLint("DiscouragedPrivateApi")
@@ -238,7 +243,12 @@ public class BaseActivity extends AppCompatActivity {
     protected void parseIntent(){
 
         srcScaleType = (ShapeImageView.ShapeScaleType) getIntent().getSerializableExtra(OpenParams.SRC_SCALE_TYPE);
-        openImageBeans = (List<OpenImageDetail>) getIntent().getSerializableExtra(OpenParams.IMAGES);
+        dataKey = getIntent().getStringExtra(OpenParams.IMAGES);
+        openImageBeans = ImageLoadUtils.getInstance().getOpenImageDetailData(dataKey);
+        if (openImageBeans == null){
+            finishAfterTransition();
+            return;
+        }
         int clickPosition = getIntent().getIntExtra(OpenParams.CLICK_POSITION, 0);
 
         imageDiskMode = (ImageDiskMode) getIntent().getSerializableExtra(OpenParams.IMAGE_DISK_MODE);

@@ -216,7 +216,10 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
 
                 }
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(OpenParams.IMAGE, openImageBean);
+//                bundle.putSerializable(OpenParams.IMAGE, openImageBean);
+                String beanKey = contextKey+openImageBean;
+                bundle.putString(OpenParams.IMAGE, beanKey);
+                ImageLoadUtils.getInstance().setOpenImageDetail(beanKey,openImageBean);
                 bundle.putInt(OpenParams.SHOW_POSITION, position);
                 bundle.putInt(OpenParams.ERROR_RES_ID, errorResId);
                 bundle.putInt(OpenParams.CLICK_POSITION, selectPos);

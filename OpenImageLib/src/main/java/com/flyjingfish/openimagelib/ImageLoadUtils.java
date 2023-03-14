@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.enums.BackViewType;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
@@ -16,8 +17,10 @@ import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class ImageLoadUtils {
     private static volatile ImageLoadUtils mInstance;
@@ -34,6 +37,8 @@ class ImageLoadUtils {
     private HashMap<String, VideoFragmentCreate> videoFragmentCreateHashMap = new HashMap<>();
     private HashMap<String, UpperLayerOption> upperLayerFragmentCreateHashMap = new HashMap<>();
     private HashMap<String, Boolean> canOpenViewPageActivityHashMap = new HashMap<>();
+    private HashMap<String, List<OpenImageDetail>> openDataMap = new HashMap<>();
+    private HashMap<String, OpenImageDetail> openDetailDataMap = new HashMap<>();
 
     private ImageLoadUtils() {
     }
@@ -243,4 +248,37 @@ class ImageLoadUtils {
     public void clearCanOpenOpenImageActivity(String key) {
         canOpenViewPageActivityHashMap.remove(key);
     }
+
+    public void setOpenImageDetailData(String key, List<OpenImageDetail> openImageDetails) {
+        openDataMap.put(key, openImageDetails);
+    }
+
+    public List<OpenImageDetail> getOpenImageDetailData(String key) {
+        return openDataMap.get(key);
+    }
+
+    public void clearOpenImageDetailData(String key) {
+        openDataMap.remove(key);
+    }
+
+    public void setOpenImageDetail(String key, OpenImageDetail openImageDetail) {
+        openDetailDataMap.put(key, openImageDetail);
+    }
+
+    public OpenImageDetail getOpenImageDetail(String key) {
+        return openDetailDataMap.get(key);
+    }
+
+    public void clearOpenImageDetail(String contextKey) {
+        List<String> keyList = new ArrayList<>();
+        for (Map.Entry<String, OpenImageDetail> helper : openDetailDataMap.entrySet()) {
+            if (helper.getKey().contains(contextKey)) {
+                keyList.add(helper.getKey());
+            }
+        }
+        for (String key : keyList) {
+            openDetailDataMap.remove(key);
+        }
+    }
+
 }

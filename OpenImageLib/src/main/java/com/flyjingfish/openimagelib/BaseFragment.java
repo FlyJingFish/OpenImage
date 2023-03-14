@@ -32,6 +32,7 @@ public abstract class BaseFragment extends BaseInnerFragment {
     protected int errorResId;
     protected Drawable coverDrawable;
     protected boolean isNoneClickView;
+    private String dataKey;
 
     public abstract View getExitImageView();
     protected void onTransitionEnd(){}
@@ -48,33 +49,36 @@ public abstract class BaseFragment extends BaseInnerFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        imageDetail = (OpenImageDetail) bundle.getSerializable(OpenParams.IMAGE);
-        openImageUrl = imageDetail.openImageUrl;
-        imageDiskMode = (ImageDiskMode) bundle.getSerializable(OpenParams.IMAGE_DISK_MODE);
-        if (imageDiskMode == null){
-            imageDiskMode = ImageDiskMode.NONE;
-        }
-        showPosition = bundle.getInt(OpenParams.SHOW_POSITION);
-        clickPosition = bundle.getInt(OpenParams.CLICK_POSITION);
-        srcScaleType = (ShapeImageView.ShapeScaleType) bundle.getSerializable(OpenParams.SRC_SCALE_TYPE);
-        errorResId = bundle.getInt(OpenParams.ERROR_RES_ID,0);
-        String itemLoadKey = bundle.getString(OpenParams.ITEM_LOAD_KEY);
-        itemLoadHelper = ImageLoadUtils.getInstance().getItemLoadHelper(itemLoadKey);
-        disableClickClose = getArguments().getBoolean(OpenParams.DISABLE_CLICK_CLOSE,false);
-        String onItemCLickKey = getArguments().getString(OpenParams.ON_ITEM_CLICK_KEY);
-        String onItemLongCLickKey = getArguments().getString(OpenParams.ON_ITEM_LONG_CLICK_KEY);
-        OnItemClickListener onItemClickListener = ImageLoadUtils.getInstance().getOnItemClickListener(onItemCLickKey);
-        OnItemLongClickListener onItemLongClickListener = ImageLoadUtils.getInstance().getOnItemLongClickListener(onItemLongCLickKey);
-        if (onItemClickListener != null){
-            onItemClickListeners.add(onItemClickListener);
-        }
-        if (onItemLongClickListener != null){
-            onItemLongClickListeners.add(onItemLongClickListener);
-        }
-        coverDrawable = ImageLoadUtils.getInstance().getCoverDrawable(getArguments().getString(OpenParams.OPEN_COVER_DRAWABLE));
+        if (bundle != null){
+            dataKey = bundle.getString(OpenParams.IMAGE);
+            imageDetail = ImageLoadUtils.getInstance().getOpenImageDetail(dataKey);
+            openImageUrl = imageDetail.openImageUrl;
+            imageDiskMode = (ImageDiskMode) bundle.getSerializable(OpenParams.IMAGE_DISK_MODE);
+            if (imageDiskMode == null){
+                imageDiskMode = ImageDiskMode.NONE;
+            }
+            showPosition = bundle.getInt(OpenParams.SHOW_POSITION);
+            clickPosition = bundle.getInt(OpenParams.CLICK_POSITION);
+            srcScaleType = (ShapeImageView.ShapeScaleType) bundle.getSerializable(OpenParams.SRC_SCALE_TYPE);
+            errorResId = bundle.getInt(OpenParams.ERROR_RES_ID,0);
+            String itemLoadKey = bundle.getString(OpenParams.ITEM_LOAD_KEY);
+            itemLoadHelper = ImageLoadUtils.getInstance().getItemLoadHelper(itemLoadKey);
+            disableClickClose = getArguments().getBoolean(OpenParams.DISABLE_CLICK_CLOSE,false);
+            String onItemCLickKey = getArguments().getString(OpenParams.ON_ITEM_CLICK_KEY);
+            String onItemLongCLickKey = getArguments().getString(OpenParams.ON_ITEM_LONG_CLICK_KEY);
+            OnItemClickListener onItemClickListener = ImageLoadUtils.getInstance().getOnItemClickListener(onItemCLickKey);
+            OnItemLongClickListener onItemLongClickListener = ImageLoadUtils.getInstance().getOnItemLongClickListener(onItemLongCLickKey);
+            if (onItemClickListener != null){
+                onItemClickListeners.add(onItemClickListener);
+            }
+            if (onItemLongClickListener != null){
+                onItemLongClickListeners.add(onItemLongClickListener);
+            }
+            coverDrawable = ImageLoadUtils.getInstance().getCoverDrawable(bundle.getString(OpenParams.OPEN_COVER_DRAWABLE));
 
-        autoAspectRadio = bundle.getFloat(OpenParams.AUTO_ASPECT_RATIO,0);
-        isNoneClickView = bundle.getBoolean(OpenParams.NONE_CLICK_VIEW,false);
+            autoAspectRadio = bundle.getFloat(OpenParams.AUTO_ASPECT_RATIO,0);
+            isNoneClickView = bundle.getBoolean(OpenParams.NONE_CLICK_VIEW,false);
+        }
     }
 
 
@@ -102,4 +106,9 @@ public abstract class BaseFragment extends BaseInnerFragment {
         mHandler.removeCallbacksAndMessages(null);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ImageLoadUtils.getInstance().clearOpenImageDetail(dataKey);
+    }
 }

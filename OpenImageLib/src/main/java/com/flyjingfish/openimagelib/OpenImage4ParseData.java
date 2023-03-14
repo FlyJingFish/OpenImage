@@ -193,8 +193,10 @@ class OpenImage4ParseData extends OpenImage4Params {
         } else {
             throw new IllegalArgumentException("请设置至少一个点击的ImageView");
         }
+        String dataKey = this.toString();
         intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
-        intent.putExtra(OpenParams.IMAGES, openImageDetails);
+        intent.putExtra(OpenParams.IMAGES, dataKey);
+        ImageLoadUtils.getInstance().setOpenImageDetailData(dataKey,openImageDetails);
         postOpen(intent, viewPair);
     }
 
