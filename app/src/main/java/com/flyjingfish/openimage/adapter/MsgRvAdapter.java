@@ -98,7 +98,7 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                         }
                     }).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
                     .setOpenImageStyle(R.style.DefaultPhotosTheme)
-                    //前者是点击所在数据位置，后者是点击的 RecyclerView 中位置
+                    //前者是点击所在 allShowData 数据位置，后者是点击的 RecyclerView 中位置
                     .setClickPosition(position+otherData.size(),position).show();
         } ;
         if (viewType == MessageBean.IMAGE){
