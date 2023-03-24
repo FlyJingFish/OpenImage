@@ -3,8 +3,6 @@ package com.flyjingfish.openimagelib;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.flyjingfish.openimagelib.enums.BackViewType;
-
 class ExitOnBackView implements ImageLoadUtils.OnBackView {
     private final View transitionView;
     private final float transitionViewStartAlpha;

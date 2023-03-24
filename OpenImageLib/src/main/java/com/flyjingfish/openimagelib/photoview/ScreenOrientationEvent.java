@@ -1,11 +1,11 @@
-package com.flyjingfish.openimagelib.utils;
+package com.flyjingfish.openimagelib.photoview;
 
 import android.content.Context;
 import android.hardware.display.DisplayManager;
 import android.os.Handler;
 import android.os.Looper;
 
-public class ScreenOrientationEvent {
+class ScreenOrientationEvent {
     private OnOrientationListener onOrientationListener;
     private DisplayManager mDisplayManager;
 

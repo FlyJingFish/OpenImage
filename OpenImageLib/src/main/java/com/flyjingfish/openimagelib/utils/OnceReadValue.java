@@ -1,6 +1,6 @@
 package com.flyjingfish.openimagelib.utils;
 
-public abstract class OnceReadValue<P, T> {
+abstract class OnceReadValue<P, T> {
 
     private volatile boolean isRead = false;
     private T cacheValue;

@@ -32,7 +32,6 @@ import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
 
 import com.flyjingfish.openimagelib.OpenImageConfig;
-import com.flyjingfish.openimagelib.utils.ScreenOrientationEvent;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 import com.flyjingfish.shapeimageviewlib.ViewUtils;
 

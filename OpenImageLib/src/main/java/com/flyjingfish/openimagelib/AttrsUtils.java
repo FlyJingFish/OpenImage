@@ -1,4 +1,4 @@
-package com.flyjingfish.openimagelib.utils;
+package com.flyjingfish.openimagelib;
 
 
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
-public class AttrsUtils {
+class AttrsUtils {
 
     public static int getTypeValueColor(Context context, int themeRes, int attr) {
         return getTypeValueColor(context, themeRes, attr, 0);
