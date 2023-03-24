@@ -114,7 +114,7 @@ public class BaseInnerFragment extends Fragment {
     /**
      * 关闭页面
      */
-    protected void close() {
+    public void close() {
         close(false);
     }
 

@@ -1,7 +1,9 @@
 package com.flyjingfish.openimagelib.listener;
 
-import com.flyjingfish.openimagelib.BaseFragment;
+import android.view.View;
+
+import com.flyjingfish.openimagelib.BaseImageFragment;
 
 public interface ImageFragmentCreate {
-    BaseFragment createImageFragment();
+    BaseImageFragment<? extends View> createImageFragment();
 }

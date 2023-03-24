@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class BaseActivity extends AppCompatActivity {
+class BaseActivity extends AppCompatActivity {
     private static final int CHECK_FINISH = 1009;
     private static final long CHECK_DELAY_MS = 2000;
     protected static final int INDICATOR_TEXT = 0;
