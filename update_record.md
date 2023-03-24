@@ -1,5 +1,11 @@
 # OpenImage 更新日志
 
+## 1.6.7
+
+1，关闭 BaseActivity 和 BaseFragment 的访问权限
+
+2，限制自定义图片或视频页面必须继承 BaseImageFragment
+
 ## 1.6.6
 
 1、修复使用 设置数据包含 Parcelable 类型数据 时，打不开页面的问题
