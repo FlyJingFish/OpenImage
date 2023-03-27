@@ -68,6 +68,7 @@ public class MainActivity extends BaseActivity {
         binding.btnIvs.setOnClickListener(v -> jump(v, ImagesActivity.class));
         binding.btnViewPager.setOnClickListener(v -> jump(v, ViewPagerDemoActivity.class));
         binding.btnScaleType.setOnClickListener(v -> jump(v, ScaleTypeActivity.class));
+        binding.btnConner.setOnClickListener(v -> jump(v, ConnerActivity.class));
     }
 
     private void jump(View v, Class<?> cls){

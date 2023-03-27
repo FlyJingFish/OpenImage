@@ -31,4 +31,5 @@ class OpenParams {
     public static final String UPPER_LAYER_BUNDLE = "upperLayerBundle";
     public static final String CONTEXT_KEY = "contextKey";
     public static final String NONE_CLICK_VIEW = "none_click_view";
+    public static final String IMAGE_SHAPE_PARAMS = "ImageShapeParams";
 }

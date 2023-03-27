@@ -88,6 +88,8 @@ class BaseActivity extends AppCompatActivity {
     private boolean isNoneClickView;
     private String dataKey;
     protected String contextKey;
+    protected float touchCloseScale = 1f;
+    protected ImageShapeParams imageShapeParams;
 
     public boolean isNoneClickView() {
         return isNoneClickView;
@@ -277,5 +279,6 @@ class BaseActivity extends AppCompatActivity {
         onBackView = ImageLoadUtils.getInstance().getOnBackView(onBackViewKey);
         clickContextKey = getIntent().getStringExtra(OpenParams.CONTEXT_KEY);
         isNoneClickView = getIntent().getBooleanExtra(OpenParams.NONE_CLICK_VIEW,false);
+        imageShapeParams = (ImageShapeParams) getIntent().getSerializableExtra(OpenParams.IMAGE_SHAPE_PARAMS);
     }
 }

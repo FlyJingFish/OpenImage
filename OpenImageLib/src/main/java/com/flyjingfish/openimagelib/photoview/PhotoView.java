@@ -16,21 +16,32 @@
 package com.flyjingfish.openimagelib.photoview;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.LayoutDirection;
 import android.util.Log;
 import android.view.GestureDetector;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.text.TextUtilsCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
+import com.flyjingfish.shapeimageviewlib.ViewUtils;
+
+import java.util.Locale;
 
 
 /**
@@ -54,6 +65,16 @@ public class PhotoView extends AppCompatImageView {
     public PhotoView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
         init();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            isRtl = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL;
+        }
+        mImagePaint = new Paint();
+        mImagePaint.setXfermode(null);
+        mRoundPaint = new Paint();
+        mRoundPaint.setColor(Color.WHITE);
+        mRoundPaint.setAntiAlias(true);
+        mRoundPaint.setStyle(Paint.Style.FILL);
+        mRoundPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
     }
 
     private void init() {
@@ -309,5 +330,173 @@ public class PhotoView extends AppCompatImageView {
 
     public void setAutoCropHeightWidthRatio(float autoCropHeightWidthRatio) {
         this.attacher.setAutoCropHeightWidthRatio(autoCropHeightWidthRatio);
+    }
+
+    private ShapeImageView.ShapeType shapeType;
+    private float leftTopRadius;
+    private float leftBottomRadius;
+    private float rightTopRadius;
+    private float rightBottomRadius;
+    private boolean isRtl = false;
+    private final Paint mImagePaint;
+    private final Paint mRoundPaint;
+    private float startTopRadius;
+    private float startBottomRadius;
+    private float endTopRadius;
+    private float endBottomRadius;
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (attacher != null && attacher.isExitMode() && shapeType == ShapeImageView.ShapeType.OVAL) {
+            canvas.saveLayer(new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), mImagePaint, Canvas.ALL_SAVE_FLAG);
+            super.onDraw(canvas);
+            drawOval(canvas);
+            canvas.restore();
+        } else if (attacher != null && attacher.isExitMode() && shapeType == ShapeImageView.ShapeType.RECTANGLE) {
+            canvas.saveLayer(new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), mImagePaint, Canvas.ALL_SAVE_FLAG);
+            super.onDraw(canvas);
+            drawRectangle(canvas);
+            canvas.restore();
+        } else {
+            super.onDraw(canvas);
+        }
+
+    }
+
+    private void drawOval(Canvas canvas) {
+        drawTopLeft(canvas);
+        drawTopRight(canvas);
+        drawBottomLeft(canvas);
+        drawBottomRight(canvas);
+    }
+
+    private void drawRectangle(Canvas canvas) {
+        if (ViewUtils.getRtlValue(isRtl ? endTopRadius : startTopRadius, this.leftTopRadius) > 0) {
+            drawTopLeft(canvas);
+        }
+        if (ViewUtils.getRtlValue(isRtl ? startTopRadius : endTopRadius, this.rightTopRadius) > 0) {
+            drawTopRight(canvas);
+        }
+        if (ViewUtils.getRtlValue(isRtl ? endBottomRadius : startBottomRadius, this.leftBottomRadius) > 0) {
+            drawBottomLeft(canvas);
+        }
+        if (ViewUtils.getRtlValue(isRtl ? startBottomRadius : endBottomRadius, this.rightBottomRadius) > 0) {
+            drawBottomRight(canvas);
+        }
+    }
+
+    private void drawTopLeft(Canvas canvas) {
+        Path path = new Path();
+        int paddingLeft = ViewUtils.getViewPaddingLeft(this);
+        int paddingRight = ViewUtils.getViewPaddingRight(this);
+        int paddingTop = getPaddingTop();
+        int paddingBottom = getPaddingBottom();
+        if (shapeType == ShapeImageView.ShapeType.OVAL) {
+            int height = getHeight();
+            int width = getWidth();
+            path.moveTo(paddingLeft, (height - paddingTop - paddingBottom) / 2 + paddingTop);
+            path.lineTo(paddingLeft, paddingTop);
+            path.lineTo((width - paddingLeft - paddingRight) / 2 + paddingLeft, paddingTop);
+            path.arcTo(new RectF(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom), -90, -90);
+        } else {
+            float leftTopRadius = ViewUtils.getRtlValue(isRtl ? endTopRadius : startTopRadius, this.leftTopRadius);
+
+            path.moveTo(paddingLeft, paddingTop + leftTopRadius);
+            path.lineTo(paddingLeft, paddingTop);
+            path.lineTo(paddingLeft + leftTopRadius, paddingTop);
+            path.arcTo(new RectF(paddingLeft, paddingTop, paddingLeft + leftTopRadius * 2, paddingTop + leftTopRadius * 2), -90, -90);
+        }
+        path.close();
+        canvas.drawPath(path, mRoundPaint);
+    }
+
+    private void drawTopRight(Canvas canvas) {
+        int width = getWidth();
+        Path path = new Path();
+        int paddingLeft = ViewUtils.getViewPaddingLeft(this);
+        int paddingRight = ViewUtils.getViewPaddingRight(this);
+        int paddingTop = getPaddingTop();
+        int paddingBottom = getPaddingBottom();
+        if (shapeType == ShapeImageView.ShapeType.OVAL) {
+            int height = getHeight();
+            path.moveTo((width - paddingLeft - paddingRight) / 2 + paddingLeft, paddingTop);
+            path.lineTo(width - paddingRight, paddingTop);
+            path.lineTo(width - paddingRight, (height - paddingTop - paddingBottom) / 2 + paddingTop);
+            path.arcTo(new RectF(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom), 0, -90);
+        } else {
+            float rightTopRadius = ViewUtils.getRtlValue(isRtl ? startTopRadius : endTopRadius, this.rightTopRadius);
+            path.moveTo(width - rightTopRadius - paddingRight, paddingTop);
+            path.lineTo(width - paddingRight, paddingTop);
+            path.lineTo(width - paddingRight, paddingTop + rightTopRadius);
+            path.arcTo(new RectF(width - paddingRight - 2 * rightTopRadius, paddingTop, width - paddingRight, paddingTop + rightTopRadius * 2), 0, -90);
+        }
+        path.close();
+        canvas.drawPath(path, mRoundPaint);
+    }
+
+    private void drawBottomLeft(Canvas canvas) {
+        int height = getHeight();
+        Path path = new Path();
+        int paddingLeft = ViewUtils.getViewPaddingLeft(this);
+        int paddingRight = ViewUtils.getViewPaddingRight(this);
+        int paddingTop = getPaddingTop();
+        int paddingBottom = getPaddingBottom();
+        if (shapeType == ShapeImageView.ShapeType.OVAL) {
+            int width = getWidth();
+            path.moveTo(paddingLeft, (height - paddingTop - paddingBottom) / 2 + paddingTop);
+            path.lineTo(paddingLeft, height - paddingBottom);
+            path.lineTo((width - paddingLeft - paddingRight) / 2 + paddingLeft, height - paddingBottom);
+            path.arcTo(new RectF(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom), 90, 90);
+        } else {
+            float leftBottomRadius = ViewUtils.getRtlValue(isRtl ? endBottomRadius : startBottomRadius, this.leftBottomRadius);
+            path.moveTo(paddingLeft, height - paddingBottom - leftBottomRadius);
+            path.lineTo(paddingLeft, height - paddingBottom);
+            path.lineTo(paddingLeft + leftBottomRadius, height - paddingBottom);
+            path.arcTo(new RectF(paddingLeft, height - paddingBottom - 2 * leftBottomRadius, paddingLeft + leftBottomRadius * 2, height - paddingBottom), 90, 90);
+        }
+        path.close();
+        canvas.drawPath(path, mRoundPaint);
+    }
+
+    private void drawBottomRight(Canvas canvas) {
+        int height = getHeight();
+        int width = getWidth();
+        Path path = new Path();
+        int paddingLeft = ViewUtils.getViewPaddingLeft(this);
+        int paddingRight = ViewUtils.getViewPaddingRight(this);
+        int paddingTop = getPaddingTop();
+        int paddingBottom = getPaddingBottom();
+        if (shapeType == ShapeImageView.ShapeType.OVAL) {
+            path.moveTo((width - paddingLeft - paddingRight) / 2 + paddingLeft, height - paddingBottom);
+            path.lineTo(width - paddingRight, height - paddingBottom);
+            path.lineTo(width - paddingRight, (height - paddingTop - paddingBottom) / 2 + paddingTop);
+            path.arcTo(new RectF(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom), 0, 90);
+        } else {
+            float rightBottomRadius = ViewUtils.getRtlValue(isRtl ? startBottomRadius : endBottomRadius, this.rightBottomRadius);
+            path.moveTo(width - paddingRight - rightBottomRadius, height - paddingBottom);
+            path.lineTo(width - paddingRight, height - paddingBottom);
+            path.lineTo(width - paddingRight, height - paddingBottom - rightBottomRadius);
+            path.arcTo(new RectF(width - paddingRight - 2 * rightBottomRadius, height - paddingBottom - 2 * rightBottomRadius, width - paddingRight, height - paddingBottom), 0, 90);
+        }
+        path.close();
+        canvas.drawPath(path, mRoundPaint);
+    }
+
+    public void setRadius(int leftTopRadius,int rightTopRadius,int rightBottomRadius,int leftBottomRadius) {
+        this.leftTopRadius = leftTopRadius;
+        this.rightTopRadius = rightTopRadius;
+        this.rightBottomRadius = rightBottomRadius;
+        this.leftBottomRadius = leftBottomRadius;
+        invalidate();
+    }
+    public void setRelativeRadius(int startTopRadius,int endTopRadius,int endBottomRadius,int startBottomRadius) {
+        this.startTopRadius = startTopRadius;
+        this.endTopRadius = endTopRadius;
+        this.endBottomRadius = endBottomRadius;
+        this.startBottomRadius = startBottomRadius;
+        invalidate();
+    }
+
+    public void setShapeType(ShapeImageView.ShapeType shapeType) {
+        this.shapeType = shapeType;
     }
 }

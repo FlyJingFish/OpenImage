@@ -78,6 +78,7 @@ class OpenImage4Params {
     protected String openImageActivityClsBundleKey;
     protected boolean isNoneClickView = false;
     protected boolean isCallShow = false;
+    protected ImageShapeParams imageShapeParams;
 
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV
@@ -130,6 +131,9 @@ class OpenImage4Params {
         }
         if (openImageActivityClsBundle != null && !TextUtils.isEmpty(openImageActivityClsBundleKey)) {
             intent.putExtra(openImageActivityClsBundleKey, openImageActivityClsBundle);
+        }
+        if (imageShapeParams != null){
+            intent.putExtra(OpenParams.IMAGE_SHAPE_PARAMS, imageShapeParams);
         }
         intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);

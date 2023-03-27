@@ -79,6 +79,12 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".activity.ConnerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".openImpl.MyBigImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"

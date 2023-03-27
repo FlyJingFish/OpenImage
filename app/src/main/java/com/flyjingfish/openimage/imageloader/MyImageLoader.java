@@ -76,7 +76,11 @@ public class MyImageLoader {
             return;
         into(url, iv, 0, 0, p, err, false, radiusDp, false);
     }
-
+    public void loadCircle(ImageView iv, String url,  @DrawableRes int p, @DrawableRes int err) {
+        if (!ActivityCompatHelper.assertValidRequest(iv.getContext()))
+            return;
+        into(url, iv, 0, 0, p, err, true, -1, false);
+    }
     public void loadRoundCorner(ImageView iv, String url, float radiusDp, int w, int h, @DrawableRes int p, @DrawableRes int err,OnImageLoadListener requestListener) {
         if (!ActivityCompatHelper.assertValidRequest(iv.getContext()))
             return;
@@ -86,7 +90,15 @@ public class MyImageLoader {
     private void into(String url, ImageView iv, int w, int h, @DrawableRes int p, @DrawableRes int err, boolean isCircle, float radiusDp, boolean isBlur) {
         into(url, iv, w, h, p, err, isCircle, radiusDp, isBlur,null);
     }
-
+    public static void loadRoundImageByType(ImageView iv, String url, float radiusDp, jp.wasabeef.glide.transformations.RoundedCornersTransformation.CornerType cornerType, @DrawableRes int p, @DrawableRes int err) {
+        RequestBuilder requestBuilder = GlideApp.with(iv).load(url);
+        requestBuilder.apply(new RequestOptions().transform(new Transformation[]{new CenterCrop(),  new jp.wasabeef.glide.transformations.RoundedCornersTransformation(dp2px(radiusDp), 0, cornerType)}));
+        if (p != -1)
+            requestBuilder.placeholder(p);
+        if (err != -1)
+            requestBuilder.error(err);
+        requestBuilder.into(iv);
+    }
     private void into(String url,ImageView iv, int w, int h, @DrawableRes int p, @DrawableRes int err, boolean isCircle, float radiusDp, boolean isBlur, OnImageLoadListener requestListener) {
         if (loader_os_type == GLIDE){
             RequestBuilder<Drawable> requestBuilder = GlideApp.with(iv).load(url);

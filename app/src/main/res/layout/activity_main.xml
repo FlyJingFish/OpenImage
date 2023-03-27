@@ -111,6 +111,12 @@
             android:textAllCaps="false"
             android:text="朋友圈"/>
         <Button
+            android:id="@+id/btn_conner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="圆角图或圆图"/>
+        <Button
             android:id="@+id/btn_view_pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

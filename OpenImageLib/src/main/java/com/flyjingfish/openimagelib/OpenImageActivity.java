@@ -34,6 +34,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.databinding.OpenImageActivityViewpagerBinding;
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
+import com.flyjingfish.openimagelib.enums.ImageShapeType;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
@@ -170,6 +171,7 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
      */
     @Override
     public void onTouchClose(float scale) {
+        touchCloseScale = scale;
         photosViewModel.onTouchCloseLiveData.setValue(scale);
         close(true);
     }
@@ -629,6 +631,8 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
                     if (names.size() == 0) {
                         return;
                     }
+                    int startWidth = exitView.getWidth();
+                    int startHeight = exitView.getHeight();
                     if (exitView instanceof ShapeImageView){
                         ShapeImageView.ShapeScaleType ShapeScaleType = ((ShapeImageView) exitView).getShapeScaleType();
                         if (shareView instanceof PhotoView){
@@ -637,10 +641,54 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
                                 ((PhotoView) shareView).setAutoCropHeightWidthRatio( ((ShapeImageView) exitView).getAutoCropHeightWidthRatio());
                             }
                         }
+                        if (shareView instanceof PhotoView){
+                            if (((ShapeImageView) exitView).getShapeType() == ShapeImageView.ShapeType.OVAL && startWidth == startHeight){
+                                ((PhotoView) shareView).setShapeType(ShapeImageView.ShapeType.RECTANGLE);
+                                ((PhotoView) shareView).setRadius(
+                                        (int) (startWidth/2/touchCloseScale),
+                                        (int) (startWidth/2/touchCloseScale),
+                                        (int) (startWidth/2/touchCloseScale),
+                                        (int) (startWidth/2/touchCloseScale));
+                                ((PhotoView) shareView).setRelativeRadius(
+                                        (int) (startWidth/2/touchCloseScale),
+                                        (int) (startWidth/2/touchCloseScale),
+                                        (int) (startWidth/2/touchCloseScale),
+                                        (int) (startWidth/2/touchCloseScale));
+                            }else {
+                                ((PhotoView) shareView).setShapeType(((ShapeImageView) exitView).getShapeType());
+                                ((PhotoView) shareView).setRadius((int) ((int) ((ShapeImageView) exitView).getLeftTopRadius()/touchCloseScale),
+                                        (int) ((int) ((ShapeImageView) exitView).getRightTopRadius()/touchCloseScale),
+                                        (int) ((int) ((ShapeImageView) exitView).getRightBottomRadius()/touchCloseScale),
+                                        (int) ((int) ((ShapeImageView) exitView).getLeftBottomRadius()/touchCloseScale));
+                                ((PhotoView) shareView).setRelativeRadius((int) ((int) ((ShapeImageView) exitView).getStartTopRadius()/touchCloseScale),
+                                        (int) ((int) ((ShapeImageView) exitView).getEndTopRadius()/touchCloseScale),
+                                        (int) ((int) ((ShapeImageView) exitView).getEndBottomRadius()/touchCloseScale),
+                                        (int) ((int) ((ShapeImageView) exitView).getStartBottomRadius()/touchCloseScale));
+                            }
+                        }
+                    }else if (imageShapeParams != null && (shareView instanceof PhotoView)){
+                        if (imageShapeParams.shapeType == ImageShapeType.OVAL){
+                            if (startWidth == startHeight){
+                                ((PhotoView) shareView).setShapeType(ShapeImageView.ShapeType.RECTANGLE);
+                                ((PhotoView) shareView).setRadius(
+                                        (int) (startWidth/2/touchCloseScale),
+                                        (int) (startWidth/2/touchCloseScale),
+                                        (int) (startWidth/2/touchCloseScale),
+                                        (int) (startWidth/2/touchCloseScale));
+                            }else {
+                                ((PhotoView) shareView).setShapeType(ShapeImageView.ShapeType.OVAL);
+                            }
+                        }else {
+                            ((PhotoView) shareView).setShapeType(ShapeImageView.ShapeType.RECTANGLE);
+                            ((PhotoView) shareView).setRadius((int) (imageShapeParams.rectangleConnerRadius.leftTopRadius/touchCloseScale),
+                                    (int) (imageShapeParams.rectangleConnerRadius.rightTopRadius/touchCloseScale),
+                                    (int) (imageShapeParams.rectangleConnerRadius.rightBottomRadius/touchCloseScale),
+                                    (int) (imageShapeParams.rectangleConnerRadius.leftBottomRadius/touchCloseScale));
+                        }
                     }
                     if (shareView instanceof PhotoView){
-                        ((PhotoView) shareView).setStartWidth(exitView.getWidth());
-                        ((PhotoView) shareView).setStartHeight(exitView.getHeight());
+                        ((PhotoView) shareView).setStartWidth(startWidth);
+                        ((PhotoView) shareView).setStartHeight(startHeight);
                     }
                     sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);
                 }

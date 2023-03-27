@@ -19,7 +19,9 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
+import com.flyjingfish.openimagelib.beans.RectangleConnerRadius;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
+import com.flyjingfish.openimagelib.enums.ImageShapeType;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
@@ -571,6 +573,21 @@ public final class OpenImage extends OpenImage4ParseData {
             throw new IllegalArgumentException("bundleKey 不能为 null");
         }
         this.openImageActivityClsBundle = bundle;
+        return this;
+    }
+
+    /**
+     * 如果你想让圆图和矩形圆角图在打开关闭时追求更细腻的体验可以设置这个
+     *
+     * @param shapeType 图片类型
+     * @param rectangleConnerRadius 如果是矩形圆角图，设置这个为圆角角度
+     * @return
+     */
+    public OpenImage setImageShapeParams(ImageShapeType shapeType, RectangleConnerRadius rectangleConnerRadius) {
+        if (shapeType == null) {
+            throw new IllegalArgumentException("shapeType 不能为 null");
+        }
+        imageShapeParams = new ImageShapeParams(shapeType,rectangleConnerRadius);
         return this;
     }
 

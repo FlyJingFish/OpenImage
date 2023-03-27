@@ -720,6 +720,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         isExitMode = exitMode;
     }
 
+    public boolean isExitMode() {
+        return isExitMode;
+    }
+
     public boolean isNoneClickView() {
         return isNoneClickView;
     }
