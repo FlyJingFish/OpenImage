@@ -7,6 +7,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:layout_marginVertical="20dp"
+            android:paddingHorizontal="14dp"
+            android:layout_gravity="center_horizontal"
+            android:text="我们app中常用矩形带圆角的图片(或圆形图)，有些小伙伴觉得关闭大图页面时四个角还是直角不好看，对于有强迫症的小伙伴可以试试下面两种设置方式"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
