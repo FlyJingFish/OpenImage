@@ -19,6 +19,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.Px;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -32,7 +33,6 @@ import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
-import com.flyjingfish.openimagelib.databinding.OpenImageActivityViewpagerBinding;
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
 import com.flyjingfish.openimagelib.enums.ImageShapeType;
 import com.flyjingfish.openimagelib.enums.MediaType;
@@ -52,13 +52,48 @@ import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 import java.util.List;
 import java.util.Map;
 
-public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.OnTouchCloseListener{
+public abstract class OpenImageActivity extends BaseActivity implements TouchCloseLayout.OnTouchCloseListener {
 
     protected View vBg;
     protected FrameLayout flTouchView;
     protected ViewPager2 viewPager;
     protected TouchCloseLayout rootView;
     protected View contentView;
+
+    /**
+     * 获取 contentView ，用于调用{@link android.app.Activity#setContentView(View view)}
+     *
+     * @return {@link View}
+     */
+    public abstract View getContentView();
+
+    /**
+     * 设置显示背景的View
+     *
+     * @return {@link View}
+     */
+    public abstract View getBgView();
+
+    /**
+     * 触摸图片可下拉的布局，必须是 {@link TouchCloseLayout}
+     *
+     * @return {@link TouchCloseLayout}
+     */
+    public abstract TouchCloseLayout getTouchCloseLayout();
+
+    /**
+     * {@link ViewPager2}的外层包裹布局，类型{@link FrameLayout}
+     *
+     * @return {@link FrameLayout}
+     */
+    public abstract FrameLayout getViewPager2Container();
+
+    /**
+     * 承载图片或视频的{@link ViewPager2}
+     *
+     * @return {@link ViewPager2}
+     */
+    public abstract ViewPager2 getViewPager2();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,32 +113,28 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
         initMoreView();
         initViewPager2();
         initTouchCloseLayout();
-        if (isNoneClickView()){
+        if (isNoneClickView()) {
             onShareTransitionEnd();
-        }else {
+        } else {
             setViewTransition();
             addTransitionListener();
         }
     }
 
-    /**
-     * 重写这个方法来设置 contentView
-     */
-    protected void initRootView(){
-        OpenImageActivityViewpagerBinding binding = OpenImageActivityViewpagerBinding.inflate(getLayoutInflater());
-        vBg = binding.vBg;
-        flTouchView = binding.flTouchView;
-        viewPager = binding.viewPager;
-        rootView = binding.getRoot();
-        contentView = rootView;
+    private void initRootView() {
+        contentView = getContentView();
+        vBg = getBgView();
+        rootView = getTouchCloseLayout();
+        flTouchView = getViewPager2Container();
+        viewPager = getViewPager2();
     }
 
-    private void initPhotosViewModel(){
+    private void initPhotosViewModel() {
         photosViewModel = new ViewModelProvider(this).get(PhotosViewModel.class);
         photosViewModel.closeViewLiveData.observe(this, integer -> close(false));
         photosViewModel.onAddOnSelectMediaListenerLiveData.observe(this, s -> {
             OnSelectMediaListener onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(s);
-            if (onSelectMediaListener != null){
+            if (onSelectMediaListener != null) {
                 onSelectMediaListeners.add(onSelectMediaListener);
             }
             onSelectMediaListenerKeys.add(s);
@@ -111,14 +142,14 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
 
         photosViewModel.onRemoveOnSelectMediaListenerLiveData.observe(this, s -> {
             OnSelectMediaListener onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(s);
-            if (onSelectMediaListener != null){
+            if (onSelectMediaListener != null) {
                 onSelectMediaListeners.remove(onSelectMediaListener);
             }
             ImageLoadUtils.getInstance().clearOnItemClickListener(s);
         });
     }
 
-    protected void initTouchCloseLayout(){
+    private void initTouchCloseLayout() {
         boolean disEnableTouchClose = getIntent().getBooleanExtra(OpenParams.DISABLE_TOUCH_CLOSE, false);
         float touchScaleClose = getIntent().getFloatExtra(OpenParams.TOUCH_CLOSE_SCALE, .76f);
         rootView.setTouchCloseScale(touchScaleClose);
@@ -158,6 +189,7 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
 
     /**
      * 正在拖动图片或视频
+     *
      * @param scale 图片或视频缩放比例
      */
     @Override
@@ -167,6 +199,7 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
 
     /**
      * 停止拖动图片或视频并关闭页面
+     *
      * @param scale 图片或视频缩放比例
      */
     @Override
@@ -176,16 +209,25 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
         close(true);
     }
 
-    protected void initViewPager2(){
+    protected void onPageScrolled(int position, float positionOffset, @Px int positionOffsetPixels) {
+    }
+
+    protected void onPageSelected(int position) {
+    }
+
+    protected void onPageScrollStateChanged(@ViewPager2.ScrollState int state) {
+    }
+
+    private void initViewPager2() {
         int errorResId = getIntent().getIntExtra(OpenParams.ERROR_RES_ID, 0);
-        float autoAspectRadio = getIntent().getFloatExtra(OpenParams.AUTO_ASPECT_RATIO,0);
+        float autoAspectRadio = getIntent().getFloatExtra(OpenParams.AUTO_ASPECT_RATIO, 0);
         boolean disableClickClose = getIntent().getBooleanExtra(OpenParams.DISABLE_CLICK_CLOSE, false);
         VideoFragmentCreate videoCreate = ImageLoadUtils.getInstance().getVideoFragmentCreate(videoFragmentCreateKey);
         ImageFragmentCreate imageCreate = ImageLoadUtils.getInstance().getImageFragmentCreate(imageFragmentCreateKey);
-        if (videoCreate == null){
+        if (videoCreate == null) {
             videoCreate = OpenImageConfig.getInstance().getVideoFragmentCreate();
         }
-        if (imageCreate == null){
+        if (imageCreate == null) {
             imageCreate = OpenImageConfig.getInstance().getImageFragmentCreate();
         }
         VideoFragmentCreate videoFragmentCreate = videoCreate;
@@ -217,9 +259,9 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
                 }
                 Bundle bundle = new Bundle();
 //                bundle.putSerializable(OpenParams.IMAGE, openImageBean);
-                String beanKey = contextKey+openImageBean;
+                String beanKey = contextKey + openImageBean;
                 bundle.putString(OpenParams.IMAGE, beanKey);
-                ImageLoadUtils.getInstance().setOpenImageDetail(beanKey,openImageBean);
+                ImageLoadUtils.getInstance().setOpenImageDetail(beanKey, openImageBean);
                 bundle.putInt(OpenParams.SHOW_POSITION, position);
                 bundle.putInt(OpenParams.ERROR_RES_ID, errorResId);
                 bundle.putInt(OpenParams.CLICK_POSITION, selectPos);
@@ -248,7 +290,7 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 showPosition = position;
-                setIndicatorPosition();
+                setIndicatorPosition(position,openImageBeans.size());
                 showMoreView();
                 if (position != selectPos && viewPager.getOffscreenPageLimit() != 1) {
                     viewPager.setOffscreenPageLimit(1);
@@ -263,15 +305,31 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
                     selectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl, openImageBeans.get(showPosition).dataPosition);
                 }
                 isFirstBacked = true;
+                OpenImageActivity.this.onPageSelected(position);
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                OpenImageActivity.this.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+                OpenImageActivity.this.onPageScrollStateChanged(state);
             }
         });
         viewPager.setCurrentItem(selectPos, false);
     }
 
-    protected void setViewTransition() {
+    private void setViewTransition() {
         ViewCompat.setTransitionName(viewPager, OpenParams.SHARE_VIEW + selectPos);
     }
 
+    /**
+     * 初始化更多View
+     */
     protected void initMoreView() {
         if (moreViewKey != null) {
             List<MoreViewOption> viewOptions = ImageLoadUtils.getInstance().getMoreViewOption(moreViewKey);
@@ -279,14 +337,15 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
                 View view = null;
                 if (moreViewOption != null && moreViewOption.getViewType() == MoreViewOption.LAYOUT_RES) {
                     view = LayoutInflater.from(this).inflate(moreViewOption.getLayoutRes(), null, false);
-                }if (moreViewOption != null && moreViewOption.getViewType() == MoreViewOption.LAYOUT_VIEW) {
+                }
+                if (moreViewOption != null && moreViewOption.getViewType() == MoreViewOption.LAYOUT_VIEW) {
                     view = moreViewOption.getView();
                 }
 
-                if (view != null){
-                    if (moreViewOption.isFollowTouch()){
+                if (view != null) {
+                    if (moreViewOption.isFollowTouch()) {
                         flTouchView.addView(view, moreViewOption.getLayoutParams());
-                    }else {
+                    } else {
                         rootView.addView(view, moreViewOption.getLayoutParams());
                     }
                     OnLoadViewFinishListener onLoadViewFinishListener = moreViewOption.getOnLoadViewFinishListener();
@@ -301,6 +360,9 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
         }
     }
 
+    /**
+     * 展示添加的更多View时回调此方法，调用时机是切换图片或停止拖动图片时
+     */
     protected void showMoreView() {
         if (moreViewOptions.size() > 0) {
             OpenImageDetail openImageDetail = openImageBeans.get(showPosition);
@@ -318,11 +380,14 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
         }
 
         View upperView;
-        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null && upperLayerOption !=null && upperLayerOption.isTouchingHide()){
+        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null && upperLayerOption != null && upperLayerOption.isTouchingHide()) {
             upperView.setVisibility(View.VISIBLE);
         }
     }
 
+    /**
+     * 隐藏添加的更多View时回调此方法，调用时机是切换图片或开始拖动图片时
+     */
     protected void touchHideMoreView() {
         if (moreViewOptions.size() > 0) {
             OpenImageDetail openImageDetail = openImageBeans.get(showPosition);
@@ -339,7 +404,7 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
             }
         }
         View upperView;
-        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null && upperLayerOption !=null && upperLayerOption.isTouchingHide()){
+        if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null && upperLayerOption != null && upperLayerOption.isTouchingHide()) {
             upperView.setVisibility(View.GONE);
         }
     }
@@ -347,7 +412,7 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
     /**
      * 设置显示指示器位置
      */
-    protected void setIndicatorPosition() {
+    protected void setIndicatorPosition(int showPosition,int total) {
         mHandler.post(() -> {
             if (indicatorType == INDICATOR_IMAGE) {//图片样式
                 if (imageIndicatorAdapter != null) {
@@ -356,7 +421,7 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
                 }
             } else if (indicatorType == INDICATOR_TEXT) {
                 if (indicatorTextBinding != null) {
-                    indicatorTextBinding.tvShowPos.setText(String.format(textFormat, showPosition + 1, openImageBeans.size()));
+                    indicatorTextBinding.tvShowPos.setText(String.format(textFormat, showPosition + 1,total));
                 }
             }
         });
@@ -491,7 +556,7 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
         }
     }
 
-    protected void addTransitionListener() {
+    private void addTransitionListener() {
         Transition transition = getWindow().getSharedElementEnterTransition();
         if (transition != null) {
             long timeMs = getIntent().getLongExtra(OpenParams.OPEN_ANIM_TIME_MS, 0);
@@ -528,29 +593,32 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
         }
     }
 
-    private void onShareTransitionEnd(){
+    /**
+     * 页面启动动画结束时回调此方法
+     */
+    protected void onShareTransitionEnd() {
         photosViewModel.transitionEndLiveData.setValue(true);
         mHandler.post(() -> {
 
-            if (upperLayerOption != null && OpenImageActivity.this.getLifecycle().getCurrentState() != Lifecycle.State.DESTROYED){
+            if (upperLayerOption != null && OpenImageActivity.this.getLifecycle().getCurrentState() != Lifecycle.State.DESTROYED) {
                 UpperLayerFragmentCreate upperLayerCreate = upperLayerOption.getUpperLayerFragmentCreate();
-                if (upperLayerCreate != null){
+                if (upperLayerCreate != null) {
                     upLayerFragment = upperLayerCreate.createLayerFragment();
                 }
-                if (upLayerFragment != null){
+                if (upLayerFragment != null) {
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     FrameLayout frameLayout = new FrameLayout(OpenImageActivity.this);
                     frameLayout.setId(R.id.upper_layer_container);
                     Bundle upperLayerBundle = getIntent().getBundleExtra(OpenParams.UPPER_LAYER_BUNDLE);
-                    if (upperLayerBundle != null){
+                    if (upperLayerBundle != null) {
                         upLayerFragment.setArguments(upperLayerBundle);
                     }
-                    if (upperLayerOption.isFollowTouch()){
-                        flTouchView.addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                    }else {
-                        rootView.addView(frameLayout,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    if (upperLayerOption.isFollowTouch()) {
+                        flTouchView.addView(frameLayout, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    } else {
+                        rootView.addView(frameLayout, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                     }
-                    transaction.replace(R.id.upper_layer_container,upLayerFragment).commitAllowingStateLoss();
+                    transaction.replace(R.id.upper_layer_container, upLayerFragment).commitAllowingStateLoss();
                 }
             }
         });
@@ -584,7 +652,7 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (canFragmentBack()){
+            if (canFragmentBack()) {
                 close(false);
             }
             return true;
@@ -592,7 +660,7 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
         return super.onKeyDown(keyCode, event);
     }
 
-    protected void setExitView() {
+    private void setExitView() {
         BackViewType backViewType = BackViewType.NO_SHARE;
         ImageView backView = null;
         ExitOnBackView.ShareExitViewBean shareExitViewBean;
@@ -633,60 +701,56 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
                     }
                     int startWidth = exitView.getWidth();
                     int startHeight = exitView.getHeight();
-                    if (exitView instanceof ShapeImageView){
-                        ShapeImageView.ShapeScaleType ShapeScaleType = ((ShapeImageView) exitView).getShapeScaleType();
-                        if (shareView instanceof PhotoView){
-                            ((PhotoView) shareView).setSrcScaleType(ShapeScaleType);
-                            if (ShapeScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP || srcScaleType == ShapeImageView.ShapeScaleType.AUTO_END_CENTER_CROP){
-                                ((PhotoView) shareView).setAutoCropHeightWidthRatio( ((ShapeImageView) exitView).getAutoCropHeightWidthRatio());
-                            }
+                    if ((exitView instanceof ShapeImageView) && (shareView instanceof PhotoView)) {
+                        ShapeImageView.ShapeScaleType shapeScaleType = ((ShapeImageView) exitView).getShapeScaleType();
+                        ((PhotoView) shareView).setSrcScaleType(shapeScaleType);
+                        if (shapeScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP || srcScaleType == ShapeImageView.ShapeScaleType.AUTO_END_CENTER_CROP) {
+                            ((PhotoView) shareView).setAutoCropHeightWidthRatio(((ShapeImageView) exitView).getAutoCropHeightWidthRatio());
                         }
-                        if (shareView instanceof PhotoView){
-                            if (((ShapeImageView) exitView).getShapeType() == ShapeImageView.ShapeType.OVAL && startWidth == startHeight){
+                        if (((ShapeImageView) exitView).getShapeType() == ShapeImageView.ShapeType.OVAL && startWidth == startHeight) {
+                            ((PhotoView) shareView).setShapeType(ShapeImageView.ShapeType.RECTANGLE);
+                            ((PhotoView) shareView).setRadius(
+                                    (int) (startWidth / 2 / touchCloseScale),
+                                    (int) (startWidth / 2 / touchCloseScale),
+                                    (int) (startWidth / 2 / touchCloseScale),
+                                    (int) (startWidth / 2 / touchCloseScale));
+                            ((PhotoView) shareView).setRelativeRadius(
+                                    (int) (startWidth / 2 / touchCloseScale),
+                                    (int) (startWidth / 2 / touchCloseScale),
+                                    (int) (startWidth / 2 / touchCloseScale),
+                                    (int) (startWidth / 2 / touchCloseScale));
+                        } else {
+                            ((PhotoView) shareView).setShapeType(((ShapeImageView) exitView).getShapeType());
+                            ((PhotoView) shareView).setRadius((int) ((int) ((ShapeImageView) exitView).getLeftTopRadius() / touchCloseScale),
+                                    (int) ((int) ((ShapeImageView) exitView).getRightTopRadius() / touchCloseScale),
+                                    (int) ((int) ((ShapeImageView) exitView).getRightBottomRadius() / touchCloseScale),
+                                    (int) ((int) ((ShapeImageView) exitView).getLeftBottomRadius() / touchCloseScale));
+                            ((PhotoView) shareView).setRelativeRadius((int) ((int) ((ShapeImageView) exitView).getStartTopRadius() / touchCloseScale),
+                                    (int) ((int) ((ShapeImageView) exitView).getEndTopRadius() / touchCloseScale),
+                                    (int) ((int) ((ShapeImageView) exitView).getEndBottomRadius() / touchCloseScale),
+                                    (int) ((int) ((ShapeImageView) exitView).getStartBottomRadius() / touchCloseScale));
+                        }
+                    } else if (imageShapeParams != null && (shareView instanceof PhotoView)) {
+                        if (imageShapeParams.shapeType == ImageShapeType.OVAL) {
+                            if (startWidth == startHeight) {
                                 ((PhotoView) shareView).setShapeType(ShapeImageView.ShapeType.RECTANGLE);
                                 ((PhotoView) shareView).setRadius(
-                                        (int) (startWidth/2/touchCloseScale),
-                                        (int) (startWidth/2/touchCloseScale),
-                                        (int) (startWidth/2/touchCloseScale),
-                                        (int) (startWidth/2/touchCloseScale));
-                                ((PhotoView) shareView).setRelativeRadius(
-                                        (int) (startWidth/2/touchCloseScale),
-                                        (int) (startWidth/2/touchCloseScale),
-                                        (int) (startWidth/2/touchCloseScale),
-                                        (int) (startWidth/2/touchCloseScale));
-                            }else {
-                                ((PhotoView) shareView).setShapeType(((ShapeImageView) exitView).getShapeType());
-                                ((PhotoView) shareView).setRadius((int) ((int) ((ShapeImageView) exitView).getLeftTopRadius()/touchCloseScale),
-                                        (int) ((int) ((ShapeImageView) exitView).getRightTopRadius()/touchCloseScale),
-                                        (int) ((int) ((ShapeImageView) exitView).getRightBottomRadius()/touchCloseScale),
-                                        (int) ((int) ((ShapeImageView) exitView).getLeftBottomRadius()/touchCloseScale));
-                                ((PhotoView) shareView).setRelativeRadius((int) ((int) ((ShapeImageView) exitView).getStartTopRadius()/touchCloseScale),
-                                        (int) ((int) ((ShapeImageView) exitView).getEndTopRadius()/touchCloseScale),
-                                        (int) ((int) ((ShapeImageView) exitView).getEndBottomRadius()/touchCloseScale),
-                                        (int) ((int) ((ShapeImageView) exitView).getStartBottomRadius()/touchCloseScale));
-                            }
-                        }
-                    }else if (imageShapeParams != null && (shareView instanceof PhotoView)){
-                        if (imageShapeParams.shapeType == ImageShapeType.OVAL){
-                            if (startWidth == startHeight){
-                                ((PhotoView) shareView).setShapeType(ShapeImageView.ShapeType.RECTANGLE);
-                                ((PhotoView) shareView).setRadius(
-                                        (int) (startWidth/2/touchCloseScale),
-                                        (int) (startWidth/2/touchCloseScale),
-                                        (int) (startWidth/2/touchCloseScale),
-                                        (int) (startWidth/2/touchCloseScale));
-                            }else {
+                                        (int) (startWidth / 2 / touchCloseScale),
+                                        (int) (startWidth / 2 / touchCloseScale),
+                                        (int) (startWidth / 2 / touchCloseScale),
+                                        (int) (startWidth / 2 / touchCloseScale));
+                            } else {
                                 ((PhotoView) shareView).setShapeType(ShapeImageView.ShapeType.OVAL);
                             }
-                        }else {
+                        } else if (imageShapeParams.rectangleConnerRadius != null) {
                             ((PhotoView) shareView).setShapeType(ShapeImageView.ShapeType.RECTANGLE);
-                            ((PhotoView) shareView).setRadius((int) (imageShapeParams.rectangleConnerRadius.leftTopRadius/touchCloseScale),
-                                    (int) (imageShapeParams.rectangleConnerRadius.rightTopRadius/touchCloseScale),
-                                    (int) (imageShapeParams.rectangleConnerRadius.rightBottomRadius/touchCloseScale),
-                                    (int) (imageShapeParams.rectangleConnerRadius.leftBottomRadius/touchCloseScale));
+                            ((PhotoView) shareView).setRadius((int) (imageShapeParams.rectangleConnerRadius.leftTopRadius / touchCloseScale),
+                                    (int) (imageShapeParams.rectangleConnerRadius.rightTopRadius / touchCloseScale),
+                                    (int) (imageShapeParams.rectangleConnerRadius.rightBottomRadius / touchCloseScale),
+                                    (int) (imageShapeParams.rectangleConnerRadius.leftBottomRadius / touchCloseScale));
                         }
                     }
-                    if (shareView instanceof PhotoView){
+                    if (shareView instanceof PhotoView) {
                         ((PhotoView) shareView).setStartWidth(startWidth);
                         ((PhotoView) shareView).setStartHeight(startHeight);
                     }
@@ -753,10 +817,11 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
 
     /**
      * 关闭页面
+     *
      * @param isTouchClose 是否是拖动关闭
      */
     protected void close(boolean isTouchClose) {
-        if (isNoneClickView()){
+        if (isNoneClickView()) {
             finishAfterTransition();
             return;
         }
@@ -787,14 +852,14 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
     }
 
     private Fragment getCurrentFragment() {
-        return getSupportFragmentManager().findFragmentByTag("f"+showPosition);
+        return getSupportFragmentManager().findFragmentByTag("f" + showPosition);
     }
 
-    public boolean canFragmentBack(){
+    protected boolean canFragmentBack() {
         boolean canLayerBack = true;
         boolean canImageBack = true;
         //首先判断最上层
-        if (upLayerFragment != null){
+        if (upLayerFragment != null) {
             canLayerBack = upLayerFragment.onKeyBackDown();
         }
         //其次判断下层图片页面
@@ -806,19 +871,4 @@ public class OpenImageActivity extends BaseActivity implements TouchCloseLayout.
         return canLayerBack && canImageBack;
     }
 
-    public View getBgView() {
-        return vBg;
-    }
-
-    public FrameLayout getTouchView() {
-        return flTouchView;
-    }
-
-    public ViewPager2 getViewPager() {
-        return viewPager;
-    }
-
-    public TouchCloseLayout getRootView() {
-        return rootView;
-    }
 }

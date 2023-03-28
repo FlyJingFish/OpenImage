@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name=".OpenImageActivity"
+            android:name=".StandardOpenImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:theme="@style/Theme.OpenImageTheme">

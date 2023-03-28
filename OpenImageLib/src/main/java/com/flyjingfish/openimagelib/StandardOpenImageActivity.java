@@ -1,21 +1,20 @@
-package com.flyjingfish.openimage.openImpl;
+package com.flyjingfish.openimagelib;
 
 import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.flyjingfish.openimage.databinding.MyActivityViewpagerBinding;
-import com.flyjingfish.openimagelib.OpenImageActivity;
+import com.flyjingfish.openimagelib.databinding.OpenImageActivityViewpagerBinding;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 
-public class MyBigImageActivity extends OpenImageActivity {
+public class StandardOpenImageActivity extends OpenImageActivity implements TouchCloseLayout.OnTouchCloseListener {
 
-    private MyActivityViewpagerBinding rootBinding;
+    private OpenImageActivityViewpagerBinding rootBinding;
 
     @Override
     public View getContentView() {
-        rootBinding = MyActivityViewpagerBinding.inflate(getLayoutInflater());
+        rootBinding = OpenImageActivityViewpagerBinding.inflate(getLayoutInflater());
         return rootBinding.getRoot();
     }
 
@@ -23,7 +22,6 @@ public class MyBigImageActivity extends OpenImageActivity {
     public View getBgView() {
         return rootBinding.vBg;
     }
-
 
     @Override
     public FrameLayout getViewPager2Container() {

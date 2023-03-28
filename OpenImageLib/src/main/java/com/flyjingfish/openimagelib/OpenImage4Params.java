@@ -73,7 +73,7 @@ class OpenImage4Params {
     protected Bundle upperLayerBundle;
     protected volatile boolean isMapShareView = true;
     protected String drawableKey;
-    protected Class<?> openImageActivityCls = OpenImageActivity.class;
+    protected Class<?> openImageActivityCls = StandardOpenImageActivity.class;
     protected Bundle openImageActivityClsBundle;
     protected String openImageActivityClsBundleKey;
     protected boolean isNoneClickView = false;
