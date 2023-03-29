@@ -2,11 +2,11 @@
 
 ## 1.7.0
 
-1，修复使用ShapeImageView长图在返回时的显示问题
+1，修复使用 ShapeImageView 长图在返回时的显示问题
 
 ## 1.6.9
 
-1，进一步完善可定制的OpenImageActivity页面
+1，进一步完善可定制的 OpenImageActivity 页面
 
 ## 1.6.8
 
@@ -22,7 +22,7 @@
 
 ## 1.6.6
 
-1、修复使用 设置数据包含 Parcelable 类型数据 时，打不开页面的问题
+1、修复使用设置数据包含 Parcelable 类型数据时，打不开页面的问题
 
 
 ## 1.6.5
@@ -45,35 +45,35 @@
 
 ## 1.6.2
 
-1、修复Layer相关bug
+1、修复 Layer 相关 bug
 
-2、修复部分情况下视频播放后，loading依旧在显示的问题
+2、修复部分情况下视频播放后，loading 依旧在显示的问题
 
 ## 1.6.1
 
-1、针对 1.6.0 第1点中的debug模式判断方法修改，改为根据使用者的开发配置来判定是否是debug模式
+1、针对 1.6.0 第1点中的 debug 模式判断方法修改，改为根据使用者的开发配置来判定是否是 debug 模式
 
-2、升级ShapeImageView到1.4.9
+2、升级 ShapeImageView 到1.4.9
 
 ## 1.6.0
 
-1、修改OpenImage.show() 时校验setClickPosition改为只在Debug模式下抛异常，正式环境默认采取无ClickView的模式打开大图
+1、修改 OpenImage.show() 时校验 setClickPosition 改为只在 Debug 模式下抛异常，正式环境默认采取无 ClickView 的模式打开大图
 
 
 ## 1.5.9
 
-1、OpenImageFullLib库新增支持全屏播放视频
+1、OpenImageFullLib 库新增支持全屏播放视频
 
-2、图片视频页面Fragment 和 UpperLayerFragment 新增onKeyBackDown方法（点击物理返回按钮时调用 true 可返回 false不可返回）
+2、图片视频页面 Fragment 和 UpperLayerFragment 新增 onKeyBackDown 方法（点击物理返回按钮时调用 true 可返回 false不可返回）
 
 
 ## 1.5.8
 
-1、新增支持无点击View是也可打开大图页面
+1、新增支持无点击 View 时也可打开大图页面，使用 setNoneClickView 方法
 
-2、修改UpperLayerFragmentCreate 的方法名 createVideoFragment --> createLayerFragment
+2、修改 UpperLayerFragmentCreate 的方法名 createVideoFragment --> createLayerFragment
 
-3、上下滑动时拖动关闭的适配Rtl
+3、上下滑动时拖动关闭的适配 Rtl
 
 
 ## 1.5.7
