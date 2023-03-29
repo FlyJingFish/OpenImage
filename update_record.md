@@ -1,9 +1,12 @@
 # OpenImage 更新日志
 
+## 1.7.0
+
+1，修复使用ShapeImageView长图在返回时的显示问题
+
 ## 1.6.9
 
 1，进一步完善可定制的OpenImageActivity页面
-
 
 ## 1.6.8
 
