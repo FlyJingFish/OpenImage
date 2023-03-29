@@ -111,6 +111,13 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         this.mStartHeight = mStartHeight;
     }
 
+    public float getStartWidth() {
+        return mStartWidth;
+    }
+
+    public float getStartHeight() {
+        return mStartHeight;
+    }
 
     private OnGestureListener onGestureListener = new OnGestureListener() {
         @Override
@@ -535,7 +542,16 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setSrcScaleType(ShapeImageView.ShapeScaleType scaleType) {
         mSrcScaleType = scaleType;
-        update();
+        if (isExitMode) {
+            if (scaleType == ShapeImageView.ShapeScaleType.START_CROP
+                    || scaleType == ShapeImageView.ShapeScaleType.END_CROP
+                    || scaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP
+                    || scaleType == ShapeImageView.ShapeScaleType.AUTO_END_CENTER_CROP) {
+                update();
+            }
+        }else {
+            update();
+        }
     }
 
     public boolean isZoomable() {
@@ -804,13 +820,13 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst;
-            if (isNoneClickView){
+            if (isNoneClickView) {
                 if (OpenImageConfig.getInstance().isReadMode()) {
                     boolean bigImageRule = maxScale * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * Math.max(viewWidth, viewHeight);
                     if (bigImageRule) {
                         mTempDst = new RectF(0, 0, viewWidth, viewWidth * scaleImageHW);
                         isBigImage = true;
-                    }else {
+                    } else {
                         if (scaleImageHW > 1) {
                             if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
                                 mMinScale = DEFAULT_MIN_SCALE;
@@ -835,7 +851,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 if ((int) mBaseRotation % 180 != 0) {
                     mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
                 }
-            }else if (isExitMode) {
+            } else if (isExitMode) {
                 if (isBigImage && (mSrcScaleType == ShapeImageView.ShapeScaleType.START_CROP || mSrcScaleType == ShapeImageView.ShapeScaleType.END_CROP || autoScaleType == ShapeImageView.ShapeScaleType.START_CROP || autoScaleType == ShapeImageView.ShapeScaleType.END_CROP || autoScaleType == ShapeImageView.ShapeScaleType.CENTER_CROP)) {
                     mTempDst = new RectF(0, 0, viewWidth, viewWidth * scaleImageHW);
                 } else {
@@ -1239,7 +1255,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
     }
 
-    public void registerDisplayListener(){
+    public void registerDisplayListener() {
         if (screenOrientationEvent != null) {
             screenOrientationEvent.unRegisterDisplayListener();
             screenOrientationEvent.registerDisplayListener(onOrientationListener);
