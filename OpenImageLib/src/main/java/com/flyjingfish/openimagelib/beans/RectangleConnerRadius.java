@@ -1,8 +1,9 @@
 package com.flyjingfish.openimagelib.beans;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class RectangleConnerRadius implements Serializable {
+public class RectangleConnerRadius implements Parcelable {
     public float leftTopRadius;
     public float rightTopRadius;
     public float rightBottomRadius;
@@ -32,4 +33,44 @@ public class RectangleConnerRadius implements Serializable {
         this.rightBottomRadius = radius;
         this.leftBottomRadius = radius;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeFloat(this.leftTopRadius);
+        dest.writeFloat(this.rightTopRadius);
+        dest.writeFloat(this.rightBottomRadius);
+        dest.writeFloat(this.leftBottomRadius);
+    }
+
+    public void readFromParcel(Parcel source) {
+        this.leftTopRadius = source.readFloat();
+        this.rightTopRadius = source.readFloat();
+        this.rightBottomRadius = source.readFloat();
+        this.leftBottomRadius = source.readFloat();
+    }
+
+    protected RectangleConnerRadius(Parcel in) {
+        this.leftTopRadius = in.readFloat();
+        this.rightTopRadius = in.readFloat();
+        this.rightBottomRadius = in.readFloat();
+        this.leftBottomRadius = in.readFloat();
+    }
+
+    public static final Parcelable.Creator<RectangleConnerRadius> CREATOR = new Parcelable.Creator<RectangleConnerRadius>() {
+        @Override
+        public RectangleConnerRadius createFromParcel(Parcel source) {
+            return new RectangleConnerRadius(source);
+        }
+
+        @Override
+        public RectangleConnerRadius[] newArray(int size) {
+            return new RectangleConnerRadius[size];
+        }
+    };
 }

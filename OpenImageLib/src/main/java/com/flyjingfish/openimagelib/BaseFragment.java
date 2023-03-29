@@ -53,13 +53,12 @@ abstract class BaseFragment extends BaseInnerFragment {
             dataKey = bundle.getString(OpenParams.IMAGE);
             imageDetail = ImageLoadUtils.getInstance().getOpenImageDetail(dataKey);
             openImageUrl = imageDetail.openImageUrl;
-            imageDiskMode = (ImageDiskMode) bundle.getSerializable(OpenParams.IMAGE_DISK_MODE);
-            if (imageDiskMode == null){
-                imageDiskMode = ImageDiskMode.NONE;
-            }
+            int imageDiskModeInt = bundle.getInt(OpenParams.IMAGE_DISK_MODE,-1);
+            imageDiskMode = imageDiskModeInt == -1 ? ImageDiskMode.NONE : ImageDiskMode.values()[imageDiskModeInt];
             showPosition = bundle.getInt(OpenParams.SHOW_POSITION);
             clickPosition = bundle.getInt(OpenParams.CLICK_POSITION);
-            srcScaleType = (ShapeImageView.ShapeScaleType) bundle.getSerializable(OpenParams.SRC_SCALE_TYPE);
+            int srcScaleTypeInt = bundle.getInt(OpenParams.SRC_SCALE_TYPE,-1);
+            srcScaleType = srcScaleTypeInt == -1 ? null : ShapeImageView.ShapeScaleType.values()[srcScaleTypeInt];;
             errorResId = bundle.getInt(OpenParams.ERROR_RES_ID,0);
             String itemLoadKey = bundle.getString(OpenParams.ITEM_LOAD_KEY);
             itemLoadHelper = ImageLoadUtils.getInstance().getItemLoadHelper(itemLoadKey);

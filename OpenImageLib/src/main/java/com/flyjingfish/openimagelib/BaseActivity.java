@@ -243,7 +243,8 @@ class BaseActivity extends AppCompatActivity {
 
     protected void parseIntent(){
 
-        srcScaleType = (ShapeImageView.ShapeScaleType) getIntent().getSerializableExtra(OpenParams.SRC_SCALE_TYPE);
+        int srcScaleTypeInt = getIntent().getIntExtra(OpenParams.SRC_SCALE_TYPE,-1);
+        srcScaleType = srcScaleTypeInt == -1 ? null : ShapeImageView.ShapeScaleType.values()[srcScaleTypeInt];
         dataKey = getIntent().getStringExtra(OpenParams.IMAGES);
         openImageBeans = ImageLoadUtils.getInstance().getOpenImageDetailData(dataKey);
         if (openImageBeans == null){
@@ -252,7 +253,8 @@ class BaseActivity extends AppCompatActivity {
         }
         int clickPosition = getIntent().getIntExtra(OpenParams.CLICK_POSITION, 0);
 
-        imageDiskMode = (ImageDiskMode) getIntent().getSerializableExtra(OpenParams.IMAGE_DISK_MODE);
+        int imageDiskModeInt = getIntent().getIntExtra(OpenParams.IMAGE_DISK_MODE,-1);
+        imageDiskMode = imageDiskModeInt == -1 ? null : ImageDiskMode.values()[imageDiskModeInt];
 
         itemLoadKey = getIntent().getStringExtra(OpenParams.ITEM_LOAD_KEY);
         selectPos = 0;
@@ -279,6 +281,6 @@ class BaseActivity extends AppCompatActivity {
         onBackView = ImageLoadUtils.getInstance().getOnBackView(onBackViewKey);
         clickContextKey = getIntent().getStringExtra(OpenParams.CONTEXT_KEY);
         isNoneClickView = getIntent().getBooleanExtra(OpenParams.NONE_CLICK_VIEW,false);
-        imageShapeParams = (ImageShapeParams) getIntent().getSerializableExtra(OpenParams.IMAGE_SHAPE_PARAMS);
+        imageShapeParams = (ImageShapeParams) getIntent().getParcelableExtra(OpenParams.IMAGE_SHAPE_PARAMS);
     }
 }

@@ -265,8 +265,12 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                 bundle.putInt(OpenParams.SHOW_POSITION, position);
                 bundle.putInt(OpenParams.ERROR_RES_ID, errorResId);
                 bundle.putInt(OpenParams.CLICK_POSITION, selectPos);
-                bundle.putSerializable(OpenParams.IMAGE_DISK_MODE, imageDiskMode);
-                bundle.putSerializable(OpenParams.SRC_SCALE_TYPE, srcScaleType);
+                if (imageDiskMode != null){
+                    bundle.putInt(OpenParams.IMAGE_DISK_MODE, imageDiskMode.ordinal());
+                }
+                if (srcScaleType != null){
+                    bundle.putInt(OpenParams.SRC_SCALE_TYPE, srcScaleType.ordinal());
+                }
                 bundle.putString(OpenParams.ITEM_LOAD_KEY, itemLoadKey);
                 bundle.putBoolean(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
                 bundle.putString(OpenParams.ON_ITEM_CLICK_KEY, onItemCLickKey);

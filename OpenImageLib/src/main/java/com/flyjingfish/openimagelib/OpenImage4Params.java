@@ -138,8 +138,13 @@ class OpenImage4Params {
         intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);
         intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, OpenImageConfig.getInstance().isDisEnableTouchClose());
-        intent.putExtra(OpenParams.SRC_SCALE_TYPE, srcImageViewShapeScaleType != null ? srcImageViewShapeScaleType : ShapeImageView.ShapeScaleType.getType(srcImageViewScaleType));
-        intent.putExtra(OpenParams.IMAGE_DISK_MODE, imageDiskMode);
+        ShapeImageView.ShapeScaleType shapeScaleType = srcImageViewShapeScaleType != null ? srcImageViewShapeScaleType : ShapeImageView.ShapeScaleType.getType(srcImageViewScaleType);
+        if (shapeScaleType != null){
+            intent.putExtra(OpenParams.SRC_SCALE_TYPE, shapeScaleType.ordinal());
+        }
+        if (imageDiskMode != null){
+            intent.putExtra(OpenParams.IMAGE_DISK_MODE, imageDiskMode.ordinal());
+        }
         intent.putExtra(OpenParams.ERROR_RES_ID, errorResId);
         intent.putExtra(OpenParams.ITEM_LOAD_KEY, itemLoadHelperKey);
         intent.putExtra(OpenParams.TOUCH_CLOSE_SCALE, OpenImageConfig.getInstance().getTouchCloseScale());
