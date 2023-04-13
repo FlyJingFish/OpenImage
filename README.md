@@ -257,14 +257,14 @@ OpenImage.with(activity)
         //设置点击监听（可不设置）
         .setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(BaseFragment fragment, OpenImageUrl openImageUrl, int position) {
+            public void onItemClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
     
             }
         })
         //设置长按图片监听（可不设置）
         .setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
-            public void onItemLongClick(BaseFragment fragment, OpenImageUrl openImageUrl, int position) {
+            public void onItemLongClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
             
             }
         })
