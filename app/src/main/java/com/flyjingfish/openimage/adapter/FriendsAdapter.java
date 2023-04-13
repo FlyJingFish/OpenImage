@@ -11,18 +11,15 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.flyjingfish.openimage.bean.ImageItem;
-import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.R;
+import com.flyjingfish.openimage.bean.ImageItem;
 import com.flyjingfish.openimage.databinding.ItemFriendImagesBinding;
 import com.flyjingfish.openimage.databinding.ItemFriendVideoBinding;
+import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.openImpl.FriendLayerFragmentCreateImpl;
 import com.flyjingfish.openimage.openImpl.FriendsVideoFragmentCreateImpl;
 import com.flyjingfish.openimage.openImpl.MyBigImageActivity;
-import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.OpenImage;
-import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
-import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 import java.util.List;
@@ -79,23 +76,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RvBaseHolder> {
 
         View.OnClickListener onClickListener = v -> OpenImage.with(holder.itemView.getContext()).setClickImageView(binding.ivImage)
                 .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
-                .setImageUrl(data).setImageDiskMode(MyImageLoader.imageDiskMode)
-                .setItemLoadHelper(new ItemLoadHelper() {
-                    @Override
-                    public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
-                        MyImageLoader.getInstance().loadRoundCorner(imageView, imageUrl, 10, overrideWidth, overrideHeight, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder,  new MyImageLoader.OnImageLoadListener() {
-                            @Override
-                            public void onSuccess() {
-                                onLoadCoverImageListener.onLoadImageSuccess();
-                            }
-
-                            @Override
-                            public void onFailed() {
-                                onLoadCoverImageListener.onLoadImageFailed();
-                            }
-                        });
-                    }
-                })
+                .setImageUrl(data)
                 .setOpenImageActivityCls(MyBigImageActivity.class)
                 .setVideoFragmentCreate(new FriendsVideoFragmentCreateImpl())
                 .setAutoScrollScanPosition(true)

@@ -13,8 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
-import com.flyjingfish.openimagelib.enums.ImageDiskMode;
-import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
@@ -28,9 +26,9 @@ abstract class BaseFragment extends BaseInnerFragment {
     protected Handler mHandler = new Handler(Looper.getMainLooper());
     protected boolean isLoadSuccess;
     protected boolean disableClickClose;
-    protected ImageDiskMode imageDiskMode;
     protected int errorResId;
     protected Drawable coverDrawable;
+    protected Drawable smallCoverDrawable;
     protected boolean isNoneClickView;
     private String dataKey;
 
@@ -42,7 +40,7 @@ abstract class BaseFragment extends BaseInnerFragment {
     protected boolean isStartCoverAnim = true;
     protected ShapeImageView.ShapeScaleType srcScaleType;
     protected AnimatorSet coverAnim;
-    protected ItemLoadHelper itemLoadHelper;
+//    protected ItemLoadHelper itemLoadHelper;
     protected float autoAspectRadio;
 
     @Override
@@ -53,15 +51,11 @@ abstract class BaseFragment extends BaseInnerFragment {
             dataKey = bundle.getString(OpenParams.IMAGE);
             imageDetail = ImageLoadUtils.getInstance().getOpenImageDetail(dataKey);
             openImageUrl = imageDetail.openImageUrl;
-            int imageDiskModeInt = bundle.getInt(OpenParams.IMAGE_DISK_MODE,-1);
-            imageDiskMode = imageDiskModeInt == -1 ? ImageDiskMode.NONE : ImageDiskMode.values()[imageDiskModeInt];
             showPosition = bundle.getInt(OpenParams.SHOW_POSITION);
             clickPosition = bundle.getInt(OpenParams.CLICK_POSITION);
             int srcScaleTypeInt = bundle.getInt(OpenParams.SRC_SCALE_TYPE,-1);
             srcScaleType = srcScaleTypeInt == -1 ? null : ShapeImageView.ShapeScaleType.values()[srcScaleTypeInt];;
             errorResId = bundle.getInt(OpenParams.ERROR_RES_ID,0);
-            String itemLoadKey = bundle.getString(OpenParams.ITEM_LOAD_KEY);
-            itemLoadHelper = ImageLoadUtils.getInstance().getItemLoadHelper(itemLoadKey);
             disableClickClose = getArguments().getBoolean(OpenParams.DISABLE_CLICK_CLOSE,false);
             String onItemCLickKey = getArguments().getString(OpenParams.ON_ITEM_CLICK_KEY);
             String onItemLongCLickKey = getArguments().getString(OpenParams.ON_ITEM_LONG_CLICK_KEY);
@@ -74,6 +68,7 @@ abstract class BaseFragment extends BaseInnerFragment {
                 onItemLongClickListeners.add(onItemLongClickListener);
             }
             coverDrawable = ImageLoadUtils.getInstance().getCoverDrawable(bundle.getString(OpenParams.OPEN_COVER_DRAWABLE));
+            smallCoverDrawable = ImageLoadUtils.getInstance().getSmallCoverDrawable(bundle.getString(OpenParams.OPEN_COVER_DRAWABLE));
 
             autoAspectRadio = bundle.getFloat(OpenParams.AUTO_ASPECT_RATIO,0);
             isNoneClickView = bundle.getBoolean(OpenParams.NONE_CLICK_VIEW,false);
@@ -100,7 +95,6 @@ abstract class BaseFragment extends BaseInnerFragment {
             coverAnim.removeAllListeners();
             coverAnim.cancel();
         }
-        itemLoadHelper = null;
         coverDrawable = null;
         mHandler.removeCallbacksAndMessages(null);
     }

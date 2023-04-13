@@ -374,6 +374,17 @@ class OpenImage4ParseData extends OpenImage4Params {
         ImageLoadUtils.getInstance().setCanOpenOpenImageActivity(contextKey,false);
         OpenImageUrl openImageUrl = openImageUrls.get(clickDataPosition);
         Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = () -> {
+            Drawable drawable;
+            if (viewPair != null && viewPair.first instanceof ImageView && (drawable = ((ImageView) viewPair.first).getDrawable()) != null){
+                String key = UUID.randomUUID().toString();
+                intent.putExtra(OpenParams.OPEN_COVER_DRAWABLE, key);
+                ImageLoadUtils.getInstance().setSmallCoverDrawable(key, drawable);
+                startActivity(intent, viewPair, key);
+            }else {
+                startActivity(intent, viewPair, null);
+            }
+        };
         OpenImageConfig.getInstance().getBigImageHelper().loadImage(context, ImageLoadUtils.getInstance().getImageLoadSuccess(openImageUrl.getImageUrl()) ? openImageUrl.getImageUrl() : openImageUrl.getCoverImageUrl(), new OnLoadBigImageListener() {
             @Override
             public void onLoadImageSuccess(Drawable drawable) {
@@ -387,10 +398,10 @@ class OpenImage4ParseData extends OpenImage4Params {
             @Override
             public void onLoadImageFailed() {
                 handler.removeCallbacksAndMessages(null);
-                startActivity(intent, viewPair, null);
+                runnable.run();
             }
         });
-        handler.postDelayed(() -> startActivity(intent, viewPair, null), 100);
+        handler.postDelayed(runnable, 100);
     }
 
     private void startActivity(Intent intent, Pair<View, String> viewPair, String drawableKey) {
@@ -419,15 +430,16 @@ class OpenImage4ParseData extends OpenImage4Params {
             }
         } else if (!TextUtils.isEmpty(drawableKey)) {
             ImageLoadUtils.getInstance().clearCoverDrawable(drawableKey);
+            ImageLoadUtils.getInstance().clearSmallCoverDrawable(drawableKey);
         }
         isStartActivity = true;
     }
 
     private void releaseImageLoadUtilMap() {
         ImageLoadUtils.getInstance().clearCanOpenOpenImageActivity(contextKey);
-        ImageLoadUtils.getInstance().clearItemLoadHelper(itemLoadHelperKey);
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
         ImageLoadUtils.getInstance().clearCoverDrawable(drawableKey);
+        ImageLoadUtils.getInstance().clearSmallCoverDrawable(drawableKey);
         ImageLoadUtils.getInstance().clearPageTransformers(pageTransformersKey);
         ImageLoadUtils.getInstance().clearOnItemClickListener(onItemClickListenerKey);
         ImageLoadUtils.getInstance().clearOnItemLongClickListener(onItemLongClickListenerKey);

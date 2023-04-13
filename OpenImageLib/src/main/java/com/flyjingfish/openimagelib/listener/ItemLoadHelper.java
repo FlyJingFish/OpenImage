@@ -5,6 +5,10 @@ import android.widget.ImageView;
 
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 
+/**
+ * 已被废弃请不要调用
+ */
+@Deprecated
 public interface ItemLoadHelper {
     /**
      *

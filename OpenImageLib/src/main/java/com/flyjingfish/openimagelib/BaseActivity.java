@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
-import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
@@ -43,7 +42,6 @@ class BaseActivity extends AppCompatActivity {
     protected int showPosition;
     protected int selectPos;
     protected boolean isCallClosed;
-    protected String itemLoadKey;
     protected String textFormat = "%1$d/%2$d";
     protected String onSelectKey;
     protected String openCoverKey;
@@ -64,7 +62,7 @@ class BaseActivity extends AppCompatActivity {
     protected OpenImageIndicatorTextBinding indicatorTextBinding;
     protected ImageIndicatorAdapter imageIndicatorAdapter;
     protected OpenImageOrientation orientation;
-    protected ImageDiskMode imageDiskMode;
+//    protected ImageDiskMode imageDiskMode;
     protected ShapeImageView.ShapeScaleType srcScaleType;
     protected OnSelectMediaListener onSelectMediaListener;
     protected ObjectAnimator wechatEffectAnim;
@@ -253,10 +251,6 @@ class BaseActivity extends AppCompatActivity {
         }
         int clickPosition = getIntent().getIntExtra(OpenParams.CLICK_POSITION, 0);
 
-        int imageDiskModeInt = getIntent().getIntExtra(OpenParams.IMAGE_DISK_MODE,-1);
-        imageDiskMode = imageDiskModeInt == -1 ? null : ImageDiskMode.values()[imageDiskModeInt];
-
-        itemLoadKey = getIntent().getStringExtra(OpenParams.ITEM_LOAD_KEY);
         selectPos = 0;
         for (int i = 0; i < openImageBeans.size(); i++) {
             OpenImageDetail openImageBean = openImageBeans.get(i);

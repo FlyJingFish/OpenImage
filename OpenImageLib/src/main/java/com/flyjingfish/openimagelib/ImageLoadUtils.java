@@ -22,6 +22,7 @@ class ImageLoadUtils {
     private HashMap<String, Boolean> imageLoadSuccessMap = new HashMap<>();
     private HashMap<String, ItemLoadHelper> itemLoadHelperHashMap = new HashMap<>();
     private HashMap<String, Drawable> coverDrawableHashMap = new HashMap<>();
+    private HashMap<String, Drawable> smallCoverDrawableHashMap = new HashMap<>();
     private HashMap<String, OnSelectMediaListener> onSelectMediaListenerHashMap = new HashMap<>();
     private HashMap<String, List<ViewPager2.PageTransformer>> pageTransformerMap = new HashMap<>();
     private HashMap<String, OnItemClickListener> onItemClickListenerHashMap = new HashMap<>();
@@ -83,6 +84,18 @@ class ImageLoadUtils {
 
     public void clearCoverDrawable(String key) {
         coverDrawableHashMap.remove(key);
+    }
+
+    public void setSmallCoverDrawable(String key, Drawable drawable) {
+        smallCoverDrawableHashMap.put(key, drawable);
+    }
+
+    public Drawable getSmallCoverDrawable(String key) {
+        return smallCoverDrawableHashMap.get(key);
+    }
+
+    public void clearSmallCoverDrawable(String key) {
+        smallCoverDrawableHashMap.remove(key);
     }
 
     public interface OnBackView {

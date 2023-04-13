@@ -258,22 +258,12 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 设置您应用内图片加载引擎设置的硬盘缓存模式，例如你设置的硬盘缓存模式是
-     *
-     * <p>例如你设置的硬盘缓存模式是:
-     * <ul>
-     *  <li> 缓存包含原图，那你应该设置{@link ImageDiskMode#CONTAIN_ORIGINAL}
-     *      <ul> <li>(例如Glide设置diskCacheStrategy()为DiskCacheStrategy.ALL或DiskCacheStrategy.DATA)</li></ul>
-     *  <li> 缓存只保存目标图片大小的，那你应该设置{@link ImageDiskMode#RESULT}
-     *      <ul> <li>(例如Glide设置diskCacheStrategy()为DiskCacheStrategy.RESOURCE)</li></ul>
-     *  <li> 没有任何缓存，那你应该设置{@link ImageDiskMode#NONE}
-     *      <ul> <li>(例如Glide设置diskCacheStrategy()为DiskCacheStrategy.NONE)</li></ul>
-     * </ul>
-     * @param imageDiskMode {@link ImageDiskMode} 点击的ImageView图片所缓存的模式（建议缓存原图）
+     * 这项已被废弃请不要调用
+     * @param imageDiskMode 这项已被废弃请不要调用
      * @return {@link OpenImage}
      */
+    @Deprecated
     public OpenImage setImageDiskMode(ImageDiskMode imageDiskMode) {
-        this.imageDiskMode = imageDiskMode;
         return this;
     }
 
@@ -299,12 +289,12 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * @param itemLoadHelper 图片加载器，当图片缓存模式不包含原图时，请设置和前一页面加载图片一样的配置
+     * 这项已被废弃请不要调用
+     * @param itemLoadHelper 这项已被废弃请不要调用
      * @return {@link OpenImage}
      */
+    @Deprecated
     public OpenImage setItemLoadHelper(ItemLoadHelper itemLoadHelper) {
-        itemLoadHelperKey = UUID.randomUUID().toString();
-        ImageLoadUtils.getInstance().setItemLoadHelper(itemLoadHelperKey, itemLoadHelper);
         return this;
     }
 

@@ -1,6 +1,5 @@
 package com.flyjingfish.openimage.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 
@@ -23,8 +21,6 @@ import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.MediaType;
-import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
-import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
@@ -138,24 +134,7 @@ public class ViewPagerDemoActivity extends BaseActivity {
                         .setShowSrcImageView(true)
                         .setAutoScrollScanPosition(true)
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
-                        .setImageUrlList(datas).setImageDiskMode(MyImageLoader.imageDiskMode)
-                        .setItemLoadHelper(new ItemLoadHelper() {
-                            @Override
-                            public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
-
-                                MyImageLoader.getInstance().load(imageView, imageUrl, overrideWidth, overrideHeight, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder, new MyImageLoader.OnImageLoadListener() {
-                                    @Override
-                                    public void onSuccess() {
-                                        onLoadCoverImageListener.onLoadImageSuccess();
-                                    }
-
-                                    @Override
-                                    public void onFailed() {
-                                        onLoadCoverImageListener.onLoadImageFailed();
-                                    }
-                                });
-                            }
-                        }).addPageTransformer(new ScaleInTransformer())
+                        .setImageUrlList(datas).addPageTransformer(new ScaleInTransformer())
                         .setOpenImageStyle(R.style.DefaultPhotosTheme)
                         .setClickPosition(position).show();
             });
@@ -217,24 +196,7 @@ public class ViewPagerDemoActivity extends BaseActivity {
                         .setAutoScrollScanPosition(false)
                         .setWechatExitFillInEffect(true)
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
-                        .setImageUrlList(datas).setImageDiskMode(MyImageLoader.imageDiskMode)
-                        .setItemLoadHelper(new ItemLoadHelper() {
-                            @Override
-                            public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
-
-                                MyImageLoader.getInstance().load(imageView, imageUrl, overrideWidth, overrideHeight, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder, new MyImageLoader.OnImageLoadListener() {
-                                    @Override
-                                    public void onSuccess() {
-                                        onLoadCoverImageListener.onLoadImageSuccess();
-                                    }
-
-                                    @Override
-                                    public void onFailed() {
-                                        onLoadCoverImageListener.onLoadImageFailed();
-                                    }
-                                });
-                            }
-                        }).addPageTransformer(new ScaleInTransformer())
+                        .setImageUrlList(datas).addPageTransformer(new ScaleInTransformer())
                         .setOpenImageStyle(R.style.DefaultPhotosTheme)
                         .setClickPosition(position).show();
             });
@@ -286,24 +248,7 @@ public class ViewPagerDemoActivity extends BaseActivity {
                     }
                 }).setShowSrcImageView(true)
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
-                        .setImageUrlList(mDatas).setImageDiskMode(MyImageLoader.imageDiskMode)
-                        .setItemLoadHelper(new ItemLoadHelper() {
-                            @Override
-                            public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
-
-                                MyImageLoader.getInstance().load(imageView, imageUrl, overrideWidth, overrideHeight, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder, new MyImageLoader.OnImageLoadListener() {
-                                    @Override
-                                    public void onSuccess() {
-                                        onLoadCoverImageListener.onLoadImageSuccess();
-                                    }
-
-                                    @Override
-                                    public void onFailed() {
-                                        onLoadCoverImageListener.onLoadImageFailed();
-                                    }
-                                });
-                            }
-                        })
+                        .setImageUrlList(mDatas)
                         .setAutoScrollScanPosition(false)
                         .setOnSelectMediaListener(new OnSelectMediaListener() {
                             boolean isFirst = true;

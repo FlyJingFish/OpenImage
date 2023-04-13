@@ -258,20 +258,15 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
 
                 }
                 Bundle bundle = new Bundle();
-//                bundle.putSerializable(OpenParams.IMAGE, openImageBean);
                 String beanKey = contextKey + openImageBean;
                 bundle.putString(OpenParams.IMAGE, beanKey);
                 ImageLoadUtils.getInstance().setOpenImageDetail(beanKey, openImageBean);
                 bundle.putInt(OpenParams.SHOW_POSITION, position);
                 bundle.putInt(OpenParams.ERROR_RES_ID, errorResId);
                 bundle.putInt(OpenParams.CLICK_POSITION, selectPos);
-                if (imageDiskMode != null){
-                    bundle.putInt(OpenParams.IMAGE_DISK_MODE, imageDiskMode.ordinal());
-                }
                 if (srcScaleType != null){
                     bundle.putInt(OpenParams.SRC_SCALE_TYPE, srcScaleType.ordinal());
                 }
-                bundle.putString(OpenParams.ITEM_LOAD_KEY, itemLoadKey);
                 bundle.putBoolean(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
                 bundle.putString(OpenParams.ON_ITEM_CLICK_KEY, onItemCLickKey);
                 bundle.putString(OpenParams.ON_ITEM_LONG_CLICK_KEY, onItemLongCLickKey);
@@ -635,9 +630,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         super.onDestroy();
         showPosition = 0;
         mHandler.removeCallbacksAndMessages(null);
-        ImageLoadUtils.getInstance().clearItemLoadHelper(itemLoadKey);
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
         ImageLoadUtils.getInstance().clearCoverDrawable(openCoverKey);
+        ImageLoadUtils.getInstance().clearSmallCoverDrawable(openCoverKey);
         ImageLoadUtils.getInstance().clearPageTransformers(pageTransformersKey);
         ImageLoadUtils.getInstance().clearOnItemClickListener(onItemCLickKey);
         ImageLoadUtils.getInstance().clearOnItemLongClickListener(onItemLongCLickKey);

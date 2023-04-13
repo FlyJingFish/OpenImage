@@ -1,23 +1,19 @@
 package com.flyjingfish.openimage.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.flyjingfish.openimage.DataUtils;
-import com.flyjingfish.openimage.bean.ImageEntity;
 import com.flyjingfish.openimage.MyApplication;
-import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.R;
+import com.flyjingfish.openimage.bean.ImageEntity;
 import com.flyjingfish.openimage.databinding.ActivityImagesBinding;
+import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
-import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
-import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 
 import org.json.JSONArray;
@@ -108,24 +104,7 @@ public class ImagesActivity extends BaseActivity {
                         index ++;
                     }
                     OpenImage.with(ImagesActivity.this).setClickImageViews(imageViews).setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
-                            .setImageUrlList(datas).setImageDiskMode(MyImageLoader.imageDiskMode)
-                            .setItemLoadHelper(new ItemLoadHelper() {
-                                @Override
-                                public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
-
-                                    MyImageLoader.getInstance().load(imageView, imageUrl,overrideWidth,overrideHeight, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder, new MyImageLoader.OnImageLoadListener() {
-                                        @Override
-                                        public void onSuccess() {
-                                            onLoadCoverImageListener.onLoadImageSuccess();
-                                        }
-
-                                        @Override
-                                        public void onFailed() {
-                                            onLoadCoverImageListener.onLoadImageFailed();
-                                        }
-                                    });
-                                }
-                            })
+                            .setImageUrlList(datas)
                             .setAutoScrollScanPosition(true)
                             .setOnSelectMediaListener(new OnSelectMediaListener() {
                                 boolean isFirstBacked = false;

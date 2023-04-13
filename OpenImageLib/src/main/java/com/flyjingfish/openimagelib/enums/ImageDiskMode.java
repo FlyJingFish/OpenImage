@@ -1,6 +1,9 @@
 package com.flyjingfish.openimagelib.enums;
 
-
+/**
+ * 这项这是已被废弃请不要调用
+ */
+@Deprecated
 public enum ImageDiskMode {
     /**
      * 硬盘缓存：包含原图

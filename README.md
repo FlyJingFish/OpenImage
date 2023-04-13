@@ -49,9 +49,7 @@ RecyclerView场景  | 聊天页面
 
 1、建议使用Glide效果更好，另外建议开启原图缓存（有些版本是自动缓存原图的）Glide通过设置diskCacheStrategy 为DiskCacheStrategy.ALL或DiskCacheStrategy.DATA
 
-2、如果您不缓存原图请注意设置 setImageDiskMode 为 RESULT（只缓存显示大小的图） 或 NONE（无任何缓存），下边会提及这项设置
-
-3、当然如果您加载的是本地图片可直接忽略上述两点
+2、当然如果您加载的是本地图片可直接忽略第1点
 
 ## 使用步骤
 
@@ -231,30 +229,6 @@ OpenImage.with(activity)
         //clickDataPosition 点击的数据所在位置 clickViewPosition 点击的视图所在位置（和上边方法二选一，详细使用方法可看wiki文档）
         //这个方法主要是针对的是像聊天页面那种图文混合的数据，可以看 "聊天页面" Demo
         .setClickPosition(clickDataPosition, clickViewPosition)
-        //可不设置,默认ImageDiskMode.CONTAIN_ORIGINAL(图片硬盘缓存包含原图)，如果你设置了Glide（或其他图片引擎）不缓存原图，请设置其他类型
-        .setImageDiskMode(ImageDiskMode.CONTAIN_ORIGINAL)
-        //可不设置（setImageDiskMode设置为RESULT或NONE时必须设置）
-        .setItemLoadHelper(new ItemLoadHelper() {
-           @Override
-           public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
-                //如果使用的Glide缓存模式是ImageDiskMode.RESULT(只保存目标图片大小),必须在加载图片时传入大小，详看Demo
-                Glide.with(imageView).load(imageUrl)
-                    .override(overrideWidth, overrideHeight)
-                    .addListener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                onLoadCoverImageListener.onLoadImageFailed();
-                                return false;
-                                }
-                        
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                onLoadCoverImageListener.onLoadImageSuccess();
-                                return false;
-                    }
-                }).into(imageView);
-           }
-        })
         //可不设置（定制页面样式，详细可看Wiki文档）
         .setOpenImageStyle(R.style.DefaultPhotosTheme)
         //设置显示在页面上层的fragment（可不设置）

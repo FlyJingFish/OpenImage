@@ -1,6 +1,5 @@
 package com.flyjingfish.openimage.activity;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.request.target.Target;
 import com.flyjingfish.openimage.R;
@@ -16,9 +14,6 @@ import com.flyjingfish.openimage.bean.ImageEntity;
 import com.flyjingfish.openimage.databinding.ActivityScaleTypeBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimagelib.OpenImage;
-import com.flyjingfish.openimagelib.beans.OpenImageUrl;
-import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
-import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
@@ -98,23 +93,7 @@ public class ScaleTypeActivity extends BaseActivity {
 
     public void onIvClick(View view) {
         OpenImage openImage = OpenImage.with(this).setClickImageView(((ImageView) view))
-                .setImageUrl(itemData).setImageDiskMode(MyImageLoader.imageDiskMode)
-                .setItemLoadHelper(new ItemLoadHelper() {
-                    @Override
-                    public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
-                        MyImageLoader.getInstance().load(imageView, imageUrl, overrideWidth, overrideHeight, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder, new MyImageLoader.OnImageLoadListener() {
-                            @Override
-                            public void onSuccess() {
-                                onLoadCoverImageListener.onLoadImageSuccess();
-                            }
-
-                            @Override
-                            public void onFailed() {
-                                onLoadCoverImageListener.onLoadImageFailed();
-                            }
-                        });
-                    }
-                }).addPageTransformer(new ScaleInTransformer())
+                .setImageUrl(itemData).addPageTransformer(new ScaleInTransformer())
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
                 .setClickPosition(0);
 

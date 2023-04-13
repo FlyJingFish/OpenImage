@@ -1,27 +1,23 @@
 package com.flyjingfish.openimage.adapter;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.bean.ImageEntity;
 import com.flyjingfish.openimage.bean.ImageItem;
-import com.flyjingfish.openimage.imageloader.MyImageLoader;
-import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.ItemImageBinding;
+import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.openImpl.FriendLayerFragmentCreateImpl;
 import com.flyjingfish.openimage.openImpl.MyBigImageActivity;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
-import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
-import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
@@ -73,24 +69,8 @@ public class FriendImageAdapter extends RecyclerView.Adapter<RvBaseHolder> {
                 return R.id.iv_image;
             }
         }).setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
-                .setImageUrlList(data).setImageDiskMode(MyImageLoader.imageDiskMode)
+                .setImageUrlList(data)
                 .setAutoScrollScanPosition(true)
-                .setItemLoadHelper(new ItemLoadHelper() {
-                    @Override
-                    public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
-                        MyImageLoader.getInstance().loadRoundCorner(imageView, imageUrl, 10, overrideWidth, overrideHeight, R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder, new MyImageLoader.OnImageLoadListener() {
-                            @Override
-                            public void onSuccess() {
-                                onLoadCoverImageListener.onLoadImageSuccess();
-                            }
-
-                            @Override
-                            public void onFailed() {
-                                onLoadCoverImageListener.onLoadImageFailed();
-                            }
-                        });
-                    }
-                })
                 .disableClickClose()
                 .setOpenImageActivityCls(MyBigImageActivity.class)
                 .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle,false,false)

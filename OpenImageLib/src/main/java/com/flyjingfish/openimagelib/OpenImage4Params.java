@@ -17,7 +17,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
-import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
@@ -45,7 +44,6 @@ class OpenImage4Params {
     protected ImageView.ScaleType srcImageViewScaleType;
     protected ShapeImageView.ShapeScaleType srcImageViewShapeScaleType;
     protected boolean autoSetScaleType;
-    protected ImageDiskMode imageDiskMode = ImageDiskMode.CONTAIN_ORIGINAL;
     protected final HashSet<Integer> srcImageWidthCache = new HashSet<>();
     protected final HashSet<Integer> srcImageHeightCache = new HashSet<>();
     protected final HashSet<Integer> srcVideoWidthCache = new HashSet<>();
@@ -60,7 +58,6 @@ class OpenImage4Params {
     protected String pageTransformersKey;
     protected String onItemClickListenerKey;
     protected String onItemLongClickListenerKey;
-    protected String itemLoadHelperKey;
     protected boolean disableClickClose;
     protected boolean showSrcImageView = true;
     protected final List<MoreViewOption> moreViewOptions = new ArrayList<>();
@@ -87,9 +84,6 @@ class OpenImage4Params {
     protected Intent inputIntentData() {
         if (openImageUrls.size() == 0) {
             throw new IllegalArgumentException("请设置数据");
-        }
-        if (imageDiskMode != ImageDiskMode.CONTAIN_ORIGINAL && itemLoadHelperKey == null && ActivityCompatHelper.isApkInDebug(context)) {
-            throw new IllegalArgumentException("请设置ItemLoadHelper");
         }
         if (clickDataPosition >= openImageUrls.size() && ActivityCompatHelper.isApkInDebug(context)) {
             throw new IllegalArgumentException("clickDataPosition不能 >= OpenImageUrl 的个数");
@@ -142,11 +136,10 @@ class OpenImage4Params {
         if (shapeScaleType != null){
             intent.putExtra(OpenParams.SRC_SCALE_TYPE, shapeScaleType.ordinal());
         }
-        if (imageDiskMode != null){
-            intent.putExtra(OpenParams.IMAGE_DISK_MODE, imageDiskMode.ordinal());
-        }
+//        if (imageDiskMode != null){
+//            intent.putExtra(OpenParams.IMAGE_DISK_MODE, imageDiskMode.ordinal());
+//        }
         intent.putExtra(OpenParams.ERROR_RES_ID, errorResId);
-        intent.putExtra(OpenParams.ITEM_LOAD_KEY, itemLoadHelperKey);
         intent.putExtra(OpenParams.TOUCH_CLOSE_SCALE, OpenImageConfig.getInstance().getTouchCloseScale());
         intent.putExtra(OpenParams.OPEN_IMAGE_STYLE, openImageStyle);
         intent.putExtra(OpenParams.OPEN_ANIM_TIME_MS, openPageAnimTimeMs);

@@ -1,6 +1,5 @@
 package com.flyjingfish.openimage.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,17 +8,15 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.activity.MessageActivity;
 import com.flyjingfish.openimage.bean.MessageBean;
-import com.flyjingfish.openimage.imageloader.MyImageLoader;
-import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.ItemMsgImageBinding;
 import com.flyjingfish.openimage.databinding.ItemMsgTextBinding;
 import com.flyjingfish.openimage.databinding.ItemMsgVideoBinding;
+import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
-import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
-import com.flyjingfish.openimagelib.listener.OnLoadCoverImageListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 
 import java.util.ArrayList;
@@ -80,23 +77,7 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                     })
                     .setAutoScrollScanPosition(MessageActivity.openAutoScroll)
                     .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
-                    .setImageUrlList(allShowData).setImageDiskMode(MyImageLoader.imageDiskMode)
-                    .setItemLoadHelper(new ItemLoadHelper() {
-                        @Override
-                        public void loadImage(Context context, OpenImageUrl openImageUrl, String imageUrl, ImageView imageView, int overrideWidth, int overrideHeight, OnLoadCoverImageListener onLoadCoverImageListener) {
-                            MyImageLoader.getInstance().loadRoundCorner(imageView, imageUrl,10, overrideWidth,overrideHeight,R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder,  new MyImageLoader.OnImageLoadListener() {
-                                @Override
-                                public void onSuccess() {
-                                    onLoadCoverImageListener.onLoadImageSuccess();
-                                }
-
-                                @Override
-                                public void onFailed() {
-                                    onLoadCoverImageListener.onLoadImageFailed();
-                                }
-                            });
-                        }
-                    }).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
+                    .setImageUrlList(allShowData).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
                     .setOpenImageStyle(R.style.DefaultPhotosTheme)
                     //前者是点击所在 allShowData 数据位置，后者是点击的 RecyclerView 中位置
                     .setClickPosition(position+otherData.size(),position).show();
