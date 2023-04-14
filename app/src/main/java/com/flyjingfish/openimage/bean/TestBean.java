@@ -3,7 +3,9 @@ package com.flyjingfish.openimage.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class TestBean implements Parcelable {
+import java.io.Serializable;
+
+public class TestBean implements Parcelable , Serializable {
     public String test;
 
     public TestBean() {

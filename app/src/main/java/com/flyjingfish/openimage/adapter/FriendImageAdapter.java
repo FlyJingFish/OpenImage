@@ -72,7 +72,6 @@ public class FriendImageAdapter extends RecyclerView.Adapter<RvBaseHolder> {
                 .setImageUrlList(data)
                 .setAutoScrollScanPosition(true)
                 .disableClickClose()
-                .setOpenImageActivityCls(MyBigImageActivity.class)
                 .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle,false,false)
                 .setOpenImageStyle(R.style.DefaultPhotosTheme)
                 .setClickPosition(position).show();

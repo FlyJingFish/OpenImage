@@ -77,7 +77,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<RvBaseHolder> {
         View.OnClickListener onClickListener = v -> OpenImage.with(holder.itemView.getContext()).setClickImageView(binding.ivImage)
                 .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
                 .setImageUrl(data)
-                .setOpenImageActivityCls(MyBigImageActivity.class)
                 .setVideoFragmentCreate(new FriendsVideoFragmentCreateImpl())
                 .setAutoScrollScanPosition(true)
                 .setUpperLayerFragmentCreate(new FriendLayerFragmentCreateImpl(),bundle,false,false)
