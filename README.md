@@ -552,10 +552,6 @@ Glide 的混淆规则：
 
 ## 版本限制
 最低SDK版本：minSdkVersion >= 21
-
-## Demo 一览
-
- <img src="/screenshot/Screenshot_20220731_203125_com.flyjingfish.openim.jpg" width="320" alt="show" />
  
 ## [点此下载apk](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk?raw=true)
  
