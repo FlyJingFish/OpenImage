@@ -23,6 +23,7 @@ public class OpenImageConfig {
     private boolean disEnableTouchClose;
     private float touchCloseScale;
     private boolean isFixSharedAnimMemoryLeaks = true;
+    private boolean isFixAndroid12OnBackPressed = true;
 
     private OpenImageConfig() {
     }
@@ -134,5 +135,13 @@ public class OpenImageConfig {
      */
     public void setFixSharedAnimMemoryLeaks(boolean fixSharedAnimMemoryLeaks) {
         isFixSharedAnimMemoryLeaks = fixSharedAnimMemoryLeaks;
+    }
+
+    public boolean isFixAndroid12OnBackPressed() {
+        return isFixAndroid12OnBackPressed;
+    }
+
+    public void setFixAndroid12OnBackPressed(boolean fixAndroid12OnBackPressed) {
+        isFixAndroid12OnBackPressed = fixAndroid12OnBackPressed;
     }
 }

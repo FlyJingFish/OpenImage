@@ -564,6 +564,17 @@ class OpenImage4ParseData extends OpenImage4Params {
                     }
                 }
             });
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R && OpenImageConfig.getInstance().isFixAndroid12OnBackPressed()){
+                fragmentActivity.getLifecycle().addObserver(new LifecycleEventObserver() {
+                    @Override
+                    public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                        if (event == Lifecycle.Event.ON_STOP){
+                            new Instrumentation().callActivityOnStop(fragmentActivity);
+                            source.getLifecycle().removeObserver(this);
+                        }
+                    }
+                });
+            }
         }
 
     }
