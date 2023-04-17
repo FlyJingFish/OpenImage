@@ -1,5 +1,7 @@
 package com.flyjingfish.openimage.activity;
 
+import android.app.Instrumentation;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -43,5 +45,12 @@ public class BaseActivity extends AppCompatActivity {
         }
 
     }
-
+    @Override
+    public void onBackPressed() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+            finish();
+        }else {
+            super.onBackPressed();
+        }
+    }
 }
