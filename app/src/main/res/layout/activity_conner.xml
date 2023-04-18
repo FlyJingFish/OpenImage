@@ -78,7 +78,7 @@
                 android:layout_height="110dp"
                 android:layout_marginStart="5dp"
                 android:onClick="onIvClick"
-                app:shape="oval"
+                app:FlyJFish_shape="oval"
                 android:scaleType="centerCrop"/>
             <com.flyjingfish.shapeimageviewlib.ShapeImageView
                 android:id="@+id/iv_2"
@@ -86,8 +86,8 @@
                 android:layout_height="110dp"
                 android:layout_marginStart="10dp"
                 android:onClick="onIvClick"
-                app:shape="rectangle"
-                app:shape_radius="20dp"
+                app:FlyJFish_shape="rectangle"
+                app:FlyJFish_shape_radius="20dp"
                 android:scaleType="centerCrop"/>
             <com.flyjingfish.shapeimageviewlib.ShapeImageView
                 android:id="@+id/iv_3"
@@ -95,11 +95,11 @@
                 android:layout_height="110dp"
                 android:layout_marginStart="10dp"
                 android:onClick="onIvClick"
-                app:shape="rectangle"
-                app:shape_left_top_radius="10dp"
-                app:shape_right_top_radius="20dp"
-                app:shape_right_bottom_radius="30dp"
-                app:shape_left_bottom_radius="40dp"
+                app:FlyJFish_shape="rectangle"
+                app:FlyJFish_shape_left_top_radius="10dp"
+                app:FlyJFish_shape_right_top_radius="20dp"
+                app:FlyJFish_shape_right_bottom_radius="30dp"
+                app:FlyJFish_shape_left_bottom_radius="40dp"
                 android:scaleType="centerCrop"/>
         </LinearLayout>
         <TextView

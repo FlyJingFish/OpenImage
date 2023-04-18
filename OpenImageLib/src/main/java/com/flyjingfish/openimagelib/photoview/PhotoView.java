@@ -28,18 +28,12 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.LayoutDirection;
-import android.util.Log;
 import android.view.GestureDetector;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.text.TextUtilsCompat;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
-import com.flyjingfish.shapeimageviewlib.ViewUtils;
 
 import java.util.Locale;
 

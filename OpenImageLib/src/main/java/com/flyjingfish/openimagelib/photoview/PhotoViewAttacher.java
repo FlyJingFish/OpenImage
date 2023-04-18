@@ -33,7 +33,6 @@ import android.widget.OverScroller;
 
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
-import com.flyjingfish.shapeimageviewlib.ViewUtils;
 
 /**
  * The component of {@link PhotoView} which does the work allowing for zooming, scaling, panning, etc.
