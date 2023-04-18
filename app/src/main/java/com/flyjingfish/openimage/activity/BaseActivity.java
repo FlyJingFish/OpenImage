@@ -45,12 +45,12 @@ public class BaseActivity extends AppCompatActivity {
         }
 
     }
-    @Override
-    public void onBackPressed() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
-            finish();
-        }else {
-            super.onBackPressed();
-        }
-    }
+//    @Override
+//    public void onBackPressed() {
+//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+//            finish();
+//        }else {
+//            super.onBackPressed();
+//        }
+//    }
 }

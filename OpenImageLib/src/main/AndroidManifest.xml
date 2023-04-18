@@ -18,5 +18,10 @@
                 android:name="android.max_aspect"
                 android:value="2.2" />
         </activity>
+        <activity
+            android:name=".FixAndroid12BugActivity"
+            android:exported="false"
+            android:theme="@style/Theme.OpenImageTheme">
+        </activity>
     </application>
 </manifest>

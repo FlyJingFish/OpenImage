@@ -1,11 +1,14 @@
 package com.flyjingfish.openimagelib;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.SharedElementCallback;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
@@ -48,6 +51,13 @@ class ExitSharedElementCallback2 extends SharedElementCallback {
         Activity activity = ActivityCompatHelper.getActivity(context);
         if (activity != null){
             activity.setExitSharedElementCallback(null);
+            fixAndroid12Bug();
+        }
+    }
+
+    private void fixAndroid12Bug(){
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R && OpenImageConfig.getInstance().isFixAndroid12OnBackPressed()) {
+            context.startActivity(new Intent(context, FixAndroid12BugActivity.class), ActivityOptions.makeSceneTransitionAnimation((Activity) context).toBundle());
         }
     }
 
