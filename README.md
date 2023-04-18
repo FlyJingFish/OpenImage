@@ -78,7 +78,7 @@ allprojects {
 
 ```
 //OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.7.1'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.7.2'
 ```
 #### B、引入只带有图片引擎的版本（只支持查看图片）
 
@@ -86,7 +86,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.7.1'
 
 ```
 //OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.7.1'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.7.2'
 ```
 
 #### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
@@ -96,7 +96,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.7.1'
 ```
 //OpenImageLib 是基础库，没有引入图片引擎和视频播放器
 //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.7.1'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.7.2'
 
 ```
 
