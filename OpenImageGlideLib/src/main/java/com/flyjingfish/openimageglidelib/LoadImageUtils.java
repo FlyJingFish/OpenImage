@@ -1,5 +1,6 @@
 package com.flyjingfish.openimageglidelib;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -42,14 +43,18 @@ public enum LoadImageUtils {
                     if (context instanceof LifecycleOwner){
                         LifecycleOwner lifecycleOwner = (LifecycleOwner) context;
                         if (lifecycleOwner.getLifecycle().getCurrentState() != Lifecycle.State.DESTROYED){
-                            finishListener.onGoLoad(maxImageSize,isWeb);
+                            finishListener.onGoLoad(maxImageSize, false);
+                        }
+                    }else if (context instanceof Activity){
+                        if (!((Activity) context).isFinishing() && !((Activity) context).isDestroyed()){
+                            finishListener.onGoLoad(maxImageSize, false);
                         }
                     }
                 });
             });
         } else {
             int[] maxImageSize = new int[]{Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL};
-            finishListener.onGoLoad(maxImageSize,isWeb);
+            finishListener.onGoLoad(maxImageSize, true);
         }
 
     }

@@ -207,7 +207,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         if (clickPosition == showPosition && TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl()) && coverDrawable != null) {
             onImageSuccess(coverDrawable);
         } else {
-            OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), imageDetail.getImageUrl(), new OnLoadBigImageListener() {
+            LoadBigImageHelper.INSTANCE.loadImage(requireContext(), imageDetail.getImageUrl(), new OnLoadBigImageListener() {
                 @Override
                 public void onLoadImageSuccess(Drawable drawable) {
                     onImageSuccess(drawable);
@@ -224,7 +224,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                         isInitImage = true;
                     });
                 }
-            });
+            },getViewLifecycleOwner());
         }
     }
 
@@ -262,7 +262,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         super.onResume();
         if (!isLoading && !isLoadSuccess && isInitImage) {
             showLoading(loadingView);
-            OpenImageConfig.getInstance().getBigImageHelper().loadImage(requireContext(), imageDetail.getImageUrl(), new OnLoadBigImageListener() {
+            LoadBigImageHelper.INSTANCE.loadImage(requireContext(), imageDetail.getImageUrl(), new OnLoadBigImageListener() {
                 @Override
                 public void onLoadImageSuccess(Drawable drawable) {
                     mHandler.post(() -> {
@@ -296,7 +296,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                         isInitImage = true;
                     });
                 }
-            });
+            },getViewLifecycleOwner());
         } else if (isLoading && isTransitionEnd) {
             loadingView.setVisibility(View.VISIBLE);
         }

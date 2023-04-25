@@ -609,7 +609,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                 if (upLayerFragment != null) {
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     FrameLayout frameLayout = new FrameLayout(OpenImageActivity.this);
-                    frameLayout.setId(R.id.upper_layer_container);
+                    frameLayout.setId(R.id.open_image_upper_layer_container);
                     Bundle upperLayerBundle = getIntent().getBundleExtra(OpenParams.UPPER_LAYER_BUNDLE);
                     if (upperLayerBundle != null) {
                         upLayerFragment.setArguments(upperLayerBundle);
@@ -619,7 +619,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                     } else {
                         rootView.addView(frameLayout, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                     }
-                    transaction.replace(R.id.upper_layer_container, upLayerFragment).commitAllowingStateLoss();
+                    transaction.replace(R.id.open_image_upper_layer_container, upLayerFragment).commitAllowingStateLoss();
                 }
             }
         });
