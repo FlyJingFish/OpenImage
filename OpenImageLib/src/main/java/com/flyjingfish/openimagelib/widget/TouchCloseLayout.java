@@ -11,10 +11,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import androidx.annotation.FloatRange;
 import androidx.core.text.TextUtilsCompat;
 
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class TouchCloseLayout extends FrameLayout {
@@ -24,20 +27,40 @@ public class TouchCloseLayout extends FrameLayout {
     private ObjectAnimator touchXAnim;
     private ObjectAnimator touchScaleXAnim;
     private ObjectAnimator touchScaleYAnim;
-    private OnTouchCloseListener onTouchCloseListener;
+    private OnTouchCloseListener setOnTouchCloseListener;
+    private final OnTouchCloseListener onTouchCloseListener = new OnTouchCloseListener() {
+        @Override
+        public void onStartTouch() {
+            for (OnTouchCloseListener onTouchCloseListener : onTouchCloseListeners) {
+                onTouchCloseListener.onStartTouch();
+            }
+        }
+
+        @Override
+        public void onEndTouch() {
+            for (OnTouchCloseListener onTouchCloseListener : onTouchCloseListeners) {
+                onTouchCloseListener.onEndTouch();
+            }
+        }
+
+        @Override
+        public void onTouchScale(float scale) {
+            for (OnTouchCloseListener onTouchCloseListener : onTouchCloseListeners) {
+                onTouchCloseListener.onTouchScale(scale);
+            }
+        }
+
+        @Override
+        public void onTouchClose(float scale) {
+            for (OnTouchCloseListener onTouchCloseListener : onTouchCloseListeners) {
+                onTouchCloseListener.onTouchClose(scale);
+            }
+        }
+    };
+    private final List<OnTouchCloseListener> onTouchCloseListeners = new ArrayList<>();
     private ObjectAnimator bgViewAnim;
     private float scale;
     private final boolean isRtl;
-
-    public TouchCloseLayout(Context context) {
-        this(context, null);
-    }
-
-    public TouchCloseLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        isRtl = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL;
-    }
-
     private float startDragX;
     private float startDragY;
     private static final float DRAG_SPEED = 1f;
@@ -47,57 +70,18 @@ public class TouchCloseLayout extends FrameLayout {
     private View bgView;
     private boolean disEnableTouchClose;
     private OpenImageOrientation orientation;
-
-    public void setTouchView(View touchView, View bgView) {
-        this.touchView = touchView;
-        this.bgView = bgView;
-        touchYAnim = ObjectAnimator.ofFloat(touchView, "translationY", 0, 0);
-        touchXAnim = ObjectAnimator.ofFloat(touchView, "translationX", 0, 0);
-        touchScaleXAnim = ObjectAnimator.ofFloat(touchView, "scaleX", 1, 1);
-        touchScaleYAnim = ObjectAnimator.ofFloat(touchView, "scaleY", 1, 1);
-        bgViewAnim = ObjectAnimator.ofFloat(bgView, "alpha", 1, 1);
-        touchAnim = new AnimatorSet();
-        touchScaleXAnim.addUpdateListener(animation -> {
-            float scaleX = touchView.getScaleX();
-            if (onTouchCloseListener != null) {
-                onTouchCloseListener.onTouchScale(scaleX);
-            }
-        });
-        touchAnim.playTogether(touchXAnim, touchYAnim, touchScaleXAnim, touchScaleYAnim, bgViewAnim);
-        touchAnim.setDuration(200);
-        touchAnim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (onTouchCloseListener != null) {
-                    onTouchCloseListener.onTouchScale(1f);
-                }
-                if (onTouchCloseListener != null){
-                    onTouchCloseListener.onEndTouch();
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                if (onTouchCloseListener != null){
-                    onTouchCloseListener.onEndTouch();
-                }
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-    }
-
     private int startX = 0;
     private int startY = 0;
     private long touchDownTime;
+
+    public TouchCloseLayout(Context context) {
+        this(context, null);
+    }
+
+    public TouchCloseLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        isRtl = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL;
+    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -155,7 +139,9 @@ public class TouchCloseLayout extends FrameLayout {
                 }
                 touchView.setScaleX(scale);
                 touchView.setScaleY(scale);
-                bgView.setAlpha(scale);
+                if (bgView != null){
+                    bgView.setAlpha(scale);
+                }
                 if (onTouchCloseListener != null) {
                     onTouchCloseListener.onTouchScale(scale);
                 }
@@ -176,7 +162,9 @@ public class TouchCloseLayout extends FrameLayout {
                         touchXAnim.setFloatValues(touchView.getTranslationX(), 0);
                         touchScaleXAnim.setFloatValues(touchView.getScaleX(), 1);
                         touchScaleYAnim.setFloatValues(touchView.getScaleY(), 1);
-                        bgViewAnim.setFloatValues(bgView.getAlpha(), 1);
+                        if (bgViewAnim != null && bgView != null){
+                            bgViewAnim.setFloatValues(bgView.getAlpha(), 1);
+                        }
                         touchAnim.start();
                     }
                 }
@@ -203,10 +191,6 @@ public class TouchCloseLayout extends FrameLayout {
 
     }
 
-    public void setOnTouchCloseListener(OnTouchCloseListener onTouchCloseListener) {
-        this.onTouchCloseListener = onTouchCloseListener;
-    }
-
     public interface OnTouchCloseListener {
         void onStartTouch();
         void onEndTouch();
@@ -215,24 +199,139 @@ public class TouchCloseLayout extends FrameLayout {
         void onTouchClose(float scale);
     }
 
+    /**
+     * @param touchView 下拉触摸缩放的View
+     * @param bgView 需要改变透明度的背景View
+     */
+    public void setTouchView(View touchView, View bgView) {
+        this.touchView = touchView;
+        this.bgView = bgView;
+        touchYAnim = ObjectAnimator.ofFloat(touchView, "translationY", 0, 0);
+        touchXAnim = ObjectAnimator.ofFloat(touchView, "translationX", 0, 0);
+        touchScaleXAnim = ObjectAnimator.ofFloat(touchView, "scaleX", 1, 1);
+        touchScaleYAnim = ObjectAnimator.ofFloat(touchView, "scaleY", 1, 1);
+        if (bgView != null){
+            bgViewAnim = ObjectAnimator.ofFloat(bgView, "alpha", 1, 1);
+        }
+        touchAnim = new AnimatorSet();
+        touchScaleXAnim.addUpdateListener(animation -> {
+            float scaleX = touchView.getScaleX();
+            if (onTouchCloseListener != null) {
+                onTouchCloseListener.onTouchScale(scaleX);
+            }
+        });
+        if (bgViewAnim != null){
+            touchAnim.playTogether(touchXAnim, touchYAnim, touchScaleXAnim, touchScaleYAnim, bgViewAnim);
+        }else {
+            touchAnim.playTogether(touchXAnim, touchYAnim, touchScaleXAnim, touchScaleYAnim);
+        }
+        touchAnim.setDuration(200);
+        touchAnim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (onTouchCloseListener != null) {
+                    onTouchCloseListener.onTouchScale(1f);
+                }
+                if (onTouchCloseListener != null){
+                    onTouchCloseListener.onEndTouch();
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                if (onTouchCloseListener != null){
+                    onTouchCloseListener.onEndTouch();
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+    }
+
+    /**
+     * 如果不需要背景透明度变化可以使用此方法
+     * @param touchView 下拉触摸缩放的View
+     */
+    public void setTouchView(View touchView) {
+        setTouchView(touchView,null);
+    }
+
+    /**
+     * 设置触摸监听
+     * @param onTouchCloseListener
+     */
+    public void setOnTouchCloseListener(OnTouchCloseListener onTouchCloseListener) {
+        if (onTouchCloseListener != null){
+            setOnTouchCloseListener = onTouchCloseListener;
+            addOnTouchCloseListener(onTouchCloseListener);
+        }else if (setOnTouchCloseListener != null){
+            removeOnTouchCloseListener(setOnTouchCloseListener);
+        }
+    }
+
+    /**
+     * 添加触摸监听
+     * @param onTouchCloseListener
+     */
+    public void addOnTouchCloseListener(OnTouchCloseListener onTouchCloseListener) {
+        onTouchCloseListeners.add(onTouchCloseListener);
+    }
+
+    /**
+     * 移除触摸监听
+     * @param onTouchCloseListener
+     */
+    public void removeOnTouchCloseListener(OnTouchCloseListener onTouchCloseListener) {
+        onTouchCloseListeners.remove(onTouchCloseListener);
+    }
+
+    /**
+     *
+     * @return 是否关闭触摸关闭功能
+     */
     public boolean isDisEnableTouchClose() {
         return disEnableTouchClose;
     }
 
+    /**
+     *
+     * @param disEnableTouchClose 是否关闭触摸关闭功能
+     */
     public void setDisEnableTouchClose(boolean disEnableTouchClose) {
         this.disEnableTouchClose = disEnableTouchClose;
     }
 
+    /**
+     *
+     * @return 触摸下拉的缩放比例小于多少时关闭页面
+     */
     public float getTouchCloseScale() {
         return touchCloseScale;
     }
 
-    public void setTouchCloseScale(float touchCloseScale) {
+    /**
+     *
+     * @param touchCloseScale 触摸下拉的缩放比例小于多少时关闭页面
+     */
+    public void setTouchCloseScale(@FloatRange(from = 0.0000001f,to = 1f) float touchCloseScale) {
         if (touchCloseScale > 0 && touchCloseScale <= 1) {
             this.touchCloseScale = touchCloseScale;
         }
     }
 
+    /**
+     *
+     * @param orientation 是上下触摸还是左右触摸，这取决于您的{@link androidx.viewpager2.widget.ViewPager2}的方向设定，
+     *                    如果你的{@link androidx.viewpager2.widget.ViewPager2} 是横向，那么你应该传入竖向，否则传入横向
+     */
     public void setOrientation(OpenImageOrientation orientation) {
         this.orientation = orientation;
     }

@@ -35,6 +35,7 @@ class ImageLoadUtils {
     private HashMap<String, Boolean> canOpenViewPageActivityHashMap = new HashMap<>();
     private HashMap<String, List<OpenImageDetail>> openDataMap = new HashMap<>();
     private HashMap<String, OpenImageDetail> openDetailDataMap = new HashMap<>();
+    private boolean isApkInDebug;
 
     private ImageLoadUtils() {
     }
@@ -289,4 +290,11 @@ class ImageLoadUtils {
         }
     }
 
+    public boolean isApkInDebug() {
+        return isApkInDebug;
+    }
+
+    public void setApkInDebug(boolean apkInDebug) {
+        isApkInDebug = apkInDebug;
+    }
 }

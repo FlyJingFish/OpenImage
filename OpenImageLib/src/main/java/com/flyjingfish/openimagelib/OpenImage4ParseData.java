@@ -44,6 +44,7 @@ class OpenImage4ParseData extends OpenImage4Params {
 
     protected void goShow() {
         if (ImageLoadUtils.getInstance().isCanOpenOpenImageActivity(contextKey)) {
+            ImageLoadUtils.getInstance().setApkInDebug(ActivityCompatHelper.isApkInDebug(context));
             Activity activity = ActivityCompatHelper.getActivity(context);
             activity.setExitSharedElementCallback(null);
             show4ParseData();

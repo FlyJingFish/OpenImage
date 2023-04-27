@@ -62,52 +62,84 @@ public class BaseInnerFragment extends Fragment {
         basePhotosViewModel.onTouchScaleLiveData.observe(getViewLifecycleOwner(), aFloat -> onTouchScale(aFloat));
     }
 
+    /**
+     * 触摸拖动关闭时回调此方法
+     * @param scale 图片缩放比例
+     */
     protected void onTouchClose(float scale){
         currentScale = scale;
     }
+    /**
+     * 触摸拖动图片时回调此方法
+     * @param scale 图片缩放比例
+     */
     protected void onTouchScale(float scale){
         currentScale = scale;
     }
 
     protected void addOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener){
-        if (onItemLongClickListener != null){
-            ImageLoadUtils.getInstance().setOnItemLongClickListener(onItemLongClickListener.toString(),onItemLongClickListener);
-            basePhotosViewModel.onAddItemLongListenerLiveData.setValue(onItemLongClickListener.toString());
-            onItemLongClickListenerKeys.add(onItemLongClickListener.toString());
+        try {
+            if (onItemLongClickListener != null){
+                ImageLoadUtils.getInstance().setOnItemLongClickListener(onItemLongClickListener.toString(),onItemLongClickListener);
+                basePhotosViewModel.onAddItemLongListenerLiveData.setValue(onItemLongClickListener.toString());
+                onItemLongClickListenerKeys.add(onItemLongClickListener.toString());
+            }
+        } catch (Exception e) {
+            hintRuntimeException();
         }
     }
 
     protected void addOnItemClickListener(OnItemClickListener onItemClickListener){
-        if (onItemClickListener != null){
-            ImageLoadUtils.getInstance().setOnItemClickListener(onItemClickListener.toString(),onItemClickListener);
-            basePhotosViewModel.onAddItemListenerLiveData.setValue(onItemClickListener.toString());
-            onItemClickListenerKeys.add(onItemClickListener.toString());
+        try {
+            if (onItemClickListener != null){
+                ImageLoadUtils.getInstance().setOnItemClickListener(onItemClickListener.toString(),onItemClickListener);
+                basePhotosViewModel.onAddItemListenerLiveData.setValue(onItemClickListener.toString());
+                onItemClickListenerKeys.add(onItemClickListener.toString());
+            }
+        } catch (Exception e) {
+            hintRuntimeException();
         }
     }
 
     protected void removeOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener){
-        if (onItemLongClickListener != null){
-            basePhotosViewModel.onRemoveItemLongListenerLiveData.setValue(onItemLongClickListener.toString());
+        try {
+            if (onItemLongClickListener != null){
+                basePhotosViewModel.onRemoveItemLongListenerLiveData.setValue(onItemLongClickListener.toString());
+            }
+        } catch (Exception e) {
+            hintRuntimeException();
         }
     }
 
     protected void removeOnItemClickListener(OnItemClickListener onItemClickListener){
-        if (onItemClickListener != null){
-            basePhotosViewModel.onRemoveItemListenerLiveData.setValue(onItemClickListener.toString());
+        try {
+            if (onItemClickListener != null){
+                basePhotosViewModel.onRemoveItemListenerLiveData.setValue(onItemClickListener.toString());
+            }
+        } catch (Exception e) {
+            hintRuntimeException();
         }
     }
 
 
     protected void addOnSelectMediaListener(OnSelectMediaListener onSelectMediaListener){
-        if (onSelectMediaListener != null){
-            ImageLoadUtils.getInstance().setOnSelectMediaListener(onSelectMediaListener.toString(),onSelectMediaListener);
-            basePhotosViewModel.onAddOnSelectMediaListenerLiveData.setValue(onSelectMediaListener.toString());
+        try {
+            if (onSelectMediaListener != null){
+                ImageLoadUtils.getInstance().setOnSelectMediaListener(onSelectMediaListener.toString(),onSelectMediaListener);
+                basePhotosViewModel.onAddOnSelectMediaListenerLiveData.setValue(onSelectMediaListener.toString());
+            }
+        } catch (Exception e) {
+            hintRuntimeException();
         }
     }
 
     protected void removeOnSelectMediaListener(OnSelectMediaListener onSelectMediaListener){
-        if (onSelectMediaListener != null){
-            basePhotosViewModel.onRemoveOnSelectMediaListenerLiveData.setValue(onSelectMediaListener.toString());
+        try {
+            if (onSelectMediaListener != null){
+                basePhotosViewModel.onRemoveOnSelectMediaListenerLiveData.setValue(onSelectMediaListener.toString());
+            }
+        } catch (Exception e) {
+            hintRuntimeException();
         }
     }
 
@@ -118,8 +150,18 @@ public class BaseInnerFragment extends Fragment {
         close(false);
     }
 
-    protected void close(boolean isTouchClose) {
-        basePhotosViewModel.closeViewLiveData.setValue(isTouchClose);
+    private void close(boolean isTouchClose) {
+        try {
+            basePhotosViewModel.closeViewLiveData.setValue(isTouchClose);
+        } catch (Exception e) {
+            hintRuntimeException();
+        }
+    }
+
+    private void hintRuntimeException(){
+        if (ImageLoadUtils.getInstance().isApkInDebug()){
+            throw new RuntimeException("请确保你是在 onViewCreated 及其之后的生命周期中调用的此方法");
+        }
     }
 
     @Override

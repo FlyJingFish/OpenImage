@@ -136,6 +136,10 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             OnSelectMediaListener onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(s);
             if (onSelectMediaListener != null) {
                 onSelectMediaListeners.add(onSelectMediaListener);
+                if (showPosition < openImageBeans.size()){
+                    OpenImageDetail imageDetail = openImageBeans.get(showPosition);
+                    onSelectMediaListener.onSelect(imageDetail.openImageUrl, showPosition);
+                }
             }
             onSelectMediaListenerKeys.add(s);
         });
@@ -298,10 +302,10 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                     onBackView.onScrollPos(openImageBeans.get(showPosition).viewPosition);
                 }
                 if (onSelectMediaListener != null) {
-                    onSelectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl, openImageBeans.get(showPosition).dataPosition);
+                    onSelectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl, showPosition);
                 }
                 for (OnSelectMediaListener selectMediaListener : onSelectMediaListeners) {
-                    selectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl, openImageBeans.get(showPosition).dataPosition);
+                    selectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl, showPosition);
                 }
                 isFirstBacked = true;
                 OpenImageActivity.this.onPageSelected(position);

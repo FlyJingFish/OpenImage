@@ -79,6 +79,9 @@ public class FriendsFragment extends BaseInnerFragment {
             @Override
             public void onSelect(OpenImageUrl openImageUrl, int position) {
                 Log.e("addOnSelectMedia","---"+position);
+                if (imageItem != null){
+                    binding.tvText.setText(imageItem.text+"(显示位置="+position+"),openImageUrl="+openImageUrl);
+                }
             }
         });
     }
