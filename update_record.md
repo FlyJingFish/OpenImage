@@ -6,7 +6,7 @@
 
 2、完善 TouchCloseLayout 类
 
-3、完善 BaseInnerFragment 必要时将会进行异常提示
+3、添加调用 BaseInnerFragment 中的方法必要时将会进行异常提示
 
 ## 1.7.5
 
