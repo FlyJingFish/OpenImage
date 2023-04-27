@@ -33,7 +33,7 @@ RecyclerView场景  | 聊天页面
 
 3，支持聊天界面的查看大图功能
 
-4，支持微信聊天页面大图不在聊天页面时回到点击位置的效果
+4，支持任意定制属于你的大图查看页面UI，多种定制方式总有一种适合你（[点此查看更多使用说明](https://github.com/FlyJingFish/OpenImage/wiki)）
 
 5，支持全部 ImageView.ScaleType 显示模式的图片打开大图效果，并且新增startCrop、endCrop、autoStartCenterCrop、autoEndCenterCrop四种显示模式
 
