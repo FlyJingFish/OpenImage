@@ -1,6 +1,7 @@
 package com.flyjingfish.openimage.openImpl;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -9,7 +10,10 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimage.bean.ImageEntity;
 import com.flyjingfish.openimage.databinding.MyActivityViewpagerBinding;
+import com.flyjingfish.openimagelib.BaseInnerFragment;
 import com.flyjingfish.openimagelib.OpenImageActivity;
+import com.flyjingfish.openimagelib.beans.OpenImageUrl;
+import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 
 public class MyBigImageActivity extends OpenImageActivity {
@@ -51,5 +55,11 @@ public class MyBigImageActivity extends OpenImageActivity {
         Bundle bundle = getIntent().getBundleExtra(BUNDLE_DATA_KEY);
         ImageEntity imageEntity = (ImageEntity) bundle.getSerializable(MY_DATA_KEY);
         rootBinding.tv1.setText(imageEntity.testBean.test);
+        addOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
+                Log.e("MyBigImageActivity","onItemClick");
+            }
+        });
     }
 }
