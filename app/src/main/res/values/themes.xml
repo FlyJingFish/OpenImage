@@ -28,4 +28,36 @@
         <item name="openImage.statusBar.fontStyle">dark</item>
         <item name="openImage.indicator.imageRes">@drawable/indicator_image</item>
     </style>
+
+    <style name="KuaishouPhotosTheme" >
+        <item name="openImage.indicator.type">none</item>
+        <item name="openImage.indicator.textFormat">@string/pos_text</item>
+        <item name="openImage.viewPager.orientation">horizontal</item>
+        <item name="openImage.viewPager.pageMargin">10dp</item>
+        <item name="openImage.statusBar.fontStyle">dark</item>
+    </style>
+    <style name="transparentDialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    <style name="BaseInputDialog" parent="DimEnabledInputDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+    <style name="DimEnabledInputDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 </resources>

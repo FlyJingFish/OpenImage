@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.flyjingfish.openimagelib.widget.TouchCloseLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/touchCloseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/v_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black" />
+
+
+    <FrameLayout
+        android:id="@+id/fl_touch_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black">
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/rl_comment"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:id="@+id/tv_top"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/purple_200"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="14dp"
+                android:text="假如您返回栏需要在图片上方"
+                android:textColor="@color/white" />
+
+
+            <TextView
+                android:id="@+id/iv_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:drawablePadding="4dp"
+                android:text="评论"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:drawableTop="@mipmap/comment"/>
+            <RelativeLayout
+                android:id="@+id/rl_comment"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@drawable/bg_comment"
+                android:layout_alignParentBottom="true">
+                <TextView
+                    android:id="@+id/tv_comment_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:paddingVertical="10dp"
+                    android:text="1条评论"/>
+                <TextView
+                    android:id="@+id/tv_comment_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="16dp"
+                    android:text="x"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/ll_comment_bottom"
+                    android:layout_below="@+id/tv_comment_title"/>
+                <RelativeLayout
+                    android:id="@+id/ll_comment_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:paddingHorizontal="13dp"
+                    android:paddingVertical="13dp">
+
+
+                    <TextView
+                        android:id="@+id/tv_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_anchor_info_bottom_edit"
+                        android:minHeight="30dp"
+                        android:paddingVertical="4dp"
+                        android:paddingHorizontal="10dp"
+                        android:hint="发表有爱的评论～"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:text=""
+                        android:textSize="13sp" />
+
+                </RelativeLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/ll_mu"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@drawable/bg_edit_person_info"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                android:paddingHorizontal="13dp"
+                tools:visibility="gone"
+                android:paddingVertical="13dp">
+
+
+                <TextView
+                    android:id="@+id/tv_mu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edit_send_person_info"
+                    android:minHeight="30dp"
+                    android:padding="4dp"
+                    android:hint="来一发弹幕吧～"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text=""
+                    android:textSize="13sp" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+
+</com.flyjingfish.openimagelib.widget.TouchCloseLayout>

@@ -91,6 +91,12 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".activity.KuaiShouDemoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".openImpl.MyBigImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
@@ -109,6 +115,22 @@
             android:name=".openImpl.MyBigImageActivity2"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
+            android:theme="@style/Theme.OpenImageTheme">
+            <meta-data
+                android:name="notch.config"
+                android:value="portrait|landscape" />
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
+            <meta-data
+                android:name="android.max_aspect"
+                android:value="2.2" />
+        </activity>
+        <activity
+            android:name=".openImpl.KuaiShouActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             android:theme="@style/Theme.OpenImageTheme">
             <meta-data
                 android:name="notch.config"

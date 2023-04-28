@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/ll_menu_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:id="@+id/ll_msg_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="13dp"
+            android:paddingVertical="13dp"
+            android:gravity="center_vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:background="@drawable/bg_edit_person_info"
+            android:orientation="horizontal">
+            <RelativeLayout
+                android:id="@+id/rl_send"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/et_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="30dp"
+                    android:text=""
+                    android:layout_marginStart="10dp"
+                    android:layout_toStartOf="@+id/iv_face"
+                    android:textColor="@color/black"
+                    android:background="@drawable/bg_edit_send_person_info"
+                    android:padding="4dp"
+                    android:textSize="13sp" />
+                <ImageView
+                    android:id="@+id/iv_face"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_toStartOf="@+id/tv_send"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_face"/>
+                <TextView
+                    android:id="@+id/tv_send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:gravity="center"
+                    android:layout_alignParentEnd="true"
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginStart="10dp"
+                    android:text="发送"
+                    android:layout_centerVertical="true"
+                    android:textColor="#2c2c2c"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_send"
+                    android:textSize="13sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/ll_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_below="@+id/ll_msg_content"
+            android:paddingHorizontal="13dp"
+            android:background="@color/white"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/ll_emoji"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="40sp"
+                    android:layout_centerInParent="true"
+                    android:text="大表情"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</LinearLayout>

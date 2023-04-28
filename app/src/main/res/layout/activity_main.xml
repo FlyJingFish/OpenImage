@@ -87,18 +87,6 @@
             android:textAllCaps="false"
             android:text="RecyclerView"/>
         <Button
-            android:id="@+id/btn_ivs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAllCaps="false"
-            android:text="单独的ImageView"/>
-        <Button
-            android:id="@+id/btn_scale_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAllCaps="false"
-            android:text="所有ScaleType的ImageView"/>
-        <Button
             android:id="@+id/btn_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -111,17 +99,38 @@
             android:textAllCaps="false"
             android:text="朋友圈"/>
         <Button
-            android:id="@+id/btn_conner"
+            android:id="@+id/btn_kuaishou"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
-            android:text="圆角图或圆图"/>
+            android:text="快手"/>
+
         <Button
             android:id="@+id/btn_custom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:text="重度定制大图页面"/>
+        <Button
+            android:id="@+id/btn_conner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="圆角图或圆图"/>
+
+        <Button
+            android:id="@+id/btn_scale_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="所有ScaleType的ImageView"/>
+        <Button
+            android:id="@+id/btn_ivs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="单独的ImageView"/>
+
         <Button
             android:id="@+id/btn_view_pager"
             android:layout_width="match_parent"

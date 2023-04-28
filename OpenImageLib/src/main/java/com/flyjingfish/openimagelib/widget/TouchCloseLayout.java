@@ -59,7 +59,7 @@ public class TouchCloseLayout extends FrameLayout {
     };
     private final List<OnTouchCloseListener> onTouchCloseListeners = new ArrayList<>();
     private ObjectAnimator bgViewAnim;
-    private float scale;
+    private float scale = 1f;
     private final boolean isRtl;
     private float startDragX;
     private float startDragY;

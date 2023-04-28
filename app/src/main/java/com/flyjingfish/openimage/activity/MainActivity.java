@@ -69,6 +69,7 @@ public class MainActivity extends BaseActivity {
         binding.btnScaleType.setOnClickListener(v -> jump(v, ScaleTypeActivity.class));
         binding.btnConner.setOnClickListener(v -> jump(v, ConnerActivity.class));
         binding.btnCustom.setOnClickListener(v -> jump(v, CustomActivity.class));
+        binding.btnKuaishou.setOnClickListener(v -> jump(v, KuaiShouDemoActivity.class));
     }
 
     private void jump(View v, Class<?> cls){
