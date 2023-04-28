@@ -47,4 +47,17 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
         videoPlayer = friendVideoPlayer;
         return rootView;
     }
+    boolean isStartedTouch;
+    @Override
+    protected void onTouchScale(float scale) {
+        if (scale == 1){
+            if (isStartedTouch){
+                videoPlayer.onVideoResume();
+                isStartedTouch = false;
+            }
+        }else {
+            isStartedTouch = true;
+        }
+        super.onTouchScale(scale);
+    }
 }

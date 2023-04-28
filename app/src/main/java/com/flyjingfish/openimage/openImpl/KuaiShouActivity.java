@@ -3,6 +3,7 @@ package com.flyjingfish.openimage.openImpl;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -167,4 +168,13 @@ public class KuaiShouActivity extends OpenImageActivity {
         rootBinding.llMu.setVisibility(View.GONE);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && isShowComment()){
+            setShowComment(false);
+            showCommentAnim.start();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }
