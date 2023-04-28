@@ -18,11 +18,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
+import com.flyjingfish.openimagelib.listener.OnItemClickListener;
+import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
@@ -62,7 +65,7 @@ class BaseActivity extends AppCompatActivity {
     protected OpenImageIndicatorTextBinding indicatorTextBinding;
     protected ImageIndicatorAdapter imageIndicatorAdapter;
     protected OpenImageOrientation orientation;
-//    protected ImageDiskMode imageDiskMode;
+    //    protected ImageDiskMode imageDiskMode;
     protected ShapeImageView.ShapeScaleType srcScaleType;
     protected OnSelectMediaListener onSelectMediaListener;
     protected ObjectAnimator wechatEffectAnim;
@@ -71,7 +74,7 @@ class BaseActivity extends AppCompatActivity {
     protected FontStyle fontStyle;
     protected BaseInnerFragment upLayerFragment;
     protected UpperLayerOption upperLayerOption;
-    protected final Handler closeHandler = new Handler(Looper.getMainLooper()){
+    protected final Handler closeHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -88,6 +91,8 @@ class BaseActivity extends AppCompatActivity {
     protected String contextKey;
     protected float touchCloseScale = 1f;
     protected ImageShapeParams imageShapeParams;
+    private final List<String> onItemClickListenerKeys = new ArrayList<>();
+    private final List<String> onItemLongClickListenerKeys = new ArrayList<>();
 
     public boolean isNoneClickView() {
         return isNoneClickView;
@@ -111,6 +116,7 @@ class BaseActivity extends AppCompatActivity {
             ImageLoadUtils.getInstance().notifyOnRemoveListener4FixBug();
         }
     }
+
     private void fixAndroid5_7Bug() {
         if (!isNoneClickView && Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
             setEnterSharedElementCallback(new SharedElementCallback() {
@@ -123,7 +129,7 @@ class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
                     super.onMapSharedElements(names, sharedElements);
-                    closeHandler.sendEmptyMessageDelayed(CHECK_FINISH,CHECK_DELAY_MS);
+                    closeHandler.sendEmptyMessageDelayed(CHECK_FINISH, CHECK_DELAY_MS);
                 }
             });
         }
@@ -143,13 +149,13 @@ class BaseActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-        ImageLoadUtils.getInstance().setCanOpenOpenImageActivity(clickContextKey,true);
+        ImageLoadUtils.getInstance().setCanOpenOpenImageActivity(clickContextKey, true);
     }
 
     @Override
     public void finishAfterTransition() {
         super.finishAfterTransition();
-        ImageLoadUtils.getInstance().setCanOpenOpenImageActivity(clickContextKey,true);
+        ImageLoadUtils.getInstance().setCanOpenOpenImageActivity(clickContextKey, true);
     }
 
     @Override
@@ -159,22 +165,31 @@ class BaseActivity extends AppCompatActivity {
         fixSharedAnimMemoryLeaks();
         ImageLoadUtils.getInstance().clearOpenImageDetailData(dataKey);
         ImageLoadUtils.getInstance().clearOpenImageDetail(contextKey);
+        for (String onItemLongClickListenerKey : onItemLongClickListenerKeys) {
+            ImageLoadUtils.getInstance().clearOnItemLongClickListener(onItemLongClickListenerKey);
+        }
+
+        for (String onItemClickListenerKey : onItemClickListenerKeys) {
+            ImageLoadUtils.getInstance().clearOnItemClickListener(onItemClickListenerKey);
+        }
+        onItemClickListenerKeys.clear();
+        onItemLongClickListenerKeys.clear();
     }
 
     @SuppressLint("DiscouragedPrivateApi")
     private void fixSharedAnimMemoryLeaks() {
-        if (!isNoneClickView && OpenImageConfig.getInstance().isFixSharedAnimMemoryLeaks()){
+        if (!isNoneClickView && OpenImageConfig.getInstance().isFixSharedAnimMemoryLeaks()) {
             try {
                 Method method = TransitionManager.class.getDeclaredMethod("getRunningTransitions");
                 method.setAccessible(true);
                 ArrayMap<ViewGroup, ArrayList<Transition>> map = (ArrayMap<ViewGroup, ArrayList<Transition>>) method.invoke(null);
                 View decorView = getWindow().getDecorView();
 
-                if (map != null){
+                if (map != null) {
                     ArrayList<Transition> transitions = map.get(decorView);
-                    if (transitions != null && transitions.size()>0){
+                    if (transitions != null && transitions.size() > 0) {
                         for (Transition transition : transitions) {
-                            if (transition != null){
+                            if (transition != null) {
                                 transition.addListener(new Transition.TransitionListener() {
                                     @Override
                                     public void onTransitionEnd(Transition transition) {
@@ -186,8 +201,11 @@ class BaseActivity extends AppCompatActivity {
                                         } catch (Throwable ignored) {
                                         }
                                     }
+
                                     @Override
-                                    public void onTransitionStart(Transition transition) {}
+                                    public void onTransitionStart(Transition transition) {
+                                    }
+
                                     @Override
                                     public void onTransitionCancel(Transition transition) {
                                         try {
@@ -198,14 +216,18 @@ class BaseActivity extends AppCompatActivity {
                                         } catch (Throwable ignored) {
                                         }
                                     }
+
                                     @Override
-                                    public void onTransitionPause(Transition transition) {}
+                                    public void onTransitionPause(Transition transition) {
+                                    }
+
                                     @Override
-                                    public void onTransitionResume(Transition transition) {}
+                                    public void onTransitionResume(Transition transition) {
+                                    }
                                 });
                             }
                         }
-                    }else {
+                    } else {
                         map.remove(decorView);
                     }
 
@@ -239,13 +261,13 @@ class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void parseIntent(){
+    protected void parseIntent() {
 
-        int srcScaleTypeInt = getIntent().getIntExtra(OpenParams.SRC_SCALE_TYPE,-1);
+        int srcScaleTypeInt = getIntent().getIntExtra(OpenParams.SRC_SCALE_TYPE, -1);
         srcScaleType = srcScaleTypeInt == -1 ? null : ShapeImageView.ShapeScaleType.values()[srcScaleTypeInt];
         dataKey = getIntent().getStringExtra(OpenParams.IMAGES);
         openImageBeans = ImageLoadUtils.getInstance().getOpenImageDetailData(dataKey);
-        if (openImageBeans == null){
+        if (openImageBeans == null) {
             finishAfterTransition();
             return;
         }
@@ -274,7 +296,35 @@ class BaseActivity extends AppCompatActivity {
         onBackViewKey = getIntent().getStringExtra(OpenParams.ON_BACK_VIEW);
         onBackView = ImageLoadUtils.getInstance().getOnBackView(onBackViewKey);
         clickContextKey = getIntent().getStringExtra(OpenParams.CONTEXT_KEY);
-        isNoneClickView = getIntent().getBooleanExtra(OpenParams.NONE_CLICK_VIEW,false);
+        isNoneClickView = getIntent().getBooleanExtra(OpenParams.NONE_CLICK_VIEW, false);
         imageShapeParams = (ImageShapeParams) getIntent().getParcelableExtra(OpenParams.IMAGE_SHAPE_PARAMS);
+    }
+
+    protected void addOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        if (onItemLongClickListener != null) {
+            ImageLoadUtils.getInstance().setOnItemLongClickListener(onItemLongClickListener.toString(), onItemLongClickListener);
+            photosViewModel.onAddItemLongListenerLiveData.setValue(onItemLongClickListener.toString());
+            onItemLongClickListenerKeys.add(onItemLongClickListener.toString());
+        }
+    }
+
+    protected void addOnItemClickListener(OnItemClickListener onItemClickListener) {
+        if (onItemClickListener != null) {
+            ImageLoadUtils.getInstance().setOnItemClickListener(onItemClickListener.toString(), onItemClickListener);
+            photosViewModel.onAddItemListenerLiveData.setValue(onItemClickListener.toString());
+            onItemClickListenerKeys.add(onItemClickListener.toString());
+        }
+    }
+
+    protected void removeOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        if (onItemLongClickListener != null) {
+            photosViewModel.onRemoveItemLongListenerLiveData.setValue(onItemLongClickListener.toString());
+        }
+    }
+
+    protected void removeOnItemClickListener(OnItemClickListener onItemClickListener) {
+        if (onItemClickListener != null) {
+            photosViewModel.onRemoveItemListenerLiveData.setValue(onItemClickListener.toString());
+        }
     }
 }

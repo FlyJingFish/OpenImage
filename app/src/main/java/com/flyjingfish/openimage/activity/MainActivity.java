@@ -11,7 +11,6 @@ import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.ActivityMainBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimagelib.OpenImageConfig;
-import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 
 public class MainActivity extends BaseActivity {
     private ActivityMainBinding binding;
@@ -35,9 +34,9 @@ public class MainActivity extends BaseActivity {
         }else {
             binding.rbPicasso.setChecked(true);
         }
-        if (MyImageLoader.imageDiskMode == ImageDiskMode.CONTAIN_ORIGINAL){
+        if (MyImageLoader.imageDiskMode == MyImageLoader.ImageDiskMode.CONTAIN_ORIGINAL){
             binding.rbOriginal.setChecked(true);
-        }else if (MyImageLoader.imageDiskMode == ImageDiskMode.RESULT){
+        }else if (MyImageLoader.imageDiskMode == MyImageLoader.ImageDiskMode.RESULT){
             binding.rbResult.setChecked(true);
         }else {
             binding.rbNone.setChecked(true);
@@ -48,13 +47,13 @@ public class MainActivity extends BaseActivity {
         binding.rgCacheType.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId){
                 case R.id.rb_original:
-                    MyImageLoader.imageDiskMode = ImageDiskMode.CONTAIN_ORIGINAL;
+                    MyImageLoader.imageDiskMode = MyImageLoader.ImageDiskMode.CONTAIN_ORIGINAL;
                     break;
                 case R.id.rb_result:
-                    MyImageLoader.imageDiskMode = ImageDiskMode.RESULT;
+                    MyImageLoader.imageDiskMode = MyImageLoader.ImageDiskMode.RESULT;
                     break;
                 case R.id.rb_none:
-                    MyImageLoader.imageDiskMode = ImageDiskMode.NONE;
+                    MyImageLoader.imageDiskMode = MyImageLoader.ImageDiskMode.NONE;
                     break;
             }
         });

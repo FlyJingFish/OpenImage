@@ -20,7 +20,6 @@ import com.bumptech.glide.request.target.Target;
 import com.flyjingfish.openimage.GlideApp;
 import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimageglidelib.BitmapUtils;
-import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 import com.squareup.picasso.Callback;
@@ -39,6 +38,22 @@ public class MyImageLoader {
     public static final int PICASSO = 2;
     public static int loader_os_type = GLIDE;
     public static ImageDiskMode imageDiskMode = ImageDiskMode.CONTAIN_ORIGINAL;
+
+    public enum ImageDiskMode {
+        /**
+         * 硬盘缓存：包含原图
+         */
+        CONTAIN_ORIGINAL,
+        /**
+         * 硬盘缓存：只保存目标图片大小，如果选择这个可能出现小图扩大到大图的效果
+         */
+        RESULT,
+        /**
+         * 硬盘缓存：没有缓存
+         */
+        NONE
+    }
+
     private MyImageLoader() {
     }
 
