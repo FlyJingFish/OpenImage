@@ -119,6 +119,9 @@ public class KuaiShouActivity extends OpenImageActivity {
             behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         });
 
+        addOnSelectMediaListener((openImageUrl, position) -> {
+            rootBinding.tvTop.setText("标题呦～（第"+position+"个图)");
+        });
         rootBinding.llMu.setOnClickListener(v -> {
             InputDialog inputDialog = InputDialog.getDialog(rootBinding.tvMu.getText().toString());
             inputDialog.setOnContentCallBack(new BaseInputDialog.OnContentCallBack() {

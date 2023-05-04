@@ -328,4 +328,17 @@ class BaseActivity extends AppCompatActivity {
             photosViewModel.onRemoveItemListenerLiveData.setValue(onItemClickListener.toString());
         }
     }
+
+    protected void addOnSelectMediaListener(OnSelectMediaListener onSelectMediaListener) {
+        if (onSelectMediaListener != null) {
+            ImageLoadUtils.getInstance().setOnSelectMediaListener(onSelectMediaListener.toString(), onSelectMediaListener);
+            photosViewModel.onAddOnSelectMediaListenerLiveData.setValue(onSelectMediaListener.toString());
+        }
+    }
+
+    protected void removeOnSelectMediaListener(OnSelectMediaListener onSelectMediaListener) {
+        if (onSelectMediaListener != null) {
+            photosViewModel.onRemoveOnSelectMediaListenerLiveData.setValue(onSelectMediaListener.toString());
+        }
+    }
 }
