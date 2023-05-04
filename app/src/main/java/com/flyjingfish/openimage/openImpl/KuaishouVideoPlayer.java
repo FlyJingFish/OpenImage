@@ -2,18 +2,20 @@ package com.flyjingfish.openimage.openImpl;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimagefulllib.GSYVideoPlayer;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 
+import moe.codeest.enviews.ENPlayView;
+
 public class KuaishouVideoPlayer extends GSYVideoPlayer {
 
 
     private PhotoView coverImageView;
     private PhotoView smallCoverImageView;
+    private ENPlayView startBtn;
 
     public KuaishouVideoPlayer(Context context) {
         super(context);
@@ -26,31 +28,34 @@ public class KuaishouVideoPlayer extends GSYVideoPlayer {
         mThumbImageView = coverImageView;
         resolveThumbImage(mThumbImageView);
         smallCoverImageView = findViewById(R.id.iv_small_cover);
+        startBtn = findViewById(R.id.start_btn);
         changeUiToNormal();
-        mTextureViewContainer.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN){
-                    clickStartIcon();
-                }
-                return false;
-            }
-        });
-        mTextureViewContainer.setOnClickListener(v -> {
+    }
+
+    @Override
+    protected void touchSurfaceUp() {
+        super.touchSurfaceUp();
+        if (!mChangePosition) {
             clickStartIcon();
-        });
+        }
     }
 
     @Override
     protected void changeUiToNormal() {
         super.changeUiToNormal();
-        mStartButton.setVisibility(GONE);
+        setViewShowState(startBtn,GONE);
     }
 
     @Override
     protected void changeUiToPlayingShow() {
         super.changeUiToPlayingShow();
-        mStartButton.setVisibility(GONE);
+        setViewShowState(startBtn,GONE);
+    }
+
+    @Override
+    protected void changeUiToPauseShow() {
+        super.changeUiToPauseShow();
+        setViewShowState(startBtn,VISIBLE);
     }
 
     public PhotoView getCoverImageView() {

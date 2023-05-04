@@ -25,7 +25,6 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     boolean isUserInputResume = true;
     boolean isUserInputPause = true;
     boolean isPauseBeforeOnVideoPause = false;
-    boolean isLossTransientAudio = false;
     boolean isHideCover = false;
     protected OpenImageGSYVideoHelper gsyVideoHelper;
 
@@ -194,22 +193,10 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     public void onVideoPause() {
         isUserInputPause = false;
-        if (mCurrentState == CURRENT_STATE_PAUSE && !isLossTransientAudio){
+        if (mCurrentState == CURRENT_STATE_PAUSE){
             isPauseBeforeOnVideoPause = true;
         }
         super.onVideoPause();
-    }
-
-    @Override
-    protected void onLossTransientAudio() {
-        isLossTransientAudio = true;
-        super.onLossTransientAudio();
-    }
-
-    @Override
-    protected void onLossAudio() {
-        isLossTransientAudio = true;
-        super.onLossAudio();
     }
 
     @Override

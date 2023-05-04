@@ -46,7 +46,7 @@
         android:layout_centerVertical="true"
         android:visibility="invisible" />
     <moe.codeest.enviews.ENPlayView
-        android:id="@+id/start"
+        android:id="@+id/start_btn"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_centerHorizontal="true"
