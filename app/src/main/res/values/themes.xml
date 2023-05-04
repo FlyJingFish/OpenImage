@@ -32,7 +32,8 @@
     <style name="KuaishouPhotosTheme" >
         <item name="openImage.indicator.type">none</item>
         <item name="openImage.indicator.textFormat">@string/pos_text</item>
-        <item name="openImage.viewPager.orientation">horizontal</item>
+        <item name="openImage.viewPager.orientation">vertical</item>
+        <item name="openImage.touchClose.orientation">vertical</item>
         <item name="openImage.viewPager.pageMargin">10dp</item>
         <item name="openImage.statusBar.fontStyle">dark</item>
     </style>

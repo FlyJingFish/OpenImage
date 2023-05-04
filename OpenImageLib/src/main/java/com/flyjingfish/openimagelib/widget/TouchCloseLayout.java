@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.FloatRange;
 import androidx.core.text.TextUtilsCompat;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 
@@ -73,6 +74,7 @@ public class TouchCloseLayout extends FrameLayout {
     private int startX = 0;
     private int startY = 0;
     private long touchDownTime;
+    private ViewPager2 viewPager2;
 
     public TouchCloseLayout(Context context) {
         this(context, null);
@@ -99,7 +101,7 @@ public class TouchCloseLayout extends FrameLayout {
                 int endY = (int) ev.getY();
                 int disX = Math.abs(endX - startX);
                 int disY = Math.abs(endY - startY);
-                if ((orientation == OpenImageOrientation.HORIZONTAL && disX > disY && (isRtl?endX < startX:endX > startX)) || (orientation == OpenImageOrientation.VERTICAL && disY > disX && endY > startY)) {
+                if ((orientation == OpenImageOrientation.HORIZONTAL && disX > disY && (isRtl?endX < startX:endX > startX) && isCanScroll()) || (orientation == OpenImageOrientation.VERTICAL && disY > disX && endY > startY && isCanScroll())) {
                     if (onTouchCloseListener != null){
                         onTouchCloseListener.onStartTouch();
                     }
@@ -174,6 +176,21 @@ public class TouchCloseLayout extends FrameLayout {
                 break;
         }
         return true;
+    }
+
+    private boolean isCanScroll(){
+        if (viewPager2 != null){
+            if (orientation == OpenImageOrientation.VERTICAL && viewPager2.getOrientation() == ViewPager2.ORIENTATION_VERTICAL){
+                return viewPager2.getCurrentItem() == 0;
+            }else if (orientation == OpenImageOrientation.HORIZONTAL && viewPager2.getOrientation() == ViewPager2.ORIENTATION_HORIZONTAL){
+                return viewPager2.getCurrentItem() == 0;
+            }else {
+                return orientation == OpenImageOrientation.HORIZONTAL && viewPager2.getOrientation() == ViewPager2.ORIENTATION_VERTICAL
+                        || orientation == OpenImageOrientation.VERTICAL && viewPager2.getOrientation() == ViewPager2.ORIENTATION_HORIZONTAL;
+            }
+        }else {
+            return true;
+        }
     }
 
     @Override
@@ -262,6 +279,14 @@ public class TouchCloseLayout extends FrameLayout {
      */
     public void setTouchView(View touchView) {
         setTouchView(touchView,null);
+    }
+
+    /**
+     * 设置相册{@link ViewPager2}
+     * @param viewPager2 相册{@link ViewPager2}
+     */
+    public void setViewPager2(ViewPager2 viewPager2) {
+        this.viewPager2 = viewPager2;
     }
 
     /**

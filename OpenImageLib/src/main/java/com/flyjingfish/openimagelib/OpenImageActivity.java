@@ -27,7 +27,6 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
@@ -159,7 +158,12 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         rootView.setTouchCloseScale(touchScaleClose);
         rootView.setTouchView(flTouchView, vBg);
         rootView.setDisEnableTouchClose(disEnableTouchClose);
-        rootView.setOrientation(orientation == OpenImageOrientation.VERTICAL ? OpenImageOrientation.HORIZONTAL : OpenImageOrientation.VERTICAL);
+        if (touchCloseOrientation != null){
+            rootView.setOrientation(touchCloseOrientation);
+        }else {
+            rootView.setOrientation(orientation == OpenImageOrientation.VERTICAL ? OpenImageOrientation.HORIZONTAL : OpenImageOrientation.VERTICAL);
+        }
+        rootView.setViewPager2(viewPager);
         rootView.setOnTouchCloseListener(this);
     }
 
@@ -236,7 +240,8 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         }
         VideoFragmentCreate videoFragmentCreate = videoCreate;
         ImageFragmentCreate imageFragmentCreate = imageCreate;
-        viewPager.setAdapter(new FragmentStateAdapter(this) {
+
+        openImageAdapter = new OpenImageFragmentStateAdapter(this){
             @NonNull
             @Override
             public Fragment createFragment(int position) {
@@ -280,12 +285,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                 fragment.setArguments(bundle);
                 return fragment;
             }
-
-            @Override
-            public int getItemCount() {
-                return openImageBeans.size();
-            }
-        });
+        };
+        openImageAdapter.setNewData(openImageBeans);
+        viewPager.setAdapter(openImageAdapter);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             boolean isFirstBacked = false;
 
@@ -449,6 +451,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             AttrsUtils.setBackgroundResourceOrColor(this, themeRes, R.attr.openImage_background, vBg);
             indicatorType = AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_indicator_type);
             orientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_viewPager_orientation));
+            touchCloseOrientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_touchClose_orientation,-1));
             if (indicatorType < 2 && openImageBeans.size() > 1) {
                 if (indicatorType == INDICATOR_IMAGE) {//图片样式
                     float interval = AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_image_interval, -1);

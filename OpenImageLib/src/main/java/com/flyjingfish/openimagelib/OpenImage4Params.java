@@ -291,7 +291,10 @@ class OpenImage4Params {
                 }
             } else {
                 ImageView shareExitView = null;
-                ImageView shareView = imageViews.get(showPosition);
+                ImageView shareView = null;
+                if (showPosition < imageViews.size()){
+                    shareView = imageViews.get(showPosition);
+                }
                 if (shareView != null && shareView.isAttachedToWindow()) {
                     autoSetScaleType(shareView);
                     shareExitView = shareView;

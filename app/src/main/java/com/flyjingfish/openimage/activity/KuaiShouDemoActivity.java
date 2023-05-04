@@ -99,20 +99,17 @@ public class KuaiShouDemoActivity extends BaseActivity {
             layoutParams.height = (int) ScreenUtils.dp2px(KuaiShouDemoActivity.this, 220);
             MyImageLoader.getInstance().load(holder.ivImage, datas.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
             holder.ivImage.setOnClickListener(v -> {
-                OpenImage.with(KuaiShouDemoActivity.this).setClickRecyclerView(binding.rv.rv, new SourceImageViewIdGet() {
-                            @Override
-                            public int getImageViewId(OpenImageUrl data, int position) {
-                                return R.id.iv_image;
-                            }
-                        }).setAutoScrollScanPosition(true)
+                OpenImage.with(KuaiShouDemoActivity.this).setClickImageView(holder.ivImage).setAutoScrollScanPosition(true)
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
-                        .setImageUrlList(datas)
+                        .setImageUrl(datas.get(position))
+                        .setClickPosition(0)
                         .addPageTransformer(new ScaleInTransformer())
                         .setOpenImageStyle(R.style.KuaishouPhotosTheme)
                         .disableClickClose()
                         .setVideoFragmentCreate(new KuaishouVideoFragmentCreateImpl())
                         .setOpenImageActivityCls(KuaiShouActivity.class)
-                        .setClickPosition(position).show();
+                        .setWechatExitFillInEffect(true)
+                        .show();
 
             });
         }

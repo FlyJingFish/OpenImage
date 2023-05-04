@@ -16,8 +16,10 @@ public enum OpenImageOrientation {
     public static OpenImageOrientation getOrientation(int orientation){
         if (orientation == 1){
             return VERTICAL;
-        }else {
+        }else if (orientation == 0){
             return HORIZONTAL;
+        }else {
+            return null;
         }
     }
 

@@ -55,5 +55,9 @@
     </attr>
     <!--卡片之间的距离-->
     <attr name="openImage.viewPager.pageMargin" format="dimension" />
-
+    <!--触摸关闭方向-->
+    <attr name="openImage.touchClose.orientation" format="enum">
+        <enum name="horizontal" value="0" />
+        <enum name="vertical" value="1" />
+    </attr>
 </resources>

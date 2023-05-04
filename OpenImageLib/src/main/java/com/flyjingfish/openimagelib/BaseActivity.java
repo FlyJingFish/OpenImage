@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
@@ -65,6 +64,7 @@ class BaseActivity extends AppCompatActivity {
     protected OpenImageIndicatorTextBinding indicatorTextBinding;
     protected ImageIndicatorAdapter imageIndicatorAdapter;
     protected OpenImageOrientation orientation;
+    protected OpenImageOrientation touchCloseOrientation;
     //    protected ImageDiskMode imageDiskMode;
     protected ShapeImageView.ShapeScaleType srcScaleType;
     protected OnSelectMediaListener onSelectMediaListener;
@@ -74,6 +74,7 @@ class BaseActivity extends AppCompatActivity {
     protected FontStyle fontStyle;
     protected BaseInnerFragment upLayerFragment;
     protected UpperLayerOption upperLayerOption;
+    protected OpenImageFragmentStateAdapter openImageAdapter;
     protected final Handler closeHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {

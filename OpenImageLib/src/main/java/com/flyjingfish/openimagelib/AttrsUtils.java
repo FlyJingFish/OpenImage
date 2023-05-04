@@ -24,16 +24,20 @@ class AttrsUtils {
         return defaultValue;
     }
 
-    public static int getTypeValueInt(Context context, int themeRes, int attr) {
+    public static int getTypeValueInt(Context context, int themeRes, int attr, int defaultValue) {
         try {
             int[] attribute = new int[]{attr};
             TypedArray array = context.obtainStyledAttributes(themeRes, attribute);
-            int intValue = array.getInt(0, 0);
+            int intValue = array.getInt(0, defaultValue);
             array.recycle();
             return intValue;
         } catch (Exception ignored) {
         }
-        return 0;
+        return defaultValue;
+    }
+
+    public static int getTypeValueInt(Context context, int themeRes, int attr) {
+        return getTypeValueInt(context, themeRes, attr,0);
     }
 
     public static float getTypeValueDimension(Context context, int themeRes, int attr) {
