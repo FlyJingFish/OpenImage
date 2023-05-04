@@ -1,5 +1,20 @@
 # OpenImage 更新日志
 
+## 1.7.7
+
+1、OpenImageActivity 页面新增 Item 点击监听器、长按监听器、选中监听器
+
+2、修复传入 ImageView 返回时的空指针 bug
+
+3、新增设置触摸关闭控件方向，并完善触摸关闭控件
+
+4、修复下拉关闭的 bug
+
+5、新增相册适配器
+
+6、新增快手示例
+
+
 ## 1.7.6
 
 1、修复部分情况下 OnSelectMediaListener 返回的position不对的问题
