@@ -11,7 +11,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="对于不满足于现有大图布局的人，可以参考这里的代码，您可自行尝试更多写法，
+            android:text="对于不满足于现有大图布局的人，可以参考这里的代码，您可自行尝试更多写法（前一页面的快手Demo也属于重度定制页面），
             \n但是需要保证一点嵌套顺序可以是以下两种
             \n1、TouchCloseLayout -> FrameLayout -> ViewPager2
             \n2、TouchCloseLayout -> FrameLayout -> 再次嵌套N层其他的 -> ViewPager2 "/>
