@@ -204,7 +204,7 @@ class OpenImage4ParseData extends OpenImage4Params {
     private boolean checkIllegalException4ShareView(Pair<View, String> viewPair,String str){
         if (viewPair == null){
             if (ActivityCompatHelper.isApkInDebug(context)){
-                throw new IllegalArgumentException(str+",详情看问题13 https://github.com/FlyJingFish/OpenImage/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98");
+                throw new IllegalArgumentException(str+",详情看问题13 https://github.com/FlyJingFish/OpenImage/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98#13%E5%81%87%E5%A6%82%E7%A2%B0%E5%88%B0%E4%BB%A5%E4%B8%8B%E5%87%A0%E7%A7%8D%E9%94%99%E8%AF%AF%E6%8F%90%E7%A4%BA");
             }else {
                 isNoneClickView = true;
                 show4ParseData();
