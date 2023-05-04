@@ -100,6 +100,9 @@ public class KuaiShouActivity extends OpenImageActivity {
                 Log.e("onSlide","=="+(1+slideOffset));
                 int endHeight = (int) (startHeight + (1+slideOffset)*(height-startHeight));
                 setViewHeight(rootBinding.vComment,endHeight);
+                rootBinding.tvTop.setTranslationY(-(1+slideOffset)*(height-startHeight));
+                rootBinding.ivLike.setTranslationY(-(1+slideOffset)*(height-startHeight)/2);
+                rootBinding.ivLike.setAlpha(-slideOffset);
             }
         });
         rootBinding.vTouch.setOnTouchListener((v, event) -> {
