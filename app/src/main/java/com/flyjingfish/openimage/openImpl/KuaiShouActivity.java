@@ -168,6 +168,10 @@ public class KuaiShouActivity extends OpenImageActivity {
                 }
             }
         });
+
+        rootBinding.tvTop.setOnClickListener(v -> {
+            close(false);
+        });
     }
 
 
