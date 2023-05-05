@@ -52,6 +52,10 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         notifyDataSetChanged();
     }
 
+    public List<OpenImageDetail> getData() {
+        return openImageBeans;
+    }
+
     public List<OpenImageDetail> filterData(Collection<? extends OpenImageUrl> imageDetails){
         if (imageDetails != null){
             List<OpenImageDetail> openImageDetails = new ArrayList<>();

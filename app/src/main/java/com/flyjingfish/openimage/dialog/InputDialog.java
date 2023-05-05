@@ -1,17 +1,23 @@
 package com.flyjingfish.openimage.dialog;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.DialogInputBinding;
@@ -55,13 +61,6 @@ public class InputDialog extends BaseInputDialog<DialogInputBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                SystemKeyboardUtils.showSoftInput(requireContext());
-            }
-        });
         switchKeyboardUtil = new SwitchKeyboardUtil(requireActivity());
         switchKeyboardUtil.setMenuViewHeightEqualKeyboard(true);
         switchKeyboardUtil.setUseSwitchAnim(true);
@@ -87,6 +86,7 @@ public class InputDialog extends BaseInputDialog<DialogInputBinding> {
 
             @Override
             public void onKeyboardHide(int keyboardHeight) {
+                Log.e("inputDialog","====2="+isShowMenu);
                 if (!isShowMenu){
                     dismiss();
                 }
@@ -96,6 +96,7 @@ public class InputDialog extends BaseInputDialog<DialogInputBinding> {
             public void onKeyboardShow(int keyboardHeight) {
                 binding.ivFace.setImageResource(R.drawable.ic_face);
                 isShowMenu = false;
+                Log.e("inputDialog","====3="+isShowMenu);
             }
 
 
@@ -103,6 +104,7 @@ public class InputDialog extends BaseInputDialog<DialogInputBinding> {
             @Override
             public void onShowMenuLayout(View layoutView) {
                 isShowMenu = true;
+                Log.e("inputDialog","====4="+isShowMenu);
                 binding.ivFace.setImageResource(layoutView == binding.llEmoji?R.drawable.ic_keyboard:R.drawable.ic_face);
             }
 

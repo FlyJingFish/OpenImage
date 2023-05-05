@@ -9,12 +9,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimagefulllib.VideoPlayerFragment;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.widget.LoadingView;
+import com.shuyu.gsyvideoplayer.listener.GSYStateUiListener;
 
 public class KuaishouPlayerFragment extends VideoPlayerFragment {
 
@@ -23,6 +25,7 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
     private LinearLayout llBtn;
     private TextView commentTv;
     private TextView titleTv;
+    private boolean isOpenSlide;
 
     @Override
     protected PhotoView getSmallCoverImageView() {
@@ -70,6 +73,17 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
             llBtn.setAlpha(aFloat);
             titleTv.setAlpha(aFloat);
         });
+        kuaishouViewModel.slidingLiveData.observe(getViewLifecycleOwner(), aFloat -> {
+            llBtn.setAlpha(1-aFloat);
+            titleTv.setAlpha(1-aFloat);
+        });
+        kuaishouViewModel.slideStatusLiveData.observe(getViewLifecycleOwner(), aBoolean -> isOpenSlide = aBoolean);
+        friendVideoPlayer.setOnSurfaceTouchListener(() -> {
+            kuaishouViewModel.closeSlideLiveData.setValue(true);
+            return isOpenSlide;
+        });
+        kuaishouViewModel.pausePlayLiveData.observe(getViewLifecycleOwner(), aBoolean -> friendVideoPlayer.playPause());
+        friendVideoPlayer.setGSYStateUiListener(state -> kuaishouViewModel.playStateLiveData.setValue(new PlayState(state,showPosition)));
     }
 
     boolean isStartedTouch;

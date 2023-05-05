@@ -32,12 +32,25 @@ public class KuaishouVideoPlayer extends GSYVideoPlayer {
         changeUiToNormal();
     }
 
+
+    @Override
+    protected void touchSurfaceMove(float deltaX, float deltaY, float y) {
+//        super.touchSurfaceMove(deltaX, deltaY, y);
+    }
+
     @Override
     protected void touchSurfaceUp() {
-        super.touchSurfaceUp();
         if (!mChangePosition) {
+            if (onSurfaceTouchListener != null && onSurfaceTouchListener.onTouchUp()){
+                return;
+            }
             clickStartIcon();
         }
+        super.touchSurfaceUp();
+    }
+
+    public void playPause(){
+        clickStartIcon();
     }
 
     @Override
@@ -58,6 +71,14 @@ public class KuaishouVideoPlayer extends GSYVideoPlayer {
         setViewShowState(startBtn,VISIBLE);
     }
 
+    @Override
+    protected void setViewShowState(View view, int visibility) {
+        super.setViewShowState(view, visibility);
+        if (view == mThumbImageViewLayout && smallCoverImageView != null){
+            smallCoverImageView.setVisibility(visibility);
+        }
+    }
+
     public PhotoView getCoverImageView() {
         return coverImageView;
     }
@@ -74,4 +95,17 @@ public class KuaishouVideoPlayer extends GSYVideoPlayer {
         return R.layout.layout_kuaishou_player;
     }
 
+    public interface OnSurfaceTouchListener{
+        boolean onTouchUp();
+    }
+
+    private OnSurfaceTouchListener onSurfaceTouchListener;
+
+    public OnSurfaceTouchListener getOnSurfaceTouchListener() {
+        return onSurfaceTouchListener;
+    }
+
+    public void setOnSurfaceTouchListener(OnSurfaceTouchListener onSurfaceTouchListener) {
+        this.onSurfaceTouchListener = onSurfaceTouchListener;
+    }
 }

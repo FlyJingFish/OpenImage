@@ -19,65 +19,91 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-        <RelativeLayout
+        <com.flyjingfish.openimage.widget.SlideLayout
+            android:id="@+id/slideLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="55dp"
             android:background="@color/black"
             >
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/v_comment"
-                android:layout_gravity="center" />
-
-            <TextView
-                android:id="@+id/tv_top"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="14dp"
-                android:drawableStart="@drawable/video_back"
-                android:drawablePadding="20dp"
-                android:text="标题呦～"
-                android:textColor="@color/white" />
-
-
-            <View
-                android:id="@+id/v_comment"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_alignParentBottom="true">
-
-            </View>
             <RelativeLayout
-                android:id="@+id/ll_mu"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:background="@drawable/bg_edit_person_info"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_alignParentBottom="true"
-                android:paddingHorizontal="13dp"
-                tools:visibility="visible"
-                android:paddingVertical="13dp">
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/ll_right_video">
 
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/v_comment"
+                    android:layout_gravity="center" />
 
                 <TextView
-                    android:id="@+id/tv_mu"
+                    android:id="@+id/tv_top"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edit_send_person_info"
-                    android:minHeight="30dp"
-                    android:padding="4dp"
-                    android:hint="来一发弹幕吧～"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:text=""
-                    android:textSize="13sp" />
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="14dp"
+                    android:drawableStart="@drawable/video_back"
+                    android:drawablePadding="20dp"
+                    android:text="标题呦～"
+                    android:textColor="@color/white" />
+
+
+                <View
+                    android:id="@+id/v_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_alignParentBottom="true">
+
+                </View>
 
             </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/ll_right_video"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+                android:layout_alignParentEnd="true"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:text="10个作品"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_videos"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </LinearLayout>
+        </com.flyjingfish.openimage.widget.SlideLayout>
+        <RelativeLayout
+            android:id="@+id/ll_mu"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/bg_edit_person_info"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:paddingHorizontal="13dp"
+            tools:visibility="visible"
+            android:paddingVertical="13dp">
+
+
+            <TextView
+                android:id="@+id/tv_mu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_edit_send_person_info"
+                android:minHeight="30dp"
+                android:padding="4dp"
+                android:hint="来一发弹幕吧～"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text=""
+                android:textSize="13sp" />
 
         </RelativeLayout>
         <View

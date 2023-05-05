@@ -50,4 +50,12 @@ public class OpenImageVideoPlayer extends GSYVideoPlayer {
         return R.layout.open_image_layout_videos;
     }
 
+    @Override
+    protected void setViewShowState(View view, int visibility) {
+        super.setViewShowState(view, visibility);
+        if (view == mThumbImageViewLayout && smallCoverImageView != null){
+            smallCoverImageView.setVisibility(visibility);
+        }
+    }
+
 }

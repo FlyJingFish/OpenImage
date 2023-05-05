@@ -45,4 +45,12 @@ public class FriendsVideoPlayer extends GSYVideoPlayer {
     public int getLayoutId() {
         return R.layout.layout_friends_player;
     }
+
+    @Override
+    protected void setViewShowState(View view, int visibility) {
+        super.setViewShowState(view, visibility);
+        if (view == mThumbImageViewLayout && smallCoverImageView != null){
+            smallCoverImageView.setVisibility(visibility);
+        }
+    }
 }

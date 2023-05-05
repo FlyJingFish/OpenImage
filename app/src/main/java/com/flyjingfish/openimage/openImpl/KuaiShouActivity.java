@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,14 +22,19 @@ import com.flyjingfish.openimage.DataUtils;
 import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.bean.MessageBean;
+import com.flyjingfish.openimage.databinding.ItemKuaishouImageBinding;
 import com.flyjingfish.openimage.databinding.ItemMsgTextBinding;
 import com.flyjingfish.openimage.databinding.MyActivityKuaishouBinding;
 import com.flyjingfish.openimage.dialog.BaseInputDialog;
 import com.flyjingfish.openimage.dialog.InputDialog;
+import com.flyjingfish.openimage.imageloader.MyImageLoader;
+import com.flyjingfish.openimage.widget.SlideLayout;
 import com.flyjingfish.openimagelib.OpenImageActivity;
+import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +50,7 @@ public class KuaiShouActivity extends OpenImageActivity {
     public static final String MY_DATA_KEY = "my_data";
     private BottomSheetBehavior behavior;
     private KuaishouViewModel kuaishouViewModel;
+    private SlideAdapter slideAdapter;
 
     @Override
     public View getContentView() {
@@ -84,8 +91,8 @@ public class KuaiShouActivity extends OpenImageActivity {
         rootBinding.tvTop.setLayoutParams(layoutParams);
         behavior = BottomSheetBehavior.from(rootBinding.rlComment);
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        final int height = (int) ScreenUtils.dp2px(KuaiShouActivity.this, 400);
-        final int startHeight = (int) ScreenUtils.dp2px(KuaiShouActivity.this, 55);
+        final int height = (int) ScreenUtils.dp2px(KuaiShouActivity.this, 345);
+        final int startHeight = 0;
         behavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -128,6 +135,8 @@ public class KuaiShouActivity extends OpenImageActivity {
 
         addOnSelectMediaListener((openImageUrl, position) -> {
             rootBinding.tvTop.setText("标题呦～（第"+position+"个图)");
+            slideAdapter.setSelectPos(position);
+            rootBinding.rvVideos.scrollToPosition(position);
         });
         rootBinding.llMu.setOnClickListener(v -> {
             InputDialog inputDialog = InputDialog.getDialog(rootBinding.tvMu.getText().toString());
@@ -179,6 +188,49 @@ public class KuaiShouActivity extends OpenImageActivity {
         rootBinding.tvTop.setOnClickListener(v -> {
             close(false);
         });
+        kuaishouViewModel.closeSlideLiveData.observe(this, aBoolean -> rootBinding.slideLayout.slideBack());
+        rootBinding.slideLayout.setSlideView(rootBinding.llRightVideo);
+        int slideMaxWidth = (int) ScreenUtils.dp2px(this,50);
+        rootBinding.slideLayout.setSlideMaxWidth(slideMaxWidth);
+        rootBinding.slideLayout.setOnSlideListener(new SlideLayout.OnSlideListener() {
+            @Override
+            public void onStartSlide() {
+                rootBinding.touchCloseLayout.setDisEnableTouchClose(true);
+                kuaishouViewModel.slideStatusLiveData.setValue(true);
+            }
+
+            @Override
+            public void onSliding(int distance) {
+                float percent = distance*1f/slideMaxWidth;
+                kuaishouViewModel.slidingLiveData.setValue(percent);
+            }
+
+            @Override
+            public void onEndSlide(int distance) {
+                if (distance > 0){
+                    kuaishouViewModel.slideStatusLiveData.setValue(true);
+                    kuaishouViewModel.slidingLiveData.setValue(1f);
+                    rootBinding.touchCloseLayout.setDisEnableTouchClose(true);
+                }else {
+                    kuaishouViewModel.slideStatusLiveData.setValue(false);
+                    kuaishouViewModel.slidingLiveData.setValue(0f);
+                    rootBinding.touchCloseLayout.setDisEnableTouchClose(false);
+                }
+            }
+        });
+        kuaishouViewModel.slidingLiveData.observe(this, aFloat -> {
+            rootBinding.tvTop.setAlpha(1-aFloat);
+        });
+
+        slideAdapter = new SlideAdapter(openImageBeans);
+        rootBinding.rvVideos.setLayoutManager(new LinearLayoutManager(this));
+        rootBinding.rvVideos.setAdapter(slideAdapter);
+
+        kuaishouViewModel.playStateLiveData.observe(this, playState -> {
+            if (playState.position == slideAdapter.getSelectPos()){
+                slideAdapter.setPause(playState.state == GSYVideoView.CURRENT_STATE_PAUSE);
+            }
+        });
     }
 
 
@@ -227,6 +279,7 @@ public class KuaiShouActivity extends OpenImageActivity {
     private void setData(List<MessageBean> datas) {
         runOnUiThread(() -> {
             openImageAdapter.addData(datas);
+            slideAdapter.setList(openImageBeans);
         });
 
     }
@@ -252,6 +305,78 @@ public class KuaiShouActivity extends OpenImageActivity {
         }
 
         static class MyHolder extends RecyclerView.ViewHolder{
+
+            public MyHolder(@NonNull View itemView) {
+                super(itemView);
+            }
+        }
+    }
+
+    private class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.MyHolder> {
+        List<OpenImageDetail> list;
+        private int selectPos;
+        private boolean isPause;
+
+        public int getSelectPos() {
+            return selectPos;
+        }
+
+        public void setSelectPos(int selectPos) {
+            this.selectPos = selectPos;
+            notifyDataSetChanged();
+        }
+
+        public SlideAdapter(List<OpenImageDetail> list) {
+            this.list = list;
+        }
+
+        public List<OpenImageDetail> getList() {
+            return list;
+        }
+
+        public void setList(List<OpenImageDetail> list) {
+            this.list = list;
+            notifyDataSetChanged();
+        }
+
+        public boolean isPause() {
+            return isPause;
+        }
+
+        public void setPause(boolean pause) {
+            isPause = pause;
+            notifyDataSetChanged();
+        }
+
+        @NonNull
+        @Override
+        public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_kuaishou_image, parent, false);
+            return new MyHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyHolder holder, final int position) {
+            ItemKuaishouImageBinding binding = ItemKuaishouImageBinding.bind(holder.itemView);
+            binding.getRoot().setSelected(position == selectPos);
+            binding.ivImage.setOnClickListener(v -> {
+                if (position != rootBinding.viewPager.getCurrentItem()){
+                    rootBinding.viewPager.setCurrentItem(position,false);
+                }else {
+                    kuaishouViewModel.pausePlayLiveData.setValue(true);
+                }
+            });
+            binding.ivPause.setVisibility(position == selectPos?View.VISIBLE:View.GONE);
+            binding.ivPause.setImageResource(isPause ?R.drawable.ic_play:R.drawable.ic_pause);
+            MyImageLoader.getInstance().load(binding.ivImage,list.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder,R.mipmap.img_load_placeholder);
+        }
+
+        @Override
+        public int getItemCount() {
+            return list != null?list.size():0;
+        }
+
+        class MyHolder extends RecyclerView.ViewHolder{
 
             public MyHolder(@NonNull View itemView) {
                 super(itemView);
