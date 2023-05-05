@@ -109,7 +109,6 @@ public class KuaiShouDemoActivity extends BaseActivity {
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
                         .setImageUrl(datas.get(position))
                         .setClickPosition(0,position)
-                        .addPageTransformer(new ScaleInTransformer())
                         .setOpenImageStyle(R.style.KuaishouPhotosTheme)
                         .disableClickClose()
                         .setVideoFragmentCreate(new KuaishouVideoFragmentCreateImpl())

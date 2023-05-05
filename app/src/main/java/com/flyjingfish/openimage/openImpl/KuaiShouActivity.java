@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -42,6 +43,7 @@ public class KuaiShouActivity extends OpenImageActivity {
     public static final String BUNDLE_DATA_KEY = "bundle_data";
     public static final String MY_DATA_KEY = "my_data";
     private BottomSheetBehavior behavior;
+    private KuaishouViewModel kuaishouViewModel;
 
     @Override
     public View getContentView() {
@@ -73,6 +75,10 @@ public class KuaiShouActivity extends OpenImageActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        kuaishouViewModel = new ViewModelProvider(this).get(KuaishouViewModel.class);
+        kuaishouViewModel.clickLikeLiveData.observe(this, aBoolean -> {
+            behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        });
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rootBinding.tvTop.getLayoutParams();
         layoutParams.topMargin = ScreenUtils.getStatusBarHeight(this);
         rootBinding.tvTop.setLayoutParams(layoutParams);
@@ -101,8 +107,9 @@ public class KuaiShouActivity extends OpenImageActivity {
                 int endHeight = (int) (startHeight + (1+slideOffset)*(height-startHeight));
                 setViewHeight(rootBinding.vComment,endHeight);
                 rootBinding.tvTop.setTranslationY(-(1+slideOffset)*(height-startHeight));
-                rootBinding.ivLike.setTranslationY(-(1+slideOffset)*(height-startHeight)/2);
-                rootBinding.ivLike.setAlpha(-slideOffset);
+                kuaishouViewModel.btnsTranslationYLiveData.setValue(-(1+slideOffset)*(height-startHeight)/2);
+                kuaishouViewModel.btnsAlphaLiveData.setValue(-slideOffset);
+
             }
         });
         rootBinding.vTouch.setOnTouchListener((v, event) -> {
@@ -110,9 +117,6 @@ public class KuaiShouActivity extends OpenImageActivity {
                 behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
             return true;
-        });
-        rootBinding.ivLike.setOnClickListener(v -> {
-            behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         });
         rootBinding.tvCommentClose.setOnClickListener(v -> {
             behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
