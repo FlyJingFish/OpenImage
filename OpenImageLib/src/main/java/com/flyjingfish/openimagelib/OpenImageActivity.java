@@ -841,6 +841,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         }
         touchHideMoreView();
         setExitView();
+        photosViewModel.onCanLayoutLiveData.setValue(false);
         if (!isTouchClose && fontStyle == FontStyle.FULL_SCREEN) {
             StatusBarHelper.cancelFullScreen(OpenImageActivity.this);
             mHandler.postDelayed(this::finishAfterTransition, 100);

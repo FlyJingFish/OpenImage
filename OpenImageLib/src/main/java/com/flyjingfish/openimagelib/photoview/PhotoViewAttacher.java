@@ -15,11 +15,13 @@
  */
 package com.flyjingfish.openimagelib.photoview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.transition.Transition;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,8 +33,20 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.flyjingfish.openimagelib.OpenImageActivity;
 import com.flyjingfish.openimagelib.OpenImageConfig;
+import com.flyjingfish.openimagelib.PhotosViewModel;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
+
+import java.util.HashSet;
 
 /**
  * The component of {@link PhotoView} which does the work allowing for zooming, scaling, panning, etc.
@@ -101,6 +115,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float exitSuperTransY;
     private float exitStartWidth;
     private float exitStartHeight;
+    public boolean isCanLayout;
 
     public void setStartWidth(float mStartWidth) {
         this.mStartWidth = mStartWidth;
@@ -207,6 +222,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         if (imageView.isInEditMode()) {
             return;
         }
+        ensureCanLayout();
         mBaseRotation = 0.0f;
         // Create Gesture Detectors...
         mScaleDragDetector = new CustomGestureDetector(imageView.getContext(), onGestureListener);
@@ -296,6 +312,122 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         screenOrientationEvent = new ScreenOrientationEvent(mImageView.getContext());
         registerDisplayListener();
     }
+    static HashSet<String> onTransitionEndSet = new HashSet<>();
+    private void ensureCanLayout() {
+        final Activity activity = ((Activity) mImageView.getContext());
+        if (activity instanceof OpenImageActivity) {
+            final OpenImageActivity openImageActivity = ((OpenImageActivity) activity);
+            final PhotosViewModel photosViewModel = new ViewModelProvider(openImageActivity).get(PhotosViewModel.class);
+            final Observer<Boolean> onCanLayoutObserver = aBoolean -> isCanLayout = aBoolean;
+            final Observer<Boolean> transitionEndObserver = aBoolean -> setCanLayoutListener();
+            mImageView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                    photosViewModel.onCanLayoutLiveData.observe(openImageActivity, onCanLayoutObserver);
+                    photosViewModel.transitionEndLiveData.observe(openImageActivity, transitionEndObserver);
+                }
+
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    photosViewModel.onCanLayoutLiveData.removeObserver(onCanLayoutObserver);
+                    photosViewModel.transitionEndLiveData.removeObserver(transitionEndObserver);
+                }
+            });
+        }else if (activity instanceof FragmentActivity){
+            final String activityKey = activity.toString();
+            final Transition transition = activity.getWindow().getSharedElementEnterTransition();
+            ((FragmentActivity) activity).getLifecycle().addObserver(new LifecycleEventObserver() {
+                @Override
+                public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                    if (event == Lifecycle.Event.ON_DESTROY){
+                        onTransitionEndSet.remove(activityKey);
+                        source.getLifecycle().removeObserver(this);
+                    }
+                }
+            });
+            if (transition != null) {
+                if (onTransitionEndSet.contains(activityKey)){
+                    setCanLayoutListener();
+                    return;
+                }
+                transition.addListener(new MyTransitionListener() {
+                    @Override
+                    public void onTransitionEnd(Transition transition) {
+                        onTransitionEndSet.add(activityKey);
+                        setCanLayoutListener();
+                    }
+                });
+            }else {
+                setCanLayoutListener();
+            }
+        }else {
+            final String activityKey = activity.toString();
+            final Transition transition = activity.getWindow().getSharedElementEnterTransition();
+            if (transition != null) {
+                if (onTransitionEndSet.contains(activityKey)){
+                    isCanLayout = true;
+                    return;
+                }
+                transition.addListener(new MyTransitionListener() {
+                    @Override
+                    public void onTransitionEnd(Transition transition) {
+                        onTransitionEndSet.add(activityKey);
+                        isCanLayout = true;
+                    }
+                });
+            }else {
+                isCanLayout = true;
+            }
+
+        }
+    }
+
+    private static class MyTransitionListener implements Transition.TransitionListener {
+
+        @Override
+        public void onTransitionStart(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionEnd(Transition transition) {
+            transition.removeListener(this);
+        }
+
+        @Override
+        public void onTransitionCancel(Transition transition) {
+            transition.removeListener(this);
+        }
+
+        @Override
+        public void onTransitionPause(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionResume(Transition transition) {
+
+        }
+    }
+
+    private void setCanLayoutListener(){
+        if (mImageView.isAttachedToWindow()){
+            isCanLayout = true;
+            return;
+        }
+        mImageView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                mImageView.removeOnAttachStateChangeListener(this);
+                isCanLayout = true;
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                mImageView.removeOnAttachStateChangeListener(this);
+            }
+        });
+    }
 
     public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
         this.mGestureDetector.setOnDoubleTapListener(newOnDoubleTapListener);
@@ -377,7 +509,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             if (mScreenOrientationChange) {
                 mTargetWidth = 0;
             }
-            if (right > left && mTargetWidth == 0) {
+            if (right > left && (mTargetWidth == 0 || isCanLayout)) {
                 mTargetWidth = right - left;
                 mTargetHeight = bottom - top;
                 mTargetViewHeight = mTargetHeight;

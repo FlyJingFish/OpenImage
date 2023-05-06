@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 public class PhotosViewModel extends AndroidViewModel {
     MutableLiveData<Boolean> closeViewLiveData = new MutableLiveData<>();
-    MutableLiveData<Boolean> transitionEndLiveData = new MutableLiveData<>();
+    public MutableLiveData<Boolean> transitionEndLiveData = new MutableLiveData<>();
     MutableLiveData<Float> onTouchScaleLiveData = new MutableLiveData<>();
     MutableLiveData<Float> onTouchCloseLiveData = new MutableLiveData<>();
     MutableLiveData<String> onAddItemListenerLiveData = new MutableLiveData<>();
@@ -17,6 +17,7 @@ public class PhotosViewModel extends AndroidViewModel {
     MutableLiveData<String> onRemoveItemLongListenerLiveData = new MutableLiveData<>();
     MutableLiveData<String> onAddOnSelectMediaListenerLiveData = new MutableLiveData<>();
     MutableLiveData<String> onRemoveOnSelectMediaListenerLiveData = new MutableLiveData<>();
+    public MutableLiveData<Boolean> onCanLayoutLiveData = new MutableLiveData<>();
 
     public PhotosViewModel(@NonNull Application application) {
         super(application);

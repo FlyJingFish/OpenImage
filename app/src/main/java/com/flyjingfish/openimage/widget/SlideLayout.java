@@ -44,7 +44,6 @@ public class SlideLayout extends RelativeLayout {
         }
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                showCommentAnim.cancel();
                 startX = (int) ev.getX();
                 startY = (int) ev.getY();
                 break;
@@ -54,6 +53,7 @@ public class SlideLayout extends RelativeLayout {
                 int disX = Math.abs(endX - startX);
                 int disY = Math.abs(endY - startY);
                 if ((disX > disY && disX > ViewConfiguration.get(getContext()).getScaledTouchSlop()) || (disX > disY && disX > ViewConfiguration.get(getContext()).getScaledTouchSlop() && Math.abs(slidingDistance)>0)) {
+                    showCommentAnim.cancel();
                     if (onSlideListener != null){
                         onSlideListener.onStartSlide();
                     }
