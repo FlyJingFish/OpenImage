@@ -89,6 +89,9 @@ public class KuaiShouActivity extends OpenImageActivity {
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rootBinding.tvTop.getLayoutParams();
         layoutParams.topMargin = ScreenUtils.getStatusBarHeight(this);
         rootBinding.tvTop.setLayoutParams(layoutParams);
+        RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) rootBinding.llRightVideo.getLayoutParams();
+        layoutParams2.topMargin = (int) (ScreenUtils.getStatusBarHeight(this)+ScreenUtils.dp2px(this,50));
+        rootBinding.llRightVideo.setLayoutParams(layoutParams2);
         behavior = BottomSheetBehavior.from(rootBinding.rlComment);
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         final int height = (int) ScreenUtils.dp2px(KuaiShouActivity.this, 345);
