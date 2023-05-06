@@ -1,5 +1,15 @@
 # OpenImage 更新日志
 
+## 1.7.8
+
+1、修复封面 PhotoView 的 bug
+
+2、完善 OpenImageFragmentStateAdapter
+
+3、修复 OpenImageVideoPlayer 暂停播放时的问题
+
+4、添加设置错误数据位置等的错误提示
+
 ## 1.7.7
 
 1、OpenImageActivity 页面新增 Item 点击监听器、长按监听器、选中监听器
@@ -13,6 +23,8 @@
 5、新增相册适配器
 
 6、新增快手示例
+
+7、OpenImageActivity 页面新增 OpenImageFragmentStateAdapter
 
 
 ## 1.7.6
