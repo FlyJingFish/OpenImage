@@ -189,7 +189,6 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     public void onVideoPause() {
         super.onVideoPause();
     }
-    protected int mOldCurrentState = -1;
 
     @Override
     protected void resolveUIState(int state) {
