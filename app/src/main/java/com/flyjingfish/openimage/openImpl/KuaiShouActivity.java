@@ -231,11 +231,7 @@ public class KuaiShouActivity extends OpenImageActivity {
         rootBinding.rvVideos.setLayoutManager(new LinearLayoutManager(this));
         rootBinding.rvVideos.setAdapter(slideAdapter);
 
-        kuaishouViewModel.playStateLiveData.observe(this, playState -> {
-            if (playState.position == slideAdapter.getSelectPos()){
-                slideAdapter.setPause(playState.position,playState.state == GSYVideoView.CURRENT_STATE_PAUSE);
-            }
-        });
+        kuaishouViewModel.playStateLiveData.observe(this, playState -> slideAdapter.setPause(playState.position,playState.state == GSYVideoView.CURRENT_STATE_PAUSE));
     }
 
 
