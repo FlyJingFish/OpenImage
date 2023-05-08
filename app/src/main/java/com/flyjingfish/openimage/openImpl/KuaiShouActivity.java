@@ -41,7 +41,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class KuaiShouActivity extends OpenImageActivity {
 
@@ -231,7 +233,7 @@ public class KuaiShouActivity extends OpenImageActivity {
 
         kuaishouViewModel.playStateLiveData.observe(this, playState -> {
             if (playState.position == slideAdapter.getSelectPos()){
-                slideAdapter.setPause(playState.state == GSYVideoView.CURRENT_STATE_PAUSE);
+                slideAdapter.setPause(playState.position,playState.state == GSYVideoView.CURRENT_STATE_PAUSE);
             }
         });
     }
@@ -318,7 +320,7 @@ public class KuaiShouActivity extends OpenImageActivity {
     private class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.MyHolder> {
         List<OpenImageDetail> list;
         private int selectPos;
-        private boolean isPause;
+        final Map<Integer,Boolean> stateMap = new HashMap<>();
 
         public int getSelectPos() {
             return selectPos;
@@ -342,12 +344,12 @@ public class KuaiShouActivity extends OpenImageActivity {
             notifyDataSetChanged();
         }
 
-        public boolean isPause() {
-            return isPause;
+        public boolean isPause(int position) {
+            return stateMap.get(position) != null?stateMap.get(position):false;
         }
 
-        public void setPause(boolean pause) {
-            isPause = pause;
+        public void setPause(int position, boolean pause) {
+            stateMap.put(position,pause);
             notifyDataSetChanged();
         }
 
@@ -370,7 +372,7 @@ public class KuaiShouActivity extends OpenImageActivity {
                 }
             });
             binding.ivPause.setVisibility(position == selectPos?View.VISIBLE:View.GONE);
-            binding.ivPause.setImageResource(isPause ?R.drawable.ic_play:R.drawable.ic_pause);
+            binding.ivPause.setImageResource(isPause(position) ?R.drawable.ic_play:R.drawable.ic_pause);
             MyImageLoader.getInstance().load(binding.ivImage,list.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder,R.mipmap.img_load_placeholder);
         }
 

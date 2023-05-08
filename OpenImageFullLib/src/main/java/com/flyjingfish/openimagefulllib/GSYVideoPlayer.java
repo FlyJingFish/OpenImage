@@ -2,6 +2,7 @@ package com.flyjingfish.openimagefulllib;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Surface;
 import android.view.View;
@@ -22,22 +23,21 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     private boolean mute;//是否需要静音
     protected int showType = GSYVideoType.getShowType();
 
-    boolean isUserInputResume = true;
-    boolean isUserInputPause = true;
-    boolean isPauseBeforeOnVideoPause = false;
+    boolean isUserInputPause = false;
+    boolean isUserInputResume = false;
     boolean isHideCover = false;
     protected OpenImageGSYVideoHelper gsyVideoHelper;
 
     public GSYVideoPlayer(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public GSYVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initAttrs(context,attrs);
+        initAttrs(context, attrs);
     }
 
-    void initAttrs(Context context,AttributeSet attrs) {
+    void initAttrs(Context context, AttributeSet attrs) {
         pageContextKey = context.toString();
         uUKey = UUID.randomUUID().toString();
 
@@ -47,6 +47,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
 
         setShowType(showType);
     }
+
     public String getVideoKey() {
         return pageContextKey + "$" + uUKey;
     }
@@ -67,12 +68,12 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     }
 
     public OpenImageGSYVideoHelper playUrl(OpenImageGSYVideoHelper.GSYVideoHelperBuilder builder) {
-        gsyVideoHelper = new OpenImageGSYVideoHelper(getContext(),this);
+        gsyVideoHelper = new OpenImageGSYVideoHelper(getContext(), this);
         gsyVideoHelper.setGsyVideoOptionBuilder(builder);
 
-        if (getFullscreenButton() != null){
+        if (getFullscreenButton() != null) {
             getFullscreenButton().setOnClickListener(v -> {
-                if (mThumbImageView instanceof PhotoView){
+                if (mThumbImageView instanceof PhotoView) {
                     PhotoView photoImageView = (PhotoView) mThumbImageView;
                     photoImageView.getAttacher().setScreenOrientationChange(true);
                 }
@@ -109,13 +110,13 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     }
 
     public void showAllWidget() {
-        if (mCurrentState == CURRENT_STATE_NORMAL){
+        if (mCurrentState == CURRENT_STATE_NORMAL) {
             changeUiToNormal();
-        }else if (mCurrentState == CURRENT_STATE_PAUSE){
+        } else if (mCurrentState == CURRENT_STATE_PAUSE) {
             changeUiToPauseShow();
-        }else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE){
+        } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {
             changeUiToCompleteShow();
-        }else if (mCurrentState == CURRENT_STATE_ERROR){
+        } else if (mCurrentState == CURRENT_STATE_ERROR) {
             changeUiToError();
         }
     }
@@ -123,7 +124,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     protected void changeUiToPlayingShow() {
         super.changeUiToPlayingShow();
-        if (!isHideCover){
+        if (!isHideCover) {
             setViewShowState(mThumbImageViewLayout, VISIBLE);
         }
     }
@@ -131,7 +132,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     protected void changeUiToPreparingShow() {
         super.changeUiToPreparingShow();
-        if (!isHideCover){
+        if (!isHideCover) {
             setViewShowState(mThumbImageViewLayout, VISIBLE);
         }
     }
@@ -139,7 +140,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     protected void changeUiToPrepareingClear() {
         super.changeUiToPrepareingClear();
-        if (!isHideCover){
+        if (!isHideCover) {
             setViewShowState(mThumbImageViewLayout, VISIBLE);
         }
     }
@@ -147,7 +148,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     public void onSurfaceSizeChanged(Surface surface, int width, int height) {
         super.onSurfaceSizeChanged(surface, width, height);
-        if (mCurrentState == CURRENT_STATE_PLAYING){
+        if (mCurrentState == CURRENT_STATE_PLAYING) {
             isHideCover = true;
             setViewShowState(mThumbImageViewLayout, INVISIBLE);
         }
@@ -173,42 +174,42 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
 
     @Override
     public void onVideoResume() {
-        if (isPauseBeforeOnVideoPause){
-            isPauseBeforeOnVideoPause = false;
+        if (isUserInputPause) {
             return;
         }
-        if (mCurrentState == CURRENT_STATE_PLAYING && this.getGSYVideoManager() != null && !this.getGSYVideoManager().isPlaying()){
-            isUserInputPause = false;
-            setStateAndUi(CURRENT_STATE_PAUSE);
-        }
         boolean seek = true;
-        if (this.getGSYVideoManager() != null){
+        if (this.getGSYVideoManager() != null) {
             long currentPosition = this.getGSYVideoManager().getCurrentPosition();
             seek = currentPosition < mCurrentPosition;
         }
-        isUserInputResume = false;
         super.onVideoResume(seek);
     }
 
     @Override
     public void onVideoPause() {
-        isUserInputPause = false;
-        if (mCurrentState == CURRENT_STATE_PAUSE){
-            isPauseBeforeOnVideoPause = true;
-        }
         super.onVideoPause();
     }
+    protected int mOldCurrentState = -1;
 
     @Override
     protected void resolveUIState(int state) {
-        if ((!isUserInputResume && state == CURRENT_STATE_PLAYING && (mLoadingProgressBar == null || mLoadingProgressBar.getVisibility() != VISIBLE))||(!isUserInputPause && state == CURRENT_STATE_PAUSE)){
-            isUserInputResume = true;
-            isUserInputPause = true;
+        if ((!isUserInputResume && state == CURRENT_STATE_PLAYING && (mLoadingProgressBar == null || mLoadingProgressBar.getVisibility() != VISIBLE))
+                || (!isUserInputPause && state == CURRENT_STATE_PAUSE)) {
             return;
         }
-        isUserInputResume = true;
-        isUserInputPause = true;
         super.resolveUIState(state);
+    }
+
+    @Override
+    protected void clickStartIcon() {
+        if (!TextUtils.isEmpty(mUrl) && mCurrentState == CURRENT_STATE_PLAYING) {
+            isUserInputPause = true;
+            isUserInputResume = false;
+        } else {
+            isUserInputPause = false;
+            isUserInputResume = true;
+        }
+        super.clickStartIcon();
     }
 
     public int getShowType() {
