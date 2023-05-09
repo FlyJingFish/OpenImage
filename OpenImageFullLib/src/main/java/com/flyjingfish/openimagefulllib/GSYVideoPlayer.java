@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +25,10 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     protected int showType = GSYVideoType.getShowType();
 
     boolean isUserInputPause = false;
-    boolean isUserInputResume = false;
+    boolean isUserInput = false;
     boolean isHideCover = false;
     protected OpenImageGSYVideoHelper gsyVideoHelper;
+    private int mOldState;
 
     public GSYVideoPlayer(Context context) {
         this(context, null);
@@ -192,22 +194,30 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
 
     @Override
     protected void resolveUIState(int state) {
-        if ((!isUserInputResume && state == CURRENT_STATE_PLAYING && (mLoadingProgressBar == null || mLoadingProgressBar.getVisibility() != VISIBLE))
-                || (!isUserInputPause && state == CURRENT_STATE_PAUSE)) {
+        int oldState = mOldState;
+        boolean userInput = isUserInput;
+        mOldState = state;
+        isUserInput = false;
+        if (!userInput && ((oldState == CURRENT_STATE_PLAYING && state == CURRENT_STATE_PAUSE)||(oldState == CURRENT_STATE_PAUSE && state == CURRENT_STATE_PLAYING))){
+            if (state == CURRENT_STATE_PLAYING){
+                startDismissControlViewTimer();
+            }
             return;
         }
         super.resolveUIState(state);
     }
 
     @Override
+    protected void prepareVideo() {
+        super.prepareVideo();
+        isUserInput = false;
+        isUserInputPause = false;
+    }
+
+    @Override
     protected void clickStartIcon() {
-        if (!TextUtils.isEmpty(mUrl) && mCurrentState == CURRENT_STATE_PLAYING) {
-            isUserInputPause = true;
-            isUserInputResume = false;
-        } else {
-            isUserInputPause = false;
-            isUserInputResume = true;
-        }
+        isUserInput = true;
+        isUserInputPause = !TextUtils.isEmpty(mUrl) && mCurrentState == CURRENT_STATE_PLAYING;
         super.clickStartIcon();
     }
 
