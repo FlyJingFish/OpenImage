@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -26,6 +27,7 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
     private TextView commentTv;
     private TextView titleTv;
     private boolean isOpenSlide;
+    private KuaishouViewModel kuaishouViewModel;
 
     @Override
     protected PhotoView getSmallCoverImageView() {
@@ -63,7 +65,7 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        KuaishouViewModel kuaishouViewModel = new ViewModelProvider(requireActivity()).get(KuaishouViewModel.class);
+        kuaishouViewModel = new ViewModelProvider(requireActivity()).get(KuaishouViewModel.class);
         commentTv.setOnClickListener(v -> kuaishouViewModel.clickLikeLiveData.setValue(true));
         kuaishouViewModel.btnsTranslationYLiveData.observe(getViewLifecycleOwner(), aFloat -> {
             llBtn.setTranslationY(aFloat);
@@ -83,7 +85,17 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
             return isOpenSlide;
         });
         kuaishouViewModel.pausePlayLiveData.observe(getViewLifecycleOwner(), aBoolean -> friendVideoPlayer.playPause());
-        friendVideoPlayer.setGSYStateUiListener(state -> kuaishouViewModel.playStateLiveData.setValue(new PlayState(state,showPosition)));
+        friendVideoPlayer.setGSYStateUiListener(state -> {
+            if (getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+                kuaishouViewModel.playStateLiveData.setValue(new PlayState(state,showPosition));
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        kuaishouViewModel.playStateLiveData.setValue(new PlayState(friendVideoPlayer.getCurrentState(),showPosition));
     }
 
     boolean isStartedTouch;
