@@ -143,7 +143,7 @@ public class KuaiShouActivity extends OpenImageActivity {
             slideAdapter.setSelectPos(position);
             rootBinding.rvVideos.scrollToPosition(position);
         });
-        rootBinding.llMu.setOnClickListener(v -> {
+        rootBinding.tvMu.setOnClickListener(v -> {
             InputDialog inputDialog = InputDialog.getDialog(rootBinding.tvMu.getText().toString());
             inputDialog.setOnContentCallBack(new BaseInputDialog.OnContentCallBack() {
                 @Override
