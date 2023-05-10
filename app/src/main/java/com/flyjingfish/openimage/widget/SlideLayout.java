@@ -21,6 +21,7 @@ public class SlideLayout extends RelativeLayout {
     private int slideMaxWidth;
     private int slidingDistance;
     private View slideView;
+    private View scaleView;
     private boolean disEnableTouch;
     private int startX = 0;
     private int startY = 0;
@@ -108,6 +109,10 @@ public class SlideLayout extends RelativeLayout {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.width = width;
         view.setLayoutParams(layoutParams);
+
+        ViewGroup.LayoutParams layoutParams1 = scaleView.getLayoutParams();
+        layoutParams1.height = getHeight() - width;
+        scaleView.setLayoutParams(layoutParams1);
     }
 
     public void slideBack(){
@@ -154,6 +159,10 @@ public class SlideLayout extends RelativeLayout {
      */
     public void setSlideView(View slideView) {
         this.slideView = slideView;
+    }
+
+    public void setScaleView(View scaleView) {
+        this.scaleView = scaleView;
     }
 
     /**

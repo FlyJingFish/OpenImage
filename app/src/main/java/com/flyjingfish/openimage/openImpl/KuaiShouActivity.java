@@ -195,6 +195,7 @@ public class KuaiShouActivity extends OpenImageActivity {
         });
         kuaishouViewModel.closeSlideLiveData.observe(this, aBoolean -> rootBinding.slideLayout.slideBack());
         rootBinding.slideLayout.setSlideView(rootBinding.llRightVideo);
+        rootBinding.slideLayout.setScaleView(rootBinding.rlPhoto);
         int slideMaxWidth = (int) ScreenUtils.dp2px(this,50);
         rootBinding.slideLayout.setSlideMaxWidth(slideMaxWidth);
         rootBinding.slideLayout.setOnSlideListener(new SlideLayout.OnSlideListener() {

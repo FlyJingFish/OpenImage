@@ -27,8 +27,10 @@
             android:background="@color/black"
             >
             <RelativeLayout
+                android:id="@+id/rl_photo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
                 android:layout_toStartOf="@+id/ll_right_video">
 
                 <androidx.viewpager2.widget.ViewPager2
@@ -38,18 +40,6 @@
                     android:layout_above="@+id/v_comment"
                     android:layout_gravity="center" />
 
-                <TextView
-                    android:id="@+id/tv_top"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="14dp"
-                    android:drawableStart="@drawable/video_back"
-                    android:drawablePadding="20dp"
-                    android:text="标题呦～"
-                    android:textColor="@color/white" />
-
-
                 <View
                     android:id="@+id/v_comment"
                     android:layout_width="match_parent"
@@ -57,15 +47,24 @@
                     android:layout_alignParentBottom="true">
 
                 </View>
-
             </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_top"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="14dp"
+                android:drawableStart="@drawable/video_back"
+                android:drawablePadding="20dp"
+                android:text="标题呦～"
+                android:textColor="@color/white" />
             <LinearLayout
                 android:id="@+id/ll_right_video"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:background="@color/black"
                 android:layout_alignParentEnd="true"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="25dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="50dp"

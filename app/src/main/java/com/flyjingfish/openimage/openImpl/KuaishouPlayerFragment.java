@@ -78,6 +78,13 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
         kuaishouViewModel.slidingLiveData.observe(getViewLifecycleOwner(), aFloat -> {
             llBtn.setAlpha(1-aFloat);
             titleTv.setAlpha(1-aFloat);
+            float minScale = 0.8f;
+            llBtn.getWidth();
+            float scale = (1-aFloat)*(1-minScale) + minScale;
+            llBtn.setScaleX(scale);
+            llBtn.setScaleY(scale);
+            titleTv.setScaleX(scale);
+            titleTv.setScaleY(scale);
         });
         kuaishouViewModel.slideStatusLiveData.observe(getViewLifecycleOwner(), aBoolean -> isOpenSlide = aBoolean);
         friendVideoPlayer.setOnSurfaceTouchListener(() -> {

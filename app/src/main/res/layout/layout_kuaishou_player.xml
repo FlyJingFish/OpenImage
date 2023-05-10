@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@color/black"
     android:id="@+id/rl_video_player_root">
     <RelativeLayout
         android:id="@+id/thumb"
@@ -24,13 +26,71 @@
     <LinearLayout
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="#99000000"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="invisible">
+        <TextView
+            android:id="@+id/current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="00:00"
+            android:visibility="gone"
+            android:textColor="#ffffff" />
 
+        <SeekBar
+            android:id="@+id/progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1.0"
+            android:background="@null"
+            android:max="100"
+            android:maxHeight="3dp"
+            android:minHeight="3dp"
+            android:visibility="gone"
+            android:progressDrawable="@drawable/kuaishou_video_seek_progress"
+            android:thumb="@drawable/kuaishou_video_seek_thumb" />
+
+        <TextView
+            android:id="@+id/total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:visibility="gone"
+            android:textColor="#ffffff" />
     </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <ProgressBar
+            android:id="@+id/bottom_progressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:layout_gravity="center"
+            android:max="100"
+            android:layout_marginHorizontal="16dip"
+            android:visibility="gone"
+            android:progressDrawable="@drawable/kuaishou_video_progress" />
+        <com.flyjingfish.openimage.widget.KuaishouSeekBar
+            android:id="@+id/progress2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:max="100"
+            android:maxHeight="3dp"
+            android:minHeight="3dp"
+            android:alpha="0"
+            android:visibility="visible"
+            android:progressDrawable="@drawable/kuaishou_video_seek_progress"
+            android:thumb="@drawable/kuaishou_video_seek_thumb" />
+    </FrameLayout>
 
     <com.flyjingfish.openimagelib.photoview.PhotoView
         android:id="@+id/iv_small_cover"
