@@ -58,6 +58,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     protected ViewPager2 viewPager;
     protected TouchCloseLayout rootView;
     protected View contentView;
+    private boolean isFirstBacked = false;
 
     /**
      * 获取 contentView ，用于调用{@link android.app.Activity#setContentView(View view)}
@@ -135,7 +136,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             OnSelectMediaListener onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(s);
             if (onSelectMediaListener != null) {
                 onSelectMediaListeners.add(onSelectMediaListener);
-                if (showPosition < openImageBeans.size()){
+                if (isFirstBacked && showPosition < openImageBeans.size()){
                     OpenImageDetail imageDetail = openImageBeans.get(showPosition);
                     onSelectMediaListener.onSelect(imageDetail.openImageUrl, showPosition);
                 }
@@ -241,7 +242,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         VideoFragmentCreate videoFragmentCreate = videoCreate;
         ImageFragmentCreate imageFragmentCreate = imageCreate;
 
-        openImageAdapter = new OpenImageFragmentStateAdapter(this){
+        openImageAdapter = new OpenImageFragmentStateAdapter(this,viewPager){
             @NonNull
             @Override
             public Fragment createFragment(int position) {
@@ -286,10 +287,11 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                 return fragment;
             }
         };
+        openImageAdapter.setWechatExitFillInEffect(wechatExitFillInEffect);
         openImageAdapter.setNewData(openImageBeans);
         viewPager.setAdapter(openImageAdapter);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            boolean isFirstBacked = false;
+
 
             @Override
             public void onPageSelected(int position) {

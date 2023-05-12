@@ -94,6 +94,7 @@ class OpenImage4Params {
         Intent intent = new Intent(context, openImageActivityCls);
 
         intent.putExtra(OpenParams.CLICK_POSITION, clickDataPosition);
+        intent.putExtra(OpenParams.WECHAT_EXIT_FILL_IN_EFFECT, wechatExitFillInEffect);
         if (onSelectKey != null) {
             intent.putExtra(OpenParams.ON_SELECT_KEY, onSelectKey);
         }
@@ -225,6 +226,9 @@ class OpenImage4Params {
             }
             ShareExitViewBean shareExitViewBean = null;
             if (srcViewType == SrcViewType.RV || srcViewType == SrcViewType.AB_LIST || srcViewType == SrcViewType.VP2) {
+                if (showPosition >= openImageDetails.size()) {
+                    return null;
+                }
                 int[] position = getVisiblePosition();
                 int firstPos = position[0];
                 int lastPos = position[1];
@@ -259,13 +263,10 @@ class OpenImage4Params {
                     View wechatView = getItemView(viewPosition);
                     if (wechatView != null) {
                         ImageView shareView = wechatView.findViewById(sourceImageViewIdGet.getImageViewId(openImageUrl, dataPosition));
-                        if (shareView != null) {
-                            boolean isAttachedToWindow = shareView.isAttachedToWindow();
-                            if (isAttachedToWindow) {
-                                autoSetScaleType(shareView);
-                                shareExitView = shareView;
-                                shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_WECHAT, shareExitView);
-                            }
+                        if (shareView != null && shareView.isAttachedToWindow()) {
+                            autoSetScaleType(shareView);
+                            shareExitView = shareView;
+                            shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_WECHAT, shareExitView);
                         }
                     }
                 }
@@ -273,17 +274,30 @@ class OpenImage4Params {
                     shareExitViewBean.isClipSrcImageView = false;
                 }
             } else if (srcViewType == SrcViewType.VP) {
+                if (showPosition >= openImageDetails.size()) {
+                    return null;
+                }
+                ImageView shareExitView = null;
                 OpenImageDetail openImageDetail = openImageDetails.get(showPosition);
                 OpenImageUrl openImageUrl = openImageDetail.openImageUrl;
                 int viewPosition = openImageDetail.viewPosition;
                 int dataPosition = openImageDetail.dataPosition;
 
                 ImageView shareView = sourceImageViewGet.getImageView(openImageUrl, dataPosition);
-                if (shareView != null) {
-                    boolean isAttachedToWindow = shareView.isAttachedToWindow();
-                    if (isAttachedToWindow) {
-                        autoSetScaleType(shareView);
-                        shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_NORMAL, shareView);
+                if (shareView != null && shareView.isAttachedToWindow()) {
+                    autoSetScaleType(shareView);
+                    shareExitView = shareView;
+                    shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_NORMAL, shareView);
+                }
+                if (shareExitView == null && wechatExitFillInEffect) {
+                    openImageUrl = openImageUrls.get(clickDataPosition);
+                    viewPosition = clickViewPosition;
+                    dataPosition = clickDataPosition;
+                    ImageView wechatView = sourceImageViewGet.getImageView(openImageUrl, dataPosition);
+                    if (wechatView != null && wechatView.isAttachedToWindow()) {
+                        autoSetScaleType(wechatView);
+                        shareExitView = wechatView;
+                        shareExitViewBean = new ShareExitViewBean(BackViewType.SHARE_WECHAT, shareExitView);
                     }
                 }
                 if (shareExitViewBean != null && viewPager.getCurrentItem() != viewPosition) {
@@ -315,6 +329,9 @@ class OpenImage4Params {
 
     }
     protected View getItemView(int position) {
+        if (position < 0){
+            return null;
+        }
         View view = null;
         if (srcViewType == SrcViewType.RV) {
             RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
@@ -352,13 +369,13 @@ class OpenImage4Params {
             return;
         }
         if (srcImageViewShapeScaleType != null && shareView instanceof ShapeImageView) {
-            ShapeImageView ShapeImageView = (ShapeImageView) shareView;
-            if (ShapeImageView.getShapeScaleType() != srcImageViewShapeScaleType) {
-                ShapeImageView.setShapeScaleType(srcImageViewShapeScaleType);
+            ShapeImageView shapeImageView = (ShapeImageView) shareView;
+            if (shapeImageView.getShapeScaleType() != srcImageViewShapeScaleType) {
+                shapeImageView.setShapeScaleType(srcImageViewShapeScaleType);
             }
         }
         if (srcImageViewScaleType != null) {
-            if (shareView.getScaleType() != srcImageViewScaleType) {
+            if (shareView != null && shareView.getScaleType() != srcImageViewScaleType) {
                 shareView.setScaleType(srcImageViewScaleType);
             }
         }

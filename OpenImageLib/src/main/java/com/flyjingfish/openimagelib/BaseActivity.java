@@ -94,6 +94,7 @@ class BaseActivity extends AppCompatActivity {
     protected ImageShapeParams imageShapeParams;
     private final List<String> onItemClickListenerKeys = new ArrayList<>();
     private final List<String> onItemLongClickListenerKeys = new ArrayList<>();
+    protected boolean wechatExitFillInEffect;
 
     public boolean isNoneClickView() {
         return isNoneClickView;
@@ -298,7 +299,8 @@ class BaseActivity extends AppCompatActivity {
         onBackView = ImageLoadUtils.getInstance().getOnBackView(onBackViewKey);
         clickContextKey = getIntent().getStringExtra(OpenParams.CONTEXT_KEY);
         isNoneClickView = getIntent().getBooleanExtra(OpenParams.NONE_CLICK_VIEW, false);
-        imageShapeParams = (ImageShapeParams) getIntent().getParcelableExtra(OpenParams.IMAGE_SHAPE_PARAMS);
+        imageShapeParams = getIntent().getParcelableExtra(OpenParams.IMAGE_SHAPE_PARAMS);
+        wechatExitFillInEffect = getIntent().getBooleanExtra(OpenParams.WECHAT_EXIT_FILL_IN_EFFECT,false);
     }
 
     protected void addOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
