@@ -1,5 +1,15 @@
 # OpenImage 更新日志
 
+## 1.8.0
+
+1、修复 OpenImageActivity 中打开页面是回调两次选中的bug
+
+2、修复 使用 setClickViewPager 时，设置 setWechatExitFillInEffect(true) 没有微信返回补位效果的bug
+
+3、修复 OpenImageActivity 加载更多数据后返回错位问题
+
+4、OpenImageFragmentStateAdapter 添加 向前添加更多数据
+
 ## 1.7.9
 
 1、修复完善播放器显示上的问题
