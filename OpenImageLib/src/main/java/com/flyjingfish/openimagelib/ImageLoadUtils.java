@@ -10,6 +10,7 @@ import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
+import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 
 import java.util.ArrayList;
@@ -19,22 +20,23 @@ import java.util.Map;
 
 class ImageLoadUtils {
     private static volatile ImageLoadUtils mInstance;
-    private HashMap<String, Boolean> imageLoadSuccessMap = new HashMap<>();
-    private HashMap<String, ItemLoadHelper> itemLoadHelperHashMap = new HashMap<>();
-    private HashMap<String, Drawable> coverDrawableHashMap = new HashMap<>();
-    private HashMap<String, Drawable> smallCoverDrawableHashMap = new HashMap<>();
-    private HashMap<String, OnSelectMediaListener> onSelectMediaListenerHashMap = new HashMap<>();
-    private HashMap<String, List<ViewPager2.PageTransformer>> pageTransformerMap = new HashMap<>();
-    private HashMap<String, OnItemClickListener> onItemClickListenerHashMap = new HashMap<>();
-    private HashMap<String, OnItemLongClickListener> onItemLongClickListenerHashMap = new HashMap<>();
-    private HashMap<String, List<MoreViewOption>> moreViewOptionHashMap = new HashMap<>();
-    private HashMap<String, OnBackView> onBackViewHashMap = new HashMap<>();
-    private HashMap<String, ImageFragmentCreate> imageFragmentCreateHashMap = new HashMap<>();
-    private HashMap<String, VideoFragmentCreate> videoFragmentCreateHashMap = new HashMap<>();
-    private HashMap<String, UpperLayerOption> upperLayerFragmentCreateHashMap = new HashMap<>();
-    private HashMap<String, Boolean> canOpenViewPageActivityHashMap = new HashMap<>();
-    private HashMap<String, List<OpenImageDetail>> openDataMap = new HashMap<>();
-    private HashMap<String, OpenImageDetail> openDetailDataMap = new HashMap<>();
+    private final HashMap<String, Boolean> imageLoadSuccessMap = new HashMap<>();
+    private final HashMap<String, ItemLoadHelper> itemLoadHelperHashMap = new HashMap<>();
+    private final HashMap<String, Drawable> coverDrawableHashMap = new HashMap<>();
+    private final HashMap<String, Drawable> smallCoverDrawableHashMap = new HashMap<>();
+    private final HashMap<String, OnSelectMediaListener> onSelectMediaListenerHashMap = new HashMap<>();
+    private final HashMap<String, List<ViewPager2.PageTransformer>> pageTransformerMap = new HashMap<>();
+    private final HashMap<String, OnItemClickListener> onItemClickListenerHashMap = new HashMap<>();
+    private final HashMap<String, OnItemLongClickListener> onItemLongClickListenerHashMap = new HashMap<>();
+    private final HashMap<String, List<MoreViewOption>> moreViewOptionHashMap = new HashMap<>();
+    private final HashMap<String, OnBackView> onBackViewHashMap = new HashMap<>();
+    private final HashMap<String, ImageFragmentCreate> imageFragmentCreateHashMap = new HashMap<>();
+    private final HashMap<String, VideoFragmentCreate> videoFragmentCreateHashMap = new HashMap<>();
+    private final HashMap<String, UpperLayerOption> upperLayerFragmentCreateHashMap = new HashMap<>();
+    private final HashMap<String, Boolean> canOpenViewPageActivityHashMap = new HashMap<>();
+    private final HashMap<String, List<OpenImageDetail>> openDataMap = new HashMap<>();
+    private final HashMap<String, OpenImageDetail> openDetailDataMap = new HashMap<>();
+    private final HashMap<String, OnUpdateViewListener> onUpdateViewListenerHashMap = new HashMap<>();
     private boolean isApkInDebug;
 
     private ImageLoadUtils() {
@@ -296,5 +298,17 @@ class ImageLoadUtils {
 
     public void setApkInDebug(boolean apkInDebug) {
         isApkInDebug = apkInDebug;
+    }
+
+    public OnUpdateViewListener getOnUpdateViewListener(String key) {
+        return onUpdateViewListenerHashMap.get(key);
+    }
+
+    public void setOnUpdateViewListener(String key, OnUpdateViewListener onUpdateViewListener) {
+        this.onUpdateViewListenerHashMap.put(key, onUpdateViewListener);
+    }
+
+    public void clearOnUpdateViewListener(String key) {
+        onUpdateViewListenerHashMap.remove(key);
     }
 }

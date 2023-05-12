@@ -17,6 +17,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
+import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
@@ -76,6 +77,8 @@ class OpenImage4Params {
     protected boolean isNoneClickView = false;
     protected boolean isCallShow = false;
     protected ImageShapeParams imageShapeParams;
+    protected OnUpdateViewListener onUpdateViewListener;
+
 
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV
@@ -147,6 +150,11 @@ class OpenImage4Params {
         intent.putExtra(OpenParams.GALLERY_EFFECT_WIDTH, leftRightShowWidthDp);
         intent.putExtra(OpenParams.CONTEXT_KEY, contextKey);
         intent.putExtra(OpenParams.NONE_CLICK_VIEW, isNoneClickView);
+        if (onUpdateViewListener != null) {
+            String key = this.toString();
+            intent.putExtra(OpenParams.ON_UPDATE_VIEW, key);
+            ImageLoadUtils.getInstance().setOnUpdateViewListener(key, onUpdateViewListener);
+        }
         backViewKey = this.toString();
         return intent;
     }

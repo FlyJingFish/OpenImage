@@ -30,6 +30,7 @@ import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
+import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
@@ -578,6 +579,11 @@ public final class OpenImage extends OpenImage4ParseData {
             throw new IllegalArgumentException("shapeType 不能为 null");
         }
         imageShapeParams = new ImageShapeParams(shapeType,rectangleConnerRadius);
+        return this;
+    }
+
+    public OpenImage setOnUpdateViewListener(OnUpdateViewListener onUpdateViewListener) {
+        this.onUpdateViewListener = onUpdateViewListener;
         return this;
     }
 

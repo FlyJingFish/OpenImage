@@ -26,6 +26,8 @@ import com.flyjingfish.openimage.openImpl.KuaiShouActivity;
 import com.flyjingfish.openimage.openImpl.KuaishouVideoFragmentCreateImpl;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
+import com.flyjingfish.openimagelib.enums.UpdateViewType;
+import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
@@ -35,6 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class KuaiShouDemoActivity extends BaseActivity {
@@ -107,10 +110,18 @@ public class KuaiShouDemoActivity extends BaseActivity {
                             }
                         }).setAutoScrollScanPosition(true)
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
-                        .setImageUrl(datas.get(position))
-                        .setClickPosition(0,position)
+                        .setImageUrlList(datas)
+                        .setClickPosition(position)
                         .setOpenImageStyle(R.style.KuaishouPhotosTheme)
                         .disableClickClose()
+                        .setOnUpdateViewListener(new OnUpdateViewListener() {
+                            @Override
+                            public UpdateViewType onUpdate(Collection<? extends OpenImageUrl> data,UpdateViewType updateViewType) {
+                                datas.addAll(0, (Collection<? extends MessageBean>) data);
+                                notifyDataSetChanged();
+                                return UpdateViewType.FORWARD;
+                            }
+                        })
                         .setVideoFragmentCreate(new KuaishouVideoFragmentCreateImpl())
                         .setOpenImageActivityCls(KuaiShouActivity.class)
                         .setWechatExitFillInEffect(true)

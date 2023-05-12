@@ -16,6 +16,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.MediaType;
+import com.flyjingfish.openimagelib.enums.UpdateViewType;
+import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,6 +30,7 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
     private final PhotosViewModel photosViewModel;
     private final ViewPager2 viewPager2;
     private final FragmentActivity fragmentActivity;
+    private final String updateKey;
     protected List<OpenImageDetail> openImageBeans;
     protected boolean wechatExitFillInEffect;
     private boolean transitionEnd;
@@ -35,6 +38,7 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
     public OpenImageFragmentStateAdapter(@NonNull FragmentActivity fragmentActivity,ViewPager2 viewPager2) {
         super(fragmentActivity);
         this.fragmentActivity = fragmentActivity;
+        updateKey = fragmentActivity.getIntent().getStringExtra(OpenParams.ON_UPDATE_VIEW);
         photosViewModel = new ViewModelProvider(fragmentActivity).get(PhotosViewModel.class);
         photosViewModel.transitionEndLiveData.observe(fragmentActivity, new Observer<Boolean>() {
             @Override
@@ -56,12 +60,12 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
 
     public void setNewData(List<OpenImageDetail> data) {
         if (data != null){
-            List<OpenImageDetail> openImageDetails = filterData(data);
+            List<OpenImageDetail> openImageDetails = filterData(data,UpdateViewType.NONE);
             data.clear();
             data.addAll(openImageDetails);
         }
         openImageBeans = data;
-        notifyDataSetChanged();
+        notifyData(null,null,UpdateViewType.NONE);
     }
 
     /**
@@ -69,13 +73,13 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
      * @param data
      */
     public void addData(Collection<? extends OpenImageUrl> data) {
-        List<OpenImageDetail> openImageDetails = filterData(data);
+        List<OpenImageDetail> openImageDetails = filterData(data,UpdateViewType.BACKWARD);
         if (openImageBeans != null){
             openImageBeans.addAll(openImageDetails);
         }else {
             openImageBeans = openImageDetails;
         }
-        notifyDataSetChanged();
+        notifyData(data,openImageDetails,UpdateViewType.BACKWARD);
     }
 
     /**
@@ -98,7 +102,7 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
 
     private void setFrontData(Collection<? extends OpenImageUrl> data) {
         int cur = viewPager2.getCurrentItem();
-        List<OpenImageDetail> openImageDetails = filterData(data);
+        List<OpenImageDetail> openImageDetails = filterData(data,UpdateViewType.FORWARD);
         if (openImageBeans != null){
             openImageBeans.addAll(0,openImageDetails);
         }else {
@@ -112,7 +116,20 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
                 unregisterAdapterDataObserver(this);
             }
         });
+        notifyData(data,openImageDetails,UpdateViewType.FORWARD);
+    }
+    
+    public void notifyData(Collection<? extends OpenImageUrl> data,List<OpenImageDetail> openImageDetails,UpdateViewType updateViewType){
         notifyDataSetChanged();
+        OnUpdateViewListener onUpdateViewListener = ImageLoadUtils.getInstance().getOnUpdateViewListener(updateKey);
+        if (onUpdateViewListener != null && data != null && openImageDetails != null){
+            UpdateViewType type = onUpdateViewListener.onUpdate(data,updateViewType);
+//            if (type == UpdateViewType.FORWARD){
+//                for (OpenImageDetail openImageDetail : openImageDetails) {
+//
+//                }
+//            }
+        }
     }
 
     /**
@@ -123,13 +140,13 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         return openImageBeans;
     }
 
-    private List<OpenImageDetail> filterData(Collection<? extends OpenImageUrl> imageDetails){
+    private List<OpenImageDetail> filterData(Collection<? extends OpenImageUrl> imageDetails,UpdateViewType updateViewType){
         if (imageDetails != null){
             List<OpenImageDetail> openImageDetails = new ArrayList<>();
             Iterator<? extends OpenImageUrl> iterator = imageDetails.iterator();
-            int oldSize=0;
-            if (openImageBeans != null){
-                oldSize=openImageBeans.size();
+            int oldSize = 0;
+            if (openImageBeans != null && updateViewType == UpdateViewType.BACKWARD){
+                oldSize = openImageBeans.get(openImageBeans.size()-1).dataPosition + 1;
             }
 
             int i=0;
@@ -147,6 +164,11 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
                     openImageDetails.add((OpenImageDetail) imageBean);
                 }
                 i++;
+            }
+            if (openImageBeans != null && updateViewType == UpdateViewType.FORWARD){
+                for (OpenImageDetail openImageBean : openImageBeans) {
+                    openImageBean.dataPosition = imageDetails.size()+openImageBean.dataPosition;
+                }
             }
             return openImageDetails;
         }else {

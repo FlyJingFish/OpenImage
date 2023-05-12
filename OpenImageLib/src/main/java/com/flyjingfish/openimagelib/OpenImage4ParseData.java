@@ -450,6 +450,7 @@ class OpenImage4ParseData extends OpenImage4Params {
         ImageLoadUtils.getInstance().clearVideoFragmentCreate(videoFragmentCreateKey);
         ImageLoadUtils.getInstance().clearUpperLayerFragmentCreate(upperLayerFragmentCreateKey);
         ImageLoadUtils.getInstance().setOnRemoveListener4FixBug(null);
+        ImageLoadUtils.getInstance().clearOnUpdateViewListener(this.toString());
         moreViewOptions.clear();
     }
 
