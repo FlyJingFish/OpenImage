@@ -184,7 +184,7 @@ public class KuaiShouActivity extends OpenImageActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 //加载更多网络数据
-                if (position > openImageAdapter.getItemCount()-3){
+                if (position <=1){
                     getNetworkMoreData();
                 }
             }
@@ -280,7 +280,7 @@ public class KuaiShouActivity extends OpenImageActivity {
 
     private void setData(List<MessageBean> datas) {
         runOnUiThread(() -> {
-            openImageAdapter.addData(datas);
+            openImageAdapter.addFrontData(datas);
             slideAdapter.setList(openImageBeans);
         });
 
