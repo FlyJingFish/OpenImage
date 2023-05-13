@@ -35,15 +35,19 @@ import java.util.Map;
 class BaseActivity extends AppCompatActivity {
     private static final int CHECK_FINISH = 1009;
     private static final long CHECK_DELAY_MS = 2000;
-    protected static final int INDICATOR_TEXT = 0;
-    protected static final int INDICATOR_IMAGE = 1;
-    protected static final long WECHAT_DURATION = 250;
-    protected static final long WECHAT_DURATION_END_ALPHA = 50;
-    protected int indicatorType;
-    protected int showPosition;
-    protected int selectPos;
-    protected boolean isCallClosed;
-    protected String textFormat = "%1$d/%2$d";
+    private List<OpenImageDetail> openImageBeans;
+    private String clickContextKey;
+    private boolean isNoneClickView;
+    private String dataKey;
+    private final List<String> onItemClickListenerKeys = new ArrayList<>();
+    private final List<String> onItemLongClickListenerKeys = new ArrayList<>();
+    static final int INDICATOR_TEXT = 0;
+    static final int INDICATOR_IMAGE = 1;
+    static final long WECHAT_DURATION = 250;
+    static final long WECHAT_DURATION_END_ALPHA = 50;
+    int indicatorType;
+    int showPosition;
+    int selectPos;
     String onSelectKey;
     String openCoverKey;
     String pageTransformersKey;
@@ -58,22 +62,10 @@ class BaseActivity extends AppCompatActivity {
     final List<String> onSelectMediaListenerKeys = new ArrayList<>();
     final List<MoreViewOption> moreViewOptions = new ArrayList<>();
     final Handler mHandler = new Handler(Looper.getMainLooper());
-    private List<OpenImageDetail> openImageBeans;
     PhotosViewModel photosViewModel;
-    protected OpenImageIndicatorTextBinding indicatorTextBinding;
-    protected ImageIndicatorAdapter imageIndicatorAdapter;
-    protected OpenImageOrientation orientation;
-    protected OpenImageOrientation touchCloseOrientation;
-    //    protected ImageDiskMode imageDiskMode;
-    protected ShapeImageView.ShapeScaleType srcScaleType;
     OnSelectMediaListener onSelectMediaListener;
     ObjectAnimator wechatEffectAnim;
-    protected LinearLayoutManager imageIndicatorLayoutManager;
     ImageLoadUtils.OnBackView onBackView;
-    protected FontStyle fontStyle;
-    protected BaseInnerFragment upLayerFragment;
-    protected UpperLayerOption upperLayerOption;
-    protected OpenImageFragmentStateAdapter openImageAdapter;
     final Handler closeHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -85,15 +77,23 @@ class BaseActivity extends AppCompatActivity {
 
         }
     };
-    private String clickContextKey;
-    private boolean isNoneClickView;
-    private String dataKey;
     String contextKey;
     float touchCloseScale = 1f;
     ImageShapeParams imageShapeParams;
-    private final List<String> onItemClickListenerKeys = new ArrayList<>();
-    private final List<String> onItemLongClickListenerKeys = new ArrayList<>();
     boolean wechatExitFillInEffect;
+
+    protected String textFormat = "%1$d/%2$d";
+    protected OpenImageIndicatorTextBinding indicatorTextBinding;
+    protected ImageIndicatorAdapter imageIndicatorAdapter;
+    protected OpenImageOrientation orientation;
+    protected OpenImageOrientation touchCloseOrientation;
+    //    protected ImageDiskMode imageDiskMode;
+    protected ShapeImageView.ShapeScaleType srcScaleType;
+    protected LinearLayoutManager imageIndicatorLayoutManager;
+    protected FontStyle fontStyle;
+    protected BaseInnerFragment upLayerFragment;
+    protected UpperLayerOption upperLayerOption;
+    protected OpenImageFragmentStateAdapter openImageAdapter;
 
     List<OpenImageDetail> getOpenImageBeans() {
         return openImageBeans;
@@ -345,5 +345,9 @@ class BaseActivity extends AppCompatActivity {
         if (onSelectMediaListener != null) {
             photosViewModel.onRemoveOnSelectMediaListenerLiveData.setValue(onSelectMediaListener.toString());
         }
+    }
+
+    protected boolean isWechatExitFillInEffect() {
+        return wechatExitFillInEffect;
     }
 }

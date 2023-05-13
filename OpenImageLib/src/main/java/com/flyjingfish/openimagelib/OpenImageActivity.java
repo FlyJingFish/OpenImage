@@ -58,6 +58,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     protected TouchCloseLayout rootView;
     protected View contentView;
     private boolean isFirstBacked = false;
+    private boolean isCallClosed;
 
     /**
      * 获取 contentView ，用于调用{@link android.app.Activity#setContentView(View view)}
