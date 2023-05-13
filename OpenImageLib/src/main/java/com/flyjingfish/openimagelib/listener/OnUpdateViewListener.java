@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public interface OnUpdateViewListener {
     /**
-     * 新加数据后回调此方法，你必须在继承自{@link com.flyjingfish.openimagelib.OpenImageActivity}的自定义activity中调用{@link com.flyjingfish.openimagelib.OpenImageFragmentStateAdapter#addData(Collection)},
+     * 新加数据后回调此方法，你必须在继承自{@link com.flyjingfish.openimagelib.OpenImageActivity}的自定义 Activity 中调用{@link com.flyjingfish.openimagelib.OpenImageFragmentStateAdapter#addData(Collection)},
      * 或{@link com.flyjingfish.openimagelib.OpenImageFragmentStateAdapter#addFrontData(Collection)}，才会回调此方法
      *
      * @param data 新增数据
