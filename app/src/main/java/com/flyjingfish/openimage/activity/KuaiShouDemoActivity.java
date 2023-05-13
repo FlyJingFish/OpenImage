@@ -44,6 +44,7 @@ public class KuaiShouDemoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityKuaishouDemoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        mode = Mode.Find;
         setSelect();
         binding.btnFind.setOnClickListener(v -> {
             mode = Mode.Find;

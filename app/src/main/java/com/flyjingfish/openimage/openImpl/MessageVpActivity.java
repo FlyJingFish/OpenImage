@@ -71,42 +71,58 @@ public class MessageVpActivity extends OpenImageActivity {
             }
         });
         addOnSelectMediaListener((openImageUrl, position) -> {
-            if (position <= 1 && addCount < 2){
+        });
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+                if (state == ViewPager2.SCROLL_STATE_IDLE){
+                   checkData();
+                }
+            }
+        });
+        checkData();
+    }
+    private void checkData() {
+        if (viewPager.getCurrentItem() > openImageAdapter.getItemCount()-3){
+            if (viewPager.getCurrentItem() <= 1){
                 loadData();
             }
-            addCount++;
-        });
+        }
     }
-
     private int addCount;
     private void loadData() {
-        MyApplication.cThreadPool.submit(() -> {
-            List<MessageBean> datas = new ArrayList<>();
+        if (addCount < 2){
+            MyApplication.cThreadPool.submit(() -> {
+                List<MessageBean> datas = new ArrayList<>();
 
-            String response1 = DataUtils.getFromAssets(this, "message_data.json");
-            try {
-                JSONArray jsonArray = new JSONArray(response1);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    MessageBean itemData = new MessageBean();
-                    JSONObject jsonObject = jsonArray.optJSONObject(i);
-                    int type = jsonObject.getInt("type");
-                    itemData.type = type;
-                    if (type == MessageBean.TEXT){
-                        itemData.text = jsonObject.getString("text");
-                    }else if (type == MessageBean.IMAGE){
-                        itemData.imageUrl = jsonObject.getString("imageUrl");
-                        itemData.coverUrl = jsonObject.getString("coverUrl");
-                    }else if (type == MessageBean.VIDEO){
-                        itemData.videoUrl = jsonObject.getString("videoUrl");
-                        itemData.coverUrl = jsonObject.getString("coverUrl");
+                String response1 = DataUtils.getFromAssets(this, "message_data.json");
+                try {
+                    JSONArray jsonArray = new JSONArray(response1);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        MessageBean itemData = new MessageBean();
+                        JSONObject jsonObject = jsonArray.optJSONObject(i);
+                        int type = jsonObject.getInt("type");
+                        itemData.type = type;
+                        if (type == MessageBean.TEXT){
+                            itemData.text = jsonObject.getString("text");
+                        }else if (type == MessageBean.IMAGE){
+                            itemData.imageUrl = jsonObject.getString("imageUrl");
+                            itemData.coverUrl = jsonObject.getString("coverUrl");
+                        }else if (type == MessageBean.VIDEO){
+                            itemData.videoUrl = jsonObject.getString("videoUrl");
+                            itemData.coverUrl = jsonObject.getString("coverUrl");
+                        }
+                        datas.add(itemData);
                     }
-                    datas.add(itemData);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            setData(datas);
-        });
+                setData(datas);
+            });
+        }
+        addCount++;
     }
 
     private void setData(List<MessageBean> datas) {

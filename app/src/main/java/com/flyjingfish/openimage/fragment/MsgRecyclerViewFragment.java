@@ -66,7 +66,11 @@ public class MsgRecyclerViewFragment extends Fragment {
     }
 
     private void setData(List<MessageBean> datas) {
-        requireActivity().runOnUiThread(() -> binding.rv.setAdapter(new MsgRvAdapter(datas)));
+        requireActivity().runOnUiThread(() -> {
+            binding.rv.setAdapter(new MsgRvAdapter(datas));
+            binding.rv.post(() -> binding.rv.scrollToPosition(binding.rv.getAdapter().getItemCount()-1));
+
+        });
 
     }
 

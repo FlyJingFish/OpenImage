@@ -65,7 +65,10 @@ public class MsgListViewViewFragment extends Fragment {
     }
 
     private void setData(List<MessageBean> datas) {
-        requireActivity().runOnUiThread(() -> binding.listView.setAdapter(new MsgLvAdapter(datas,binding.listView)));
+        requireActivity().runOnUiThread(() -> {
+            binding.listView.setAdapter(new MsgLvAdapter(datas,binding.listView));
+            binding.listView.post(() -> binding.listView.smoothScrollToPosition(binding.listView.getAdapter().getCount()-1));
+        });
 
     }
 
