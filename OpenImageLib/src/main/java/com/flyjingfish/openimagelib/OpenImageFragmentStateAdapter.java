@@ -44,10 +44,6 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         this.viewPager2 = viewPager2;
     }
 
-    public boolean isWechatExitFillInEffect() {
-        return wechatExitFillInEffect;
-    }
-
     void setWechatExitFillInEffect(boolean wechatExitFillInEffect) {
         this.wechatExitFillInEffect = wechatExitFillInEffect;
     }
