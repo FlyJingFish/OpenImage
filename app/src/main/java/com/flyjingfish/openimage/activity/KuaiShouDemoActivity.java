@@ -137,6 +137,8 @@ public class KuaiShouDemoActivity extends BaseActivity {
                     openImage
                             .setImageUrlList(datas)
                             .setClickPosition(position)
+                            .setAutoScrollScanPosition(true)
+                            .setWechatExitFillInEffect(false)
                             .setOnUpdateViewListener(new OnUpdateViewListener() {
                                 @Override
                                 public void onUpdate(Collection<? extends OpenImageUrl> data,UpdateViewType updateViewType) {
@@ -147,9 +149,7 @@ public class KuaiShouDemoActivity extends BaseActivity {
                                     }
                                     notifyDataSetChanged();
                                 }
-                            })
-                            .setAutoScrollScanPosition(true)
-                            .setWechatExitFillInEffect(false);
+                            });
                 }else {
                     openImage
                             .setImageUrl(datas.get(position))
