@@ -70,39 +70,65 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
 
     /**
      * 向后加数据
-     * @param data
+     * @param data 新增的数据
      */
     public void addData(Collection<? extends OpenImageUrl> data) {
-        List<OpenImageDetail> openImageDetails = filterData(data,UpdateViewType.BACKWARD);
+        addData(data,UpdateViewType.BACKWARD);
+    }
+
+    /**
+     * 向后加数据
+     * @param data 新增的数据
+     * @param updateViewType 不可传入 {@link UpdateViewType#FORWARD},传入{@link UpdateViewType#BACKWARD} 向后加数据并且可更新前一页面UI
+     *                       传入{@link UpdateViewType#NONE} 向后加数据但是不可更新前一页面UI
+     */
+    public void addData(Collection<? extends OpenImageUrl> data,UpdateViewType updateViewType) {
+        if (updateViewType == UpdateViewType.FORWARD){
+            updateViewType = UpdateViewType.BACKWARD;
+        }
+        List<OpenImageDetail> openImageDetails = filterData(data,updateViewType);
         if (openImageBeans != null){
             openImageBeans.addAll(openImageDetails);
         }else {
             openImageBeans = openImageDetails;
         }
-        notifyData(data,openImageDetails,UpdateViewType.BACKWARD);
+        notifyData(data,openImageDetails,updateViewType);
     }
 
     /**
      * 向前加数据
-     * @param data
+     * @param data 新增的数据
      */
     public void addFrontData(Collection<? extends OpenImageUrl> data) {
+        addFrontData(data,UpdateViewType.FORWARD);
+    }
+
+    /**
+     * 向前加数据
+     * @param data 新增的数据
+     * @param updateViewType  不可传入 {@link UpdateViewType#BACKWARD},传入{@link UpdateViewType#FORWARD} 向前加数据并且可更新前一页面UI
+     *                        传入{@link UpdateViewType#NONE} 向前加数据但是不可更新前一页面UI
+     */
+    public void addFrontData(Collection<? extends OpenImageUrl> data,final UpdateViewType updateViewType) {
         if (transitionEnd){
-            setFrontData(data);
+            setFrontData(data,updateViewType);
         }else {
             photosViewModel.transitionEndLiveData.observe(fragmentActivity, new Observer<Boolean>() {
                 @Override
                 public void onChanged(Boolean aBoolean) {
-                    setFrontData(data);
+                    setFrontData(data,updateViewType);
                     photosViewModel.transitionEndLiveData.removeObserver(this);
                 }
             });
         }
     }
 
-    private void setFrontData(Collection<? extends OpenImageUrl> data) {
+    private void setFrontData(Collection<? extends OpenImageUrl> data,UpdateViewType updateViewType) {
+        if (updateViewType == UpdateViewType.BACKWARD){
+            updateViewType = UpdateViewType.FORWARD;
+        }
         int cur = viewPager2.getCurrentItem();
-        List<OpenImageDetail> openImageDetails = filterData(data,UpdateViewType.FORWARD);
+        List<OpenImageDetail> openImageDetails = filterData(data,updateViewType);
         if (openImageBeans != null){
             openImageBeans.addAll(0,openImageDetails);
         }else {
@@ -116,19 +142,14 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
                 unregisterAdapterDataObserver(this);
             }
         });
-        notifyData(data,openImageDetails,UpdateViewType.FORWARD);
+        notifyData(data,openImageDetails,updateViewType);
     }
     
     public void notifyData(Collection<? extends OpenImageUrl> data,List<OpenImageDetail> openImageDetails,UpdateViewType updateViewType){
         notifyDataSetChanged();
         OnUpdateViewListener onUpdateViewListener = ImageLoadUtils.getInstance().getOnUpdateViewListener(updateKey);
         if (onUpdateViewListener != null && data != null && openImageDetails != null){
-            UpdateViewType type = onUpdateViewListener.onUpdate(data,updateViewType);
-//            if (type == UpdateViewType.FORWARD){
-//                for (OpenImageDetail openImageDetail : openImageDetails) {
-//
-//                }
-//            }
+            onUpdateViewListener.onUpdate(data,updateViewType);
         }
     }
 
@@ -159,7 +180,11 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
                         OpenImageDetail openImageDetail = new OpenImageDetail();
                         openImageDetail.openImageUrl = imageBean;
                         openImageDetail.dataPosition = oldDataPos + i;
-                        openImageDetail.viewPosition = oldViewPos + i;
+                        if (updateViewType == UpdateViewType.NONE){
+                            openImageDetail.viewPosition = -1;
+                        }else if (updateViewType == UpdateViewType.BACKWARD){
+                            openImageDetail.viewPosition = oldViewPos + i;
+                        }
                         openImageDetails.add(openImageDetail);
                     }
                 }else {
@@ -170,7 +195,9 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
             if (openImageBeans != null && updateViewType == UpdateViewType.FORWARD){
                 for (OpenImageDetail openImageBean : openImageBeans) {
                     openImageBean.dataPosition = imageDetails.size()+openImageBean.dataPosition;
-                    openImageBean.viewPosition = imageDetails.size()+openImageBean.viewPosition;
+                    if (openImageBean.viewPosition>=0){
+                        openImageBean.viewPosition = imageDetails.size()+openImageBean.viewPosition;
+                    }
                 }
             }
             return openImageDetails;

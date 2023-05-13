@@ -21,6 +21,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.flyjingfish.openimage.DataUtils;
 import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimage.R;
+import com.flyjingfish.openimage.activity.KuaiShouDemoActivity;
 import com.flyjingfish.openimage.bean.MessageBean;
 import com.flyjingfish.openimage.databinding.ItemKuaishouImageBinding;
 import com.flyjingfish.openimage.databinding.ItemMsgTextBinding;
@@ -31,6 +32,7 @@ import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.widget.SlideLayout;
 import com.flyjingfish.openimagelib.OpenImageActivity;
 import com.flyjingfish.openimagelib.beans.OpenImageDetail;
+import com.flyjingfish.openimagelib.enums.UpdateViewType;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -184,7 +186,7 @@ public class KuaiShouActivity extends OpenImageActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 //加载更多网络数据
-                if (position <=1){
+                if (position > openImageAdapter.getItemCount()-3){
                     getNetworkMoreData();
                 }
             }
@@ -280,7 +282,11 @@ public class KuaiShouActivity extends OpenImageActivity {
 
     private void setData(List<MessageBean> datas) {
         runOnUiThread(() -> {
-            openImageAdapter.addFrontData(datas);
+            if (KuaiShouDemoActivity.mode == KuaiShouDemoActivity.Mode.Search){
+                openImageAdapter.addData(datas);
+            }else {
+                openImageAdapter.addData(datas, UpdateViewType.NONE);
+            }
             slideAdapter.setList(openImageBeans);
         });
 

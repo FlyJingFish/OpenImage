@@ -18,6 +18,7 @@ import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MsgLvAdapter extends BaseAdapter {
@@ -101,21 +102,36 @@ public class MsgLvAdapter extends BaseAdapter {
         }
         MessageBean messageBean = messageBeans.get(position);
         int viewType = messageBean.type;
-        View.OnClickListener onClickListener = v -> OpenImage.with(parent.getContext()).setClickListView(listView, new SourceImageViewIdGet<OpenImageUrl>() {
-            @Override
-            public int getImageViewId(OpenImageUrl data, int position1) {
-                MessageBean msgBean = (MessageBean) data;
-                if (msgBean.type == MessageBean.IMAGE){
-                    return R.id.iv_image;
-                }else {
-                    return R.id.iv_video;
-                }
-            }
-        }) .setAutoScrollScanPosition(MessageActivity.openAutoScroll)
-                .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
-                .setImageUrlList(messageBeans).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
-                .setOpenImageStyle(R.style.DefaultPhotosTheme)
-                .setClickPosition(position).show();
+        View.OnClickListener onClickListener = v -> {
+            String url1= "https://pics4.baidu.com/feed/50da81cb39dbb6fd95aa0c599b8d0d1e962b3708.jpeg?token=bf17224f51a6f4bb389e787f9c487940";
+            String url2= "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.tt98.com%2Fd%2Ffile%2Fpic%2F201811082010742%2F5be40536abdd2.jpg&refer=http%3A%2F%2Fimg.tt98.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661701773&t=2d03e79dd2eb007d30a330479093ecf4";
+            List<MessageBean> otherData = new ArrayList<>();
+            MessageBean messageBean1 = new MessageBean(MessageBean.IMAGE,url1,url1);
+            MessageBean messageBean2 = new MessageBean(MessageBean.IMAGE,url2,url2);
+            MessageBean messageBean3 = new MessageBean(MessageBean.TEXT,url2,url2);//文本或其他类型的数据不必排除
+            otherData.add(messageBean1);
+            otherData.add(messageBean3);
+            otherData.add(messageBean2);
+
+            List<MessageBean> allShowData = new ArrayList<>();
+            allShowData.addAll(otherData);//recyclerView 适配器以外的数据
+            allShowData.addAll(messageBeans);//recyclerView 适配器的数据
+            OpenImage.with(parent.getContext()).setClickListView(listView, new SourceImageViewIdGet<OpenImageUrl>() {
+                        @Override
+                        public int getImageViewId(OpenImageUrl data, int position1) {
+                            MessageBean msgBean = (MessageBean) data;
+                            if (msgBean.type == MessageBean.IMAGE){
+                                return R.id.iv_image;
+                            }else {
+                                return R.id.iv_video;
+                            }
+                        }
+                    }) .setAutoScrollScanPosition(MessageActivity.openAutoScroll)
+                    .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+                    .setImageUrlList(allShowData).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
+                    .setOpenImageStyle(R.style.DefaultPhotosTheme)
+                    .setClickPosition(position+otherData.size(),position).show();
+        };
         if (viewType == MessageBean.IMAGE){
             ItemMsgImageBinding binding = ItemMsgImageBinding.bind(holder2.itemView);
             binding.ivImage.setOnClickListener(onClickListener);

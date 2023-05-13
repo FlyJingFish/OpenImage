@@ -24,6 +24,14 @@ class ImageIndicatorAdapter extends RecyclerView.Adapter<ImageIndicatorAdapter.I
         this.orientation = orientation;
     }
 
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
     @NonNull
     @Override
     public IndicatorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

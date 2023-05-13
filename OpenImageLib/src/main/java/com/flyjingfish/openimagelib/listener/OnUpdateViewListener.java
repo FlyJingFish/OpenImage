@@ -6,5 +6,5 @@ import com.flyjingfish.openimagelib.enums.UpdateViewType;
 import java.util.Collection;
 
 public interface OnUpdateViewListener {
-    UpdateViewType onUpdate(Collection<? extends OpenImageUrl> data,UpdateViewType updateViewType);
+    void onUpdate(Collection<? extends OpenImageUrl> data,UpdateViewType updateViewType);
 }

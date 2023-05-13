@@ -43,15 +43,34 @@ import java.util.List;
 public class KuaiShouDemoActivity extends BaseActivity {
 
     private ActivityKuaishouDemoBinding binding;
-
+    public static Mode mode = Mode.Find;
+    public enum Mode{
+        Find,Search
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityKuaishouDemoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setSelect();
+        binding.btnFind.setOnClickListener(v -> {
+            mode = Mode.Find;
+            setSelect();
+            loadData();
+        });
+        binding.btnSearch.setOnClickListener(v -> {
+            mode = Mode.Search;
+            setSelect();
+            loadData();
+        });
         binding.rv.rv.setLayoutManager(new GridLayoutManager(this, 2));
         loadData();
 
+    }
+
+    private void setSelect(){
+        binding.btnFind.setSelected(mode == Mode.Find);
+        binding.btnSearch.setSelected(mode == Mode.Search);
     }
 
     private void loadData() {
@@ -102,7 +121,7 @@ public class KuaiShouDemoActivity extends BaseActivity {
             layoutParams.height = (int) ScreenUtils.dp2px(KuaiShouDemoActivity.this, 220);
             MyImageLoader.getInstance().load(holder.ivImage, datas.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
             holder.ivImage.setOnClickListener(v -> {
-                OpenImage.with(KuaiShouDemoActivity.this)
+                OpenImage openImage = OpenImage.with(KuaiShouDemoActivity.this)
                         .setClickRecyclerView(binding.rv.rv, new SourceImageViewIdGet() {
                             @Override
                             public int getImageViewId(OpenImageUrl data, int position) {
@@ -110,22 +129,34 @@ public class KuaiShouDemoActivity extends BaseActivity {
                             }
                         }).setAutoScrollScanPosition(true)
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
-                        .setImageUrlList(datas)
-                        .setClickPosition(position)
                         .setOpenImageStyle(R.style.KuaishouPhotosTheme)
-                        .disableClickClose()
-                        .setOnUpdateViewListener(new OnUpdateViewListener() {
-                            @Override
-                            public UpdateViewType onUpdate(Collection<? extends OpenImageUrl> data,UpdateViewType updateViewType) {
-                                datas.addAll(0, (Collection<? extends MessageBean>) data);
-                                notifyDataSetChanged();
-                                return UpdateViewType.FORWARD;
-                            }
-                        })
-                        .setVideoFragmentCreate(new KuaishouVideoFragmentCreateImpl())
                         .setOpenImageActivityCls(KuaiShouActivity.class)
-                        .setWechatExitFillInEffect(false)
-                        .show();
+                        .setVideoFragmentCreate(new KuaishouVideoFragmentCreateImpl())
+                        .disableClickClose();
+                if (mode == Mode.Search){
+                    openImage
+                            .setImageUrlList(datas)
+                            .setClickPosition(position)
+                            .setOnUpdateViewListener(new OnUpdateViewListener() {
+                                @Override
+                                public void onUpdate(Collection<? extends OpenImageUrl> data,UpdateViewType updateViewType) {
+                                    if (updateViewType == UpdateViewType.FORWARD){
+                                        datas.addAll(0, (Collection<? extends MessageBean>) data);
+                                    }else if (updateViewType == UpdateViewType.BACKWARD){
+                                        datas.addAll((Collection<? extends MessageBean>) data);
+                                    }
+                                    notifyDataSetChanged();
+                                }
+                            })
+                            .setWechatExitFillInEffect(false);
+                }else {
+                    openImage
+                            .setImageUrl(datas.get(position))
+                            .setClickPosition(0,position)
+                            .setWechatExitFillInEffect(true);
+                }
+
+                openImage.show();
 
             });
         }

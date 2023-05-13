@@ -15,11 +15,15 @@ import com.flyjingfish.openimage.databinding.ItemMsgImageBinding;
 import com.flyjingfish.openimage.databinding.ItemMsgTextBinding;
 import com.flyjingfish.openimage.databinding.ItemMsgVideoBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
+import com.flyjingfish.openimage.openImpl.MessageVpActivity;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
+import com.flyjingfish.openimagelib.enums.UpdateViewType;
+import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
@@ -49,19 +53,19 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
         int viewType = messageBean.type;
         View.OnClickListener onClickListener = v ->{
             //添加聊天以外的图片，数据不必将除视频或图片之外的数据排除掉，排除掉将不能对应View的点击位置
-            String url1= "https://pics4.baidu.com/feed/50da81cb39dbb6fd95aa0c599b8d0d1e962b3708.jpeg?token=bf17224f51a6f4bb389e787f9c487940";
-            String url2= "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.tt98.com%2Fd%2Ffile%2Fpic%2F201811082010742%2F5be40536abdd2.jpg&refer=http%3A%2F%2Fimg.tt98.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661701773&t=2d03e79dd2eb007d30a330479093ecf4";
-            List<MessageBean> otherData = new ArrayList<>();
-            MessageBean messageBean1 = new MessageBean(MessageBean.IMAGE,url1,url1);
-            MessageBean messageBean2 = new MessageBean(MessageBean.IMAGE,url2,url2);
-            MessageBean messageBean3 = new MessageBean(MessageBean.TEXT,url2,url2);//文本或其他类型的数据不必排除
-            otherData.add(messageBean1);
-            otherData.add(messageBean3);
-            otherData.add(messageBean2);
-
-            List<MessageBean> allShowData = new ArrayList<>();
-            allShowData.addAll(otherData);//recyclerView 适配器以外的数据
-            allShowData.addAll(messageBeans);//recyclerView 适配器的数据
+//            String url1= "https://pics4.baidu.com/feed/50da81cb39dbb6fd95aa0c599b8d0d1e962b3708.jpeg?token=bf17224f51a6f4bb389e787f9c487940";
+//            String url2= "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.tt98.com%2Fd%2Ffile%2Fpic%2F201811082010742%2F5be40536abdd2.jpg&refer=http%3A%2F%2Fimg.tt98.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661701773&t=2d03e79dd2eb007d30a330479093ecf4";
+//            List<MessageBean> otherData = new ArrayList<>();
+//            MessageBean messageBean1 = new MessageBean(MessageBean.IMAGE,url1,url1);
+//            MessageBean messageBean2 = new MessageBean(MessageBean.IMAGE,url2,url2);
+//            MessageBean messageBean3 = new MessageBean(MessageBean.TEXT,url2,url2);//文本或其他类型的数据不必排除
+//            otherData.add(messageBean1);
+//            otherData.add(messageBean3);
+//            otherData.add(messageBean2);
+//
+//            List<MessageBean> allShowData = new ArrayList<>();
+//            allShowData.addAll(otherData);//recyclerView 适配器以外的数据
+//            allShowData.addAll(messageBeans);//recyclerView 适配器的数据
             //以上两种数据都不必排除其他类型数据
             OpenImage.with(holder.itemView.getContext()).setClickRecyclerView((RecyclerView) holder.itemView.getParent(), new SourceImageViewIdGet<OpenImageUrl>() {
                         @Override
@@ -77,10 +81,21 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                     })
                     .setAutoScrollScanPosition(MessageActivity.openAutoScroll)
                     .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
-                    .setImageUrlList(allShowData).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
+                    .setImageUrlList(messageBeans).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
                     .setOpenImageStyle(R.style.DefaultPhotosTheme)
+                    .setOnUpdateViewListener(new OnUpdateViewListener() {
+                        @Override
+                        public void onUpdate(Collection<? extends OpenImageUrl> data, UpdateViewType updateViewType) {
+                            if (updateViewType == UpdateViewType.FORWARD){
+                                messageBeans.addAll(0, (Collection<? extends MessageBean>) data);
+                            }else if (updateViewType == UpdateViewType.BACKWARD){
+                                messageBeans.addAll((Collection<? extends MessageBean>) data);
+                            }
+                            notifyDataSetChanged();
+                        }
+                    }).setOpenImageActivityCls(MessageVpActivity.class)
                     //前者是点击所在 allShowData 数据位置，后者是点击的 RecyclerView 中位置
-                    .setClickPosition(position+otherData.size(),position).show();
+                    .setClickPosition(position).show();
         } ;
         if (viewType == MessageBean.IMAGE){
             ItemMsgImageBinding binding = ItemMsgImageBinding.bind(holder.itemView);

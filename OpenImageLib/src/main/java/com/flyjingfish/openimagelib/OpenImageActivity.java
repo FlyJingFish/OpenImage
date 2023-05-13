@@ -425,6 +425,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         mHandler.post(() -> {
             if (indicatorType == INDICATOR_IMAGE) {//图片样式
                 if (imageIndicatorAdapter != null) {
+                    imageIndicatorAdapter.setTotal(total);
                     imageIndicatorAdapter.setSelectPosition(showPosition);
                     imageIndicatorLayoutManager.scrollToPosition(showPosition);
                 }
