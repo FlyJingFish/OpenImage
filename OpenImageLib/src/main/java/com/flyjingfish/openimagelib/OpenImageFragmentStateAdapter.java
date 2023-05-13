@@ -164,7 +164,6 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
     private List<OpenImageDetail> filterData(Collection<? extends OpenImageUrl> imageDetails,UpdateViewType updateViewType){
         if (imageDetails != null){
             List<OpenImageDetail> openImageDetails = new ArrayList<>();
-            Iterator<? extends OpenImageUrl> iterator = imageDetails.iterator();
             int oldDataPos = 0;
             int oldViewPos = 0;
             if (openImageBeans != null && updateViewType == UpdateViewType.BACKWARD){
@@ -173,8 +172,7 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
             }
 
             int i=0;
-            while (iterator.hasNext()){
-                OpenImageUrl imageBean = iterator.next();
+            for (OpenImageUrl imageBean : imageDetails) {
                 if (!(imageBean instanceof OpenImageDetail)){
                     if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
                         OpenImageDetail openImageDetail = new OpenImageDetail();

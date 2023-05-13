@@ -127,7 +127,7 @@ public class KuaiShouDemoActivity extends BaseActivity {
                             public int getImageViewId(OpenImageUrl data, int position) {
                                 return R.id.iv_image;
                             }
-                        }).setAutoScrollScanPosition(true)
+                        })
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
                         .setOpenImageStyle(R.style.KuaishouPhotosTheme)
                         .setOpenImageActivityCls(KuaiShouActivity.class)
@@ -148,11 +148,13 @@ public class KuaiShouDemoActivity extends BaseActivity {
                                     notifyDataSetChanged();
                                 }
                             })
+                            .setAutoScrollScanPosition(true)
                             .setWechatExitFillInEffect(false);
                 }else {
                     openImage
                             .setImageUrl(datas.get(position))
                             .setClickPosition(0,position)
+                            .setAutoScrollScanPosition(false)
                             .setWechatExitFillInEffect(true);
                 }
 
