@@ -136,6 +136,7 @@ public class ViewPagerDemoActivity extends BaseActivity {
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
                         .setImageUrlList(datas).addPageTransformer(new ScaleInTransformer())
                         .setOpenImageStyle(R.style.DefaultPhotosTheme)
+                        .setWechatExitFillInEffect(true)
                         .setClickPosition(position).show();
             });
             return view;

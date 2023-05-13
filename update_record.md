@@ -1,5 +1,13 @@
 # OpenImage 更新日志
 
+## 1.8.1
+
+1、修复 android12 上 setNoneClickView 时返回后导致父activity动画被更改的问题
+
+2、增加更新数据和View的方法（OpenImage中新增两个 setOpenImageActivityCls 方法 可用于更新）
+
+3、修复添加数据之后指示器不变的bug
+
 ## 1.8.0
 
 1、修复 OpenImageActivity 中打开页面是回调两次选中的bug
