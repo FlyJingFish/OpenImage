@@ -582,6 +582,11 @@ public final class OpenImage extends OpenImage4ParseData {
         return this;
     }
 
+    /**
+     * 如果您想在大图页面加载更多数据并且更新前一页面的列表，那么你应该用此方法
+     * @param onUpdateViewListener 新的数据在此回调
+     * @return
+     */
     public OpenImage setOnUpdateViewListener(OnUpdateViewListener onUpdateViewListener) {
         this.onUpdateViewListener = onUpdateViewListener;
         return this;

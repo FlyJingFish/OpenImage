@@ -145,7 +145,7 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         notifyData(data,openImageDetails,updateViewType);
     }
     
-    public void notifyData(Collection<? extends OpenImageUrl> data,List<OpenImageDetail> openImageDetails,UpdateViewType updateViewType){
+    private void notifyData(Collection<? extends OpenImageUrl> data,List<OpenImageDetail> openImageDetails,UpdateViewType updateViewType){
         notifyDataSetChanged();
         OnUpdateViewListener onUpdateViewListener = ImageLoadUtils.getInstance().getOnUpdateViewListener(updateKey);
         if (onUpdateViewListener != null && data != null && openImageDetails != null){
