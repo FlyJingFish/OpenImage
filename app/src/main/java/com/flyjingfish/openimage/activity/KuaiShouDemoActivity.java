@@ -8,28 +8,20 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.flyjingfish.openimage.DataUtils;
 import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimage.R;
-import com.flyjingfish.openimage.bean.ImageEntity;
 import com.flyjingfish.openimage.bean.MessageBean;
-import com.flyjingfish.openimage.bean.TestBean;
 import com.flyjingfish.openimage.databinding.ActivityKuaishouDemoBinding;
-import com.flyjingfish.openimage.databinding.ActivityRecyclerviewBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
-import com.flyjingfish.openimage.openImpl.FriendsVideoFragmentCreateImpl;
 import com.flyjingfish.openimage.openImpl.KuaiShouActivity;
 import com.flyjingfish.openimage.openImpl.KuaishouVideoFragmentCreateImpl;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.UpdateViewType;
-import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
-import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 import org.json.JSONArray;
@@ -130,7 +122,6 @@ public class KuaiShouDemoActivity extends BaseActivity {
                         })
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
                         .setOpenImageStyle(R.style.KuaishouPhotosTheme)
-                        .setOpenImageActivityCls(KuaiShouActivity.class)
                         .setVideoFragmentCreate(new KuaishouVideoFragmentCreateImpl())
                         .disableClickClose();
                 if (mode == Mode.Search){
@@ -139,23 +130,21 @@ public class KuaiShouDemoActivity extends BaseActivity {
                             .setClickPosition(position)
                             .setAutoScrollScanPosition(true)
                             .setWechatExitFillInEffect(false)
-                            .setOnUpdateViewListener(new OnUpdateViewListener() {
-                                @Override
-                                public void onUpdate(Collection<? extends OpenImageUrl> data,UpdateViewType updateViewType) {
-                                    if (updateViewType == UpdateViewType.FORWARD){
-                                        datas.addAll(0, (Collection<? extends MessageBean>) data);
-                                    }else if (updateViewType == UpdateViewType.BACKWARD){
-                                        datas.addAll((Collection<? extends MessageBean>) data);
-                                    }
-                                    notifyDataSetChanged();
+                            .setOpenImageActivityCls(KuaiShouActivity.class, (data, updateViewType) -> {
+                                if (updateViewType == UpdateViewType.FORWARD){
+                                    datas.addAll(0, (Collection<? extends MessageBean>) data);
+                                }else if (updateViewType == UpdateViewType.BACKWARD){
+                                    datas.addAll((Collection<? extends MessageBean>) data);
                                 }
+                                notifyDataSetChanged();
                             });
                 }else {
                     openImage
                             .setImageUrl(datas.get(position))
                             .setClickPosition(0,position)
                             .setAutoScrollScanPosition(false)
-                            .setWechatExitFillInEffect(true);
+                            .setWechatExitFillInEffect(true)
+                            .setOpenImageActivityCls(KuaiShouActivity.class);
                 }
 
                 openImage.show();

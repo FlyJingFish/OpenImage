@@ -13,6 +13,7 @@ import android.widget.ListView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -545,8 +546,8 @@ public final class OpenImage extends OpenImage4ParseData {
      * @param openImageActivityCls 自己定义的大图页面，必须继承 {@link OpenImageActivity}
      * @return {@link OpenImage}
      */
-    public OpenImage setOpenImageActivityCls(Class<? extends OpenImageActivity> openImageActivityCls) {
-        return setOpenImageActivityCls(openImageActivityCls, null, null);
+    public OpenImage setOpenImageActivityCls(@NonNull Class<? extends OpenImageActivity> openImageActivityCls) {
+        return setOpenImageActivityCls(openImageActivityCls, null, null,null);
     }
 
     /**
@@ -557,9 +558,34 @@ public final class OpenImage extends OpenImage4ParseData {
      * @param bundle               传给页面的数据
      * @return {@link OpenImage}
      */
-    public OpenImage setOpenImageActivityCls(Class<? extends OpenImageActivity> openImageActivityCls, String bundleKey, Bundle bundle) {
+    public OpenImage setOpenImageActivityCls(@NonNull Class<? extends OpenImageActivity> openImageActivityCls, String bundleKey, Bundle bundle) {
+        return setOpenImageActivityCls(openImageActivityCls, bundleKey, bundle,null);
+    }
+
+    /**
+     * 如果以上定义页面样式的方法还不够用，可继承 OpenImageActivity 页面自己去写页面
+     *
+     * @param openImageActivityCls 自己定义的大图页面，必须继承 {@link OpenImageActivity}
+     * @param onUpdateViewListener 如果您想在大图页面加载更多数据并且更新前一页面的列表，那么你可传入此接口
+     * @return {@link OpenImage}
+     */
+    public OpenImage setOpenImageActivityCls(@NonNull Class<? extends OpenImageActivity> openImageActivityCls,OnUpdateViewListener onUpdateViewListener) {
+        return setOpenImageActivityCls(openImageActivityCls, null, null,onUpdateViewListener);
+    }
+
+    /**
+     * 如果以上定义页面样式的方法还不够用，可继承 OpenImageActivity 页面自己去写页面
+     *
+     * @param openImageActivityCls 自己定义的大图页面，必须继承 {@link OpenImageActivity}
+     * @param bundleKey            传给页面的数据 key [ bundle = getIntent().getBundleExtra(bundleKey) ]
+     * @param bundle               传给页面的数据
+     * @param onUpdateViewListener 如果您想在大图页面加载更多数据并且更新前一页面的列表，那么你可传入此接口
+     * @return {@link OpenImage}
+     */
+    public OpenImage setOpenImageActivityCls(@NonNull Class<? extends OpenImageActivity> openImageActivityCls, String bundleKey, Bundle bundle,@Nullable OnUpdateViewListener onUpdateViewListener) {
         this.openImageActivityCls = openImageActivityCls;
         this.openImageActivityClsBundleKey = bundleKey;
+        this.onUpdateViewListener = onUpdateViewListener;
         if (bundle != null && TextUtils.isEmpty(bundleKey)) {
             throw new IllegalArgumentException("bundleKey 不能为 null");
         }
@@ -579,16 +605,6 @@ public final class OpenImage extends OpenImage4ParseData {
             throw new IllegalArgumentException("shapeType 不能为 null");
         }
         imageShapeParams = new ImageShapeParams(shapeType,rectangleConnerRadius);
-        return this;
-    }
-
-    /**
-     * 如果您想在大图页面加载更多数据并且更新前一页面的列表，那么你应该用此方法
-     * @param onUpdateViewListener 新的数据在此回调
-     * @return
-     */
-    public OpenImage setOnUpdateViewListener(OnUpdateViewListener onUpdateViewListener) {
-        this.onUpdateViewListener = onUpdateViewListener;
         return this;
     }
 

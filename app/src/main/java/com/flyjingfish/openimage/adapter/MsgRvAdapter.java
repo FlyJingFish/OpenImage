@@ -19,10 +19,8 @@ import com.flyjingfish.openimage.openImpl.MessageVpActivity;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.UpdateViewType;
-import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -83,17 +81,14 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                     .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
                     .setImageUrlList(messageBeans).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
                     .setOpenImageStyle(R.style.DefaultPhotosTheme)
-                    .setOnUpdateViewListener(new OnUpdateViewListener() {
-                        @Override
-                        public void onUpdate(Collection<? extends OpenImageUrl> data, UpdateViewType updateViewType) {
-                            if (updateViewType == UpdateViewType.FORWARD){
-                                messageBeans.addAll(0, (Collection<? extends MessageBean>) data);
-                            }else if (updateViewType == UpdateViewType.BACKWARD){
-                                messageBeans.addAll((Collection<? extends MessageBean>) data);
-                            }
-                            notifyDataSetChanged();
+                    .setOpenImageActivityCls(MessageVpActivity.class, (data, updateViewType) -> {
+                        if (updateViewType == UpdateViewType.FORWARD){
+                            messageBeans.addAll(0, (Collection<? extends MessageBean>) data);
+                        }else if (updateViewType == UpdateViewType.BACKWARD){
+                            messageBeans.addAll((Collection<? extends MessageBean>) data);
                         }
-                    }).setOpenImageActivityCls(MessageVpActivity.class)
+                        notifyDataSetChanged();
+                    })
                     //前者是点击所在 allShowData 数据位置，后者是点击的 RecyclerView 中位置
                     .setClickPosition(position).show();
         } ;
