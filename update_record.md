@@ -1,5 +1,9 @@
 # OpenImage 更新日志
 
+## 1.8.2
+
+1、关闭一些访问权限，避免重度定制使用者使用后出现问题
+
 ## 1.8.1
 
 1、修复 android12 上 setNoneClickView 时返回后导致父activity动画被更改的问题
