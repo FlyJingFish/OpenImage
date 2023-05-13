@@ -182,7 +182,7 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
                         openImageDetail.dataPosition = oldDataPos + i;
                         if (updateViewType == UpdateViewType.NONE){
                             openImageDetail.viewPosition = -1;
-                        }else if (updateViewType == UpdateViewType.BACKWARD){
+                        }else{
                             openImageDetail.viewPosition = oldViewPos + i;
                         }
                         openImageDetails.add(openImageDetail);
