@@ -31,5 +31,9 @@
             android:background="@drawable/bg_title"
             android:layout_weight="1"/>
     </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="发现：大图页面上数据会加载更多，切换视频后始终会回到点击位置；\n搜索:大图页面上数据也会加载更多，并且会将初始搜索数据传入大图页面，加载更多数据后会同步更新上一页面的列表"/>
     <include android:id="@+id/rv" layout="@layout/layout_recyclerview"/>
 </LinearLayout>
