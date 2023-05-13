@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;

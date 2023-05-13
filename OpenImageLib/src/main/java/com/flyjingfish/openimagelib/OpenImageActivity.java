@@ -31,7 +31,6 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
 import com.flyjingfish.openimagelib.enums.ImageShapeType;
 import com.flyjingfish.openimagelib.enums.MediaType;
@@ -136,8 +135,8 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             OnSelectMediaListener onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(s);
             if (onSelectMediaListener != null) {
                 onSelectMediaListeners.add(onSelectMediaListener);
-                if (isFirstBacked && showPosition < openImageBeans.size()){
-                    OpenImageDetail imageDetail = openImageBeans.get(showPosition);
+                if (isFirstBacked && showPosition < getOpenImageBeans().size()){
+                    OpenImageDetail imageDetail = getOpenImageBeans().get(showPosition);
                     onSelectMediaListener.onSelect(imageDetail.openImageUrl, showPosition);
                 }
             }
@@ -288,7 +287,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             }
         };
         openImageAdapter.setWechatExitFillInEffect(wechatExitFillInEffect);
-        openImageAdapter.setNewData(openImageBeans);
+        openImageAdapter.setNewData(getOpenImageBeans());
         viewPager.setAdapter(openImageAdapter);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
@@ -297,19 +296,19 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 showPosition = position;
-                setIndicatorPosition(position,openImageBeans.size());
+                setIndicatorPosition(position,getOpenImageBeans().size());
                 showMoreView();
                 if (position != selectPos && viewPager.getOffscreenPageLimit() != 1) {
                     viewPager.setOffscreenPageLimit(1);
                 }
                 if (isFirstBacked && onBackView != null) {
-                    onBackView.onScrollPos(openImageBeans.get(showPosition).viewPosition);
+                    onBackView.onScrollPos(getOpenImageBeans().get(showPosition).viewPosition);
                 }
                 if (onSelectMediaListener != null) {
-                    onSelectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl, showPosition);
+                    onSelectMediaListener.onSelect(getOpenImageBeans().get(showPosition).openImageUrl, showPosition);
                 }
                 for (OnSelectMediaListener selectMediaListener : onSelectMediaListeners) {
-                    selectMediaListener.onSelect(openImageBeans.get(showPosition).openImageUrl, showPosition);
+                    selectMediaListener.onSelect(getOpenImageBeans().get(showPosition).openImageUrl, showPosition);
                 }
                 isFirstBacked = true;
                 OpenImageActivity.this.onPageSelected(position);
@@ -372,7 +371,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
      */
     protected void showMoreView() {
         if (moreViewOptions.size() > 0) {
-            OpenImageDetail openImageDetail = openImageBeans.get(showPosition);
+            OpenImageDetail openImageDetail = getOpenImageBeans().get(showPosition);
             MediaType mediaType = openImageDetail.getType();
             for (MoreViewOption moreViewOption : moreViewOptions) {
                 MoreViewShowType showType = moreViewOption.getMoreViewShowType();
@@ -397,7 +396,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
      */
     protected void touchHideMoreView() {
         if (moreViewOptions.size() > 0) {
-            OpenImageDetail openImageDetail = openImageBeans.get(showPosition);
+            OpenImageDetail openImageDetail = getOpenImageBeans().get(showPosition);
             MediaType mediaType = openImageDetail.getType();
             for (MoreViewOption moreViewOption : moreViewOptions) {
                 MoreViewShowType showType = moreViewOption.getMoreViewShowType();
@@ -455,7 +454,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             indicatorType = AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_indicator_type);
             orientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_viewPager_orientation));
             touchCloseOrientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_touchClose_orientation,-1));
-            if (indicatorType < 2 && openImageBeans.size() > 1) {
+            if (indicatorType < 2 && getOpenImageBeans().size() > 1) {
                 if (indicatorType == INDICATOR_IMAGE) {//图片样式
                     float interval = AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_image_interval, -1);
                     int imageRes = AttrsUtils.getTypeValueResourceId(this, themeRes, R.attr.openImage_indicator_imageRes);
@@ -473,7 +472,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                     OpenImageOrientation realOrientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_indicator_image_orientation));
                     imageIndicatorLayoutManager = new LinearLayoutManager(this, realOrientation == OpenImageOrientation.HORIZONTAL ? LinearLayoutManager.HORIZONTAL : LinearLayoutManager.VERTICAL, false);
                     recyclerView.setLayoutManager(imageIndicatorLayoutManager);
-                    imageIndicatorAdapter = new ImageIndicatorAdapter(openImageBeans.size(), interval, imageRes, realOrientation);
+                    imageIndicatorAdapter = new ImageIndicatorAdapter(getOpenImageBeans().size(), interval, imageRes, realOrientation);
                     recyclerView.setAdapter(imageIndicatorAdapter);
 
                 } else {
@@ -504,7 +503,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             StatusBarHelper.translucent(this);
             StatusBarHelper.setStatusBarDarkMode(this);
             orientation = OpenImageOrientation.HORIZONTAL;
-            if (openImageBeans.size() > 1) {
+            if (getOpenImageBeans().size() > 1) {
                 indicatorTextBinding = OpenImageIndicatorTextBinding.inflate(getLayoutInflater(), rootView, true);
                 FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
                 layoutParams.bottomMargin = (int) ScreenUtils.dp2px(this, 10);

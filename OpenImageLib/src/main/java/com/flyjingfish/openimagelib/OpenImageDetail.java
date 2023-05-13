@@ -1,9 +1,10 @@
-package com.flyjingfish.openimagelib.beans;
+package com.flyjingfish.openimagelib;
 
 
+import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.MediaType;
 
-public class OpenImageDetail implements OpenImageUrl {
+class OpenImageDetail implements OpenImageUrl {
     public OpenImageUrl openImageUrl;
     public int srcWidth;
     public int srcHeight;

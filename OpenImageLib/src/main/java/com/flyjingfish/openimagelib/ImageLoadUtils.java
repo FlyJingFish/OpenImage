@@ -4,7 +4,6 @@ import android.graphics.drawable.Drawable;
 
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;

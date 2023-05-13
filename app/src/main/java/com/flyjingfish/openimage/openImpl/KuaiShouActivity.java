@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,7 +30,7 @@ import com.flyjingfish.openimage.dialog.InputDialog;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.widget.SlideLayout;
 import com.flyjingfish.openimagelib.OpenImageActivity;
-import com.flyjingfish.openimagelib.beans.OpenImageDetail;
+import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.UpdateViewType;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
@@ -229,8 +228,7 @@ public class KuaiShouActivity extends OpenImageActivity {
         kuaishouViewModel.slidingLiveData.observe(this, aFloat -> {
             rootBinding.tvTop.setAlpha(1-aFloat);
         });
-
-        slideAdapter = new SlideAdapter(openImageBeans);
+        slideAdapter = new SlideAdapter(openImageAdapter.getData());
         rootBinding.rvVideos.setLayoutManager(new LinearLayoutManager(this));
         rootBinding.rvVideos.setAdapter(slideAdapter);
 
@@ -287,7 +285,7 @@ public class KuaiShouActivity extends OpenImageActivity {
             }else {
                 openImageAdapter.addData(datas, UpdateViewType.NONE);
             }
-            slideAdapter.setList(openImageBeans);
+            slideAdapter.setList(openImageAdapter.getData());
         });
 
     }
@@ -321,7 +319,7 @@ public class KuaiShouActivity extends OpenImageActivity {
     }
 
     private class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.MyHolder> {
-        List<OpenImageDetail> list;
+        List<? extends OpenImageUrl> list;
         private int selectPos;
         final Map<Integer,Boolean> stateMap = new HashMap<>();
 
@@ -334,15 +332,15 @@ public class KuaiShouActivity extends OpenImageActivity {
             notifyDataSetChanged();
         }
 
-        public SlideAdapter(List<OpenImageDetail> list) {
+        public SlideAdapter(List<? extends OpenImageUrl> list) {
             this.list = list;
         }
 
-        public List<OpenImageDetail> getList() {
+        public List<? extends OpenImageUrl> getList() {
             return list;
         }
 
-        public void setList(List<OpenImageDetail> list) {
+        public void setList(List<? extends OpenImageUrl> list) {
             this.list = list;
             notifyDataSetChanged();
         }

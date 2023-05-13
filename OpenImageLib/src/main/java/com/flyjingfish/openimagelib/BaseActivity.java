@@ -20,7 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
@@ -45,37 +44,37 @@ class BaseActivity extends AppCompatActivity {
     protected int selectPos;
     protected boolean isCallClosed;
     protected String textFormat = "%1$d/%2$d";
-    protected String onSelectKey;
-    protected String openCoverKey;
-    protected String pageTransformersKey;
-    protected String onItemCLickKey;
-    protected String onItemLongCLickKey;
-    protected String moreViewKey;
-    protected String onBackViewKey;
-    protected String videoFragmentCreateKey;
-    protected String imageFragmentCreateKey;
-    protected String upperLayerFragmentCreateKey;
-    protected final List<OnSelectMediaListener> onSelectMediaListeners = new ArrayList<>();
-    protected final List<String> onSelectMediaListenerKeys = new ArrayList<>();
-    protected final List<MoreViewOption> moreViewOptions = new ArrayList<>();
-    protected final Handler mHandler = new Handler(Looper.getMainLooper());
-    protected List<OpenImageDetail> openImageBeans;
-    protected PhotosViewModel photosViewModel;
+    String onSelectKey;
+    String openCoverKey;
+    String pageTransformersKey;
+    String onItemCLickKey;
+    String onItemLongCLickKey;
+    String moreViewKey;
+    String onBackViewKey;
+    String videoFragmentCreateKey;
+    String imageFragmentCreateKey;
+    String upperLayerFragmentCreateKey;
+    final List<OnSelectMediaListener> onSelectMediaListeners = new ArrayList<>();
+    final List<String> onSelectMediaListenerKeys = new ArrayList<>();
+    final List<MoreViewOption> moreViewOptions = new ArrayList<>();
+    final Handler mHandler = new Handler(Looper.getMainLooper());
+    private List<OpenImageDetail> openImageBeans;
+    PhotosViewModel photosViewModel;
     protected OpenImageIndicatorTextBinding indicatorTextBinding;
     protected ImageIndicatorAdapter imageIndicatorAdapter;
     protected OpenImageOrientation orientation;
     protected OpenImageOrientation touchCloseOrientation;
     //    protected ImageDiskMode imageDiskMode;
     protected ShapeImageView.ShapeScaleType srcScaleType;
-    protected OnSelectMediaListener onSelectMediaListener;
-    protected ObjectAnimator wechatEffectAnim;
+    OnSelectMediaListener onSelectMediaListener;
+    ObjectAnimator wechatEffectAnim;
     protected LinearLayoutManager imageIndicatorLayoutManager;
-    protected ImageLoadUtils.OnBackView onBackView;
+    ImageLoadUtils.OnBackView onBackView;
     protected FontStyle fontStyle;
     protected BaseInnerFragment upLayerFragment;
     protected UpperLayerOption upperLayerOption;
     protected OpenImageFragmentStateAdapter openImageAdapter;
-    protected final Handler closeHandler = new Handler(Looper.getMainLooper()) {
+    final Handler closeHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -89,12 +88,16 @@ class BaseActivity extends AppCompatActivity {
     private String clickContextKey;
     private boolean isNoneClickView;
     private String dataKey;
-    protected String contextKey;
-    protected float touchCloseScale = 1f;
-    protected ImageShapeParams imageShapeParams;
+    String contextKey;
+    float touchCloseScale = 1f;
+    ImageShapeParams imageShapeParams;
     private final List<String> onItemClickListenerKeys = new ArrayList<>();
     private final List<String> onItemLongClickListenerKeys = new ArrayList<>();
-    protected boolean wechatExitFillInEffect;
+    boolean wechatExitFillInEffect;
+
+    List<OpenImageDetail> getOpenImageBeans() {
+        return openImageBeans;
+    }
 
     public boolean isNoneClickView() {
         return isNoneClickView;

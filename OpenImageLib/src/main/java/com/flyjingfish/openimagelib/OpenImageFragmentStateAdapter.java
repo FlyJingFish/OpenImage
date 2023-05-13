@@ -1,19 +1,15 @@
 package com.flyjingfish.openimagelib;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.flyjingfish.openimagelib.beans.OpenImageDetail;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.UpdateViewType;
@@ -21,9 +17,7 @@ import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Handler;
 
 public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
 
@@ -54,11 +48,11 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         return wechatExitFillInEffect;
     }
 
-    public void setWechatExitFillInEffect(boolean wechatExitFillInEffect) {
+    void setWechatExitFillInEffect(boolean wechatExitFillInEffect) {
         this.wechatExitFillInEffect = wechatExitFillInEffect;
     }
 
-    public void setNewData(List<OpenImageDetail> data) {
+    void setNewData(List<OpenImageDetail> data) {
         if (data != null){
             List<OpenImageDetail> openImageDetails = filterData(data,UpdateViewType.NONE);
             data.clear();
@@ -157,8 +151,16 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
      * 获取适配器内的数据
      * @return
      */
-    public List<OpenImageDetail> getData() {
-        return openImageBeans;
+    @Nullable
+    public List<? extends OpenImageUrl> getData() {
+        List<OpenImageUrl> openImageUrls = null;
+        if (openImageBeans != null){
+            openImageUrls = new ArrayList<>();
+            for (OpenImageDetail openImageBean : openImageBeans) {
+                openImageUrls.add(openImageBean.openImageUrl);
+            }
+        }
+        return openImageUrls;
     }
 
     private List<OpenImageDetail> filterData(Collection<? extends OpenImageUrl> imageDetails,UpdateViewType updateViewType){
