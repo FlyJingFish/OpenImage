@@ -58,6 +58,16 @@ class OpenImage4ParseData extends OpenImage4Params {
         if (isNoneClickView){
             openImageDetails = new ArrayList<>();
             viewPair = initShareView(openImageDetails);
+            ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView(null){
+                @Override
+                public ShareExitViewBean onBack(int showPosition) {
+                    Activity activity = ActivityCompatHelper.getActivity(context);
+                    if (activity != null) {
+                        activity.setExitSharedElementCallback(new BaseSharedElementCallback(context));
+                    }
+                    return super.onBack(showPosition);
+                }
+            });
         }else if (recyclerView != null) {
             if (sourceImageViewIdGet == null) {
                 throw new IllegalArgumentException("sourceImageViewIdGet 不能为null");

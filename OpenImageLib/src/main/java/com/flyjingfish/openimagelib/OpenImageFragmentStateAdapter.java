@@ -144,9 +144,11 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         if (imageDetails != null){
             List<OpenImageDetail> openImageDetails = new ArrayList<>();
             Iterator<? extends OpenImageUrl> iterator = imageDetails.iterator();
-            int oldSize = 0;
+            int oldDataPos = 0;
+            int oldViewPos = 0;
             if (openImageBeans != null && updateViewType == UpdateViewType.BACKWARD){
-                oldSize = openImageBeans.get(openImageBeans.size()-1).dataPosition + 1;
+                oldDataPos = openImageBeans.get(openImageBeans.size()-1).dataPosition + 1;
+                oldViewPos = openImageBeans.get(openImageBeans.size()-1).viewPosition + 1;
             }
 
             int i=0;
@@ -156,8 +158,8 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
                     if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
                         OpenImageDetail openImageDetail = new OpenImageDetail();
                         openImageDetail.openImageUrl = imageBean;
-                        openImageDetail.dataPosition = oldSize + i;
-                        openImageDetail.viewPosition = -1;
+                        openImageDetail.dataPosition = oldDataPos + i;
+                        openImageDetail.viewPosition = oldViewPos + i;
                         openImageDetails.add(openImageDetail);
                     }
                 }else {
@@ -168,6 +170,7 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
             if (openImageBeans != null && updateViewType == UpdateViewType.FORWARD){
                 for (OpenImageDetail openImageBean : openImageBeans) {
                     openImageBean.dataPosition = imageDetails.size()+openImageBean.dataPosition;
+                    openImageBean.viewPosition = imageDetails.size()+openImageBean.viewPosition;
                 }
             }
             return openImageDetails;

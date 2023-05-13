@@ -21,8 +21,7 @@ import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import java.util.List;
 import java.util.Map;
 
-class ExitSharedElementCallback2 extends SharedElementCallback {
-    protected Context context;
+class ExitSharedElementCallback2 extends BaseSharedElementCallback {
     protected Float startAlpha;
     protected Integer startVisibility;
     private final ImageView shareExitMapView;
@@ -32,7 +31,7 @@ class ExitSharedElementCallback2 extends SharedElementCallback {
     private final Float showCurrentViewStartAlpha;
 
     public ExitSharedElementCallback2(Context context, ImageView shareExitMapView, boolean showSrcImageView, Float showCurrentViewStartAlpha,boolean isClipSrcImageView) {
-        this.context = context;
+        super(context);
         this.shareExitMapView = shareExitMapView;
         this.showSrcImageView = showSrcImageView;
         this.showCurrentViewStartAlpha = showCurrentViewStartAlpha;
@@ -47,17 +46,6 @@ class ExitSharedElementCallback2 extends SharedElementCallback {
         }
         if (!showSrcImageView && shareExitMapView != null) {
             shareExitMapView.setAlpha(Math.max(startAlpha, startSrcAlpha));
-        }
-        Activity activity = ActivityCompatHelper.getActivity(context);
-        if (activity != null){
-            activity.setExitSharedElementCallback(null);
-            fixAndroid12Bug();
-        }
-    }
-
-    private void fixAndroid12Bug(){
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R && OpenImageConfig.getInstance().isFixAndroid12OnBackPressed()) {
-            context.startActivity(new Intent(context, FixAndroid12BugActivity.class), ActivityOptions.makeSceneTransitionAnimation((Activity) context).toBundle());
         }
     }
 

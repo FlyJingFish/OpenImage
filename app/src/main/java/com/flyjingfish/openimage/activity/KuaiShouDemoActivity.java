@@ -124,7 +124,7 @@ public class KuaiShouDemoActivity extends BaseActivity {
                         })
                         .setVideoFragmentCreate(new KuaishouVideoFragmentCreateImpl())
                         .setOpenImageActivityCls(KuaiShouActivity.class)
-                        .setWechatExitFillInEffect(true)
+                        .setWechatExitFillInEffect(false)
                         .show();
 
             });
