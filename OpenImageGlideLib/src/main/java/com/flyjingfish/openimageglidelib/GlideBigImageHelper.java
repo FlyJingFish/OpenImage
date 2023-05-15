@@ -21,7 +21,6 @@ import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
 
 
 public class GlideBigImageHelper implements BigImageHelper {
-
     @Override
     public void loadImage(Context context, String imageUrl, OnLoadBigImageListener onLoadBigImageListener) {
         LoadImageUtils.INSTANCE.loadImageForSize(context, imageUrl, new OnLocalRealFinishListener() {
@@ -62,15 +61,5 @@ public class GlideBigImageHelper implements BigImageHelper {
         });
 
     }
-
-    @Override
-    public void loadImage(Context context, String imageUrl, ImageView imageView) {
-        RequestOptions requestOptions = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.ALL);
-        Glide.with(context)
-                .load(imageUrl).apply(requestOptions).into(imageView);
-
-    }
-
 
 }

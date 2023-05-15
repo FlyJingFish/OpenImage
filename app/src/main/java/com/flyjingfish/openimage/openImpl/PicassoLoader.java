@@ -18,16 +18,12 @@ import com.squareup.picasso.Picasso;
 public class PicassoLoader {
     Context context; String imageUrl; OnLoadBigImageListener onLoadBigImageListener;
     final Object tag = new Object();
-    private ImageView imageView;
     com.squareup.picasso.Target myTarget = new com.squareup.picasso.Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             myTarget = null;//这句不能删除否则图片加载异常
             if (onLoadBigImageListener != null){
                 onLoadBigImageListener.onLoadImageSuccess(new BitmapDrawable(context.getResources(),bitmap));
-            }else if (imageView != null){
-                BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(),bitmap);
-                imageView.setImageDrawable(bitmapDrawable);
             }
         }
 
@@ -47,12 +43,6 @@ public class PicassoLoader {
         this.context = context;
         this.imageUrl = imageUrl;
         this.onLoadBigImageListener = onLoadBigImageListener;
-    }
-
-    public PicassoLoader(Context context, String imageUrl, ImageView imageView) {
-        this.context = context;
-        this.imageUrl = imageUrl;
-        this.imageView = imageView;
     }
 
     public void load(){

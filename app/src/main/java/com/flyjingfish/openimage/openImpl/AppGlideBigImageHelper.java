@@ -17,15 +17,4 @@ public class AppGlideBigImageHelper extends GlideBigImageHelper {
         }
 
     }
-
-    @Override
-    public void loadImage(Context context, String imageUrl, ImageView imageView) {
-        if (MyImageLoader.loader_os_type == MyImageLoader.GLIDE){
-            super.loadImage(context, imageUrl, imageView);
-        }else {
-            new PicassoLoader(context, imageUrl, imageView).load();
-        }
-
-    }
-
 }
