@@ -1,5 +1,19 @@
 # OpenImage 更新日志
 
+## 1.8.5
+
+1、修改 OpenImageFragmentStateAdapter 的 getItemId 方法，使用雪花算法避免 Hash 值也会重复
+
+## 1.8.4
+
+1、修改 OpenImageFragmentStateAdapter 的 getItemId 方法，使用 Hash 值
+
+## 1.8.3
+
+1、OpenImageFragmentStateAdapter 新增 **删除**、**替换(更新)** 数据的方法
+
+2、OnUpdateViewListener 新增 **onRemove**、 **onReplace(更新)** 方法，**onUpdate** 改名为 **onAdd**
+
 ## 1.8.2
 
 1、关闭一些访问权限，避免重度定制使用者使用后出现问题
