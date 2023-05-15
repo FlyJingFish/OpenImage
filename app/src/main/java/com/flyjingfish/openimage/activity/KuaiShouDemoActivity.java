@@ -137,10 +137,11 @@ public class KuaiShouDemoActivity extends BaseActivity {
                                 public void onAdd(Collection<? extends OpenImageUrl> data, UpdateViewType updateViewType) {
                                     if (updateViewType == UpdateViewType.FORWARD){
                                         datas.addAll(0, (Collection<? extends MessageBean>) data);
+                                        notifyDataSetChanged();
                                     }else if (updateViewType == UpdateViewType.BACKWARD){
                                         datas.addAll((Collection<? extends MessageBean>) data);
+                                        notifyDataSetChanged();
                                     }
-                                    notifyDataSetChanged();
                                 }
 
                                 @Override

@@ -87,10 +87,11 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                         public void onAdd(Collection<? extends OpenImageUrl> data, UpdateViewType updateViewType) {
                             if (updateViewType == UpdateViewType.FORWARD){
                                 messageBeans.addAll(0, (Collection<? extends MessageBean>) data);
+                                notifyDataSetChanged();
                             }else if (updateViewType == UpdateViewType.BACKWARD){
                                 messageBeans.addAll((Collection<? extends MessageBean>) data);
+                                notifyDataSetChanged();
                             }
-                            notifyDataSetChanged();
                         }
 
                         @Override
