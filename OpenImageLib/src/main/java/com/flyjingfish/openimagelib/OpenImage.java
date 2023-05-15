@@ -57,7 +57,6 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     private OpenImage(Context context) {
-        ImageLoadUtils.getInstance().getSnowFlakeId();
         if (context instanceof Activity) {
             this.context = context;
             this.contextKey = context.toString();
@@ -67,8 +66,8 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     *
      * 设置数据
+     *
      * @param openImageUrls 图片数据组
      * @return {@link OpenImage}
      */
@@ -79,6 +78,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * 设置数据
+     *
      * @param openImageUrl 单个图片数据可设置这个
      * @return {@link OpenImage}
      */
@@ -88,6 +88,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * 设置数据
+     *
      * @param openImageUrls 图片String数据组
      * @param mediaType     图片还是视频
      * @return {@link OpenImage}
@@ -103,6 +104,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * 设置数据
+     *
      * @param openImageUrl 单个String图片数据可设置这个
      * @param mediaType    图片还是视频
      * @return {@link OpenImage}
@@ -139,6 +141,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * 设置点击的ImageView所在容器
+     *
      * @param viewPager          展示数据的ViewPager
      * @param sourceImageViewGet 展示数据的ViewPager 的图片ImageView
      * @return {@link OpenImage}
@@ -151,6 +154,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * 设置点击的ImageView所在容器
+     *
      * @param gridView             展示数据的GridView
      * @param sourceImageViewIdGet 展示数据的GridView 的图片Id
      * @return {@link OpenImage}
@@ -163,6 +167,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * 设置点击的ImageView所在容器
+     *
      * @param listView             展示数据的ListView
      * @param sourceImageViewIdGet 展示数据的ListView 的图片Id
      * @return {@link OpenImage}
@@ -175,6 +180,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * 设置点击的ImageView数组
+     *
      * @param imageViews 自己传展示数据的ImageView组
      * @return {@link OpenImage}
      */
@@ -184,6 +190,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * 设置点击的ImageView
+     *
      * @param imageView 自己传展示数据的单个ImageView
      * @return {@link OpenImage}
      */
@@ -193,6 +200,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * 设置点击的ImageView集合
+     *
      * @param imageViews 自己传展示数据的ImageView组
      * @return {@link OpenImage}
      */
@@ -262,6 +270,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * 这项已被废弃请不要调用
+     *
      * @param imageDiskMode 这项已被废弃请不要调用
      * @return {@link OpenImage}
      */
@@ -283,6 +292,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * </ul>
      * <p> 所以建议设置此项
      * <p>
+     *
      * @param errorResId 大图加载失败后显示的图片
      * @return {@link OpenImage}
      */
@@ -293,6 +303,7 @@ public final class OpenImage extends OpenImage4ParseData {
 
     /**
      * 这项已被废弃请不要调用
+     *
      * @param itemLoadHelper 这项已被废弃请不要调用
      * @return {@link OpenImage}
      */
@@ -453,7 +464,6 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     *
      * 添加View 到大图页面，此方法可多次调用，添加多个View，可以联合 {@link OpenImage#setOnSelectMediaListener} 使用，
      * 获取正在显示的图片或视频（即您传入的数据 {@link OpenImageUrl}）
      *
@@ -548,7 +558,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @return {@link OpenImage}
      */
     public OpenImage setOpenImageActivityCls(@NonNull Class<? extends OpenImageActivity> openImageActivityCls) {
-        return setOpenImageActivityCls(openImageActivityCls, null, null,null);
+        return setOpenImageActivityCls(openImageActivityCls, null, null, null);
     }
 
     /**
@@ -560,7 +570,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @return {@link OpenImage}
      */
     public OpenImage setOpenImageActivityCls(@NonNull Class<? extends OpenImageActivity> openImageActivityCls, String bundleKey, Bundle bundle) {
-        return setOpenImageActivityCls(openImageActivityCls, bundleKey, bundle,null);
+        return setOpenImageActivityCls(openImageActivityCls, bundleKey, bundle, null);
     }
 
     /**
@@ -570,8 +580,8 @@ public final class OpenImage extends OpenImage4ParseData {
      * @param onUpdateViewListener 如果您想在大图页面加载更多数据并且更新前一页面的列表，那么你可传入此接口
      * @return {@link OpenImage}
      */
-    public OpenImage setOpenImageActivityCls(@NonNull Class<? extends OpenImageActivity> openImageActivityCls,OnUpdateViewListener onUpdateViewListener) {
-        return setOpenImageActivityCls(openImageActivityCls, null, null,onUpdateViewListener);
+    public OpenImage setOpenImageActivityCls(@NonNull Class<? extends OpenImageActivity> openImageActivityCls, OnUpdateViewListener onUpdateViewListener) {
+        return setOpenImageActivityCls(openImageActivityCls, null, null, onUpdateViewListener);
     }
 
     /**
@@ -583,7 +593,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @param onUpdateViewListener 如果您想在大图页面加载更多数据并且更新前一页面的列表，那么你可传入此接口
      * @return {@link OpenImage}
      */
-    public OpenImage setOpenImageActivityCls(@NonNull Class<? extends OpenImageActivity> openImageActivityCls, String bundleKey, Bundle bundle,@Nullable OnUpdateViewListener onUpdateViewListener) {
+    public OpenImage setOpenImageActivityCls(@NonNull Class<? extends OpenImageActivity> openImageActivityCls, String bundleKey, Bundle bundle, @Nullable OnUpdateViewListener onUpdateViewListener) {
         this.openImageActivityCls = openImageActivityCls;
         this.openImageActivityClsBundleKey = bundleKey;
         this.onUpdateViewListener = onUpdateViewListener;
@@ -597,7 +607,7 @@ public final class OpenImage extends OpenImage4ParseData {
     /**
      * 如果你想让圆图和矩形圆角图在打开关闭时追求更细腻的体验可以设置这个
      *
-     * @param shapeType 图片类型
+     * @param shapeType             图片类型
      * @param rectangleConnerRadius 如果是矩形圆角图，设置这个为圆角角度
      * @return
      */
@@ -605,7 +615,7 @@ public final class OpenImage extends OpenImage4ParseData {
         if (shapeType == null) {
             throw new IllegalArgumentException("shapeType 不能为 null");
         }
-        imageShapeParams = new ImageShapeParams(shapeType,rectangleConnerRadius);
+        imageShapeParams = new ImageShapeParams(shapeType, rectangleConnerRadius);
         return this;
     }
 
@@ -613,9 +623,9 @@ public final class OpenImage extends OpenImage4ParseData {
      * 打开大图页面，只可以调用一次哦～切勿多次调用
      */
     public void show() {
-        if (!isCallShow){
+        if (!isCallShow) {
             isCallShow = true;
-        }else if (ActivityCompatHelper.isApkInDebug(context)){
+        } else if (ActivityCompatHelper.isApkInDebug(context)) {
             throw new UnsupportedOperationException("不可以多次调用 show 方法");
         }
         goShow();

@@ -6,7 +6,7 @@ class SnowFlakeUtil {
 
     // 初始时间戳(纪年)，可用雪花算法服务上线时间戳的值
     // 1650789964886：2022-04-24 16:45:59
-    private final long INIT_EPOCH;
+    private static final long INIT_EPOCH = 0;
  
     // 记录最后使用的毫秒时间戳，主要用于判断是否同一毫秒，以及用于服务器时钟回拨判断
     private long lastTimeMillis = -1L;
@@ -74,7 +74,6 @@ class SnowFlakeUtil {
         }
         this.workerId = workerId;
         this.dataCenterId = dataCenterId;
-        this.INIT_EPOCH = timeGen();
     }
  
     /**
