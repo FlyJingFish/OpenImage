@@ -327,6 +327,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                 OpenImageActivity.this.onPageScrollStateChanged(state);
             }
         });
+        openImageAdapter.setOnUpdateIndicator(() -> {
+            setIndicatorPosition(showPosition,getOpenImageBeans().size());
+        });
         viewPager.setCurrentItem(selectPos, false);
     }
 
@@ -867,7 +870,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     }
 
     private Fragment getCurrentFragment() {
-        return getSupportFragmentManager().findFragmentByTag("f" + showPosition);
+        return getSupportFragmentManager().findFragmentByTag("f" + openImageAdapter.getItemId(showPosition));
     }
 
     protected boolean canFragmentBack() {

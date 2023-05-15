@@ -21,6 +21,7 @@ import com.flyjingfish.openimage.openImpl.KuaishouVideoFragmentCreateImpl;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.UpdateViewType;
+import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
@@ -131,13 +132,36 @@ public class KuaiShouDemoActivity extends BaseActivity {
                             .setClickPosition(position)
                             .setAutoScrollScanPosition(true)
                             .setWechatExitFillInEffect(false)
-                            .setOpenImageActivityCls(KuaiShouActivity.class, (data, updateViewType) -> {
-                                if (updateViewType == UpdateViewType.FORWARD){
-                                    datas.addAll(0, (Collection<? extends MessageBean>) data);
-                                }else if (updateViewType == UpdateViewType.BACKWARD){
-                                    datas.addAll((Collection<? extends MessageBean>) data);
+                            .setOpenImageActivityCls(KuaiShouActivity.class, new OnUpdateViewListener() {
+                                @Override
+                                public void onAdd(Collection<? extends OpenImageUrl> data, UpdateViewType updateViewType) {
+                                    if (updateViewType == UpdateViewType.FORWARD){
+                                        datas.addAll(0, (Collection<? extends MessageBean>) data);
+                                    }else if (updateViewType == UpdateViewType.BACKWARD){
+                                        datas.addAll((Collection<? extends MessageBean>) data);
+                                    }
+                                    notifyDataSetChanged();
                                 }
-                                notifyDataSetChanged();
+
+                                @Override
+                                public void onRemove(OpenImageUrl openImageUrl) {
+                                    datas.remove(openImageUrl);
+                                    notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onReplace(int position, OpenImageUrl oldData, OpenImageUrl newData) {
+                                    int index=0;
+                                    for (MessageBean bean : datas) {
+                                        if (bean == oldData){
+                                            datas.set(index, (MessageBean) newData);
+                                            notifyDataSetChanged();
+                                            return;
+                                        }
+                                        index++;
+                                    }
+                                }
+
                             });
                 }else {
                     openImage

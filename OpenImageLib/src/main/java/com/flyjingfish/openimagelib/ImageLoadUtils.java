@@ -100,6 +100,12 @@ class ImageLoadUtils {
         smallCoverDrawableHashMap.remove(key);
     }
 
+    public void clearAllSmallCoverDrawable() {
+        smallCoverDrawableHashMap.clear();
+    }
+    public void clearAllCoverDrawable() {
+        coverDrawableHashMap.clear();
+    }
     public interface OnBackView {
         ExitOnBackView.ShareExitViewBean onBack(int showPosition);
 

@@ -19,6 +19,7 @@ import com.flyjingfish.openimage.openImpl.MessageVpActivity;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.UpdateViewType;
+import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 
 import java.util.Collection;
@@ -81,13 +82,35 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                     .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
                     .setImageUrlList(messageBeans).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
                     .setOpenImageStyle(R.style.DefaultPhotosTheme)
-                    .setOpenImageActivityCls(MessageVpActivity.class, (data, updateViewType) -> {
-                        if (updateViewType == UpdateViewType.FORWARD){
-                            messageBeans.addAll(0, (Collection<? extends MessageBean>) data);
-                        }else if (updateViewType == UpdateViewType.BACKWARD){
-                            messageBeans.addAll((Collection<? extends MessageBean>) data);
+                    .setOpenImageActivityCls(MessageVpActivity.class, new OnUpdateViewListener() {
+                        @Override
+                        public void onAdd(Collection<? extends OpenImageUrl> data, UpdateViewType updateViewType) {
+                            if (updateViewType == UpdateViewType.FORWARD){
+                                messageBeans.addAll(0, (Collection<? extends MessageBean>) data);
+                            }else if (updateViewType == UpdateViewType.BACKWARD){
+                                messageBeans.addAll((Collection<? extends MessageBean>) data);
+                            }
+                            notifyDataSetChanged();
                         }
-                        notifyDataSetChanged();
+
+                        @Override
+                        public void onRemove(OpenImageUrl openImageUrl) {
+                            messageBeans.remove(openImageUrl);
+                            notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onReplace(int position,OpenImageUrl oldData, OpenImageUrl newData) {
+                            int index=0;
+                            for (MessageBean bean : messageBeans) {
+                                if (bean == oldData){
+                                    messageBeans.set(index, (MessageBean) newData);
+                                    notifyDataSetChanged();
+                                    return;
+                                }
+                                index++;
+                            }
+                        }
                     })
                     //前者是点击所在 allShowData 数据位置，后者是点击的 RecyclerView 中位置
                     .setClickPosition(position).show();
