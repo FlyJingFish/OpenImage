@@ -283,7 +283,6 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         if (openImageDetail != null){
             key = openImageDetail.toString();
         }
-        Log.e("getItemId",key);
         return hash(key);
     }
 
