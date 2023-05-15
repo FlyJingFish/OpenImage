@@ -36,6 +36,7 @@ class ImageLoadUtils {
     private final HashMap<String, List<OpenImageDetail>> openDataMap = new HashMap<>();
     private final HashMap<String, OpenImageDetail> openDetailDataMap = new HashMap<>();
     private final HashMap<String, OnUpdateViewListener> onUpdateViewListenerHashMap = new HashMap<>();
+    private final SnowFlakeUtil snowFlakeUtil = new SnowFlakeUtil();
     private boolean isApkInDebug;
 
     private ImageLoadUtils() {
@@ -315,5 +316,9 @@ class ImageLoadUtils {
 
     public void clearOnUpdateViewListener(String key) {
         onUpdateViewListenerHashMap.remove(key);
+    }
+
+    public long getSnowFlakeId(){
+        return snowFlakeUtil.nextId();
     }
 }

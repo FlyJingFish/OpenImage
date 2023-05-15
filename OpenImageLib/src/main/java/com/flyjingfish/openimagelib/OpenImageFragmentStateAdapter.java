@@ -1,7 +1,5 @@
 package com.flyjingfish.openimagelib;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -60,11 +58,6 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         }
         openImageBeans = data;
         notifyData(null, null, UpdateViewType.NONE);
-    }
-
-    static int hash(Object key) {
-        int h;
-        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
     }
 
     /**
@@ -276,14 +269,10 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
     @Override
     public long getItemId(int position) {
         if (openImageBeans == null) {
-            return 0;
+            return position;
         }
         OpenImageDetail openImageDetail = openImageBeans.get(position);
-        String key = "";
-        if (openImageDetail != null){
-            key = openImageDetail.toString();
-        }
-        return hash(key);
+        return openImageDetail != null ? openImageDetail.getId() : position;
     }
 
     /**

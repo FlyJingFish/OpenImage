@@ -10,6 +10,11 @@ class OpenImageDetail implements OpenImageUrl {
     public int srcHeight;
     public int dataPosition;
     public int viewPosition;
+    private final long id;
+
+    public OpenImageDetail() {
+        id = ImageLoadUtils.getInstance().getSnowFlakeId();
+    }
 
     @Override
     public String getImageUrl() {
@@ -31,4 +36,7 @@ class OpenImageDetail implements OpenImageUrl {
         return openImageUrl.getType();
     }
 
+    public long getId() {
+        return id;
+    }
 }

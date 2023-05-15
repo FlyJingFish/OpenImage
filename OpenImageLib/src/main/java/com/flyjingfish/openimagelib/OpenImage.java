@@ -57,6 +57,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     private OpenImage(Context context) {
+        ImageLoadUtils.getInstance().getSnowFlakeId();
         if (context instanceof Activity) {
             this.context = context;
             this.contextKey = context.toString();
