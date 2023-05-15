@@ -1,5 +1,7 @@
 package com.flyjingfish.openimagelib;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -276,7 +278,13 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         if (openImageBeans == null) {
             return 0;
         }
-        return hash(openImageBeans.get(position));
+        OpenImageDetail openImageDetail = openImageBeans.get(position);
+        String key = "";
+        if (openImageDetail != null){
+            key = openImageDetail.toString();
+        }
+        Log.e("getItemId",key);
+        return hash(key);
     }
 
     /**
@@ -309,7 +317,7 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
             int i = 0;
             for (OpenImageUrl imageBean : imageDetails) {
                 if (!(imageBean instanceof OpenImageDetail)) {
-                    if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
+                    if (imageBean != null && (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO)) {
                         OpenImageDetail openImageDetail = new OpenImageDetail();
                         openImageDetail.openImageUrl = imageBean;
                         openImageDetail.dataPosition = oldDataPos + i;
