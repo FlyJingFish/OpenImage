@@ -325,16 +325,6 @@ OpenImage.with(activity)
 
     }
 
-    @Override
-    public void loadImage(Context context, String imageUrl, ImageView imageView) {
-         RequestOptions requestOptions = new RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .format(DecodeFormat.PREFER_RGB_565);
-            Glide.with(context)
-                    .load(imageUrl).apply(requestOptions).into(imageView);
-
-    }
-
 }
 ```
 
