@@ -13,6 +13,7 @@ import androidx.viewbinding.ViewBinding;
 
 import com.flyjingfish.openimage.R;
 
+
 public abstract class BaseDialogFragment<VB extends ViewBinding> extends DialogFragment {
 
     protected VB binding;

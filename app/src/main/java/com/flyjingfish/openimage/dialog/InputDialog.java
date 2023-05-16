@@ -1,6 +1,5 @@
 package com.flyjingfish.openimage.dialog;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -9,28 +8,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.DialogInputBinding;
 import com.flyjingfish.switchkeyboardlib.MenuModeView;
 import com.flyjingfish.switchkeyboardlib.SwitchKeyboardUtil;
-import com.flyjingfish.switchkeyboardlib.SystemKeyboardUtils;
 
 
 public class InputDialog extends BaseInputDialog<DialogInputBinding> {
 
     private static final String CONTENT = "content";
     private String content;
-    private SwitchKeyboardUtil switchKeyboardUtil;
     private boolean isShowMenu;
 
     public static InputDialog getDialog(String content){
@@ -39,11 +30,6 @@ public class InputDialog extends BaseInputDialog<DialogInputBinding> {
         bundle.putString(CONTENT,content);
         infoInputDialog.setArguments(bundle);
         return infoInputDialog;
-    }
-
-    @Override
-    protected EditText getContentEditText() {
-        return binding.etContent;
     }
 
     @Override
@@ -61,13 +47,14 @@ public class InputDialog extends BaseInputDialog<DialogInputBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        switchKeyboardUtil = new SwitchKeyboardUtil(requireActivity());
+        SwitchKeyboardUtil switchKeyboardUtil = new SwitchKeyboardUtil(requireActivity());
         switchKeyboardUtil.setMenuViewHeightEqualKeyboard(true);
         switchKeyboardUtil.setUseSwitchAnim(true);
         switchKeyboardUtil.setUseMenuUpAnim(true);
         switchKeyboardUtil.attachLifecycle(this);
         switchKeyboardUtil.setInputEditText(binding.etContent);
         switchKeyboardUtil.setMenuViewContainer(binding.llMenu);
+        switchKeyboardUtil.setAutoShowKeyboard(true);
         switchKeyboardUtil.setToggleMenuViews(
                 new MenuModeView(binding.ivFace,binding.llEmoji));
         switchKeyboardUtil.setOnKeyboardMenuListener(new SwitchKeyboardUtil.OnKeyboardMenuListener() {

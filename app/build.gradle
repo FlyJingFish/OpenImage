@@ -87,5 +87,5 @@ dependencies {
 //    implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:'+PROJ_VERSION
     // 依赖androidx, 已升级AndroidX的项目集成下面的依赖
     implementation "com.bytedance.tools.codelocator:codelocator-core:2.0.0"
-    implementation 'com.github.FlyJingFish:SwitchKeyboard:1.2.0'
+    implementation 'com.github.FlyJingFish:SwitchKeyboard:1.2.1'
 }
