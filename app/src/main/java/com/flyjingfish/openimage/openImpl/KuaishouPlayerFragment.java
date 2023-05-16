@@ -91,7 +91,12 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
             kuaishouViewModel.closeSlideLiveData.setValue(true);
             return isOpenSlide;
         });
-        kuaishouViewModel.pausePlayLiveData.observe(getViewLifecycleOwner(), aBoolean -> friendVideoPlayer.playPause());
+        kuaishouViewModel.pausePlayLiveData.observe(getViewLifecycleOwner(), playState -> {
+            if (playState.position == showPosition && !playState.consume){
+                friendVideoPlayer.playPause();
+                playState.consume = true;
+            }
+        });
         friendVideoPlayer.setGSYStateUiListener(state -> {
             if (getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
                 kuaishouViewModel.playStateLiveData.setValue(new PlayState(state,showPosition));

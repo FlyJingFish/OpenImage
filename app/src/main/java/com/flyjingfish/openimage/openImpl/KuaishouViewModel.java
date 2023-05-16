@@ -13,7 +13,7 @@ public class KuaishouViewModel extends AndroidViewModel {
     MutableLiveData<Float> slidingLiveData = new MutableLiveData<>();
     MutableLiveData<Boolean> slideStatusLiveData = new MutableLiveData<>();
     MutableLiveData<Boolean> closeSlideLiveData = new MutableLiveData<>();
-    MutableLiveData<Boolean> pausePlayLiveData = new MutableLiveData<>();
+    MutableLiveData<PlayState> pausePlayLiveData = new MutableLiveData<>();
     MutableLiveData<PlayState> playStateLiveData = new MutableLiveData<>();
     public KuaishouViewModel(@NonNull Application application) {
         super(application);

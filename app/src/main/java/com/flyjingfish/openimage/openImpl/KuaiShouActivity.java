@@ -374,7 +374,7 @@ public class KuaiShouActivity extends OpenImageActivity {
                 if (position != rootBinding.viewPager.getCurrentItem()) {
                     rootBinding.viewPager.setCurrentItem(position, false);
                 } else {
-                    kuaishouViewModel.pausePlayLiveData.setValue(true);
+                    kuaishouViewModel.pausePlayLiveData.setValue(new PlayState(position));
                 }
             });
             binding.ivPause.setVisibility(position == selectPos ? View.VISIBLE : View.GONE);
