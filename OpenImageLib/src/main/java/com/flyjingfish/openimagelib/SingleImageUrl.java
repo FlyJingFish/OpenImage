@@ -4,8 +4,8 @@ import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.MediaType;
 
 class SingleImageUrl implements OpenImageUrl {
-    private String url;
-    private MediaType mediaType;
+    private final String url;
+    private final MediaType mediaType;
 
     public SingleImageUrl(String url, MediaType mediaType) {
         this.url = url;
