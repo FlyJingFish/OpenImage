@@ -1,16 +1,21 @@
 package com.flyjingfish.openimage.dialog;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.DialogInputBinding;
@@ -18,11 +23,13 @@ import com.flyjingfish.switchkeyboardlib.MenuModeView;
 import com.flyjingfish.switchkeyboardlib.SwitchKeyboardUtil;
 
 
-public class InputDialog extends BaseInputDialog<DialogInputBinding> {
+public class InputDialog extends DialogFragment {
 
     private static final String CONTENT = "content";
     private String content;
     private boolean isShowMenu;
+    protected OnContentCallBack onContentCallBack;
+    private DialogInputBinding binding;
 
     public static InputDialog getDialog(String content){
         InputDialog infoInputDialog = new InputDialog();
@@ -35,18 +42,35 @@ public class InputDialog extends BaseInputDialog<DialogInputBinding> {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        content = getArguments().getString(CONTENT);
+        setStyle(DialogFragment.STYLE_NORMAL,R.style.DimEnabledInputDialog);
+    }
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = DialogInputBinding.inflate(inflater,container,false);
+        return binding.getRoot();
     }
 
     @Override
-    protected DialogInputBinding setViewBinding(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
-        return DialogInputBinding.inflate(inflater,container,false);
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        Window window;
+        if (dialog != null && (window = dialog.getWindow()) != null) {
+            window.setGravity(Gravity.BOTTOM);
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Bundle bundle = getArguments();
+        if (bundle != null){
+            content = bundle.getString(CONTENT);
+        }
         SwitchKeyboardUtil switchKeyboardUtil = new SwitchKeyboardUtil(requireActivity());
         switchKeyboardUtil.setMenuViewHeightEqualKeyboard(true);
         switchKeyboardUtil.setUseSwitchAnim(true);
@@ -131,5 +155,28 @@ public class InputDialog extends BaseInputDialog<DialogInputBinding> {
             }
         });
 
+    }
+
+    public void setOnContentCallBack(OnContentCallBack onContentCallBack) {
+        this.onContentCallBack = onContentCallBack;
+    }
+
+    public interface OnContentCallBack{
+        void onSendContent(String content);
+        void onContent(String content);
+    }
+
+    @Override
+    public void show(@NonNull FragmentManager manager, @Nullable String tag) {
+        try {
+            manager.beginTransaction().remove(this).commit();
+            super.show(manager, tag);
+        } catch (Exception ignored) {
+        }
+    }
+
+    @Override
+    public void dismiss() {
+        dismissAllowingStateLoss();
     }
 }

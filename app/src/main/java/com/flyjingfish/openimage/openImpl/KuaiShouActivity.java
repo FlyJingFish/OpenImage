@@ -25,7 +25,6 @@ import com.flyjingfish.openimage.bean.MessageBean;
 import com.flyjingfish.openimage.databinding.ItemKuaishouImageBinding;
 import com.flyjingfish.openimage.databinding.ItemMsgTextBinding;
 import com.flyjingfish.openimage.databinding.MyActivityKuaishouBinding;
-import com.flyjingfish.openimage.dialog.BaseInputDialog;
 import com.flyjingfish.openimage.dialog.InputDialog;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.widget.SlideLayout;
@@ -146,7 +145,7 @@ public class KuaiShouActivity extends OpenImageActivity {
         });
         rootBinding.tvMu.setOnClickListener(v -> {
             InputDialog inputDialog = InputDialog.getDialog(rootBinding.tvMu.getText().toString());
-            inputDialog.setOnContentCallBack(new BaseInputDialog.OnContentCallBack() {
+            inputDialog.setOnContentCallBack(new InputDialog.OnContentCallBack() {
                 @Override
                 public void onSendContent(String content) {
 
@@ -162,7 +161,7 @@ public class KuaiShouActivity extends OpenImageActivity {
 
         rootBinding.llCommentBottom.setOnClickListener(v -> {
             InputDialog inputDialog = InputDialog.getDialog(rootBinding.tvComment.getText().toString());
-            inputDialog.setOnContentCallBack(new BaseInputDialog.OnContentCallBack() {
+            inputDialog.setOnContentCallBack(new InputDialog.OnContentCallBack() {
                 @Override
                 public void onSendContent(String content) {
 
