@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.openimagelib.beans.ClickViewParam;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.beans.RectangleConnerRadius;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
@@ -216,6 +218,17 @@ public final class OpenImage extends OpenImage4ParseData {
      */
     public OpenImage setNoneClickView() {
         isNoneClickView = true;
+        return this;
+    }
+
+
+    public OpenImage setClickWebView(WebView webView, ClickViewParam clickViewParam) {
+        return setClickWebView(webView,new ArrayList<>(Collections.singletonList(clickViewParam)));
+    }
+
+    public OpenImage setClickWebView(WebView webView, List<ClickViewParam> clickViewParams) {
+        this.webView = webView;
+        this.clickViewParams = clickViewParams;
         return this;
     }
 

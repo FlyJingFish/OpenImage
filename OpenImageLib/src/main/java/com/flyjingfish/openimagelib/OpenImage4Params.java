@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.openimagelib.beans.ClickViewParam;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
@@ -36,6 +38,8 @@ class OpenImage4Params {
     protected AbsListView absListView;
     protected ViewPager2 viewPager2;
     protected ViewPager viewPager;
+    protected WebView webView;
+    protected List<ClickViewParam> clickViewParams;
     protected long openPageAnimTimeMs;
     protected int clickViewPosition;
     protected int clickDataPosition;
@@ -80,7 +84,7 @@ class OpenImage4Params {
 
 
     protected enum SrcViewType {
-        RV, AB_LIST, VP, VP2, IV
+        RV, AB_LIST, VP, VP2, IV, WEB_VIEW
     }
 
     protected Intent inputIntentData() {
@@ -182,7 +186,7 @@ class OpenImage4Params {
                 shareExitView = shareExitViewBean.shareExitView;
                 isClipSrcImageView = shareExitViewBean.isClipSrcImageView;
             }
-            activity.setExitSharedElementCallback(new ExitSharedElementCallback2(context, shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null, isClipSrcImageView));
+            activity.setExitSharedElementCallback(new ExitSharedElementCallback2(context, shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null, isClipSrcImageView,OpenImage4Params.this));
             return shareExitViewBean;
         }
 

@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.flyjingfish.openimagelib.beans.ClickViewParam;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
@@ -200,6 +202,35 @@ class OpenImage4ParseData extends OpenImage4Params {
             }
 
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails));
+        } else if (webView != null) {
+            srcViewType = SrcViewType.WEB_VIEW;
+
+            ViewGroup decorView = (ViewGroup) ((Activity) context).getWindow().getDecorView();
+            int[] webViewLocation = new int[2];
+            webView.getLocationOnScreen(webViewLocation);
+            FrameLayout.LayoutParams layoutParams2 = new FrameLayout.LayoutParams(webView.getWidth(),webView.getHeight());
+            layoutParams2.leftMargin = webViewLocation[0];
+            layoutParams2.topMargin = webViewLocation[1];
+            FrameLayout frameLayout = new FrameLayout(context);
+            decorView.addView(frameLayout,layoutParams2);
+
+            imageViews = new ArrayList<>();
+            for (ClickViewParam clickViewParam : clickViewParams) {
+                ImageView imageView = new ImageView(context);
+                int webViewWidth = webView.getWidth();
+                float scale = clickViewParam.imgWidth *1f/clickViewParam.browserWidth;
+                float scale2 = clickViewParam.browserWidth *1f/webViewWidth;
+                int imageViewWidth = (int) (webViewWidth*scale);
+                int imageViewHeight = (int) (imageViewWidth*(clickViewParam.imgHeight *1f/clickViewParam.imgWidth));
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(imageViewWidth,imageViewHeight);
+                layoutParams.topMargin = (int) (clickViewParam.marginTop/scale2);
+                layoutParams.leftMargin = (int) (clickViewParam.marginLeft/scale2);
+                frameLayout.addView(imageView,layoutParams);
+                imageViews.add(imageView);
+            }
+
+            show4ParseData();
+            return;
         } else {
             throw new IllegalArgumentException("请设置至少一个点击的ImageView");
         }

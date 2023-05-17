@@ -112,6 +112,12 @@
             android:textAllCaps="false"
             android:text="重度定制大图页面"/>
         <Button
+            android:id="@+id/btn_webView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="WebView"/>
+        <Button
             android:id="@+id/btn_conner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
