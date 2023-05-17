@@ -558,7 +558,7 @@ Glide 的混淆规则：
 
 ### 联系方式
 
-* 有问题可以加群大家一起交流（QQ：221045694）
+* 有问题可以加群大家一起交流 [QQ：221045694](https://qm.qq.com/cgi-bin/qm/qr?k=7DPRtMv2TjheueV5nyXYGdi_LAJJ8rgW&jump_from=webapi&authKey=suIbGOhGIaDh7JRskUotAZnKBBZp8ptNB58x5jTmS7+2FiOwSH1TATdKMrdtbONz)
 
 <img src="/screenshot/qq.jpg" width="220"/>
 
