@@ -163,11 +163,11 @@ public class InputDialog extends DialogFragment {
     }
 
     public static InputDialog getDialog(String content){
-        InputDialog infoInputDialog = new InputDialog();
+        InputDialog inputDialog = new InputDialog();
         Bundle bundle = new Bundle();
         bundle.putString(CONTENT,content);
-        infoInputDialog.setArguments(bundle);
-        return infoInputDialog;
+        inputDialog.setArguments(bundle);
+        return inputDialog;
     }
 
     public void setOnContentCallBack(OnContentCallBack onContentCallBack) {
