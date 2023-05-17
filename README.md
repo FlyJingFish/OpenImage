@@ -143,7 +143,7 @@ new SourceImageViewIdGet() {
    public int getImageViewId(OpenImageUrl data, int position) {
         //data 可强转为您传入的数据类型
         MessageBean msgBean = (MessageBean) data;
-        //在此视频数据和图片数据的 ImageView 的 Id 不一样
+        //在此视频数据和图片数据的 ImageView 的 Id 不一样（根据您具体情况返回对应的Id即可，以下仅为示例～）
         if (msgBean.type == MessageBean.IMAGE){
             return R.id.iv_image;
         }else {
@@ -153,6 +153,8 @@ new SourceImageViewIdGet() {
 }
 
 ```
+
+**以上仅为示例，**
 
 #### B、在您的数据实体类上实现OpenImageUrl接口(这个方式适合显示图片和视频的混合数据，建议使用这个方式)
 
