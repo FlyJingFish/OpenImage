@@ -31,37 +31,11 @@ public class InputDialog extends DialogFragment {
     protected OnContentCallBack onContentCallBack;
     private DialogInputBinding binding;
 
-    public static InputDialog getDialog(String content){
-        InputDialog infoInputDialog = new InputDialog();
-        Bundle bundle = new Bundle();
-        bundle.putString(CONTENT,content);
-        infoInputDialog.setArguments(bundle);
-        return infoInputDialog;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL,R.style.DimEnabledInputDialog);
-    }
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DialogInputBinding.inflate(inflater,container,false);
         return binding.getRoot();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        Window window;
-        if (dialog != null && (window = dialog.getWindow()) != null) {
-            window.setGravity(Gravity.BOTTOM);
-            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
     }
 
     @Override
@@ -157,13 +131,21 @@ public class InputDialog extends DialogFragment {
 
     }
 
-    public void setOnContentCallBack(OnContentCallBack onContentCallBack) {
-        this.onContentCallBack = onContentCallBack;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL,R.style.DimEnabledInputDialog);
     }
 
-    public interface OnContentCallBack{
-        void onSendContent(String content);
-        void onContent(String content);
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        Window window;
+        if (dialog != null && (window = dialog.getWindow()) != null) {
+            window.setGravity(Gravity.BOTTOM);
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
     }
 
     @Override
@@ -178,5 +160,22 @@ public class InputDialog extends DialogFragment {
     @Override
     public void dismiss() {
         dismissAllowingStateLoss();
+    }
+
+    public static InputDialog getDialog(String content){
+        InputDialog infoInputDialog = new InputDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString(CONTENT,content);
+        infoInputDialog.setArguments(bundle);
+        return infoInputDialog;
+    }
+
+    public void setOnContentCallBack(OnContentCallBack onContentCallBack) {
+        this.onContentCallBack = onContentCallBack;
+    }
+
+    public interface OnContentCallBack{
+        void onSendContent(String content);
+        void onContent(String content);
     }
 }
