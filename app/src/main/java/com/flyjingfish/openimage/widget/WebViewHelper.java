@@ -3,7 +3,6 @@ package com.flyjingfish.openimage.widget;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
@@ -11,7 +10,6 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 
 import androidx.annotation.Keep;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
 import com.flyjingfish.openimage.R;
