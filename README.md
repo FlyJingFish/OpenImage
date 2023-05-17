@@ -154,7 +154,6 @@ new SourceImageViewIdGet() {
 
 ```
 
-**以上仅为示例，**
 
 #### B、在您的数据实体类上实现OpenImageUrl接口(这个方式适合显示图片和视频的混合数据，建议使用这个方式)
 
