@@ -121,7 +121,7 @@ OpenImage.with(activity)
         .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
            @Override
            public int getImageViewId(OpenImageUrl data, int position) {
-               return R.id.iv_image;//点击的ImageView的Id
+               return R.id.iv_image;//点击的ImageView的Id或者切换图片后对应的ImageView的Id
            }
        })
        //点击的ImageView的ScaleType类型（如果设置不对，打开的动画效果将是错误的）
@@ -132,6 +132,26 @@ OpenImage.with(activity)
        .setClickPosition(position)
        //开始展示大图
        .show();
+```
+
+**在此着重再介绍下 SourceImageViewIdGet 在这是动态获取 ImageView 的Id的，如果你的 RecyclerView（或ViewPager2、ListView、GridView）
+展示的图片 Id 出现多个则需根据 getImageViewId 中的 position 或 data 来返回对应的 Id，例如：**
+
+```java
+new SourceImageViewIdGet() {
+   @Override
+   public int getImageViewId(OpenImageUrl data, int position) {
+        //data 可强转为您传入的数据类型
+        MessageBean msgBean = (MessageBean) data;
+        //在此视频数据和图片数据的 ImageView 的 Id 不一样
+        if (msgBean.type == MessageBean.IMAGE){
+            return R.id.iv_image;
+        }else {
+            return R.id.iv_video;
+        }
+   }
+}
+
 ```
 
 #### B、在您的数据实体类上实现OpenImageUrl接口(这个方式适合显示图片和视频的混合数据，建议使用这个方式)
@@ -180,7 +200,7 @@ OpenImage.with(activity)
         .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
            @Override
            public int getImageViewId(OpenImageUrl data, int position) {
-               return R.id.iv_image;//点击的ImageView的Id
+               return R.id.iv_image;//点击的ImageView的Id或者切换图片后对应的ImageView的Id
            }
        })
        //点击的ImageView的ScaleType类型（如果设置不对，打开的动画效果将是错误的）
@@ -219,7 +239,7 @@ OpenImage.with(activity)
          .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
            @Override
            public int getImageViewId(OpenImageUrl data, int position) {
-               return R.id.iv_image;//点击的ImageView的Id
+               return R.id.iv_image;//点击的ImageView的Id或者切换图片后对应的ImageView的Id
            }
         })
         //点击的ImageView的ScaleType类型（如果设置不对，打开的动画效果将是错误的）
