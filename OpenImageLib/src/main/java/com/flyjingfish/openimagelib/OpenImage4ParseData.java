@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -238,7 +239,12 @@ class OpenImage4ParseData extends OpenImage4Params {
             show4ParseData();
             return;
         } else {
-            throw new IllegalArgumentException("请设置至少一个点击的ImageView");
+            if (ActivityCompatHelper.isApkInDebug(context)){
+                throw new IllegalArgumentException("请设置至少一个点击的ImageView");
+            }else {
+                Log.e("OpenImage","请设置至少一个点击的ImageView");
+                return;
+            }
         }
         String dataKey = this.toString();
         intent.putExtra(OpenParams.ON_BACK_VIEW, backViewKey);
