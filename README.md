@@ -16,11 +16,11 @@
  
 RecyclerView场景  | 聊天页面 | 打开视频
  ------ | ------ | ------   
- <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" alt="show" width="320px" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203549_1.gif" alt="show" width="320px" alt="show" /> | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203923_1.gif" alt="show" width="320px" alt="show" /> |
+ <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" alt="show" width="240px" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203549_1.gif" alt="show" width="240px" /> | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203923_1.gif" alt="show" width="240px" /> |
 
 朋友圈  | 快手 | WebView
  ------ | ------  | ------     
- <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/friends_demo.gif" alt="show" width="320px" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/Screenrecording_20230518_165929.gif" alt="show" width="320px" alt="show" /> |  <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/Screenrecording_20230518_170044.gif" alt="show" width="320px" alt="show" /> |
+ <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/friends_demo.gif" alt="show" width="240px" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/Screenrecording_20230518_165929.gif" alt="show" width="240px" /> |  <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/Screenrecording_20230518_170044.gif" alt="show" width="240px" /> |
 
 
  
