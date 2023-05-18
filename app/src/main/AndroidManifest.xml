@@ -103,6 +103,18 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".activity.WebViewActivity1"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".activity.WebViewActivity2"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".openImpl.MyBigImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"

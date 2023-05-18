@@ -2,10 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingHorizontal="20dp"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <WebView
-        android:id="@+id/webView"
+    <Button
+        android:id="@+id/btn_single"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="在网页中已经存在Js调用本地代码"
+        android:textColor="@color/white" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="上边 Demo 需要 web前端 调用本地方法，并且传入相应的参数"
+        android:textSize="10sp"
+        android:gravity="center"/>
+    <Button
+        android:id="@+id/btn_much"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="向网页中注入Js代码"
+        android:textColor="@color/white" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="上边 Demo 是在加载的网页上动态地注入Js代码，这种方法是不太好的，不建议采用这个方法。例如网页上有的不需要的展示图片也会出现在大图浏览页面上。当然如果你如果有自己独到的注入方法也可以"
+        android:textSize="10sp"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:gravity="center"/>
+
 </LinearLayout>

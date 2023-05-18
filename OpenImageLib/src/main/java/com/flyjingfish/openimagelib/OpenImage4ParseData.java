@@ -218,6 +218,8 @@ class OpenImage4ParseData extends OpenImage4Params {
             decorView.addView(frameLayout,layoutParams2);
 
             imageViews = new ArrayList<>();
+            ImageView clickImageView = null;
+            int index = 0;
             for (ClickViewParam clickViewParam : clickViewParams) {
                 if (clickViewParam == null && ActivityCompatHelper.isApkInDebug(context)){
                     throw new IllegalArgumentException("ClickViewParam 不可为 null");
@@ -232,11 +234,26 @@ class OpenImage4ParseData extends OpenImage4Params {
                     layoutParams.topMargin = (int) (clickViewParam.marginTop/scale2);
                     layoutParams.leftMargin = (int) (clickViewParam.marginLeft/scale2);
                     frameLayout.addView(imageView,layoutParams);
+                    autoSetScaleType(imageView);
                     imageViews.add(imageView);
+                    if (index == clickViewPosition){
+                        clickImageView = imageView;
+                    }
                 }
+                index++;
             }
-
-            show4ParseData();
+            final View posView = clickImageView;
+            if (posView != null){
+                posView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        posView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        show4ParseData();
+                    }
+                });
+            }else {
+                show4ParseData();
+            }
             return;
         } else {
             if (ActivityCompatHelper.isApkInDebug(context)){

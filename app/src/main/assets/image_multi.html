@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!-- saved from url=(0023)http://www.tianqi99.cn/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<title>images</title>
+	<style>
+		.product_list{
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			justify-content:space-around;
+		}
+		.product_bot{
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			justify-content:space-around;
+		}
+		.news-cover {
+		    width: 32vw;
+		    height: 32vw;
+		    border-radius:8px;
+		    margin-top: 10px;
+		    overflow: hidden;
+		}
+		.news-cover img {
+			height: 100%;
+			width: 100%;
+			object-fit: cover;
+
+	</style>
+	<script>
+		function openImage(obj){
+			var marginTop = obj.offsetTop-document.documentElement.scrollTop;
+			var marginLeft = obj.offsetLeft-document.documentElement.scrollLeft;
+			var imgWidth = obj.offsetWidth;
+			var imgHeight = obj.offsetHeight;
+			window.openImageApi.openSingleImage(obj.src,imgWidth,imgHeight,marginTop,marginLeft,window.innerWidth)
+		}
+		function openImages(pos){
+			var imgs = document.getElementsByTagName("img");
+			var jsonArray = [];
+			for (var i = 0;i < imgs.length;i++) {
+				var obj = imgs[i];
+				var marginTop = obj.offsetTop-document.documentElement.scrollTop;
+				var marginLeft = obj.offsetLeft-document.documentElement.scrollLeft;
+				var imgWidth = obj.offsetWidth;
+				var imgHeight = obj.offsetHeight;
+
+				let jsonObject = {
+					"url" : obj.src,
+					"imgWidth":imgWidth,
+					"imgHeight":imgHeight,
+					"marginTop":marginTop,
+					"marginLeft":marginLeft,
+					"browserWidth":window.innerWidth
+				}
+				jsonArray.push(jsonObject);
+			}
+			window.openImageApi.openImages(JSON.stringify(jsonArray),pos)
+		}
+	</script>
+</head>
+<body>
+
+<div class="product_list">
+	<div class="product_bot">
+		<div class="news-cover">
+			<img onclick="openImages(0)" class="product_img" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F9%2F57c4f3db0ff7a_120_80.jpg&refer=http%3A%2F%2Fpic1.win4000.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1662179613&t=105ec8c89e77a853ba57e2a2dc056eab">
+
+		</div>
+		<div class="news-cover">
+			<img onclick="openImages(1)" class="product_img" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp0.itc.cn%2Fq_70%2Fimages03%2F20210227%2F6687c969b58d486fa2f23d8488b96ae4.jpeg&refer=http%3A%2F%2Fp0.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661701773&t=19043990158a1d11c2a334146020e2ce">
+		</div>
+		<div class="news-cover">
+			<img onclick="openImages(2)" class="product_img" src="http://img1.baidu.com/it/u=2872324617,2662678801&fm=253&app=120&f=JPEG?w=640&h=960">
+		</div>
+	</div>
+	<div class="product_bot">
+
+		<div class="news-cover">
+			<img onclick="openImages(3)" class="product_img" src="https://img0.baidu.com/it/u=376865838,605929249&fm=253&fmt=auto&app=138&f=JPG?w=300&h=500">
+		</div>
+		<div class="news-cover">
+			<img onclick="openImages(4)" class="product_img" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.tt98.com%2Fd%2Ffile%2Fpic%2F201811082010742%2F5be40536abdd2.jpg&refer=http%3A%2F%2Fimg.tt98.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661701773&t=2d03e79dd2eb007d30a330479093ecf4">
+		</div>
+		<div class="news-cover">
+			<img onclick="openImages(5)" class="product_img" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fnimg.ws.126.net%2F%3Furl%3Dhttp%253A%252F%252Fdingyue.ws.126.net%252F2021%252F0529%252Fd082a060j00qtvk4j007cd200u001o0g00it011m.jpg%26thumbnail%3D650x2147483647%26quality%3D80%26type%3Djpg&refer=http%3A%2F%2Fnimg.ws.126.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661701773&t=0ad52eb2d08c70ddafdab9e8aa04840d">
+		</div>
+	</div>
+</div>
+
+
+
+</body></html>
