@@ -12,7 +12,7 @@
 
 <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/download_qrcode.png" alt="show" width="200px" alt="show" />
 
-## 效果演示
+## 多种场景效果演示（不限于以下几种，更多支持[点此查看](https://github.com/FlyJingFish/OpenImage/wiki)）
  
 RecyclerView场景  | 聊天页面 | 打开视频
  ------ | ------ | ------   
