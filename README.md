@@ -14,13 +14,13 @@
 
 ## 效果演示
  
-RecyclerView场景  | 聊天页面
- ------ | ------   
- <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" alt="show" width="320px" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203549_1.gif" alt="show" width="320px" alt="show" /> |
- 
-打开视频  | 朋友圈 
- ------ | ------   
- <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203923_1.gif" alt="show" width="320px" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/friends_demo.gif" alt="show" width="320px" alt="show" /> |
+RecyclerView场景  | 聊天页面 | 打开视频
+ ------ | ------ | ------   
+ <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" alt="show" width="320px" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203549_1.gif" alt="show" width="320px" alt="show" /> | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203923_1.gif" alt="show" width="320px" alt="show" /> |
+
+朋友圈  | 快手 | WebView
+ ------ | ------  | ------     
+ <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/friends_demo.gif" alt="show" width="320px" alt="show" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/Screenrecording_20230518_165929.gif" alt="show" width="320px" alt="show" /> |  <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/Screenrecording_20230518_170044.gif" alt="show" width="320px" alt="show" /> |
 
 
  
@@ -80,7 +80,7 @@ allprojects {
 
 ```
 //OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.8.5'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.8.6'
 ```
 #### B、引入只带有图片引擎的版本（只支持查看图片）
 
@@ -88,7 +88,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.8.5'
 
 ```
 //OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.8.5'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.8.6'
 ```
 
 #### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
@@ -98,7 +98,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.8.5'
 ```
 //OpenImageLib 是基础库，没有引入图片引擎和视频播放器
 //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.8.5'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.8.6'
 
 ```
 

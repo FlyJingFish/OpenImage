@@ -1,5 +1,13 @@
 # OpenImage 更新日志
 
+## 1.8.6
+
+1、新增支持 WebView 对应的方法是 OpenImage ---> setClickWebView
+
+2、新增 OpenImage ---> setOnExitListener 设置退出大图页面返的监听
+
+3、升级 [ShapeImageView](https://github.com/FlyJingFish/ShapeImageView) 库至最新版本 1.5.1
+
 ## 1.8.5
 
 1、修改 OpenImageFragmentStateAdapter 的 getItemId 方法，使用雪花算法避免 Hash 值也会重复
@@ -87,7 +95,7 @@
 
 ## 1.7.3
 
-1、升级 ShapeImageView 库，处理某些小伙伴遇到的自定义属性冲突的问题
+1、升级 [ShapeImageView](https://github.com/FlyJingFish/ShapeImageView) 库，处理某些小伙伴遇到的自定义属性冲突的问题
 
 ## 1.7.2
 
@@ -99,7 +107,7 @@
 
 ## 1.7.0
 
-1、修复使用 ShapeImageView 长图在返回时的显示问题
+1、修复使用 [ShapeImageView](https://github.com/FlyJingFish/ShapeImageView) 长图在返回时的显示问题
 
 ## 1.6.9
 
@@ -150,7 +158,7 @@
 
 1、针对 1.6.0 第1点中的 debug 模式判断方法修改，改为根据使用者的开发配置来判定是否是 debug 模式
 
-2、升级 ShapeImageView 到1.4.9
+2、升级 [ShapeImageView](https://github.com/FlyJingFish/ShapeImageView) 到1.4.9
 
 ## 1.6.0
 
