@@ -41,7 +41,7 @@ RecyclerView场景  | 聊天页面 | 打开视频
 
 7，支持图片和视频混合数据
 
-8，支持传入包含图片的 RecyclerView、ViewPager、ViewPager2、ListView、GridView 和 多个ImageView 的调用方式，傻瓜式调用，无需关心图片切换后该返回到哪个位置
+8，支持传入包含图片的 RecyclerView、ViewPager、ViewPager2、ListView、GridView 和 多个ImageView 的调用方式，甚至 WebView，傻瓜式调用，无需关心图片切换后该返回到哪个位置
 
 9，支持大图和大图阅读模式
 
