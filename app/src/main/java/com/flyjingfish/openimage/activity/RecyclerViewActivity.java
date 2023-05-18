@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -150,6 +151,7 @@ public class RecyclerViewActivity extends BaseActivity {
                         .setImageUrlList(datas)
                         .addPageTransformer(new ScaleInTransformer())
                         .setOpenImageStyle(R.style.DefaultPhotosTheme)
+                        .setOnExitListener(() -> Toast.makeText(RecyclerViewActivity.this,"onExit",Toast.LENGTH_SHORT).show())
                         .setClickPosition(position).show();
 
             });

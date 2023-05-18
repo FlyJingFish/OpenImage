@@ -13,10 +13,12 @@ import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import java.util.List;
 
 class BaseSharedElementCallback extends SharedElementCallback {
-    protected Context context;
+    protected final Context context;
+    protected final OpenImage4Params openImage4Params;
 
-    public BaseSharedElementCallback(Context context) {
+    public BaseSharedElementCallback(Context context,OpenImage4Params openImage4Params) {
         this.context = context;
+        this.openImage4Params = openImage4Params;
     }
     @Override
     public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
@@ -25,6 +27,9 @@ class BaseSharedElementCallback extends SharedElementCallback {
         if (activity != null){
             activity.setExitSharedElementCallback(null);
             fixAndroid12Bug();
+        }
+        if (openImage4Params.onExitListener != null){
+            openImage4Params.onExitListener.onExit();
         }
     }
     private void fixAndroid12Bug(){

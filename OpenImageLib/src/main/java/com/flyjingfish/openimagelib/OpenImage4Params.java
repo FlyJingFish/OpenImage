@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 
@@ -18,6 +17,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.ClickViewParam;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
+import com.flyjingfish.openimagelib.listener.OnExitListener;
 import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
@@ -38,7 +38,7 @@ class OpenImage4Params {
     protected AbsListView absListView;
     protected ViewPager2 viewPager2;
     protected ViewPager viewPager;
-    protected WebView webView;
+    protected View parentParamsView;
     protected List<ClickViewParam> clickViewParams;
     protected long openPageAnimTimeMs;
     protected int clickViewPosition;
@@ -81,7 +81,7 @@ class OpenImage4Params {
     protected boolean isCallShow = false;
     protected ImageShapeParams imageShapeParams;
     protected OnUpdateViewListener onUpdateViewListener;
-
+    protected OnExitListener onExitListener;
 
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV, WEB_VIEW

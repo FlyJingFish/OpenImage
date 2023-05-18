@@ -1,14 +1,9 @@
 package com.flyjingfish.openimagelib;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
-import android.app.SharedElementCallback;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
@@ -17,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-
-import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 
 import java.util.List;
 import java.util.Map;
@@ -31,15 +24,13 @@ class ExitSharedElementCallback2 extends BaseSharedElementCallback {
     private final boolean showSrcImageView;
     private final boolean isClipSrcImageView;
     private final Float showCurrentViewStartAlpha;
-    private final OpenImage4Params openImage4Params;
 
     public ExitSharedElementCallback2(Context context, ImageView shareExitMapView, boolean showSrcImageView, Float showCurrentViewStartAlpha,boolean isClipSrcImageView,OpenImage4Params openImage4Params) {
-        super(context);
+        super(context,openImage4Params);
         this.shareExitMapView = shareExitMapView;
         this.showSrcImageView = showSrcImageView;
         this.showCurrentViewStartAlpha = showCurrentViewStartAlpha;
         this.isClipSrcImageView = isClipSrcImageView;
-        this.openImage4Params = openImage4Params;
     }
 
     @Override
@@ -51,13 +42,14 @@ class ExitSharedElementCallback2 extends BaseSharedElementCallback {
         if (!showSrcImageView && shareExitMapView != null) {
             shareExitMapView.setAlpha(Math.max(startAlpha, startSrcAlpha));
         }
-        if (openImage4Params.webView != null && openImage4Params.imageViews != null){
+        if (openImage4Params.parentParamsView != null && openImage4Params.imageViews != null){
             for (ImageView imageView : openImage4Params.imageViews) {
                 FrameLayout frameLayout = (FrameLayout) imageView.getParent();
                 if (frameLayout != null){
                     ViewGroup viewGroup = (ViewGroup) frameLayout.getParent();
                     if (viewGroup != null){
                         viewGroup.removeView(frameLayout);
+                        break;
                     }
                 }
             }

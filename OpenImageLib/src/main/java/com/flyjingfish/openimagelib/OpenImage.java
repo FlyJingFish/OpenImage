@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -29,6 +28,7 @@ import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
+import com.flyjingfish.openimagelib.listener.OnExitListener;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
@@ -221,13 +221,30 @@ public final class OpenImage extends OpenImage4ParseData {
         return this;
     }
 
-
-    public OpenImage setClickWebView(WebView webView, ClickViewParam clickViewParam) {
-        return setClickWebView(webView,new ArrayList<>(Collections.singletonList(clickViewParam)));
+    /**
+     * 支持在网页内点击图片，你需要和网页前端人员对接后才可获得对应的参数
+     *
+     * @param webView 网页浏览器
+     * @param clickViewParam 点击图片或视频在网页内的参数
+     * @return {@link OpenImage}
+     */
+    public OpenImage setClickWebView(View webView, ClickViewParam clickViewParam) {
+        if (clickViewParam != null){
+            return setClickWebView(webView, new ArrayList<>(Collections.singletonList(clickViewParam)));
+        }else {
+            return setClickWebView(webView, (List<ClickViewParam>) null);
+        }
     }
 
-    public OpenImage setClickWebView(WebView webView, List<ClickViewParam> clickViewParams) {
-        this.webView = webView;
+    /**
+     * 支持在网页内点击图片，你需要和网页前端人员对接后才可获得对应的参数
+     *
+     * @param webView 网页浏览器
+     * @param clickViewParams  点击图片或视频在网页内的参数
+     * @return {@link OpenImage}
+     */
+    public OpenImage setClickWebView(View webView, List<ClickViewParam> clickViewParams) {
+        this.parentParamsView = webView;
         this.clickViewParams = clickViewParams;
         return this;
     }
@@ -629,6 +646,16 @@ public final class OpenImage extends OpenImage4ParseData {
             throw new IllegalArgumentException("shapeType 不能为 null");
         }
         imageShapeParams = new ImageShapeParams(shapeType, rectangleConnerRadius);
+        return this;
+    }
+
+    /**
+     * 如果你需要监听大图退出复位的时刻不妨调用这个
+     *
+     * @param onExitListener 退出复位监听
+     */
+    public OpenImage setOnExitListener(OnExitListener onExitListener) {
+        this.onExitListener = onExitListener;
         return this;
     }
 

@@ -5,6 +5,7 @@ import android.app.ActivityOptions;
 import android.app.Instrumentation;
 import android.app.SharedElementCallback;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,7 +65,7 @@ class OpenImage4ParseData extends OpenImage4Params {
                 public ShareExitViewBean onBack(int showPosition) {
                     Activity activity = ActivityCompatHelper.getActivity(context);
                     if (activity != null) {
-                        activity.setExitSharedElementCallback(new BaseSharedElementCallback(context));
+                        activity.setExitSharedElementCallback(new BaseSharedElementCallback(context,OpenImage4ParseData.this));
                     }
                     return super.onBack(showPosition);
                 }
@@ -188,11 +189,12 @@ class OpenImage4ParseData extends OpenImage4Params {
                 }
             });
         } else if (imageViews != null && imageViews.size() > 0) {
+            SrcViewType oldSrcViewType = srcViewType;
             srcViewType = SrcViewType.IV;
             openImageDetails = new ArrayList<>();
 
             viewPair = initShareView(openImageDetails);
-            if (checkIllegalException4ShareView(viewPair,"请确保是否调用了setClickPosition并且参数设置正确，或所传ImageView个数是否正确")){
+            if (checkIllegalException4ShareView(viewPair,"请确保是否调用了setClickPosition并且参数设置正确，或所传"+(oldSrcViewType == SrcViewType.WEB_VIEW?"ClickViewParam":"ImageView")+"个数是否正确")){
                 return;
             }
 
@@ -202,13 +204,13 @@ class OpenImage4ParseData extends OpenImage4Params {
             }
 
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails));
-        } else if (webView != null) {
+        } else if (parentParamsView != null && clickViewParams != null) {
             srcViewType = SrcViewType.WEB_VIEW;
 
             ViewGroup decorView = (ViewGroup) ((Activity) context).getWindow().getDecorView();
             int[] webViewLocation = new int[2];
-            webView.getLocationOnScreen(webViewLocation);
-            FrameLayout.LayoutParams layoutParams2 = new FrameLayout.LayoutParams(webView.getWidth(),webView.getHeight());
+            parentParamsView.getLocationOnScreen(webViewLocation);
+            FrameLayout.LayoutParams layoutParams2 = new FrameLayout.LayoutParams(parentParamsView.getWidth(), parentParamsView.getHeight());
             layoutParams2.leftMargin = webViewLocation[0];
             layoutParams2.topMargin = webViewLocation[1];
             FrameLayout frameLayout = new FrameLayout(context);
@@ -216,17 +218,21 @@ class OpenImage4ParseData extends OpenImage4Params {
 
             imageViews = new ArrayList<>();
             for (ClickViewParam clickViewParam : clickViewParams) {
-                ImageView imageView = new ImageView(context);
-                int webViewWidth = webView.getWidth();
-                float scale = clickViewParam.imgWidth *1f/clickViewParam.browserWidth;
-                float scale2 = clickViewParam.browserWidth *1f/webViewWidth;
-                int imageViewWidth = (int) (webViewWidth*scale);
-                int imageViewHeight = (int) (imageViewWidth*(clickViewParam.imgHeight *1f/clickViewParam.imgWidth));
-                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(imageViewWidth,imageViewHeight);
-                layoutParams.topMargin = (int) (clickViewParam.marginTop/scale2);
-                layoutParams.leftMargin = (int) (clickViewParam.marginLeft/scale2);
-                frameLayout.addView(imageView,layoutParams);
-                imageViews.add(imageView);
+                if (clickViewParam == null && ActivityCompatHelper.isApkInDebug(context)){
+                    throw new IllegalArgumentException("ClickViewParam 不可为 null");
+                }else if (clickViewParam != null){
+                    ImageView imageView = new ImageView(context);
+                    int webViewWidth = parentParamsView.getWidth();
+                    float scale = clickViewParam.imgWidth *1f/clickViewParam.browserWidth;
+                    float scale2 = clickViewParam.browserWidth *1f/webViewWidth;
+                    int imageViewWidth = (int) (webViewWidth*scale);
+                    int imageViewHeight = (int) (imageViewWidth*(clickViewParam.imgHeight *1f/clickViewParam.imgWidth));
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(imageViewWidth,imageViewHeight);
+                    layoutParams.topMargin = (int) (clickViewParam.marginTop/scale2);
+                    layoutParams.leftMargin = (int) (clickViewParam.marginLeft/scale2);
+                    frameLayout.addView(imageView,layoutParams);
+                    imageViews.add(imageView);
+                }
             }
 
             show4ParseData();
