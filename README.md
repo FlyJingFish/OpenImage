@@ -16,7 +16,7 @@
  
 RecyclerView场景  | 聊天页面 | 打开视频
  ------ | ------ | ------   
- <img src="/screenshot/SVID_20220731_203152_1.gif" alt="show" width="240px" />  | <img src="/screenshot/SVID_20220731_203549_1.gif" alt="show" width="240px" /> | <img src="/screenshot/SVID_20220731_203923_1.gif" alt="show" width="240px" /> |
+ <img src="/screenshot/Screenrecording_20230519_124228.gif" alt="show" width="240px" />  | <img src="/screenshot/SVID_20220731_203549_1.gif" alt="show" width="240px" /> | <img src="/screenshot/SVID_20220731_203923_1.gif" alt="show" width="240px" /> |
 
 朋友圈  | 快手 | WebView
  ------ | ------  | ------     
