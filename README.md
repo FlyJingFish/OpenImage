@@ -157,7 +157,7 @@ new SourceImageViewIdGet() {
 
 #### B、在您的数据实体类上实现OpenImageUrl接口(这个方式适合显示图片和视频的混合数据，建议使用这个方式)
 
-**PS:列表中展示的图片链接和展示大图时所用链接是不同时，这种方式可以有更好的过渡效果**
+**PS:列表中展示的图片链接和展示大图时所用链接是不同时（即存在缩略图和原始大图两种链接的情况），这种方式可以有更好的过渡效果**
 
 ```java
 public class ImageEntity implements OpenImageUrl {
@@ -179,7 +179,7 @@ public class ImageEntity implements OpenImageUrl {
     }
 
     @Override
-    public String getCoverImageUrl() {//这个代表前边列表展示的图片
+    public String getCoverImageUrl() {//这个代表前边列表展示的图片（即缩略图）
         return resouceType == 1 ? smallCoverUrl : smallPhotoUrl;//封面小图链接（或视频的封面小图链接）
     }
 
