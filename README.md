@@ -576,6 +576,16 @@ Glide 的混淆规则：
 
 - [PhotoView](https://github.com/Baseflow/PhotoView)
 
+### 赞赏
+
+都看到这里了，如果您喜欢 OpenImage，或感觉 OpenImage 帮助到了您，可以点右上角“Star”支持一下，您的支持就是我的动力，谢谢～ 😃
+
+您也可以扫描下面的二维码，请作者喝杯咖啡 ☕
+
+<div>
+<img src="/screenshot/IMG_4071.JPG" width="280" heght="350">
+<img src="/screenshot/IMG_4072.PNG" width="280" heght="350">
+</div>
 
 ### 联系方式
 
