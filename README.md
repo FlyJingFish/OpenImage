@@ -10,17 +10,17 @@
 
 ## [点此下载apk,也可扫下边二维码下载](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk?raw=true)
 
-<img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/download_qrcode.png" alt="show" width="200px" alt="show" />
+<img src="/screenshot/download_qrcode.png" alt="show" width="200px" />
 
 ## 多种场景效果演示（不限于以下几种，更多支持[点此查看](https://github.com/FlyJingFish/OpenImage/wiki)）
  
 RecyclerView场景  | 聊天页面 | 打开视频
  ------ | ------ | ------   
- <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203152_1.gif" alt="show" width="240px" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203549_1.gif" alt="show" width="240px" /> | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/SVID_20220731_203923_1.gif" alt="show" width="240px" /> |
+ <img src="/screenshot/SVID_20220731_203152_1.gif" alt="show" width="240px" />  | <img src="/screenshot/SVID_20220731_203549_1.gif" alt="show" width="240px" /> | <img src="/screenshot/SVID_20220731_203923_1.gif" alt="show" width="240px" /> |
 
 朋友圈  | 快手 | WebView
  ------ | ------  | ------     
- <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/friends_demo.gif" alt="show" width="240px" />  | <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/Screenrecording_20230518_165929.gif" alt="show" width="240px" /> |  <img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/Screenrecording_20230518_170044.gif" alt="show" width="240px" /> |
+ <img src="/screenshot/friends_demo.gif" alt="show" width="240px" />  | <img src="/screenshot/Screenrecording_20230518_165929.gif" alt="show" width="240px" /> |  <img src="/screenshot/Screenrecording_20230518_170044.gif" alt="show" width="240px" /> |
 
 
  
