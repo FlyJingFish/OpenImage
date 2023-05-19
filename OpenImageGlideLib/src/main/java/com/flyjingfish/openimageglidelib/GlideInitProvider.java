@@ -14,6 +14,10 @@ public class GlideInitProvider extends ContentProvider {
         if (OpenImageConfig.getInstance().getBigImageHelper() == null){
             OpenImageConfig.getInstance().setBigImageHelper(new GlideBigImageHelper());
         }
+        //初始化下载大图类
+        if (OpenImageConfig.getInstance().getDownloadMediaHelper() == null){
+            OpenImageConfig.getInstance().setDownloadMediaHelper(new GlideDownloadMediaHelper());
+        }
         return true;
     }
 

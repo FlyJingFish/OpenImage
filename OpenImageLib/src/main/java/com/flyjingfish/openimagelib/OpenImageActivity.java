@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,12 +32,15 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
 import com.flyjingfish.openimagelib.enums.ImageShapeType;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
+import com.flyjingfish.openimagelib.listener.DownloadMediaHelper;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
+import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
@@ -502,6 +506,17 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             } else {
                 compositePageTransformer.addTransformer(new MarginPageTransformer((int) ScreenUtils.dp2px(this, 10)));
             }
+            boolean downloadShow = AttrsUtils.getTypeValueBoolean(this, themeRes, R.attr.openImage_download_show);
+            if (downloadShow){
+                ImageView imageView = new ImageView(this);
+                imageView.setImageResource(R.drawable.ic_open_image_download);
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.gravity = Gravity.BOTTOM|Gravity.END;
+                layoutParams.setMarginEnd(20);
+                layoutParams.bottomMargin = 20;
+                rootView.addView(imageView, layoutParams);
+                imageView.setOnClickListener(v -> downloadMedia());
+            }
         } else {
             fontStyle = FontStyle.DARK;
             StatusBarHelper.translucent(this);
@@ -541,6 +556,29 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             viewPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         }
 
+    }
+
+    private void downloadMedia(){
+        OpenImageUrl openImageUrl = getOpenImageBeans().get(showPosition);
+        DownloadMediaHelper downloadMediaHelper = OpenImageConfig.getInstance().getDownloadMediaHelper();
+        if (downloadMediaHelper != null){
+            downloadMediaHelper.download(this,openImageUrl, new OnDownloadMediaListener() {
+                @Override
+                public void onDownloadStart() {
+                    Toast.makeText(OpenImageActivity.this,"开始下载",Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onDownloadSuccess() {
+                    Toast.makeText(OpenImageActivity.this,"下载成功",Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onDownloadFailed() {
+                    Toast.makeText(OpenImageActivity.this,"下载失败",Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void setIndicatorLayoutParams(FrameLayout.LayoutParams layoutParams, int themeRes) {

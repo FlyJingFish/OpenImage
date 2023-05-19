@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -129,5 +130,36 @@ public class BitmapUtils {
             close(inputStream);
         }
         return mediaExtraInfo;
+    }
+
+    public static String getImageTypeWithMime(Context context,String path) {
+        InputStream inputStream = null;
+        String type = "";
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            if (isContent(path)) {
+                inputStream = PictureContentResolver.getContentResolverOpenInputStream(context, Uri.parse(path));
+            } else {
+                inputStream = new FileInputStream(path);
+            }
+            BitmapFactory.decodeStream(inputStream, null, options);
+            type = options.outMimeType;
+            Log.d("ImageUtil", "getImageTypeWithMime: path = " + path + ", type1 = " + type);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(inputStream);
+        }
+        String var10000;
+        if (TextUtils.isEmpty(type)) {
+            var10000 = "";
+        } else {
+            byte var5 = 6;
+            var10000 = type.substring(var5);
+        }
+        type = var10000;
+        Log.d("ImageUtil", "getImageTypeWithMime: path = " + path + ", type2 = " + type);
+        return type;
     }
 }

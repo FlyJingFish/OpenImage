@@ -3,6 +3,7 @@ package com.flyjingfish.openimagelib;
 import androidx.annotation.FloatRange;
 
 import com.flyjingfish.openimagelib.listener.BigImageHelper;
+import com.flyjingfish.openimagelib.listener.DownloadMediaHelper;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 
@@ -12,6 +13,7 @@ import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 public class OpenImageConfig {
     private static volatile OpenImageConfig mInstance;
     private BigImageHelper bigImageHelper;
+    private DownloadMediaHelper downloadMediaHelper;
     private ImageFragmentCreate imageFragmentCreate;
     private VideoFragmentCreate videoFragmentCreate;
 
@@ -143,5 +145,17 @@ public class OpenImageConfig {
 
     public void setFixAndroid12OnBackPressed(boolean fixAndroid12OnBackPressed) {
         isFixAndroid12OnBackPressed = fixAndroid12OnBackPressed;
+    }
+
+    public DownloadMediaHelper getDownloadMediaHelper() {
+        return downloadMediaHelper;
+    }
+
+    /**
+     * 设置下载图片的类，设置之后才可拥有下载图片的能力
+     * @param downloadMediaHelper
+     */
+    public void setDownloadMediaHelper(DownloadMediaHelper downloadMediaHelper) {
+        this.downloadMediaHelper = downloadMediaHelper;
     }
 }

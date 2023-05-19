@@ -27,6 +27,7 @@
         <item name="openImage.viewPager.pageMargin">10dp</item>
         <item name="openImage.statusBar.fontStyle">dark</item>
         <item name="openImage.indicator.imageRes">@drawable/indicator_image</item>
+        <item name="openImage.download.show">true</item>
     </style>
 
     <style name="KuaishouPhotosTheme" >
