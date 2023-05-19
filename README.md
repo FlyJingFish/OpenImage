@@ -583,8 +583,8 @@ Glide 的混淆规则：
 如果感觉 OpenImage 为您节约了大量开发时间、为您的项目增光添彩，您也可以扫描下面的二维码，请作者喝杯咖啡 ☕
 
 <div>
-<img src="/screenshot/IMG_4071.JPG" width="280" height="350">
-<img src="/screenshot/IMG_4072.PNG" width="280" height="350">
+<img src="/screenshot/IMG_4075.PNG" width="280" height="350">
+<img src="/screenshot/IMG_4076.JPG" width="280" height="350">
 </div>
 
 ### 联系方式
