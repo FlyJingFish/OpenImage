@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -24,7 +27,14 @@ class FileUtils {
         String var10001 = resource.getAbsolutePath();
         String mimeType;
         if (video){
-            mimeType = "mp4";
+            try {
+                mimeType = getMimeType(context,resource);
+            } catch (Throwable ignored) {
+                mimeType = null;
+            }
+            if (TextUtils.isEmpty(mimeType)){
+                mimeType = "mp4";
+            }
         }else {
             mimeType = BitmapUtils.getImageTypeWithMime(context, var10001);
         }
@@ -135,5 +145,14 @@ class FileUtils {
         // Android Q添加了IS_PENDING状态，为0时其他应用才可见
         imageValues.put(MediaStore.Images.Media.IS_PENDING, 0);
         resolver.update(insertUri, imageValues, null, null);
+    }
+
+    static String getMimeType(Context context,File file) {
+        MediaMetadataRetriever mMediaMetadataRetriever = new MediaMetadataRetriever();
+        mMediaMetadataRetriever.setDataSource(context.getApplicationContext(), Uri.fromFile(file));
+
+
+        String mimeType = mMediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
+        return MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
     }
 }
