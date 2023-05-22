@@ -152,7 +152,7 @@ public class OpenImageConfig {
     }
 
     /**
-     * 设置下载图片的类，设置之后才可拥有下载图片的能力
+     * 设置下载图片或视频的类，设置之后才可拥有下载图片或视频的能力
      * @param downloadMediaHelper
      */
     public void setDownloadMediaHelper(DownloadMediaHelper downloadMediaHelper) {
