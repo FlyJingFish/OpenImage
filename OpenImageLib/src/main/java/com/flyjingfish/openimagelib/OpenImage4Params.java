@@ -3,10 +3,12 @@ package com.flyjingfish.openimagelib;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -82,6 +84,10 @@ class OpenImage4Params {
     protected ImageShapeParams imageShapeParams;
     protected OnUpdateViewListener onUpdateViewListener;
     protected OnExitListener onExitListener;
+    protected boolean showDownload;
+    protected int downloadSrc;
+    protected ColorStateList downloadPercentColors;
+    protected FrameLayout.LayoutParams downloadLayoutParams;
 
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV, WEB_VIEW
@@ -157,6 +163,20 @@ class OpenImage4Params {
             String key = this.toString();
             intent.putExtra(OpenParams.ON_UPDATE_VIEW, key);
             ImageLoadUtils.getInstance().setOnUpdateViewListener(key, onUpdateViewListener);
+        }
+        intent.putExtra(OpenParams.DOWNLOAD_SHOW, showDownload);
+        if (showDownload){
+            intent.putExtra(OpenParams.DOWNLOAD_SRC, downloadSrc);
+        }
+        if (downloadPercentColors != null){
+            String key = this.toString();
+            intent.putExtra(OpenParams.DOWNLOAD_SRC_PERCENT_COLORS, key);
+            ImageLoadUtils.getInstance().setDownloadPercentColors(key, downloadPercentColors);
+        }
+        if (showDownload && downloadLayoutParams != null){
+            String key = this.toString();
+            intent.putExtra(OpenParams.DOWNLOAD_LAYOUT_PARAMS, key);
+            ImageLoadUtils.getInstance().setDownloadParams(key, downloadLayoutParams);
         }
         backViewKey = this.toString();
         return intent;

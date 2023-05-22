@@ -1,5 +1,6 @@
 package com.flyjingfish.openimage.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +83,7 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                     .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
                     .setImageUrlList(messageBeans).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
                     .setOpenImageStyle(R.style.DefaultPhotosTheme)
+                    .setShowDownload()
                     .setOpenImageActivityCls(MessageVpActivity.class, new OnUpdateViewListener() {
                         @Override
                         public void onAdd(Collection<? extends OpenImageUrl> data, UpdateViewType updateViewType) {

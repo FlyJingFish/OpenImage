@@ -3,6 +3,7 @@ package com.flyjingfish.openimageglidelib;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -17,8 +18,8 @@ import java.io.OutputStream;
 
 class FileUtils {
 
-    static boolean save(Activity context, File resource, boolean video) {
-        boolean suc = false;
+    static String save(Context context, File resource, boolean video) {
+        String sucPath = null;
         String name = System.currentTimeMillis() + "";
         String var10001 = resource.getAbsolutePath();
         String mimeType;
@@ -31,15 +32,16 @@ class FileUtils {
         if (Build.VERSION.SDK_INT >= 29) {
             ContentResolver resolver = context.getContentResolver();
             ContentValues values = new ContentValues();
+            String relativePath =  (video ?Environment.DIRECTORY_MOVIES:Environment.DIRECTORY_PICTURES) + "/";
             values.put(MediaStore.Images.Media.DESCRIPTION, name);
             values.put(MediaStore.Images.Media.DISPLAY_NAME, name);
             values.put(MediaStore.Images.Media.MIME_TYPE, (video ?"video/":"image/") + mimeType);
             values.put(MediaStore.Images.Media.TITLE, name);
-            values.put(MediaStore.Images.Media.RELATIVE_PATH, (video ?Environment.DIRECTORY_MOVIES:Environment.DIRECTORY_PICTURES) + "/");
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, relativePath);
 
             Uri insertUri = resolver.insert(video ?MediaStore.Video.Media.EXTERNAL_CONTENT_URI:MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
             if (insertUri == null) {
-                return false;
+                return null;
             }
             BufferedInputStream inputStream = null;
             OutputStream os = null;
@@ -57,7 +59,7 @@ class FileUtils {
                 }
                 refresh(resolver, insertUri);
 
-                suc = true;
+                sucPath = relativePath;
             } catch (Exception ignored) {
             } finally {
                 try {
@@ -79,10 +81,11 @@ class FileUtils {
             if (!folderFile.exists()) {
                 boolean r = folderFile.mkdirs();
                 if (!r) {
-                    return false;
+                    return null;
                 }
             }
             File newFile = new File(path + name);
+            boolean suc;
             if (!newFile.exists()) {
                 suc = copySdcardFile(resource,newFile);
             } else {
@@ -91,9 +94,11 @@ class FileUtils {
             if (suc){
                 new SingleMediaScanner(context, newFile.getAbsolutePath(), () -> {
                 });
+                sucPath = path;
             }
+
         }
-        return suc;
+        return sucPath;
     }
 
     static boolean copySdcardFile(File fromFile, File toFile) {

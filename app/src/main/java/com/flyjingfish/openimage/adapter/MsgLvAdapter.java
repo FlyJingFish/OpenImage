@@ -129,7 +129,8 @@ public class MsgLvAdapter extends BaseAdapter {
                     }) .setAutoScrollScanPosition(MessageActivity.openAutoScroll)
                     .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
                     .setImageUrlList(allShowData).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
-                    .setOpenImageStyle(R.style.DefaultPhotosTheme)
+//                    .setOpenImageStyle(R.style.DefaultPhotosTheme)
+                    .setShowDownload()
                     .setClickPosition(position+otherData.size(),position).show();
         };
         if (viewType == MessageBean.IMAGE){

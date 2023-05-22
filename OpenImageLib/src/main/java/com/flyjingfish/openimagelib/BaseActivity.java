@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.ArrayMap;
@@ -94,6 +95,16 @@ class BaseActivity extends AppCompatActivity {
     protected BaseInnerFragment upLayerFragment;
     protected UpperLayerOption upperLayerOption;
     protected OpenImageFragmentStateAdapter openImageAdapter;
+    boolean indicatorTouchingHide = true;
+    View indicatorView;
+    protected boolean downloadToast = true;
+    protected String startToast;
+    protected String successToast;
+    protected String errorToast;
+
+    String downloadParamsKey;
+
+    String percentColorsKey;
 
     List<OpenImageDetail> getOpenImageBeans() {
         return openImageBeans;
@@ -179,6 +190,12 @@ class BaseActivity extends AppCompatActivity {
         }
         onItemClickListenerKeys.clear();
         onItemLongClickListenerKeys.clear();
+        if (!TextUtils.isEmpty(downloadParamsKey)){
+            ImageLoadUtils.getInstance().clearDownloadParams(downloadParamsKey);
+        }
+        if (!TextUtils.isEmpty(percentColorsKey)){
+            ImageLoadUtils.getInstance().clearDownloadPercentColors(percentColorsKey);
+        }
     }
 
     @SuppressLint("DiscouragedPrivateApi")

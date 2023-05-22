@@ -157,6 +157,30 @@ class DeviceHelper {
         return isMeizu() && isLower;
     }
 
+//    public static boolean isHarmonyOs() {
+//        try {
+//            Class<?> buildExClass = Class.forName("com.huawei.system.BuildEx");
+//            Object osBrand = buildExClass.getMethod("getOsBrand").invoke(buildExClass);
+//            return osBrand == null ?false: osBrand.toString().toLowerCase().contains("harmony");
+//        } catch (Throwable x) {
+//            return false;
+//        }
+//    }
+//
+//    public static int getHarmonyVersionCode() {
+//        return getProp("hw_sc.build.os.apiversion", 0);
+//    }
+//
+//    private static int getProp(String property, int defaultValue) {
+//        try {
+//            Class<?> spClz = Class.forName("android.os.SystemProperties");
+//            Method method = spClz.getDeclaredMethod("get", String.class);
+//            String value = (String) method.invoke(spClz, property);
+//            return  (TextUtils.isEmpty(value)) ?defaultValue:Integer.parseInt(value);
+//        } catch (Throwable ignored) {
+//        }
+//        return defaultValue;
+//    }
 
     private static OnceReadValue<Void, Boolean> isMeizuValue = new OnceReadValue<Void, Boolean>() {
         @Override

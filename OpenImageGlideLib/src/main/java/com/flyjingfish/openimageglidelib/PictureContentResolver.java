@@ -5,7 +5,7 @@ import android.net.Uri;
 
 import java.io.InputStream;
 
-public final class PictureContentResolver {
+final class PictureContentResolver {
 
     public static InputStream getContentResolverOpenInputStream(Context context, Uri uri) {
         try {

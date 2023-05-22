@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="download_start_toast">开始下载</string>
+    <string name="download_end_toast">成功保存到: %1$s</string>
+    <string name="download_error_toast">下载失败</string>
+</resources>

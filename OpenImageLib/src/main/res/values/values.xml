@@ -39,7 +39,7 @@
     <!--文本大小-->
     <attr name="openImage.indicator.textSize" format="dimension" />
     <!--图片指示器资源-->
-    <attr name="openImage.indicator.imageRes" format="reference" />
+    <attr name="openImage.indicator.imageRes" format="reference|color" />
     <!--图片指示器每个之间的间隔-->
     <attr name="openImage.indicator.image.interval" format="dimension" />
     <!--图片指示器排列方向-->
@@ -60,5 +60,14 @@
         <enum name="horizontal" value="0" />
         <enum name="vertical" value="1" />
     </attr>
-    <attr name="openImage.download.show" format="boolean" />
+    <!--触摸时指示器是否隐藏-->
+    <attr name="openImage.indicator.touchingHide" format="boolean" />
+    <!--下载时是否显示 Toast-->
+    <attr name="openImage.download.toast" format="boolean" />
+    <!--下载开始时 Toast 的文案-->
+    <attr name="openImage.download.startToast" format="reference|string" />
+    <!--下载结束时 Toast 的文案-->
+    <attr name="openImage.download.successToast" format="reference|string" />
+    <!--下载失败时 Toast 的文案-->
+    <attr name="openImage.download.errorToast" format="reference|string" />
 </resources>

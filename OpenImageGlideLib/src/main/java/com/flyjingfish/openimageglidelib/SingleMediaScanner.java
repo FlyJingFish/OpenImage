@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 class SingleMediaScanner implements MediaScannerConnection.MediaScannerConnectionClient {
-   private final MediaScannerConnection mMs;
+   private MediaScannerConnection mMs;
    private final String path;
    private final ScanListener listener;
 
@@ -28,6 +28,7 @@ class SingleMediaScanner implements MediaScannerConnection.MediaScannerConnectio
    @Override
    public void onScanCompleted(String path, Uri uri) {
       this.mMs.disconnect();
+      this.mMs = null;
       if (listener != null) {
          listener.onScanFinish();
       }

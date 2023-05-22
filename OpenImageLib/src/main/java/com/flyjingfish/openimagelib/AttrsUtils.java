@@ -2,6 +2,7 @@ package com.flyjingfish.openimagelib;
 
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -69,15 +70,19 @@ class AttrsUtils {
     }
 
     public static boolean getTypeValueBoolean(Context context, int themeRes, int attr) {
+        return getTypeValueBoolean(context, themeRes, attr, false);
+    }
+
+    public static boolean getTypeValueBoolean(Context context, int themeRes, int attr, boolean defaultValue) {
         try {
             int[] attribute = new int[]{attr};
             TypedArray array = context.obtainStyledAttributes(themeRes, attribute);
-            boolean statusFont = array.getBoolean(0, false);
+            boolean statusFont = array.getBoolean(0, defaultValue);
             array.recycle();
             return statusFont;
         } catch (Exception ignored) {
         }
-        return false;
+        return defaultValue;
     }
 
     public static int getTypeValueResourceId(Context context, int themeRes, int attr) {
@@ -109,5 +114,17 @@ class AttrsUtils {
         if (drawable != null) {
             view.setBackground(drawable);
         }
+    }
+
+    public static ColorStateList getTypeValueColorStateList(Context context, int themeRes, int attr) {
+        try {
+            int[] attribute = new int[]{attr};
+            TypedArray array = context.obtainStyledAttributes(themeRes, attribute);
+            ColorStateList color = array.getColorStateList(0);
+            array.recycle();
+            return color;
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 }

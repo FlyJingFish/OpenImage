@@ -26,10 +26,29 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import okhttp3.OkHttpClient;
+
 public enum LoadImageUtils {
     INSTANCE;
     private final ExecutorService cThreadPool = Executors.newFixedThreadPool(5);
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private OkHttpClient okHttpClient;
+
+    public synchronized void initOkHttpClient(){
+        this.okHttpClient = ProgressManager.getInstance().with(new OkHttpClient.Builder())
+                .build();
+    }
+
+    public OkHttpClient getOkHttpClient() {
+        if (okHttpClient == null){
+            initOkHttpClient();
+        }
+        return okHttpClient;
+    }
+
+    public boolean isInitOkHttpClient() {
+        return okHttpClient != null;
+    }
 
     public void loadImageForSize(Context context, String imageUrl, OnLocalRealFinishListener finishListener) {
         boolean isWeb = BitmapUtils.isWeb(imageUrl);
@@ -86,5 +105,19 @@ public enum LoadImageUtils {
 
                     }
                 });
+    }
+
+    void saveFile(Context context, File resource, boolean video,OnSaveFinish onSaveFinish) {
+        cThreadPool.submit(() -> {
+            String sucPath = FileUtils.save(context, resource, video);
+            if (onSaveFinish != null){
+                handler.post(() -> onSaveFinish.onFinish(sucPath));
+            }
+        });
+
+    }
+
+    interface OnSaveFinish{
+        void onFinish(String sucPath);
     }
 }
