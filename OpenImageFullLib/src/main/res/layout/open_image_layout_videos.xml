@@ -13,6 +13,12 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:scaleType="fitCenter" />
+    <com.flyjingfish.openimagelib.photoview.PhotoView
+        android:id="@+id/iv_small_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        />
 
     <FrameLayout
         android:id="@+id/surface_container"
@@ -21,6 +27,7 @@
         android:gravity="center">
 
     </FrameLayout>
+
 
 
 
@@ -107,6 +114,7 @@
     </LinearLayout>
 
 
+
     <moe.codeest.enviews.ENPlayView
         android:id="@+id/start"
         android:layout_width="60dp"
@@ -115,12 +123,7 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical" />
 
-    <com.flyjingfish.openimagelib.photoview.PhotoView
-        android:id="@+id/iv_small_cover"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        />
+
     <com.flyjingfish.openimagelib.widget.LoadingView
         android:id="@+id/loading"
         android:layout_width="40dp"
