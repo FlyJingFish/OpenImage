@@ -70,4 +70,6 @@
     <attr name="openImage.download.successToast" format="reference|string" />
     <!--下载失败时 Toast 的文案-->
     <attr name="openImage.download.errorToast" format="reference|string" />
+    <!--请求读取外部存储权限失败时的文案-->
+    <attr name="openImage.requestWriteExternalStoragePermissionsFail" format="reference|string" />
 </resources>

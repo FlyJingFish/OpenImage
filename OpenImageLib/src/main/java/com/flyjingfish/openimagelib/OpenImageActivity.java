@@ -530,6 +530,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             if (errorToast == null){
                 errorToast = getResources().getString(R.string.download_error_toast);
             }
+            requestWriteExternalStoragePermissionsFail = (String) AttrsUtils.getTypeValueText(this,themeRes,R.attr.openImage_requestWriteExternalStoragePermissionsFail);
         } else {
             fontStyle = FontStyle.DARK;
             StatusBarHelper.translucent(this);
@@ -597,7 +598,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         } else {
             viewPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         }
-
+        if (TextUtils.isEmpty(requestWriteExternalStoragePermissionsFail)){
+            requestWriteExternalStoragePermissionsFail = getString(R.string.request_WRITE_EXTERNAL_STORAGE_permissions_fail);
+        }
     }
 
     protected void checkPermissionAndDownload() {
@@ -615,7 +618,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 downloadMedia();
             } else {
-                Toast.makeText(this,"请打开存储权限",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,requestWriteExternalStoragePermissionsFail,Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -632,8 +635,10 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             }
             downloadList.add(openImageUrl);
             downloadMediaHelper.download(this,openImageUrl, new OnDownloadMediaListener() {
+                private boolean isWithProgress;
                 @Override
                 public void onDownloadStart(boolean isWithProgress) {
+                    this.isWithProgress = isWithProgress;
                     if (downloadToast && !TextUtils.isEmpty(startToast)){
                         Toast.makeText(OpenImageActivity.this,startToast,Toast.LENGTH_SHORT).show();
                     }
@@ -657,7 +662,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
 
                 @Override
                 public void onDownloadProgress(int percent) {
-                    if (downloadImageView != null){
+                    if (downloadImageView != null && isWithProgress){
                         downloadImageView.setPercent(percent / 100f);
                     }
                 }

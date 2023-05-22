@@ -151,6 +151,7 @@ public class RecyclerViewActivity extends BaseActivity {
                         .setImageUrlList(datas)
                         .addPageTransformer(new ScaleInTransformer())
                         .setOpenImageStyle(R.style.DefaultPhotosTheme)
+                        .setShowDownload()
                         .setOnExitListener(() -> Toast.makeText(RecyclerViewActivity.this,"onExit",Toast.LENGTH_SHORT).show())
                         .setClickPosition(position).show();
 

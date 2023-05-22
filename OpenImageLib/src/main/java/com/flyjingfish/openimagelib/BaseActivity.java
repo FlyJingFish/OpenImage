@@ -101,6 +101,7 @@ class BaseActivity extends AppCompatActivity {
     protected String startToast;
     protected String successToast;
     protected String errorToast;
+    protected String requestWriteExternalStoragePermissionsFail;
 
     String downloadParamsKey;
 
