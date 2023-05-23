@@ -125,6 +125,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         setContentView(contentView);
 
         initMoreView();
+        initDownloadView();
         initViewPager2();
         initTouchCloseLayout();
         if (isNoneClickView()) {
@@ -550,6 +551,35 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             successToast = getResources().getString(R.string.download_end_toast);
             errorToast = getResources().getString(R.string.download_error_toast);
         }
+        pageTransformersKey = getIntent().getStringExtra(OpenParams.PAGE_TRANSFORMERS);
+        List<ViewPager2.PageTransformer> pageTransformers = ImageLoadUtils.getInstance().getPageTransformers(pageTransformersKey);
+        if (pageTransformers != null && pageTransformers.size() > 0) {
+            for (ViewPager2.PageTransformer pageTransformer : pageTransformers) {
+                compositePageTransformer.addTransformer(pageTransformer);
+            }
+        }
+        viewPager.setPageTransformer(compositePageTransformer);
+
+        int leftRightPadding = getIntent().getIntExtra(OpenParams.GALLERY_EFFECT_WIDTH, 0);
+        if (leftRightPadding > 0) {
+            View recyclerView = viewPager.getChildAt(0);
+            if (recyclerView instanceof RecyclerView) {
+                recyclerView.setPadding((int) ScreenUtils.dp2px(this, leftRightPadding), 0, (int) ScreenUtils.dp2px(this, leftRightPadding), 0);
+                ((RecyclerView) recyclerView).setClipToPadding(false);
+            }
+        }
+
+        if (orientation == OpenImageOrientation.VERTICAL) {
+            viewPager.setOrientation(ViewPager2.ORIENTATION_VERTICAL);
+        } else {
+            viewPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
+        }
+        if (requestWriteExternalStoragePermissionsFail == null){
+            requestWriteExternalStoragePermissionsFail = getString(R.string.request_WRITE_EXTERNAL_STORAGE_permissions_fail);
+        }
+    }
+
+    private void initDownloadView() {
         boolean downloadShow =  getIntent().getBooleanExtra(OpenParams.DOWNLOAD_SHOW, false);
         DownloadMediaHelper downloadMediaHelper = OpenImageConfig.getInstance().getDownloadMediaHelper();
         if (downloadShow && downloadMediaHelper != null){
@@ -582,32 +612,6 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                 downloadImageView.setPercentColors(percentColors);
             }
 
-        }
-        pageTransformersKey = getIntent().getStringExtra(OpenParams.PAGE_TRANSFORMERS);
-        List<ViewPager2.PageTransformer> pageTransformers = ImageLoadUtils.getInstance().getPageTransformers(pageTransformersKey);
-        if (pageTransformers != null && pageTransformers.size() > 0) {
-            for (ViewPager2.PageTransformer pageTransformer : pageTransformers) {
-                compositePageTransformer.addTransformer(pageTransformer);
-            }
-        }
-        viewPager.setPageTransformer(compositePageTransformer);
-
-        int leftRightPadding = getIntent().getIntExtra(OpenParams.GALLERY_EFFECT_WIDTH, 0);
-        if (leftRightPadding > 0) {
-            View recyclerView = viewPager.getChildAt(0);
-            if (recyclerView instanceof RecyclerView) {
-                recyclerView.setPadding((int) ScreenUtils.dp2px(this, leftRightPadding), 0, (int) ScreenUtils.dp2px(this, leftRightPadding), 0);
-                ((RecyclerView) recyclerView).setClipToPadding(false);
-            }
-        }
-
-        if (orientation == OpenImageOrientation.VERTICAL) {
-            viewPager.setOrientation(ViewPager2.ORIENTATION_VERTICAL);
-        } else {
-            viewPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
-        }
-        if (requestWriteExternalStoragePermissionsFail == null){
-            requestWriteExternalStoragePermissionsFail = getString(R.string.request_WRITE_EXTERNAL_STORAGE_permissions_fail);
         }
     }
 
