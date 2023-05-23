@@ -80,7 +80,7 @@ allprojects {
 
 ```
 //OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.8.6'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.8.7'
 ```
 #### B、引入只带有图片引擎的版本（只支持查看图片）
 
@@ -88,7 +88,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.8.6'
 
 ```
 //OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.8.6'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.8.7'
 ```
 
 #### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
@@ -98,7 +98,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.8.6'
 ```
 //OpenImageLib 是基础库，没有引入图片引擎和视频播放器
 //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.8.6'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.8.7'
 
 ```
 
@@ -268,6 +268,8 @@ OpenImage.with(activity)
         .setOpenImageActivityCls(MyBigImageActivity.class)
         //设置切换图片时前一页面跟随滚动（可不设置）
         .setAutoScrollScanPosition(true)
+        //设置显示下载按钮（可不设置，默认不显示）
+        .setShowDownload()
         //设置画廊效果，参数为左右两侧漏出的宽度（可不设置）
         .setGalleryEffect(10)
         //设置切换图片监听（可不设置）
