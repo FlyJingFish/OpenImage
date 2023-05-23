@@ -1,5 +1,11 @@
 # OpenImage 更新日志
 
+## 1.8.8
+
+1、修复下载进度在切换项目后的显示bug
+
+2、BaseInnerFragment 和 BaseImageFragment 新增 下载图片或视频 的方法
+
 ## 1.8.7
 
 1、新增可选下载图片或视频的按钮，对应方法是  OpenImage ---> setShowDownload （如果需要显示下载进度请前往[下载图片或视频的显示进度](https://github.com/FlyJingFish/OpenImage/wiki/%E4%B8%89%E3%80%81%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87%E6%88%96%E8%A7%86%E9%A2%91%E7%9A%84%E6%98%BE%E7%A4%BA%E8%BF%9B%E5%BA%A6)）
