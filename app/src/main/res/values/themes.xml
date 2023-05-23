@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="DefaultPhotosTheme" >
-<!--        <item name="openImage.background">@mipmap/vp_bg</item>-->
+    <!--        <item name="openImage.background">@mipmap/vp_bg</item>-->
         <item name="openImage.indicator.type">image</item>
         <item name="openImage.indicator.textFormat">@string/pos_text</item>
         <item name="openImage.viewPager.orientation">horizontal</item>
@@ -22,11 +22,16 @@
         <item name="openImage.indicator.textSize">16sp</item>
         <item name="openImage.indicator.gravity">center_horizontal|bottom</item>
         <item name="openImage.indicator.marginBottom">14dp</item>
-<!--        <item name="openImage.indicator.marginEnd">30dp</item>-->
+    <!--        <item name="openImage.indicator.marginEnd">30dp</item>-->
         <item name="openImage.indicator.image.interval">4dp</item>
         <item name="openImage.viewPager.pageMargin">10dp</item>
         <item name="openImage.statusBar.fontStyle">dark</item>
         <item name="openImage.indicator.imageRes">@drawable/indicator_image</item>
+        <item name="openImage.download.toast">true</item>
+        <item name="openImage.download.startToast">@string/download_start_toast</item>
+        <item name="openImage.download.successToast">成功保存到：%1$s</item>
+        <item name="openImage.download.errorToast">下载失败</item>
+        <item name="openImage.requestWriteExternalStoragePermissionsFail">@string/request_WRITE_EXTERNAL_STORAGE_permissions_fail</item>
     </style>
 
     <style name="KuaishouPhotosTheme" >
