@@ -193,14 +193,19 @@ public class BaseInnerFragment extends Fragment {
             }
             return;
         }
-        addActivityResultCallback(result -> {
-            if (result.equals(true)) {
-                downloadMedia(openImageUrl,onDownloadMediaListener);
-            } else if (!TextUtils.isEmpty(requestWriteExternalStoragePermissionsFail)){
-                Toast.makeText(requireContext(),requestWriteExternalStoragePermissionsFail,Toast.LENGTH_SHORT).show();
-            }
-        });
-        launcher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        boolean isPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        if (isPermission){
+            downloadMedia(openImageUrl,onDownloadMediaListener);
+        }else {
+            addActivityResultCallback(result -> {
+                if (result.equals(true)) {
+                    downloadMedia(openImageUrl,onDownloadMediaListener);
+                } else if (!TextUtils.isEmpty(requestWriteExternalStoragePermissionsFail)){
+                    Toast.makeText(requireContext(),requestWriteExternalStoragePermissionsFail,Toast.LENGTH_SHORT).show();
+                }
+            });
+            launcher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
     }
 
     /**
