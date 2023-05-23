@@ -105,7 +105,7 @@ class BaseActivity extends AppCompatActivity {
 
     String downloadParamsKey;
 
-    String percentColorsKey;
+    boolean downloadTouchingHide = true;
 
     List<OpenImageDetail> getOpenImageBeans() {
         return openImageBeans;
@@ -193,9 +193,6 @@ class BaseActivity extends AppCompatActivity {
         onItemLongClickListenerKeys.clear();
         if (!TextUtils.isEmpty(downloadParamsKey)){
             ImageLoadUtils.getInstance().clearDownloadParams(downloadParamsKey);
-        }
-        if (!TextUtils.isEmpty(percentColorsKey)){
-            ImageLoadUtils.getInstance().clearDownloadPercentColors(percentColorsKey);
         }
     }
 

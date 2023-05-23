@@ -1,11 +1,10 @@
 package com.flyjingfish.openimagelib;
 
-import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
-import android.widget.FrameLayout;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.openimagelib.beans.DownloadParams;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
@@ -38,8 +37,7 @@ class ImageLoadUtils {
     private final HashMap<String, List<OpenImageDetail>> openDataMap = new HashMap<>();
     private final HashMap<String, OpenImageDetail> openDetailDataMap = new HashMap<>();
     private final HashMap<String, OnUpdateViewListener> onUpdateViewListenerHashMap = new HashMap<>();
-    private final HashMap<String, FrameLayout.LayoutParams> downloadParamsHashMap = new HashMap<>();
-    private final HashMap<String, ColorStateList> downloadColorsHashMap = new HashMap<>();
+    private final HashMap<String, DownloadParams> downloadParamsHashMap = new HashMap<>();
     private final SnowFlakeUtil snowFlakeUtil = new SnowFlakeUtil();
     private boolean isApkInDebug;
 
@@ -326,27 +324,17 @@ class ImageLoadUtils {
         return snowFlakeUtil.nextId();
     }
 
-    public FrameLayout.LayoutParams getDownloadParams(String key) {
+    public DownloadParams getDownloadParams(String key) {
         return downloadParamsHashMap.get(key);
     }
 
-    public void setDownloadParams(String key, FrameLayout.LayoutParams layoutParams) {
-        this.downloadParamsHashMap.put(key, layoutParams);
+    public void setDownloadParams(String key, DownloadParams downloadParams) {
+
+        this.downloadParamsHashMap.put(key, downloadParams);
     }
 
     public void clearDownloadParams(String key) {
         downloadParamsHashMap.remove(key);
     }
 
-    public ColorStateList getDownloadPercentColors(String key) {
-        return downloadColorsHashMap.get(key);
-    }
-
-    public void setDownloadPercentColors(String key, ColorStateList colorStateList) {
-        this.downloadColorsHashMap.put(key, colorStateList);
-    }
-
-    public void clearDownloadPercentColors(String key) {
-        downloadColorsHashMap.remove(key);
-    }
 }

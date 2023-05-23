@@ -1,5 +1,6 @@
 package com.flyjingfish.openimage.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.flyjingfish.openimage.databinding.ItemMsgTextBinding;
 import com.flyjingfish.openimage.databinding.ItemMsgVideoBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimagelib.OpenImage;
+import com.flyjingfish.openimagelib.beans.DownloadParams;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 
@@ -130,7 +132,7 @@ public class MsgLvAdapter extends BaseAdapter {
                     .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
                     .setImageUrlList(allShowData).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
 //                    .setOpenImageStyle(R.style.DefaultPhotosTheme)
-                    .setShowDownload()
+                    .setShowDownload(new DownloadParams().setPercentColor(Color.RED).setTouchingHide(false))
                     .setClickPosition(position+otherData.size(),position).show();
         };
         if (viewType == MessageBean.IMAGE){

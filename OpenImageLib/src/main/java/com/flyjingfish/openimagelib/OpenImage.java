@@ -2,7 +2,6 @@ package com.flyjingfish.openimagelib;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -22,6 +20,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.ClickViewParam;
+import com.flyjingfish.openimagelib.beans.DownloadParams;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.beans.RectangleConnerRadius;
 import com.flyjingfish.openimagelib.enums.ImageDiskMode;
@@ -665,52 +664,16 @@ public final class OpenImage extends OpenImage4ParseData {
      * 设置显示下载按钮
      */
     public OpenImage setShowDownload() {
-        return setShowDownload(R.drawable.ic_open_image_download,null);
-    }
-
-    /**
-     * 设置显示下载按钮
-     * @param downloadSrc 下载按钮资源图
-     * @param percentColor  下载按钮进度颜色
-     * @return
-     */
-    public OpenImage setShowDownload(@DrawableRes int downloadSrc, @ColorInt int percentColor) {
-        return setShowDownload(downloadSrc, percentColor, null);
+        return setShowDownload(null);
     }
 
     /**
      *
-     * @param downloadSrc 下载按钮资源图
-     * @param percentColor  下载按钮进度颜色
-     * @param downloadLayoutParams 下载按钮布局参数
-     * @return
+     * @param downloadParams 下载按钮相关参数{@link DownloadParams}
      */
-    public OpenImage setShowDownload(@DrawableRes int downloadSrc, @ColorInt int percentColor, FrameLayout.LayoutParams downloadLayoutParams) {
-        return setShowDownload(downloadSrc, ColorStateList.valueOf(percentColor), downloadLayoutParams);
-    }
-
-    /**
-     *
-     * @param downloadSrc 下载按钮资源图
-     * @param downloadLayoutParams 下载按钮布局参数
-     * @return
-     */
-    public OpenImage setShowDownload(@DrawableRes int downloadSrc,FrameLayout.LayoutParams downloadLayoutParams) {
-        return setShowDownload(downloadSrc,null,downloadLayoutParams);
-    }
-
-    /**
-     *
-     * @param downloadSrc 下载按钮资源图
-     * @param percentColors  下载按钮进度颜色
-     * @param downloadLayoutParams 下载按钮布局参数
-     * @return
-     */
-    public OpenImage setShowDownload(@DrawableRes int downloadSrc, ColorStateList percentColors,FrameLayout.LayoutParams downloadLayoutParams) {
+    public OpenImage setShowDownload(DownloadParams downloadParams) {
         this.showDownload = true;
-        this.downloadSrc = downloadSrc;
-        this.downloadPercentColors = percentColors;
-        this.downloadLayoutParams = downloadLayoutParams;
+        this.downloadParams = downloadParams;
         return this;
     }
 

@@ -3,12 +3,10 @@ package com.flyjingfish.openimagelib;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.ClickViewParam;
+import com.flyjingfish.openimagelib.beans.DownloadParams;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.OnExitListener;
 import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
@@ -85,9 +84,7 @@ class OpenImage4Params {
     protected OnUpdateViewListener onUpdateViewListener;
     protected OnExitListener onExitListener;
     protected boolean showDownload;
-    protected int downloadSrc;
-    protected ColorStateList downloadPercentColors;
-    protected FrameLayout.LayoutParams downloadLayoutParams;
+    protected DownloadParams downloadParams;
 
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV, WEB_VIEW
@@ -165,18 +162,10 @@ class OpenImage4Params {
             ImageLoadUtils.getInstance().setOnUpdateViewListener(key, onUpdateViewListener);
         }
         intent.putExtra(OpenParams.DOWNLOAD_SHOW, showDownload);
-        if (showDownload){
-            intent.putExtra(OpenParams.DOWNLOAD_SRC, downloadSrc);
-        }
-        if (downloadPercentColors != null){
+        if (showDownload && downloadParams != null){
             String key = this.toString();
-            intent.putExtra(OpenParams.DOWNLOAD_SRC_PERCENT_COLORS, key);
-            ImageLoadUtils.getInstance().setDownloadPercentColors(key, downloadPercentColors);
-        }
-        if (showDownload && downloadLayoutParams != null){
-            String key = this.toString();
-            intent.putExtra(OpenParams.DOWNLOAD_LAYOUT_PARAMS, key);
-            ImageLoadUtils.getInstance().setDownloadParams(key, downloadLayoutParams);
+            intent.putExtra(OpenParams.DOWNLOAD_PARAMS, key);
+            ImageLoadUtils.getInstance().setDownloadParams(key, downloadParams);
         }
         backViewKey = this.toString();
         return intent;
