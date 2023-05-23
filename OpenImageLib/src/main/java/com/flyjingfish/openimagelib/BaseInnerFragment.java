@@ -1,19 +1,34 @@
 package com.flyjingfish.openimagelib;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.flyjingfish.openimagelib.beans.OpenImageUrl;
+import com.flyjingfish.openimagelib.listener.DownloadMediaHelper;
+import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
+import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 public class BaseInnerFragment extends Fragment {
 
@@ -23,6 +38,27 @@ public class BaseInnerFragment extends Fragment {
     private final List<String> onItemClickListenerKeys = new ArrayList<>();
     private final List<String> onItemLongClickListenerKeys = new ArrayList<>();
     protected float currentScale = 1f;
+    private List<OpenImageUrl> downloadList;
+    private final List<ActivityResultCallback<Boolean>> activityResultCallbacks = new ArrayList<>();
+    private ActivityResultLauncher<String> launcher;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        launcher = registerForActivityResult(new ActivityResultContracts.RequestPermission(),
+                result -> {
+                    Iterator<ActivityResultCallback<Boolean>> iterator = activityResultCallbacks.iterator();
+                    while (iterator.hasNext()){
+                        ActivityResultCallback<Boolean> activityResultCallback = iterator.next();
+                        activityResultCallback.onActivityResult(result);
+                        iterator.remove();
+                    }
+                });
+    }
+
+    private void addActivityResultCallback(ActivityResultCallback<Boolean> activityResultCallback){
+        activityResultCallbacks.add(activityResultCallback);
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -142,6 +178,84 @@ public class BaseInnerFragment extends Fragment {
             hintRuntimeException();
         }
     }
+
+    /**
+     * 检测权限并下载图片或视频
+     * @param openImageUrl 下载的项目
+     * @param onDownloadMediaListener 下载监听
+     * @param requestWriteExternalStoragePermissionsFail 请求存储权限失败后 Toast 的文案，如果为null 或 “” 则不显示
+     */
+    protected void checkPermissionAndDownload(OpenImageUrl openImageUrl,OnDownloadMediaListener onDownloadMediaListener,@Nullable String requestWriteExternalStoragePermissionsFail) {
+        DownloadMediaHelper downloadMediaHelper = OpenImageConfig.getInstance().getDownloadMediaHelper();
+        if (downloadMediaHelper == null) {
+            if (ImageLoadUtils.getInstance().isApkInDebug()) {
+                throw new IllegalArgumentException("DownloadMediaHelper 不可为null 请调用 OpenImageConfig 的 setDownloadMediaHelper 来设置");
+            }
+            return;
+        }
+        addActivityResultCallback(result -> {
+            if (result.equals(true)) {
+                downloadMedia(openImageUrl,onDownloadMediaListener);
+            } else if (!TextUtils.isEmpty(requestWriteExternalStoragePermissionsFail)){
+                Toast.makeText(requireContext(),requestWriteExternalStoragePermissionsFail,Toast.LENGTH_SHORT).show();
+            }
+        });
+        launcher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
+    /**
+     * 不会检测权限直接下载图片或视频
+     * @param openImageUrl 下载的项目
+     * @param onDownloadMediaListener 下载监听
+     */
+    protected void downloadMedia(OpenImageUrl openImageUrl,OnDownloadMediaListener onDownloadMediaListener) {
+        DownloadMediaHelper downloadMediaHelper = OpenImageConfig.getInstance().getDownloadMediaHelper();
+        if (downloadMediaHelper == null) {
+            if (ImageLoadUtils.getInstance().isApkInDebug()) {
+                throw new IllegalArgumentException("DownloadMediaHelper 不可为null 请调用 OpenImageConfig 的 setDownloadMediaHelper 来设置");
+            }
+            return;
+        }
+        if (downloadList == null) {
+            downloadList = new ArrayList<>();
+        }
+        if (downloadList.contains(openImageUrl)) {
+            return;
+        }
+        downloadList.add(openImageUrl);
+        downloadMediaHelper.download(requireActivity(), getViewLifecycleOwner(), openImageUrl, new OnDownloadMediaListener() {
+            @Override
+            public void onDownloadStart(boolean isWithProgress) {
+                if (onDownloadMediaListener != null){
+                    onDownloadMediaListener.onDownloadStart(isWithProgress);
+                }
+            }
+
+            @Override
+            public void onDownloadSuccess(String path) {
+                if (onDownloadMediaListener != null){
+                    onDownloadMediaListener.onDownloadSuccess(path);
+                }
+                downloadList.remove(openImageUrl);
+            }
+
+            @Override
+            public void onDownloadProgress(int percent) {
+                if (onDownloadMediaListener != null){
+                    onDownloadMediaListener.onDownloadProgress(percent);
+                }
+            }
+
+            @Override
+            public void onDownloadFailed() {
+                if (onDownloadMediaListener != null){
+                    onDownloadMediaListener.onDownloadFailed();
+                }
+                downloadList.remove(openImageUrl);
+            }
+        });
+    }
+
 
     /**
      * 关闭页面

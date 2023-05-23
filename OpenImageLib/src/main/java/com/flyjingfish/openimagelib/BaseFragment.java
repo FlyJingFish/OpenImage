@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
+import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
@@ -85,6 +86,23 @@ abstract class BaseFragment extends BaseInnerFragment {
                 onTransitionEnd();
             }
         });
+    }
+
+    /**
+     * 检测权限并下载当前页面的图片或视频
+     * @param onDownloadMediaListener 下载监听
+     */
+    protected void downloadCurrentMedia(OnDownloadMediaListener onDownloadMediaListener) {
+        downloadMedia(openImageUrl,onDownloadMediaListener);
+    }
+
+    /**
+     * 检测权限并下载当前页面的图片或视频
+     * @param onDownloadMediaListener 下载监听
+     * @param requestWriteExternalStoragePermissionsFail 请求存储权限失败后 Toast 的文案，如果为null 或 “” 则不显示
+     */
+    protected void checkPermissionAndDownloadCurrent(OnDownloadMediaListener onDownloadMediaListener, @Nullable String requestWriteExternalStoragePermissionsFail) {
+        checkPermissionAndDownload(openImageUrl,onDownloadMediaListener,requestWriteExternalStoragePermissionsFail);
     }
 
     @Override

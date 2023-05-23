@@ -23,7 +23,7 @@ import java.io.File;
 
 public class GlideDownloadMediaHelper implements DownloadMediaHelper {
     @Override
-    public void download(FragmentActivity activity, OpenImageUrl openImageUrl, OnDownloadMediaListener onDownloadMediaListener) {
+    public void download(FragmentActivity activity, LifecycleOwner lifecycleOwner, OpenImageUrl openImageUrl, OnDownloadMediaListener onDownloadMediaListener) {
         final String downloadUrl = openImageUrl.getType() == MediaType.VIDEO?openImageUrl.getVideoUrl():openImageUrl.getImageUrl();
         boolean isInitOkHttpClient = LoadImageUtils.INSTANCE.isInitOkHttpClient();
         if (onDownloadMediaListener != null) {
@@ -31,7 +31,7 @@ public class GlideDownloadMediaHelper implements DownloadMediaHelper {
         }
         final Context context = activity.getApplicationContext();
         final boolean[] isDestroy = new boolean[]{false};
-        activity.getLifecycle().addObserver(new LifecycleEventObserver() {
+        lifecycleOwner.getLifecycle().addObserver(new LifecycleEventObserver() {
             @Override
             public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
                 if (event == Lifecycle.Event.ON_DESTROY){

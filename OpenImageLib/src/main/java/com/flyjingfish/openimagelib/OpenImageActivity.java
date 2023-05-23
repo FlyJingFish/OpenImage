@@ -58,12 +58,13 @@ import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class OpenImageActivity extends BaseActivity implements TouchCloseLayout.OnTouchCloseListener {
 
-    protected static final int RequestPermissionsCode = 1;
+    protected static final int RequestPermissionsCode = 101;
     protected View vBg;
     protected FrameLayout flTouchView;
     protected ViewPager2 viewPager;
@@ -73,6 +74,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     private boolean isCallClosed;
     private List<OpenImageUrl> downloadList;
     private PercentImageView downloadImageView;
+    private Map<Integer,Float> downloadProgress;
 
     /**
      * 获取 contentView ，用于调用{@link android.app.Activity#setContentView(View view)}
@@ -318,6 +320,14 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                     selectMediaListener.onSelect(getOpenImageBeans().get(showPosition).openImageUrl, showPosition);
                 }
                 isFirstBacked = true;
+                if (downloadImageView != null && downloadProgress != null){
+                    Float progress = downloadProgress.get(showPosition);
+                    if (progress == null){
+                        downloadImageView.setPercent(0f);
+                    }else {
+                        downloadImageView.setPercent(progress);
+                    }
+                }
             }
 
             @Override
@@ -582,8 +592,16 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
 
     private void initDownloadView() {
         boolean downloadShow = getIntent().getBooleanExtra(OpenParams.DOWNLOAD_SHOW, false);
-        DownloadMediaHelper downloadMediaHelper = OpenImageConfig.getInstance().getDownloadMediaHelper();
-        if (downloadShow && downloadMediaHelper != null) {
+        if (downloadShow) {
+            DownloadMediaHelper downloadMediaHelper = OpenImageConfig.getInstance().getDownloadMediaHelper();
+            if (downloadMediaHelper == null) {
+                if (ImageLoadUtils.getInstance().isApkInDebug()) {
+                    throw new IllegalArgumentException("DownloadMediaHelper 不可为null 请调用 OpenImageConfig 的 setDownloadMediaHelper 来设置");
+                }
+                return;
+            }
+
+            downloadProgress = new HashMap<>();
             downloadParamsKey = getIntent().getStringExtra(OpenParams.DOWNLOAD_PARAMS);
             DownloadParams downloadParams = null;
             if (!TextUtils.isEmpty(downloadParamsKey)) {
@@ -627,7 +645,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
+        if (requestCode == RequestPermissionsCode) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 downloadMedia();
             } else if (!TextUtils.isEmpty(requestWriteExternalStoragePermissionsFail)) {
@@ -637,59 +655,67 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     }
 
     protected void downloadMedia() {
-        OpenImageUrl openImageUrl = getOpenImageBeans().get(showPosition);
+        final OpenImageUrl openImageUrl = getOpenImageBeans().get(showPosition);
         DownloadMediaHelper downloadMediaHelper = OpenImageConfig.getInstance().getDownloadMediaHelper();
-        if (downloadMediaHelper != null) {
-            if (downloadList == null) {
-                downloadList = new ArrayList<>();
+        if (downloadMediaHelper == null) {
+            if (ImageLoadUtils.getInstance().isApkInDebug()) {
+                throw new IllegalArgumentException("DownloadMediaHelper 不可为null 请调用 OpenImageConfig 的 setDownloadMediaHelper 来设置");
             }
-            if (downloadList.contains(openImageUrl)) {
-                return;
-            }
-            downloadList.add(openImageUrl);
-            downloadMediaHelper.download(this, openImageUrl, new OnDownloadMediaListener() {
-                private boolean isWithProgress;
-
-                @Override
-                public void onDownloadStart(boolean isWithProgress) {
-                    this.isWithProgress = isWithProgress;
-                    if (downloadToast && !TextUtils.isEmpty(startToast)) {
-                        Toast.makeText(OpenImageActivity.this, startToast, Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onDownloadSuccess(String path) {
-                    if (downloadToast && !TextUtils.isEmpty(successToast)) {
-                        try {
-                            String endToast = String.format(successToast, path);
-                            Toast.makeText(OpenImageActivity.this, endToast, Toast.LENGTH_SHORT).show();
-                        } catch (Throwable e) {
-                            Toast.makeText(OpenImageActivity.this, successToast, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    if (downloadImageView != null) {
-                        downloadImageView.setPercent(0);
-                    }
-                    downloadList.remove(openImageUrl);
-                }
-
-                @Override
-                public void onDownloadProgress(int percent) {
-                    if (downloadImageView != null && isWithProgress) {
-                        downloadImageView.setPercent(percent / 100f);
-                    }
-                }
-
-                @Override
-                public void onDownloadFailed() {
-                    if (downloadToast && !TextUtils.isEmpty(errorToast)) {
-                        Toast.makeText(OpenImageActivity.this, errorToast, Toast.LENGTH_SHORT).show();
-                    }
-                    downloadList.remove(openImageUrl);
-                }
-            });
+            return;
         }
+        if (downloadList == null) {
+            downloadList = new ArrayList<>();
+        }
+        if (downloadList.contains(openImageUrl)) {
+            return;
+        }
+        final int downloadPosition = showPosition;
+        downloadList.add(openImageUrl);
+        downloadMediaHelper.download(this,this, openImageUrl, new OnDownloadMediaListener() {
+            private boolean isWithProgress;
+
+            @Override
+            public void onDownloadStart(boolean isWithProgress) {
+                this.isWithProgress = isWithProgress;
+                if (downloadToast && !TextUtils.isEmpty(startToast)) {
+                    Toast.makeText(OpenImageActivity.this, startToast, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onDownloadSuccess(String path) {
+                if (downloadToast && !TextUtils.isEmpty(successToast)) {
+                    try {
+                        String endToast = String.format(successToast, path);
+                        Toast.makeText(OpenImageActivity.this, endToast, Toast.LENGTH_SHORT).show();
+                    } catch (Throwable e) {
+                        Toast.makeText(OpenImageActivity.this, successToast, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                if (downloadImageView != null && downloadPosition == showPosition) {
+                    downloadImageView.setPercent(0);
+                }
+                downloadList.remove(openImageUrl);
+                downloadProgress.remove(downloadPosition);
+            }
+
+            @Override
+            public void onDownloadProgress(int percent) {
+                float percentFloat = percent / 100f;
+                downloadProgress.put(downloadPosition,percentFloat);
+                if (downloadImageView != null && isWithProgress && downloadPosition == showPosition) {
+                    downloadImageView.setPercent(percentFloat);
+                }
+            }
+
+            @Override
+            public void onDownloadFailed() {
+                if (downloadToast && !TextUtils.isEmpty(errorToast)) {
+                    Toast.makeText(OpenImageActivity.this, errorToast, Toast.LENGTH_SHORT).show();
+                }
+                downloadList.remove(openImageUrl);
+            }
+        });
     }
 
     private void setIndicatorLayoutParams(FrameLayout.LayoutParams layoutParams, int themeRes) {
