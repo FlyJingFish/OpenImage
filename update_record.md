@@ -8,7 +8,7 @@
 
 ## 1.8.7
 
-1、新增可选下载图片或视频的按钮，对应方法是  OpenImage ---> setShowDownload （如果需要显示下载进度请前往[下载图片或视频的显示进度](https://github.com/FlyJingFish/OpenImage/wiki/3%E3%80%81%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87%E6%88%96%E8%A7%86%E9%A2%91%E7%9A%84%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)）
+1、新增可选下载图片或视频的按钮，对应方法是  OpenImage ---> setShowDownload （如果需要显示下载进度请前往[下载图片或视频的使用说明](https://github.com/FlyJingFish/OpenImage/wiki/3%E3%80%81%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87%E6%88%96%E8%A7%86%E9%A2%91%E7%9A%84%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)）
 
 2、修复视频播放结束后播放器上帝播放按钮不能再次点击的 bug
 
