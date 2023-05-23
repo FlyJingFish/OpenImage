@@ -668,7 +668,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     *
+     * 设置显示下载按钮
      * @param downloadParams 下载按钮相关参数{@link DownloadParams}
      */
     public OpenImage setShowDownload(DownloadParams downloadParams) {
