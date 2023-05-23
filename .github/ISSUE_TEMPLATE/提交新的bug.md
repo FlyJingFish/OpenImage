@@ -1,11 +1,13 @@
 ---
 name: 提交新的bug
-about: Create a report to help us improve
+about: 提交bug请严格按照格式填写
 title: ''
 labels: ''
 assignees: ''
 
 ---
+
+**提交前先给个Star～吧，你的支持才能让作者有足够的动力去维护这个项目**
 
 **描述一下大概怎么回事**
 例如使用什么功能时会这样
