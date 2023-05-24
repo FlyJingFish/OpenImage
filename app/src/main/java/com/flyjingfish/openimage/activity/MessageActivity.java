@@ -15,6 +15,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.flyjingfish.openimage.fragment.MsgListViewViewFragment;
 import com.flyjingfish.openimage.fragment.MsgRecyclerViewFragment;
 import com.flyjingfish.openimage.databinding.ActivityMessageBinding;
+import com.flyjingfish.openimage.openImpl.MessageVpActivity;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -78,5 +79,11 @@ public class MessageActivity extends BaseActivity {
             autoScroll.setTitle(isAutoScroll?"打开跟随滚动":"关闭跟随滚动");
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MessageVpActivity.addCount = 0;
     }
 }

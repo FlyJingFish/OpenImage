@@ -85,19 +85,17 @@ public class MessageVpActivity extends OpenImageActivity {
         checkData();
     }
     private void checkData() {
-        if (viewPager.getCurrentItem() > openImageAdapter.getItemCount()-3){
-            if (viewPager.getCurrentItem() <= 1){
-                loadData();
-            }
+        if (viewPager.getCurrentItem() <= 0){
+            loadData();
         }
     }
-    private int addCount;
+    public static int addCount;
     private void loadData() {
-        if (addCount < 2){
+        if (addCount < 1){
             MyApplication.cThreadPool.submit(() -> {
                 List<MessageBean> datas = new ArrayList<>();
 
-                String response1 = DataUtils.getFromAssets(this, "message_data.json");
+                String response1 = DataUtils.getFromAssets(this, "message_data2.json");
                 try {
                     JSONArray jsonArray = new JSONArray(response1);
                     for (int i = 0; i < jsonArray.length(); i++) {

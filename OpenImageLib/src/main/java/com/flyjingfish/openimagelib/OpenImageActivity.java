@@ -74,7 +74,8 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     private boolean isCallClosed;
     private List<OpenImageUrl> downloadList;
     private PercentImageView downloadImageView;
-    private Map<Integer,Float> downloadProgress;
+    private Map<Long,Float> downloadProgress;
+    private long currentMediaId;
 
     /**
      * 获取 contentView ，用于调用{@link android.app.Activity#setContentView(View view)}
@@ -321,7 +322,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                 }
                 isFirstBacked = true;
                 if (downloadImageView != null && downloadProgress != null){
-                    Float progress = downloadProgress.get(showPosition);
+                    OpenImageDetail curDetail = getOpenImageBeans().get(showPosition);
+                    currentMediaId = curDetail.getId();
+                    Float progress = downloadProgress.get(currentMediaId);
                     if (progress == null){
                         downloadImageView.setPercent(0f);
                     }else {
@@ -655,7 +658,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     }
 
     protected void downloadMedia() {
-        final OpenImageUrl openImageUrl = getOpenImageBeans().get(showPosition);
+        final OpenImageDetail openImageDetail = getOpenImageBeans().get(showPosition);
         DownloadMediaHelper downloadMediaHelper = OpenImageConfig.getInstance().getDownloadMediaHelper();
         if (downloadMediaHelper == null) {
             if (ImageLoadUtils.getInstance().isApkInDebug()) {
@@ -666,12 +669,12 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         if (downloadList == null) {
             downloadList = new ArrayList<>();
         }
-        if (downloadList.contains(openImageUrl)) {
+        if (downloadList.contains(openImageDetail)) {
             return;
         }
-        final int downloadPosition = showPosition;
-        downloadList.add(openImageUrl);
-        downloadMediaHelper.download(this,this, openImageUrl, new OnDownloadMediaListener() {
+        final long downloadId = openImageDetail.getId();
+        downloadList.add(openImageDetail);
+        downloadMediaHelper.download(this,this, openImageDetail, new OnDownloadMediaListener() {
             private boolean isWithProgress;
 
             @Override
@@ -692,18 +695,18 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                         Toast.makeText(OpenImageActivity.this, successToast, Toast.LENGTH_SHORT).show();
                     }
                 }
-                if (downloadImageView != null && downloadPosition == showPosition) {
+                if (downloadImageView != null && downloadId == currentMediaId) {
                     downloadImageView.setPercent(0);
                 }
-                downloadList.remove(openImageUrl);
-                downloadProgress.remove(downloadPosition);
+                downloadList.remove(openImageDetail);
+                downloadProgress.remove(downloadId);
             }
 
             @Override
             public void onDownloadProgress(int percent) {
                 float percentFloat = percent / 100f;
-                downloadProgress.put(downloadPosition,percentFloat);
-                if (downloadImageView != null && isWithProgress && downloadPosition == showPosition) {
+                downloadProgress.put(downloadId,percentFloat);
+                if (downloadImageView != null && isWithProgress && downloadId == currentMediaId) {
                     downloadImageView.setPercent(percentFloat);
                 }
             }
@@ -713,7 +716,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                 if (downloadToast && !TextUtils.isEmpty(errorToast)) {
                     Toast.makeText(OpenImageActivity.this, errorToast, Toast.LENGTH_SHORT).show();
                 }
-                downloadList.remove(openImageUrl);
+                downloadList.remove(openImageDetail);
             }
         });
     }
