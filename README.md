@@ -80,7 +80,7 @@ allprojects {
 
 ```
 //OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.8.8'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.8.9'
 ```
 #### B、引入只带有图片引擎的版本（只支持查看图片）
 
@@ -88,7 +88,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.8.8'
 
 ```
 //OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.8.8'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.8.9'
 ```
 
 #### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
@@ -98,11 +98,22 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.8.8'
 ```
 //OpenImageLib 是基础库，没有引入图片引擎和视频播放器
 //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.8.8'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.8.9'
 
 ```
 
 ### 第二步. 简单一步调用即可
+
+先确保你有没有添加以下权限
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    
+</manifest>
+```
 
 **你可以选择下面两种图片数据的其中一种**
 

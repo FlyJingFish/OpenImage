@@ -1,5 +1,11 @@
 # OpenImage 更新日志
 
+## 1.8.9
+
+1、修复因为加载更多数据导致的下载进度显示错误的问题
+
+2、BaseInnerFragment 的 checkPermissionAndDownload 下载前先检测是否获取了读写权限
+
 ## 1.8.8
 
 1、修复下载进度在切换项目后的显示bug
