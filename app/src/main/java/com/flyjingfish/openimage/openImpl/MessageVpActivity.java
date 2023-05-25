@@ -64,12 +64,6 @@ public class MessageVpActivity extends OpenImageActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
-                Log.e("MyBigImageActivity","onItemClick");
-            }
-        });
         addOnSelectMediaListener((openImageUrl, position) -> {
         });
 

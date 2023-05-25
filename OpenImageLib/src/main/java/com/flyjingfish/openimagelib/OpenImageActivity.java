@@ -194,7 +194,6 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
      */
     @Override
     public void onStartTouch() {
-        touching = true;
         if (onBackView != null) {
             onBackView.onStartTouchScale(showPosition);
         }
@@ -209,7 +208,6 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
      */
     @Override
     public void onEndTouch() {
-        touching = false;
         if (onBackView != null) {
             onBackView.onEndTouchScale(showPosition);
         }
@@ -458,27 +456,11 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         if (indicatorView != null && indicatorTouchingHide) {
             indicatorView.setVisibility(View.GONE);
         }
-        if (downloadImageView != null) {
-            if (downloadTouchingHide && touching){
-                downloadImageView.setVisibility(View.GONE);
-            }else {
-                if ((mediaType == MediaType.IMAGE && (downloadShowType == MoreViewShowType.IMAGE || downloadShowType == MoreViewShowType.BOTH))||(mediaType == MediaType.VIDEO && (downloadShowType == MoreViewShowType.VIDEO || downloadShowType == MoreViewShowType.BOTH))) {
-                    downloadImageView.setVisibility(View.GONE);
-                } else {
-                    downloadImageView.setVisibility(View.VISIBLE);
-                }
-            }
+        if (downloadImageView != null && downloadTouchingHide) {
+            downloadImageView.setVisibility(View.GONE);
         }
-        if (closeImageView != null) {
-            if (closeTouchingHide && touching){
-                closeImageView.setVisibility(View.GONE);
-            }else {
-                if ((mediaType == MediaType.IMAGE && (closeShowType == MoreViewShowType.IMAGE || closeShowType == MoreViewShowType.BOTH))||(mediaType == MediaType.VIDEO && (closeShowType == MoreViewShowType.VIDEO || closeShowType == MoreViewShowType.BOTH))) {
-                    closeImageView.setVisibility(View.GONE);
-                } else {
-                    closeImageView.setVisibility(View.VISIBLE);
-                }
-            }
+        if (closeImageView != null && closeTouchingHide) {
+            closeImageView.setVisibility(View.GONE);
         }
     }
 

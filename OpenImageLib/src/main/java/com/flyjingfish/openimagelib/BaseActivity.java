@@ -111,7 +111,6 @@ class BaseActivity extends AppCompatActivity {
     boolean closeTouchingHide = true;
     MoreViewShowType downloadShowType = MoreViewShowType.BOTH;
     MoreViewShowType closeShowType = MoreViewShowType.IMAGE;
-    boolean touching;
 
     List<OpenImageDetail> getOpenImageBeans() {
         return openImageBeans;
