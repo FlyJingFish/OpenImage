@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
@@ -36,6 +37,7 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.openimagelib.beans.CloseParams;
 import com.flyjingfish.openimagelib.beans.DownloadParams;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
@@ -74,6 +76,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     private boolean isCallClosed;
     private List<OpenImageUrl> downloadList;
     private PercentImageView downloadImageView;
+    private AppCompatImageView closeImageView;
     private Map<Long,Float> downloadProgress;
     private long currentMediaId;
 
@@ -129,6 +132,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
 
         initMoreView();
         initDownloadView();
+        initCloseView();
         initViewPager2();
         initTouchCloseLayout();
         if (isNoneClickView()) {
@@ -185,12 +189,12 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         rootView.setViewPager2(viewPager);
         rootView.setOnTouchCloseListener(this);
     }
-
     /**
      * 开始拖动图片或视频
      */
     @Override
     public void onStartTouch() {
+        touching = true;
         if (onBackView != null) {
             onBackView.onStartTouchScale(showPosition);
         }
@@ -205,6 +209,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
      */
     @Override
     public void onEndTouch() {
+        touching = false;
         if (onBackView != null) {
             onBackView.onEndTouchScale(showPosition);
         }
@@ -390,9 +395,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
      * 展示添加的更多View时回调此方法，调用时机是切换图片或停止拖动图片时
      */
     protected void showMoreView() {
+        OpenImageDetail openImageDetail = getOpenImageBeans().get(showPosition);
+        MediaType mediaType = openImageDetail.getType();
         if (moreViewOptions.size() > 0) {
-            OpenImageDetail openImageDetail = getOpenImageBeans().get(showPosition);
-            MediaType mediaType = openImageDetail.getType();
             for (MoreViewOption moreViewOption : moreViewOptions) {
                 MoreViewShowType showType = moreViewOption.getMoreViewShowType();
                 if (mediaType == MediaType.IMAGE && (showType == MoreViewShowType.IMAGE || showType == MoreViewShowType.BOTH)) {
@@ -409,11 +414,22 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null && upperLayerOption != null && upperLayerOption.isTouchingHide()) {
             upperView.setVisibility(View.VISIBLE);
         }
-        if (downloadImageView != null && downloadTouchingHide) {
-            downloadImageView.setVisibility(View.VISIBLE);
-        }
-        if (indicatorView != null && indicatorTouchingHide) {
+        if (indicatorView != null) {
             indicatorView.setVisibility(View.VISIBLE);
+        }
+        if (downloadImageView != null) {
+            if ((mediaType == MediaType.IMAGE && (downloadShowType == MoreViewShowType.IMAGE || downloadShowType == MoreViewShowType.BOTH))||(mediaType == MediaType.VIDEO && (downloadShowType == MoreViewShowType.VIDEO || downloadShowType == MoreViewShowType.BOTH))) {
+                downloadImageView.setVisibility(View.VISIBLE);
+            } else {
+                downloadImageView.setVisibility(View.GONE);
+            }
+        }
+        if (closeImageView != null) {
+            if ((mediaType == MediaType.IMAGE && (closeShowType == MoreViewShowType.IMAGE || closeShowType == MoreViewShowType.BOTH))||(mediaType == MediaType.VIDEO && (closeShowType == MoreViewShowType.VIDEO || closeShowType == MoreViewShowType.BOTH))) {
+                closeImageView.setVisibility(View.VISIBLE);
+            } else {
+                closeImageView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -421,9 +437,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
      * 隐藏添加的更多View时回调此方法，调用时机是切换图片或开始拖动图片时
      */
     protected void touchHideMoreView() {
+        OpenImageDetail openImageDetail = getOpenImageBeans().get(showPosition);
+        MediaType mediaType = openImageDetail.getType();
         if (moreViewOptions.size() > 0) {
-            OpenImageDetail openImageDetail = getOpenImageBeans().get(showPosition);
-            MediaType mediaType = openImageDetail.getType();
             for (MoreViewOption moreViewOption : moreViewOptions) {
                 MoreViewShowType showType = moreViewOption.getMoreViewShowType();
                 if (mediaType == MediaType.IMAGE && (showType == MoreViewShowType.IMAGE || showType == MoreViewShowType.BOTH) && !moreViewOption.isFollowTouch()) {
@@ -439,11 +455,30 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         if (upLayerFragment != null && (upperView = upLayerFragment.getView()) != null && upperLayerOption != null && upperLayerOption.isTouchingHide()) {
             upperView.setVisibility(View.GONE);
         }
-        if (downloadImageView != null && downloadTouchingHide) {
-            downloadImageView.setVisibility(View.GONE);
-        }
         if (indicatorView != null && indicatorTouchingHide) {
             indicatorView.setVisibility(View.GONE);
+        }
+        if (downloadImageView != null) {
+            if (downloadTouchingHide && touching){
+                downloadImageView.setVisibility(View.GONE);
+            }else {
+                if ((mediaType == MediaType.IMAGE && (downloadShowType == MoreViewShowType.IMAGE || downloadShowType == MoreViewShowType.BOTH))||(mediaType == MediaType.VIDEO && (downloadShowType == MoreViewShowType.VIDEO || downloadShowType == MoreViewShowType.BOTH))) {
+                    downloadImageView.setVisibility(View.GONE);
+                } else {
+                    downloadImageView.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+        if (closeImageView != null) {
+            if (closeTouchingHide && touching){
+                closeImageView.setVisibility(View.GONE);
+            }else {
+                if ((mediaType == MediaType.IMAGE && (closeShowType == MoreViewShowType.IMAGE || closeShowType == MoreViewShowType.BOTH))||(mediaType == MediaType.VIDEO && (closeShowType == MoreViewShowType.VIDEO || closeShowType == MoreViewShowType.BOTH))) {
+                    closeImageView.setVisibility(View.GONE);
+                } else {
+                    closeImageView.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 
@@ -593,6 +628,38 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         }
     }
 
+    private void initCloseView() {
+        boolean closeShow = getIntent().getBooleanExtra(OpenParams.CLOSE_SHOW, false);
+        if (closeShow){
+            closeParamsKey = getIntent().getStringExtra(OpenParams.CLOSE_PARAMS);
+            CloseParams closeParams = null;
+            if (!TextUtils.isEmpty(closeParamsKey)) {
+                closeParams = ImageLoadUtils.getInstance().getCloseParams(closeParamsKey);
+                if (closeParams != null && (closeShowType = closeParams.getMoreViewShowType()) == null){
+                    closeShowType = MoreViewShowType.IMAGE;
+                }
+            }
+            FrameLayout.LayoutParams downloadLayoutParams;
+            if (closeParams == null || closeParams.getCloseLayoutParams() == null) {
+                downloadLayoutParams = new FrameLayout.LayoutParams((int) ScreenUtils.dp2px(this, 24), (int) ScreenUtils.dp2px(this, 24));
+                downloadLayoutParams.gravity = Gravity.BOTTOM | Gravity.START;
+                downloadLayoutParams.setMarginStart((int) ScreenUtils.dp2px(this, 14));
+                downloadLayoutParams.bottomMargin = (int) ScreenUtils.dp2px(this, 8);
+            } else {
+                downloadLayoutParams = closeParams.getCloseLayoutParams();
+            }
+            closeImageView = new AppCompatImageView(this);
+            int downloadSrc = R.drawable.ic_open_image_close;
+            if (closeParams != null) {
+                downloadSrc = closeParams.getCloseSrc();
+                closeTouchingHide = closeParams.isTouchingHide();
+            }
+            closeImageView.setImageResource(downloadSrc);
+            rootView.addView(closeImageView, downloadLayoutParams);
+            closeImageView.setOnClickListener(v -> close(false));
+        }
+
+    }
     private void initDownloadView() {
         boolean downloadShow = getIntent().getBooleanExtra(OpenParams.DOWNLOAD_SHOW, false);
         if (downloadShow) {
@@ -609,6 +676,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             DownloadParams downloadParams = null;
             if (!TextUtils.isEmpty(downloadParamsKey)) {
                 downloadParams = ImageLoadUtils.getInstance().getDownloadParams(downloadParamsKey);
+                if (downloadParams != null && (downloadShowType = downloadParams.getMoreViewShowType()) == null){
+                    downloadShowType = MoreViewShowType.BOTH;
+                }
             }
             FrameLayout.LayoutParams downloadLayoutParams;
             if (downloadParams == null || downloadParams.getDownloadLayoutParams() == null) {

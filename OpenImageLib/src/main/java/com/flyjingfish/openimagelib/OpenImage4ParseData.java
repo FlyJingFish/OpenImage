@@ -93,7 +93,7 @@ class OpenImage4ParseData extends OpenImage4Params {
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
                 public void onScrollPos(int pos) {
-                    if (isAutoScrollScanPosition) {
+                    if (isAutoScrollScanPosition && recyclerView != null) {
                         final RecyclerView.LayoutManager layoutManager =
                                 recyclerView.getLayoutManager();
                         View viewAtPosition =
@@ -125,7 +125,7 @@ class OpenImage4ParseData extends OpenImage4Params {
 
                 @Override
                 public void onScrollPos(int pos) {
-                    if (isAutoScrollScanPosition) {
+                    if (isAutoScrollScanPosition && absListView != null) {
                         absListView.post(() -> {
                             absListView.smoothScrollToPosition(pos);
                         });
@@ -154,7 +154,7 @@ class OpenImage4ParseData extends OpenImage4Params {
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
                 public void onScrollPos(int pos) {
-                    if (isAutoScrollScanPosition) {
+                    if (isAutoScrollScanPosition && viewPager2 != null) {
                         viewPager2.post(() -> {
                             viewPager2.setCurrentItem(pos, false);
                         });
@@ -181,7 +181,7 @@ class OpenImage4ParseData extends OpenImage4Params {
             ImageLoadUtils.getInstance().setOnBackView(backViewKey, new ExitOnBackView4ListView(shareViewClick, openImageDetails) {
                 @Override
                 public void onScrollPos(int pos) {
-                    if (isAutoScrollScanPosition) {
+                    if (isAutoScrollScanPosition && viewPager != null) {
                         viewPager.post(() -> {
                             viewPager.setCurrentItem(pos, false);
                         });

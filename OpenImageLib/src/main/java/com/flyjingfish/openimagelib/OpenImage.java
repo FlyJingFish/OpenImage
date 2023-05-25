@@ -20,6 +20,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.ClickViewParam;
+import com.flyjingfish.openimagelib.beans.CloseParams;
 import com.flyjingfish.openimagelib.beans.DownloadParams;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.beans.RectangleConnerRadius;
@@ -441,12 +442,22 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 禁用点击图片关闭页面功能
+     * 禁用点击图片关闭页面功能，设置此项后{@link OpenImageConfig#setDisEnableClickClose(boolean)} 就不起作用了
      *
      * @return {@link OpenImage}
      */
     public OpenImage disableClickClose() {
         disableClickClose = true;
+        return this;
+    }
+
+    /**
+     * 开始点击图片关闭页面功能，设置此项后{@link OpenImageConfig#setDisEnableClickClose(boolean)} 就不起作用了
+     *
+     * @return {@link OpenImage}
+     */
+    public OpenImage enableClickClose() {
+        disableClickClose = false;
         return this;
     }
 
@@ -674,6 +685,43 @@ public final class OpenImage extends OpenImage4ParseData {
     public OpenImage setShowDownload(DownloadParams downloadParams) {
         this.showDownload = true;
         this.downloadParams = downloadParams;
+        return this;
+    }
+
+    /**
+     * 设置显示关闭按钮
+     */
+    public OpenImage setShowClose() {
+        return setShowClose(new CloseParams());
+    }
+
+    /**
+     * 设置显示关闭按钮
+     * @param closeParams 关闭按钮相关参数{@link CloseParams}
+     */
+    public OpenImage setShowClose(CloseParams closeParams) {
+        this.showClose = true;
+        this.closeParams = closeParams;
+        return this;
+    }
+
+    /**
+     * 禁用下拉触摸关闭页面功能，设置此项后{@link OpenImageConfig#setDisEnableTouchClose(boolean)} (boolean)} 就不起作用了
+     *
+     * @return {@link OpenImage}
+     */
+    public OpenImage disableTouchClose() {
+        disableTouchClose = true;
+        return this;
+    }
+
+    /**
+     * 启用下拉触摸关闭页面功能
+     *
+     * @return {@link OpenImage}，设置此项后{@link OpenImageConfig#setDisEnableTouchClose(boolean)} 就不起作用了
+     */
+    public OpenImage enableTouchClose() {
+        disableTouchClose = false;
         return this;
     }
 

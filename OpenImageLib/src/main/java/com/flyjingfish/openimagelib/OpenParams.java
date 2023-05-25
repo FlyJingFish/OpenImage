@@ -35,5 +35,7 @@ class OpenParams {
     public static final String WECHAT_EXIT_FILL_IN_EFFECT = "wechatExitFillInEffect";
     public static final String ON_UPDATE_VIEW = "onUpdateViewListener";
     public static final String DOWNLOAD_SHOW = "downloadShow";
-    public static final String DOWNLOAD_PARAMS = "downloadLayoutParams";
+    public static final String DOWNLOAD_PARAMS = "downloadParams";
+    public static final String CLOSE_SHOW = "closeShow";
+    public static final String CLOSE_PARAMS = "closeParams";
 }

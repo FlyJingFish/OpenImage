@@ -1,6 +1,5 @@
 package com.flyjingfish.openimageglidelib;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;

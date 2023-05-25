@@ -32,6 +32,7 @@ import android.view.GestureDetector;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.text.TextUtilsCompat;
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
@@ -59,9 +60,7 @@ public class PhotoView extends AppCompatImageView {
     public PhotoView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
         init();
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            isRtl = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL;
-        }
+        isRtl = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL;
         mImagePaint = new Paint();
         mImagePaint.setXfermode(null);
         mRoundPaint = new Paint();
@@ -139,6 +138,7 @@ public class PhotoView extends AppCompatImageView {
         if (attacher != null) {
             attacher.update();
         }
+        startGif();
     }
 
     @Override
@@ -154,6 +154,19 @@ public class PhotoView extends AppCompatImageView {
         super.setImageURI(uri);
         if (attacher != null) {
             attacher.update();
+        }
+        startGif();
+    }
+
+    private void startGif(){
+        Drawable drawable = getDrawable();
+        if (drawable instanceof Animatable2Compat) {
+            post(() -> {
+                drawable.setVisible(true,false);
+                if (!((Animatable2Compat) drawable).isRunning()){
+                    ((Animatable2Compat) drawable).start();
+                }
+            });
         }
     }
 
@@ -292,6 +305,10 @@ public class PhotoView extends AppCompatImageView {
         if (attacher != null){
             attacher.unRegisterDisplayListener();
         }
+        Drawable drawable = getDrawable();
+        if (drawable instanceof Animatable2Compat){
+            ((Animatable2Compat) drawable).stop();
+        }
     }
 
     @Override
@@ -299,6 +316,10 @@ public class PhotoView extends AppCompatImageView {
         super.onAttachedToWindow();
         if (attacher != null){
             attacher.registerDisplayListener();
+        }
+        Drawable drawable = getDrawable();
+        if (drawable instanceof Animatable2Compat){
+            ((Animatable2Compat) drawable).start();
         }
     }
 

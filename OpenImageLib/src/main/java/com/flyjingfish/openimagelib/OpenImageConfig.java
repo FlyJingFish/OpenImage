@@ -23,6 +23,7 @@ public class OpenImageConfig {
     //判定是否是长图的变量
     protected float readModeRule = DEFAULT_READ_MODE_RULE;
     private boolean disEnableTouchClose;
+    private boolean disEnableClickClose;
     private float touchCloseScale;
     private boolean isFixSharedAnimMemoryLeaks = true;
     private boolean isFixAndroid12OnBackPressed = true;
@@ -113,6 +114,18 @@ public class OpenImageConfig {
      */
     public void setDisEnableTouchClose(boolean disEnableTouchClose) {
         this.disEnableTouchClose = disEnableTouchClose;
+    }
+
+    public boolean isDisEnableClickClose() {
+        return disEnableClickClose;
+    }
+
+    /**
+     * 开启或关闭 拖动关闭功能
+     * @param disEnableClickClose 是否关闭点击关闭功能
+     */
+    public void setDisEnableClickClose(boolean disEnableClickClose) {
+        this.disEnableClickClose = disEnableClickClose;
     }
 
     public float getTouchCloseScale() {

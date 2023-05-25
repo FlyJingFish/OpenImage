@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.flyjingfish.openimagelib.beans.CloseParams;
 import com.flyjingfish.openimagelib.beans.DownloadParams;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
@@ -38,6 +39,7 @@ class ImageLoadUtils {
     private final HashMap<String, OpenImageDetail> openDetailDataMap = new HashMap<>();
     private final HashMap<String, OnUpdateViewListener> onUpdateViewListenerHashMap = new HashMap<>();
     private final HashMap<String, DownloadParams> downloadParamsHashMap = new HashMap<>();
+    private final HashMap<String, CloseParams> closeParamsHashMap = new HashMap<>();
     private final SnowFlakeUtil snowFlakeUtil = new SnowFlakeUtil();
     private boolean isApkInDebug;
 
@@ -335,6 +337,19 @@ class ImageLoadUtils {
 
     public void clearDownloadParams(String key) {
         downloadParamsHashMap.remove(key);
+    }
+
+    public CloseParams getCloseParams(String key) {
+        return closeParamsHashMap.get(key);
+    }
+
+    public void setCloseParams(String key, CloseParams closeParams) {
+
+        this.closeParamsHashMap.put(key, closeParams);
+    }
+
+    public void clearCloseParams(String key) {
+        closeParamsHashMap.remove(key);
     }
 
 }

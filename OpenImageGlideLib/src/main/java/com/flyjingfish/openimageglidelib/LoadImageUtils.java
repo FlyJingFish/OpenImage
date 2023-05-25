@@ -12,10 +12,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
@@ -83,18 +80,7 @@ public enum LoadImageUtils {
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
         Glide.with(context).asFile()
-                .load(imageUrl).apply(requestOptions).addListener(new RequestListener<File>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {
-                        onLoadBigImageListener.onLoadImageFailed();
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                }).into(new CustomTarget<File>() {
+                .load(imageUrl).apply(requestOptions).into(new CustomTarget<File>() {
                     @Override
                     public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
                         loadImageForSize(context,resource.getPath(),finishListener);
@@ -103,6 +89,12 @@ public enum LoadImageUtils {
                     @Override
                     public void onLoadCleared(@Nullable Drawable placeholder) {
 
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        onLoadBigImageListener.onLoadImageFailed();
                     }
                 });
     }

@@ -7,6 +7,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 
 import com.flyjingfish.openimagelib.R;
+import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 
 
 public class DownloadParams {
@@ -15,6 +16,7 @@ public class DownloadParams {
     private ColorStateList percentColors;
     private boolean touchingHide = true;
     private FrameLayout.LayoutParams downloadLayoutParams;
+    private MoreViewShowType moreViewShowType = MoreViewShowType.BOTH;
 
     /**
      *
@@ -64,6 +66,20 @@ public class DownloadParams {
     public DownloadParams setDownloadLayoutParams(FrameLayout.LayoutParams downloadLayoutParams) {
         this.downloadLayoutParams = downloadLayoutParams;
         return this;
+    }
+
+    /**
+     *
+     * @param moreViewShowType 展示类型
+     * @return
+     */
+    public DownloadParams setMoreViewShowType(MoreViewShowType moreViewShowType) {
+        this.moreViewShowType = moreViewShowType;
+        return this;
+    }
+
+    public MoreViewShowType getMoreViewShowType() {
+        return moreViewShowType;
     }
 
     public int getDownloadSrc() {

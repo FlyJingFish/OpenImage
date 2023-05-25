@@ -16,6 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.beans.ClickViewParam;
+import com.flyjingfish.openimagelib.beans.CloseParams;
 import com.flyjingfish.openimagelib.beans.DownloadParams;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.OnExitListener;
@@ -63,7 +64,7 @@ class OpenImage4Params {
     protected String pageTransformersKey;
     protected String onItemClickListenerKey;
     protected String onItemLongClickListenerKey;
-    protected boolean disableClickClose;
+    protected Boolean disableClickClose;
     protected boolean showSrcImageView = true;
     protected final List<MoreViewOption> moreViewOptions = new ArrayList<>();
     protected SrcViewType srcViewType;
@@ -84,7 +85,10 @@ class OpenImage4Params {
     protected OnUpdateViewListener onUpdateViewListener;
     protected OnExitListener onExitListener;
     protected boolean showDownload;
+    protected boolean showClose;
+    protected Boolean disableTouchClose;
     protected DownloadParams downloadParams;
+    protected CloseParams closeParams;
 
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV, WEB_VIEW
@@ -139,9 +143,12 @@ class OpenImage4Params {
         if (imageShapeParams != null){
             intent.putExtra(OpenParams.IMAGE_SHAPE_PARAMS, imageShapeParams);
         }
-        intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
+        if (disableClickClose == null){
+            intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, OpenImageConfig.getInstance().isDisEnableClickClose());
+        }else {
+            intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
+        }
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);
-        intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, OpenImageConfig.getInstance().isDisEnableTouchClose());
         ShapeImageView.ShapeScaleType shapeScaleType = srcImageViewShapeScaleType != null ? srcImageViewShapeScaleType : ShapeImageView.ShapeScaleType.getType(srcImageViewScaleType);
         if (shapeScaleType != null){
             intent.putExtra(OpenParams.SRC_SCALE_TYPE, shapeScaleType.ordinal());
@@ -162,10 +169,21 @@ class OpenImage4Params {
             ImageLoadUtils.getInstance().setOnUpdateViewListener(key, onUpdateViewListener);
         }
         intent.putExtra(OpenParams.DOWNLOAD_SHOW, showDownload);
+        intent.putExtra(OpenParams.CLOSE_SHOW, showClose);
         if (showDownload && downloadParams != null){
             String key = this.toString();
             intent.putExtra(OpenParams.DOWNLOAD_PARAMS, key);
             ImageLoadUtils.getInstance().setDownloadParams(key, downloadParams);
+        }
+        if (showClose && closeParams != null){
+            String key = this.toString();
+            intent.putExtra(OpenParams.CLOSE_PARAMS, key);
+            ImageLoadUtils.getInstance().setCloseParams(key, closeParams);
+        }
+        if (disableTouchClose == null){
+            intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, OpenImageConfig.getInstance().isDisEnableTouchClose());
+        }else {
+            intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, disableTouchClose);
         }
         backViewKey = this.toString();
         return intent;

@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
+import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
@@ -104,8 +105,13 @@ class BaseActivity extends AppCompatActivity {
     protected String requestWriteExternalStoragePermissionsFail;
 
     String downloadParamsKey;
+    String closeParamsKey;
 
     boolean downloadTouchingHide = true;
+    boolean closeTouchingHide = true;
+    MoreViewShowType downloadShowType = MoreViewShowType.BOTH;
+    MoreViewShowType closeShowType = MoreViewShowType.IMAGE;
+    boolean touching;
 
     List<OpenImageDetail> getOpenImageBeans() {
         return openImageBeans;
@@ -193,6 +199,9 @@ class BaseActivity extends AppCompatActivity {
         onItemLongClickListenerKeys.clear();
         if (!TextUtils.isEmpty(downloadParamsKey)){
             ImageLoadUtils.getInstance().clearDownloadParams(downloadParamsKey);
+        }
+        if (!TextUtils.isEmpty(closeParamsKey)){
+            ImageLoadUtils.getInstance().clearCloseParams(closeParamsKey);
         }
     }
 
@@ -329,6 +338,10 @@ class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 设置后 {@link OpenImage#enableClickClose()} 则不起作用
+     * @param onItemClickListener
+     */
     protected void addOnItemClickListener(OnItemClickListener onItemClickListener) {
         if (onItemClickListener != null) {
             ImageLoadUtils.getInstance().setOnItemClickListener(onItemClickListener.toString(), onItemClickListener);
