@@ -42,7 +42,7 @@ class CustomGestureDetector {
                     return false;
              
                 if (scaleFactor >= 0) {
-                    mListener.onScale(scaleFactor,
+                    mListener.onScale(true,scaleFactor,
                             detector.getFocusX(), detector.getFocusY());
                 }
                 return true;
@@ -158,8 +158,12 @@ class CustomGestureDetector {
                         if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
                             mListener.onFling(mLastTouchX, mLastTouchY, -vX,
                                     -vY);
+                        }else {
+                            mListener.onTouchEnd();
                         }
                     }
+                }else {
+                    mListener.onTouchEnd();
                 }
 
                 // Recycle Velocity Tracker

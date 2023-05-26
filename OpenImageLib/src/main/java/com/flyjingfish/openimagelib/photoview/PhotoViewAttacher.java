@@ -193,6 +193,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     parent.requestDisallowInterceptTouchEvent(true);
                 }
             }
+            if (mImageView instanceof PhotoView){
+                ((PhotoView) mImageView).moving();
+            }
         }
 
         @Override
@@ -200,17 +203,34 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             mCurrentFlingRunnable = new FlingRunnable(mImageView.getContext());
             mCurrentFlingRunnable.fling(getImageViewWidth(mImageView),
                     getImageViewHeight(mImageView), (int) velocityX, (int) velocityY);
+            if (mImageView instanceof PhotoView){
+                ((PhotoView) mImageView).clearBitmap();
+            }
             mImageView.post(mCurrentFlingRunnable);
         }
 
         @Override
-        public void onScale(float scaleFactor, float focusX, float focusY) {
+        public void onScale(boolean doubleFinger,float scaleFactor, float focusX, float focusY) {
             if (getScale() < mMaxScale || scaleFactor < 1f) {
                 if (mScaleChangeListener != null) {
                     mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
                 }
                 mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
                 checkAndDisplayMatrix();
+                if (mImageView instanceof PhotoView){
+                    if (doubleFinger){
+                        ((PhotoView) mImageView).clearBitmap();
+                    }else {
+                        ((PhotoView) mImageView).onTouchEnd();
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onTouchEnd() {
+            if (mImageView instanceof PhotoView && !isScaling){
+                ((PhotoView) mImageView).onTouchEnd();
             }
         }
     };
@@ -251,6 +271,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 }
                 return false;
             }
+
         });
         mGestureDetector.setOnDoubleTapListener(new GestureDetector.OnDoubleTapListener() {
             @Override
@@ -289,6 +310,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     float scale = getScale();
                     float x = ev.getX();
                     float y = ev.getY();
+                    if (mImageView instanceof PhotoView){
+                        ((PhotoView) mImageView).clearBitmap();
+                    }
                     if (scale < getMediumScale()) {
                         setScale(getMediumScale(), x, y, true);
                     } else if (scale >= getMediumScale() && scale < getMaximumScale()) {
@@ -565,6 +589,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 boolean didntScale = !wasScaling && !mScaleDragDetector.isScaling();
                 boolean didntDrag = !wasDragging && !mScaleDragDetector.isDragging();
                 mBlockParentIntercept = didntScale && didntDrag;
+                isScaling = wasScaling;
             }
             // Check to see if the user double tapped
             if (mGestureDetector != null && mGestureDetector.onTouchEvent(ev)) {
@@ -574,7 +599,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
         return handled;
     }
-
+    boolean isScaling;
     public void setAllowParentInterceptOnEdge(boolean allow) {
         mAllowParentInterceptOnEdge = allow;
     }
@@ -647,6 +672,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             throw new IllegalArgumentException("Scale must be within the range of minScale and maxScale");
         }
         if (animate) {
+            isScaling = true;
             mImageView.post(new AnimatedZoomRunnable(getScale(), scale,
                     focalX, focalY));
         } else {
@@ -864,6 +890,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void setExitMode(boolean exitMode) {
+        if (exitMode && mImageView instanceof PhotoView){
+            ((PhotoView) mImageView).clearBitmap();
+        }
         isExitMode = exitMode;
     }
 
@@ -1304,7 +1333,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             float t = interpolate();
             float scale = mZoomStart + t * (mZoomEnd - mZoomStart);
             float deltaScale = scale / getScale();
-            onGestureListener.onScale(deltaScale, mFocalX, mFocalY);
+            onGestureListener.onScale(false,deltaScale, mFocalX, mFocalY);
             // We haven't hit our target scale yet, so post ourselves again
             if (t < 1f) {
                 Compat.postOnAnimation(mImageView, this);
@@ -1365,6 +1394,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         @Override
         public void run() {
             if (mScroller.isFinished()) {
+                if (mImageView instanceof PhotoView){
+                    ((PhotoView) mImageView).onTouchEnd();
+                }
                 return; // remaining post that should not be handled
             }
             if (mScroller.computeScrollOffset()) {
@@ -1374,6 +1406,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 checkAndDisplayMatrix();
                 mCurrentX = newX;
                 mCurrentY = newY;
+                if (mImageView instanceof PhotoView){
+                    ((PhotoView) mImageView).moving();
+                }
                 // Post On animation
                 Compat.postOnAnimation(mImageView, this);
             }

@@ -7,6 +7,8 @@ interface OnGestureListener {
     void onFling(float startX, float startY, float velocityX,
                  float velocityY);
 
-    void onScale(float scaleFactor, float focusX, float focusY);
+    void onScale(boolean doubleFinger,float scaleFactor, float focusX, float focusY);
+
+    void onTouchEnd();
 
 }

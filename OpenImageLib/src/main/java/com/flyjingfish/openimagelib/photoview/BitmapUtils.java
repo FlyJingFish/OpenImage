@@ -45,6 +45,27 @@ class BitmapUtils {
         return new int[]{maxWidth, maxHeight};
     }
 
+    public static int getMaxInSampleSize(int imageWidth, int imageHeight) {
+        int maxWidth = 0, maxHeight = 0;
+        if (imageWidth == 0 && imageHeight == 0) {
+            return 1;
+        }
+        int inSampleSize = BitmapUtils.computeSize(imageWidth, imageHeight);
+        long totalMemory = getTotalMemory();
+        boolean decodeAttemptSuccess = false;
+        while (!decodeAttemptSuccess) {
+            maxWidth = imageWidth / inSampleSize;
+            maxHeight = imageHeight / inSampleSize;
+            int bitmapSize = maxWidth * maxHeight * ARGB_8888_MEMORY_BYTE;
+            if (bitmapSize > totalMemory) {
+                inSampleSize *= 2;
+                continue;
+            }
+            decodeAttemptSuccess = true;
+        }
+        return inSampleSize;
+    }
+
     /**
      * 获取当前应用可用内存
      *

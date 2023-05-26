@@ -204,6 +204,13 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         }
     }
 
+    @Override
+    public void close() {
+        smallCoverImageView.setExitMode(true);
+        photoView.setExitMode(true);
+        super.close();
+    }
+
     protected void loadBigImage() {
         if (clickPosition == showPosition && TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl()) && coverDrawable != null) {
             onImageSuccess(coverDrawable,coverFilePath);
