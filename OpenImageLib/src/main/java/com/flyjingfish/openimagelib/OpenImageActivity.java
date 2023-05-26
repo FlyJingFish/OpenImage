@@ -875,6 +875,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         mHandler.removeCallbacksAndMessages(null);
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
         ImageLoadUtils.getInstance().clearCoverDrawable(openCoverKey);
+        ImageLoadUtils.getInstance().clearCoverFilePath(openCoverKey);
         ImageLoadUtils.getInstance().clearSmallCoverDrawable(openCoverKey);
         ImageLoadUtils.getInstance().clearPageTransformers(pageTransformersKey);
         ImageLoadUtils.getInstance().clearOnItemClickListener(onItemCLickKey);

@@ -59,18 +59,18 @@ public enum LoadImageUtils {
                     if (context instanceof LifecycleOwner){
                         LifecycleOwner lifecycleOwner = (LifecycleOwner) context;
                         if (lifecycleOwner.getLifecycle().getCurrentState() != Lifecycle.State.DESTROYED){
-                            finishListener.onGoLoad(maxImageSize, false);
+                            finishListener.onGoLoad(imageUrl,maxImageSize, false);
                         }
                     }else if (context instanceof Activity){
                         if (!((Activity) context).isFinishing() && !((Activity) context).isDestroyed()){
-                            finishListener.onGoLoad(maxImageSize, false);
+                            finishListener.onGoLoad(imageUrl,maxImageSize, false);
                         }
                     }
                 });
             });
         } else {
             int[] maxImageSize = new int[]{Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL};
-            finishListener.onGoLoad(maxImageSize, true);
+            finishListener.onGoLoad(imageUrl,maxImageSize, true);
         }
 
     }

@@ -28,6 +28,7 @@ abstract class BaseFragment extends BaseInnerFragment {
     protected boolean disableClickClose;
     protected int errorResId;
     protected Drawable coverDrawable;
+    protected String coverFilePath;
     protected Drawable smallCoverDrawable;
     protected boolean isNoneClickView;
     private String dataKey;
@@ -68,6 +69,7 @@ abstract class BaseFragment extends BaseInnerFragment {
                 onItemLongClickListeners.add(onItemLongClickListener);
             }
             coverDrawable = ImageLoadUtils.getInstance().getCoverDrawable(bundle.getString(OpenParams.OPEN_COVER_DRAWABLE));
+            coverFilePath = ImageLoadUtils.getInstance().getCoverFilePath(bundle.getString(OpenParams.OPEN_COVER_DRAWABLE));
             smallCoverDrawable = ImageLoadUtils.getInstance().getSmallCoverDrawable(bundle.getString(OpenParams.OPEN_COVER_DRAWABLE));
 
             autoAspectRadio = bundle.getFloat(OpenParams.AUTO_ASPECT_RATIO,0);

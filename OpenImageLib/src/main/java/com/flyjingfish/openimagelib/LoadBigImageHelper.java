@@ -26,9 +26,9 @@ enum LoadBigImageHelper {
         };
         OpenImageConfig.getInstance().getBigImageHelper().loadImage(context, url, new OnLoadBigImageListener() {
             @Override
-            public void onLoadImageSuccess(Drawable drawable) {
+            public void onLoadImageSuccess(Drawable drawable, String filePath) {
                 if (onLoadBigImageListener != null && !isDestroy[0]){
-                    onLoadBigImageListener.onLoadImageSuccess(drawable);
+                    onLoadBigImageListener.onLoadImageSuccess(drawable,filePath);
                 }
             }
 

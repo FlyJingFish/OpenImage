@@ -456,11 +456,12 @@ class OpenImage4ParseData extends OpenImage4Params {
         };
         OpenImageConfig.getInstance().getBigImageHelper().loadImage(context, ImageLoadUtils.getInstance().getImageLoadSuccess(openImageUrl.getImageUrl()) ? openImageUrl.getImageUrl() : openImageUrl.getCoverImageUrl(), new OnLoadBigImageListener() {
             @Override
-            public void onLoadImageSuccess(Drawable drawable) {
+            public void onLoadImageSuccess(Drawable drawable, String filePath) {
                 handler.removeCallbacksAndMessages(null);
                 String key = UUID.randomUUID().toString();
                 intent.putExtra(OpenParams.OPEN_COVER_DRAWABLE, key);
                 ImageLoadUtils.getInstance().setCoverDrawable(key, drawable);
+                ImageLoadUtils.getInstance().setCoverFilePath(key, filePath);
                 startActivity(intent, viewPair, key);
             }
 
@@ -499,6 +500,7 @@ class OpenImage4ParseData extends OpenImage4Params {
             }
         } else if (!TextUtils.isEmpty(drawableKey)) {
             ImageLoadUtils.getInstance().clearCoverDrawable(drawableKey);
+            ImageLoadUtils.getInstance().clearCoverFilePath(drawableKey);
             ImageLoadUtils.getInstance().clearSmallCoverDrawable(drawableKey);
         }
         isStartActivity = true;
@@ -508,6 +510,7 @@ class OpenImage4ParseData extends OpenImage4Params {
         ImageLoadUtils.getInstance().clearCanOpenOpenImageActivity(contextKey);
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
         ImageLoadUtils.getInstance().clearCoverDrawable(drawableKey);
+        ImageLoadUtils.getInstance().clearCoverFilePath(drawableKey);
         ImageLoadUtils.getInstance().clearSmallCoverDrawable(drawableKey);
         ImageLoadUtils.getInstance().clearPageTransformers(pageTransformersKey);
         ImageLoadUtils.getInstance().clearOnItemClickListener(onItemClickListenerKey);

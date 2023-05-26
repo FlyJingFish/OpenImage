@@ -20,7 +20,7 @@ public class GlideBigImageHelper implements BigImageHelper {
     public void loadImage(Context context, String imageUrl, OnLoadBigImageListener onLoadBigImageListener) {
         LoadImageUtils.INSTANCE.loadImageForSize(context, imageUrl, new OnLocalRealFinishListener() {
             @Override
-            public void onGoLoad(int[] maxImageSize, boolean isWeb) {
+            public void onGoLoad(String filePath, int[] maxImageSize, boolean isWeb) {
                 if (isWeb){
                     LoadImageUtils.INSTANCE.loadWebImage(context, imageUrl, onLoadBigImageListener, this);
                 }else {
@@ -28,10 +28,10 @@ public class GlideBigImageHelper implements BigImageHelper {
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .override(maxImageSize[0], maxImageSize[1]);
                     Glide.with(context)
-                            .load(imageUrl).apply(requestOptions).into(new CustomTarget<Drawable>() {
+                            .load(filePath).apply(requestOptions).into(new CustomTarget<Drawable>() {
                                 @Override
                                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                    onLoadBigImageListener.onLoadImageSuccess(resource);
+                                    onLoadBigImageListener.onLoadImageSuccess(resource,filePath);
                                 }
 
                                 @Override

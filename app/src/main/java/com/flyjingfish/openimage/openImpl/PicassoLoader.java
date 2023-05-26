@@ -23,7 +23,7 @@ public class PicassoLoader {
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             myTarget = null;//这句不能删除否则图片加载异常
             if (onLoadBigImageListener != null){
-                onLoadBigImageListener.onLoadImageSuccess(new BitmapDrawable(context.getResources(),bitmap));
+                onLoadBigImageListener.onLoadImageSuccess(new BitmapDrawable(context.getResources(),bitmap),imageUrl);
             }
         }
 

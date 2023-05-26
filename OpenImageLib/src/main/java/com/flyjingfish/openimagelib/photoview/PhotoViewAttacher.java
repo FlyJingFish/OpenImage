@@ -958,21 +958,21 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         mTempDst = new RectF(0, 0, viewWidth, viewWidth * scaleImageHW);
                         isBigImage = true;
                     } else {
-                        if (scaleImageHW > 1) {
-                            if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
-                                mMinScale = DEFAULT_MIN_SCALE;
-                                //设置中等缩放为适宽的缩放
-                                mMidScale = widthScale / heightScale;
-                                mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
-                            }
-                        } else {
-                            if (maxScale * drawableWidth > DEFAULT_MID_SCALE * viewWidth) {
-                                mMinScale = DEFAULT_MIN_SCALE;
-                                //设置中等缩放为适宽的缩放
-                                mMidScale = heightScale / widthScale;
-                                mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
-                            }
-                        }
+//                        if (scaleImageHW > 1) {
+//                            if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
+//                                mMinScale = DEFAULT_MIN_SCALE;
+//                                //设置中等缩放为适宽的缩放
+//                                mMidScale = widthScale / heightScale;
+//                                mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+//                            }
+//                        } else {
+//                            if (maxScale * drawableWidth > DEFAULT_MID_SCALE * viewWidth) {
+//                                mMinScale = DEFAULT_MIN_SCALE;
+//                                //设置中等缩放为适宽的缩放
+//                                mMidScale = heightScale / widthScale;
+//                                mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+//                            }
+//                        }
                         mTempDst = new RectF(0, 0, viewWidth, viewHeight);
                     }
                 } else {
@@ -1054,21 +1054,21 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                             mTargetHeight = targetWidth * scaleImageHW;
                             isBigImage = true;
                         } else {
-                            if (scaleImageHW > 1) {
-                                if (maxScale * drawableHeight > DEFAULT_MID_SCALE * targetHeight) {
-                                    mMinScale = DEFAULT_MIN_SCALE;
-                                    //设置中等缩放为适宽的缩放
-                                    mMidScale = widthScale / heightScale;
-                                    mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
-                                }
-                            } else {
-                                if (maxScale * drawableWidth > DEFAULT_MID_SCALE * targetWidth) {
-                                    mMinScale = DEFAULT_MIN_SCALE;
-                                    //设置中等缩放为适宽的缩放
-                                    mMidScale = heightScale / widthScale;
-                                    mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
-                                }
-                            }
+//                            if (scaleImageHW > 1) {
+//                                if (maxScale * drawableHeight > DEFAULT_MID_SCALE * targetHeight) {
+//                                    mMinScale = DEFAULT_MIN_SCALE;
+//                                    //设置中等缩放为适宽的缩放
+//                                    mMidScale = widthScale / heightScale;
+//                                    mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+//                                }
+//                            } else {
+//                                if (maxScale * drawableWidth > DEFAULT_MID_SCALE * targetWidth) {
+//                                    mMinScale = DEFAULT_MIN_SCALE;
+//                                    //设置中等缩放为适宽的缩放
+//                                    mMidScale = heightScale / widthScale;
+//                                    mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+//                                }
+//                            }
                             mTargetWidth = targetWidth;
                             mTargetHeight = targetHeight;
                         }

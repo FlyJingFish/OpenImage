@@ -98,6 +98,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                 smallCoverImageView.setAlpha(0f);
                 photoView.setAlpha(1f);
                 photoView.setImageDrawable(coverDrawable);
+                photoView.setImageFilePath(coverFilePath);
             } else {
                 smallCoverImageView.setAlpha(1f);
                 photoView.setAlpha(0f);
@@ -205,12 +206,12 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
 
     protected void loadBigImage() {
         if (clickPosition == showPosition && TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl()) && coverDrawable != null) {
-            onImageSuccess(coverDrawable);
+            onImageSuccess(coverDrawable,coverFilePath);
         } else {
             LoadBigImageHelper.INSTANCE.loadImage(requireContext(), imageDetail.getImageUrl(), new OnLoadBigImageListener() {
                 @Override
-                public void onLoadImageSuccess(Drawable drawable) {
-                    onImageSuccess(drawable);
+                public void onLoadImageSuccess(Drawable drawable, String filePath) {
+                    onImageSuccess(drawable,filePath);
                 }
 
                 @Override
@@ -228,9 +229,10 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         }
     }
 
-    protected void onImageSuccess(Drawable drawable) {
+    protected void onImageSuccess(Drawable drawable,String filePath) {
         mHandler.post(() -> {
             photoView.setImageDrawable(drawable);
+            photoView.setImageFilePath(filePath);
             int imageWidth = drawable.getIntrinsicWidth(), imageHeight = drawable.getIntrinsicHeight();
             if (shouldUseSmallCoverAnim) {
                 initCoverAnim(imageWidth, imageHeight, true);
@@ -264,9 +266,10 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             showLoading(loadingView);
             LoadBigImageHelper.INSTANCE.loadImage(requireContext(), imageDetail.getImageUrl(), new OnLoadBigImageListener() {
                 @Override
-                public void onLoadImageSuccess(Drawable drawable) {
+                public void onLoadImageSuccess(Drawable drawable, String filePath) {
                     mHandler.post(() -> {
                         photoView.setImageDrawable(drawable);
+                        photoView.setImageFilePath(filePath);
                         loadPrivateImageFinish(true);
                         hideLoading(loadingView);
                         isLoadSuccess = true;

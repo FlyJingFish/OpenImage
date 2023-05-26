@@ -24,6 +24,7 @@ class ImageLoadUtils {
     private final HashMap<String, Boolean> imageLoadSuccessMap = new HashMap<>();
     private final HashMap<String, ItemLoadHelper> itemLoadHelperHashMap = new HashMap<>();
     private final HashMap<String, Drawable> coverDrawableHashMap = new HashMap<>();
+    private final HashMap<String, String> coverFilePathHashMap = new HashMap<>();
     private final HashMap<String, Drawable> smallCoverDrawableHashMap = new HashMap<>();
     private final HashMap<String, OnSelectMediaListener> onSelectMediaListenerHashMap = new HashMap<>();
     private final HashMap<String, List<ViewPager2.PageTransformer>> pageTransformerMap = new HashMap<>();
@@ -352,4 +353,15 @@ class ImageLoadUtils {
         closeParamsHashMap.remove(key);
     }
 
+    public void setCoverFilePath(String key, String filePath) {
+        coverFilePathHashMap.put(key, filePath);
+    }
+
+    public String getCoverFilePath(String key) {
+        return coverFilePathHashMap.get(key);
+    }
+
+    public void clearCoverFilePath(String key) {
+        coverFilePathHashMap.remove(key);
+    }
 }
