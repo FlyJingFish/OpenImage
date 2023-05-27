@@ -9,6 +9,4 @@ interface OnGestureListener {
 
     void onScale(boolean doubleFinger,float scaleFactor, float focusX, float focusY);
 
-    void onTouchEnd();
-
 }

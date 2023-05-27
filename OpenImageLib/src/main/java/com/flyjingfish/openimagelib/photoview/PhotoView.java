@@ -559,12 +559,6 @@ public class PhotoView extends AppCompatImageView {
         invalidate();
     }
 
-    void onTouchEnd(){
-        if (photoViewSuperBigImageHelper != null){
-            photoViewSuperBigImageHelper.onTouchEnd();
-        }
-    }
-
     void moving(){
         if (photoViewSuperBigImageHelper != null){
             photoViewSuperBigImageHelper.moving();

@@ -51,6 +51,7 @@ class PhotoViewSuperBigImageHelper {
 
     void onMatrixChanged(RectF rectF){
         matrixChangedRectF = rectF;
+        toGetBigImage();
     }
 
     public void setSubsamplingScaleBitmap(Bitmap subsamplingScaleBitmap) {
@@ -59,11 +60,15 @@ class PhotoViewSuperBigImageHelper {
         }else {
             showMatrixChangedRectF.set(matrixChangedRectF.left,matrixChangedRectF.top,matrixChangedRectF.right,matrixChangedRectF.bottom);
         }
+        Log.e("ssssssss","setSubsamplingScaleBitmap");
         photoView.setSubsamplingScaleBitmap(subsamplingScaleBitmap,showRect);
     }
 
     private Rect showRect;
     private final Handler mHandler = new Handler(Looper.getMainLooper()){
+
+        private TileLoadTask task;
+
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -106,7 +111,10 @@ class PhotoViewSuperBigImageHelper {
                     float scale = rect.height()/originalImageSize[1];
                     Rect subsamplingRect = new Rect((int) (left/scale), (int) (top/scale), (int) (right/scale), (int) (bottom/scale));
                     showRect = new Rect(left1,top1,right1,bottom1);
-                    TileLoadTask task = new TileLoadTask(PhotoViewSuperBigImageHelper.this, skiaImageRegionDecoder, subsamplingRect,showRect);
+                    if (task != null){
+                        task.cancel(true);
+                    }
+                    task = new TileLoadTask(PhotoViewSuperBigImageHelper.this, skiaImageRegionDecoder, subsamplingRect,showRect);
                     execute(task);
                     Log.e("handleMessage",rect+"==="+subsamplingRect+"===="+rect.width()+"="+rect.height()+"="+viewWidth+"="+viewHeight);
                 }else {
@@ -120,6 +128,10 @@ class PhotoViewSuperBigImageHelper {
     public void setImageFilePath(String filePath) {
         Drawable drawable = getDrawable();
         if (drawable == null){
+            return;
+        }
+        String mimeType = BitmapUtils.getImageTypeWithMime(photoView.getContext(), filePath);
+        if ("gif".equalsIgnoreCase(mimeType)){
             return;
         }
         imageWidth = drawable.getIntrinsicWidth();
@@ -214,7 +226,7 @@ class PhotoViewSuperBigImageHelper {
             try {
                 PhotoViewSuperBigImageHelper view = viewRef.get();
                 ImageRegionDecoder decoder = decoderRef.get();
-                if (decoder != null && view != null && decoder.isReady()) {
+                if (decoder != null && view != null && decoder.isReady() && !isCancelled()) {
                     view.decoderLock.readLock().lock();
                     try {
                         if (decoder.isReady()) {
@@ -249,7 +261,10 @@ class PhotoViewSuperBigImageHelper {
     }
 
     void onTouchEnd(){
-        toGetBigImage();
+//        if (!moving){
+//            toGetBigImage();
+//        }
+        Log.e("ssssssss","onTouchEnd");
     }
 
     void moving(){
@@ -262,6 +277,7 @@ class PhotoViewSuperBigImageHelper {
             int bottom = (int) (showRect.bottom + moveY);
             Rect rect = new Rect(left,top,right,bottom);
             photoView.setShowRect(rect);
+            Log.e("ssssssss","moving");
         }
     }
 

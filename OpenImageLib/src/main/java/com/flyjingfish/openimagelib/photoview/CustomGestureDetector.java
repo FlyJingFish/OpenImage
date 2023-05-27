@@ -158,12 +158,8 @@ class CustomGestureDetector {
                         if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
                             mListener.onFling(mLastTouchX, mLastTouchY, -vX,
                                     -vY);
-                        }else {
-                            mListener.onTouchEnd();
                         }
                     }
-                }else {
-                    mListener.onTouchEnd();
                 }
 
                 // Recycle Velocity Tracker
