@@ -15,6 +15,7 @@
  */
 package com.flyjingfish.openimagelib.photoview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -365,7 +366,7 @@ public class PhotoView extends AppCompatImageView {
     private float leftBottomRadius;
     private float rightTopRadius;
     private float rightBottomRadius;
-    private boolean isRtl = false;
+    private boolean isRtl;
     private final Paint mImagePaint;
     private final Paint mRoundPaint;
     private float startTopRadius;
@@ -373,16 +374,17 @@ public class PhotoView extends AppCompatImageView {
     private float endTopRadius;
     private float endBottomRadius;
     private Rect showRect;
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         if (attacher != null && attacher.isExitMode() && shapeType == ShapeImageView.ShapeType.OVAL) {
-            canvas.saveLayer(new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), mImagePaint, Canvas.ALL_SAVE_FLAG);
+            canvas.saveLayer(new RectF(0, 0, getWidth(), getHeight()), mImagePaint, Canvas.ALL_SAVE_FLAG);
             super.onDraw(canvas);
             drawSuperBigImage(canvas);
             drawOval(canvas);
             canvas.restore();
         } else if (attacher != null && attacher.isExitMode() && shapeType == ShapeImageView.ShapeType.RECTANGLE) {
-            canvas.saveLayer(new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), mImagePaint, Canvas.ALL_SAVE_FLAG);
+            canvas.saveLayer(new RectF(0, 0, getWidth(), getHeight()), mImagePaint, Canvas.ALL_SAVE_FLAG);
             super.onDraw(canvas);
             drawSuperBigImage(canvas);
             drawRectangle(canvas);
@@ -396,7 +398,6 @@ public class PhotoView extends AppCompatImageView {
 
     private void drawSuperBigImage(Canvas canvas){
         if (subsamplingScaleBitmap != null && showRect != null){
-//            canvas.drawBitmap(subsamplingScaleBitmap,new Rect(0,0,subsamplingScaleBitmap.getWidth(),subsamplingScaleBitmap.getHeight()),new Rect(0,0,300,300),mImagePaint);
             canvas.drawBitmap(subsamplingScaleBitmap,new Rect(0,0,subsamplingScaleBitmap.getWidth(),subsamplingScaleBitmap.getHeight()),showRect,mImagePaint);
         }
     }
@@ -540,7 +541,7 @@ public class PhotoView extends AppCompatImageView {
     }
 
     /**
-     * 设置之后才可以支持超大图
+     * 设置之后才可以支持超大图,必须在设置图片之后才可以调用，否则无作用
      * @param filePath 图片本地路径
      */
     public void setImageFilePath(String filePath) {
@@ -549,7 +550,7 @@ public class PhotoView extends AppCompatImageView {
         }
     }
 
-    public void setSubsamplingScaleBitmap(Bitmap bitmap,Rect rect) {
+    void setSubsamplingScaleBitmap(Bitmap bitmap,Rect rect) {
         if (subsamplingScaleBitmap != null){
             subsamplingScaleBitmap.recycle();
         }
@@ -560,7 +561,7 @@ public class PhotoView extends AppCompatImageView {
         invalidate();
     }
 
-    public void setShowRect(Rect rect) {
+    void setShowRect(Rect rect) {
         this.showRect = rect;
         invalidate();
     }

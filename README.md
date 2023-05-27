@@ -43,9 +43,11 @@ RecyclerView场景  | 聊天页面 | 打开视频
 
 8，支持传入包含图片的 **RecyclerView**、**ViewPager**、**ViewPager2**、**ListView**、**GridView** 和 **多个ImageView** 的调用方式，甚至 **WebView**，傻瓜式调用，无需关心图片切换后该返回到哪个位置
 
-9，支持大图和大图阅读模式
+9，支持长图和长图阅读模式
 
-10，支持自定义大图切换效果（PageTransformer）
+10，支持显示超大图细节
+
+11，支持自定义大图切换效果（PageTransformer）
 
 ## 前言
 
@@ -80,7 +82,7 @@ allprojects {
 
 ```
 //OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.9.0'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.9.1'
 ```
 #### B、引入只带有图片引擎的版本（只支持查看图片）
 
@@ -88,7 +90,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.9.0'
 
 ```
 //OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.9.0'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.9.1'
 ```
 
 #### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
@@ -98,7 +100,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.9.0'
 ```
 //OpenImageLib 是基础库，没有引入图片引擎和视频播放器
 //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.9.0'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.9.1'
 
 ```
 

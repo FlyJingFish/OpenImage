@@ -24,7 +24,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 class PhotoViewSuperBigImageHelper {
     private static final int REGION = 2;
-    private PhotoView photoView;
+    private final PhotoView photoView;
     private int imageWidth;
     private int imageHeight;
     private boolean isSuperBigImage;
@@ -40,7 +40,7 @@ class PhotoViewSuperBigImageHelper {
     private boolean isInitDecoder;
     private static float TOTAL_CACHE_LENGTH;
 
-    public PhotoViewSuperBigImageHelper(PhotoView photoView) {
+    PhotoViewSuperBigImageHelper(PhotoView photoView) {
         this.photoView = photoView;
         TOTAL_CACHE_LENGTH = ScreenUtils.dp2px(photoView.getContext(), 100);
         photoView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
@@ -144,7 +144,7 @@ class PhotoViewSuperBigImageHelper {
         toGetBigImage();
     }
 
-    public void setSubsamplingScaleBitmap(Bitmap subsamplingScaleBitmap, RectF decoderRect) {
+    void setSubsamplingScaleBitmap(Bitmap subsamplingScaleBitmap, RectF decoderRect) {
         if (decoderRect != null && matrixChangedRectF != null && decoderRect.left == matrixChangedRectF.left && decoderRect.right == matrixChangedRectF.right
                 && decoderRect.top == matrixChangedRectF.top && decoderRect.bottom == matrixChangedRectF.bottom) {
             if (showMatrixChangedRectF == null) {
@@ -160,10 +160,10 @@ class PhotoViewSuperBigImageHelper {
     }
 
 
-    public void setImageFilePath(String filePath) {
+    void setImageFilePath(String filePath) {
         this.filePath = filePath;
-        Drawable drawable = getDrawable();
-        if (drawable == null) {
+        Drawable drawable;
+        if ((drawable = getDrawable()) == null || filePath == null) {
             return;
         }
         String mimeType = BitmapUtils.getImageTypeWithMime(photoView.getContext(), filePath);
@@ -172,7 +172,6 @@ class PhotoViewSuperBigImageHelper {
         }
         imageWidth = drawable.getIntrinsicWidth();
         imageHeight = drawable.getIntrinsicHeight();
-        final float imageScaleWh = imageWidth * 1f / imageHeight;
         LoadImageUtils.INSTANCE.loadImageForSize(photoView.getContext(), filePath, (filePath1, originalImageSize, isWeb) -> {
             PhotoViewSuperBigImageHelper.this.originalImageSize = originalImageSize;
             PhotoViewSuperBigImageHelper.this.isWeb = isWeb;
@@ -201,9 +200,16 @@ class PhotoViewSuperBigImageHelper {
     private void init() {
         if (!isWeb && originalImageSize != null) {
             if (originalImageSize[0] > imageWidth && originalImageSize[1] > imageHeight) {
+                int viewWidth = getWidth();
+                int viewHeight = getHeight();
+                final float widthScale = viewWidth * 1f / imageWidth;
+                final float heightScale = viewHeight * 1f / imageHeight;
+                float scale = Math.min(widthScale, heightScale);
+
+
                 skiaImageRegionDecoder = new SkiaImageRegionDecoder();
                 isSuperBigImage = true;
-                float maxScale = Math.max(originalImageSize[0], originalImageSize[1]) * 1f / Math.max(imageWidth, imageHeight);
+                float maxScale = Math.max(originalImageSize[0], originalImageSize[1]) * 1f / Math.max(imageWidth, imageHeight)/scale;
                 float min = photoView.getMinimumScale();
 
                 photoView.setScaleLevels(min, (min + maxScale) / 2, maxScale);
@@ -312,7 +318,7 @@ class PhotoViewSuperBigImageHelper {
     }
 
     void moving() {
-        if (showRect != null && matrixChangedRectF != null && showMatrixChangedRectF != null) {
+        if (isSuperBigImage && showRect != null && matrixChangedRectF != null && showMatrixChangedRectF != null) {
             float moveX = matrixChangedRectF.left - showMatrixChangedRectF.left;
             float moveY = matrixChangedRectF.top - showMatrixChangedRectF.top;
             int left = (int) (showRect.left + moveX);
@@ -325,7 +331,7 @@ class PhotoViewSuperBigImageHelper {
     }
 
     private void toGetBigImage() {
-        if (matrixChangedRectF != null) {
+        if (matrixChangedRectF != null && isSuperBigImage) {
             Message message = Message.obtain();
             message.what = REGION;
             message.obj = matrixChangedRectF;

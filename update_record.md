@@ -1,5 +1,12 @@
 # OpenImage 更新日志
 
+## 1.9.1
+
+**1、新增支持超大图，可查看超大图细节**
+
+2、超大图功能可以选择关闭 --> OpenImageConfig.getInstance().setSupportSuperBigImage(false);
+
+
 ## 1.9.0
 
 1、修复打开大图所在页面 finish() 后，大图页面切换图片崩溃的 bug
