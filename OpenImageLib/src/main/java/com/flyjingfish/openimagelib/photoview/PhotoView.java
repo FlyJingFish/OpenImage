@@ -36,6 +36,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.text.TextUtilsCompat;
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 
+import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.util.Locale;
@@ -371,6 +372,7 @@ public class PhotoView extends AppCompatImageView {
     private float startBottomRadius;
     private float endTopRadius;
     private float endBottomRadius;
+    private Rect showRect;
     @Override
     protected void onDraw(Canvas canvas) {
         if (attacher != null && attacher.isExitMode() && shapeType == ShapeImageView.ShapeType.OVAL) {
@@ -393,7 +395,7 @@ public class PhotoView extends AppCompatImageView {
     }
 
     private void drawSuperBigImage(Canvas canvas){
-        if (subsamplingScaleBitmap != null){
+        if (subsamplingScaleBitmap != null && showRect != null){
 //            canvas.drawBitmap(subsamplingScaleBitmap,new Rect(0,0,subsamplingScaleBitmap.getWidth(),subsamplingScaleBitmap.getHeight()),new Rect(0,0,300,300),mImagePaint);
             canvas.drawBitmap(subsamplingScaleBitmap,new Rect(0,0,subsamplingScaleBitmap.getWidth(),subsamplingScaleBitmap.getHeight()),showRect,mImagePaint);
         }
@@ -537,12 +539,16 @@ public class PhotoView extends AppCompatImageView {
         this.shapeType = shapeType;
     }
 
+    /**
+     * 设置之后才可以支持超大图
+     * @param filePath 图片本地路径
+     */
     public void setImageFilePath(String filePath) {
-        if (photoViewSuperBigImageHelper != null){
+        if (photoViewSuperBigImageHelper != null && OpenImageConfig.getInstance().isSupportSuperBigImage()){
             photoViewSuperBigImageHelper.setImageFilePath(filePath);
         }
     }
-    Rect showRect;
+
     public void setSubsamplingScaleBitmap(Bitmap bitmap,Rect rect) {
         if (subsamplingScaleBitmap != null){
             subsamplingScaleBitmap.recycle();

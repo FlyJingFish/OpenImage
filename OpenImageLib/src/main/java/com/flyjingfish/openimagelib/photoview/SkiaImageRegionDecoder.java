@@ -11,7 +11,6 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 
 import androidx.annotation.Keep;
@@ -145,16 +144,7 @@ class SkiaImageRegionDecoder implements ImageRegionDecoder {
         }
     }
 
-    /**
-     * Before SDK 21, BitmapRegionDecoder was not synchronized internally. Any attempt to decode
-     * regions from multiple threads with one decoder instance causes a segfault. For old versions
-     * use the write lock to enforce single threaded decoding.
-     */
     private Lock getDecodeLock() {
-        if (Build.VERSION.SDK_INT < 21) {
-            return decoderLock.writeLock();
-        } else {
-            return decoderLock.readLock();
-        }
+        return decoderLock.readLock();
     }
 }

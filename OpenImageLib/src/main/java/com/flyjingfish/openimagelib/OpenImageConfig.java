@@ -20,6 +20,7 @@ public class OpenImageConfig {
     private static final float DEFAULT_READ_MODE_RULE = 2f;
     //阅读模式（长图的默认适宽显示）
     protected boolean isReadMode = true;
+    protected boolean supportSuperBigImage = true;
     //判定是否是长图的变量
     protected float readModeRule = DEFAULT_READ_MODE_RULE;
     private boolean disEnableTouchClose;
@@ -170,5 +171,17 @@ public class OpenImageConfig {
      */
     public void setDownloadMediaHelper(DownloadMediaHelper downloadMediaHelper) {
         this.downloadMediaHelper = downloadMediaHelper;
+    }
+
+    public boolean isSupportSuperBigImage() {
+        return supportSuperBigImage;
+    }
+
+    /**
+     * 在此可以对超大图设置是否打开
+     * @param supportSuperBigImage 是否支持超大图
+     */
+    public void setSupportSuperBigImage(boolean supportSuperBigImage) {
+        this.supportSuperBigImage = supportSuperBigImage;
     }
 }
