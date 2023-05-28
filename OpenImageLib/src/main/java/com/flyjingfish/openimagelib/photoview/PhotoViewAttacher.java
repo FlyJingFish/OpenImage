@@ -886,9 +886,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void setExitMode(boolean exitMode) {
-        if (exitMode && mImageView instanceof PhotoView){
-            ((PhotoView) mImageView).clearBitmap();
-        }
         isExitMode = exitMode;
     }
 

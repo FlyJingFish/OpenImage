@@ -346,6 +346,10 @@ public class PhotoView extends AppCompatImageView {
     }
     public void setExitMode(boolean mode) {
         attacher.setExitMode(mode);
+        if (mode){
+            subsamplingScaleBitmap = null;
+            clearBitmap();
+        }
     }
 
 
@@ -551,14 +555,15 @@ public class PhotoView extends AppCompatImageView {
     }
 
     void setSubsamplingScaleBitmap(Bitmap bitmap,Rect rect) {
-        if (subsamplingScaleBitmap != null){
-            subsamplingScaleBitmap.recycle();
-        }
         this.showRect = rect;
         if (!attacher.isExitMode()){
             this.subsamplingScaleBitmap = bitmap;
         }
         invalidate();
+    }
+
+    Bitmap getSubsamplingScaleBitmap() {
+        return subsamplingScaleBitmap;
     }
 
     void setShowRect(Rect rect) {

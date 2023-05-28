@@ -33,12 +33,13 @@ class PhotoViewSuperBigImageHelper {
     private int[] originalImageSize;
     private boolean isWeb;
     private RectF matrixChangedRectF;
-    private RectF showMatrixChangedRectF;
-    private Rect showRect;
+    private RectF showingMatrixRectF;
+    private Rect showingViewRect;
     private boolean isOnGlobalLayout;
     private String filePath;
     private boolean isInitDecoder;
     private static float TOTAL_CACHE_LENGTH;
+    private CacheDecoderBitmap cacheDecoderBitmap;
 
     PhotoViewSuperBigImageHelper(PhotoView photoView) {
         this.photoView = photoView;
@@ -57,105 +58,51 @@ class PhotoViewSuperBigImageHelper {
         photoView.getViewTreeObserver().addOnGlobalLayoutListener(new MyOnGlobalLayoutListener());
     }
 
+    void onMatrixChanged(RectF rectF) {
+        matrixChangedRectF = rectF;
+        toGetBigImage();
+    }
+
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
 
-        private TileLoadTask task;
+        private BitmapLoadTask task;
 
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             if (msg.what == REGION && isSuperBigImage && imageWidth != 0 && imageHeight != 0 && isInitDecoder) {//1333=1000
                 RectF rect = (RectF) msg.obj;
-                int viewWidth = getWidth();
-                int viewHeight = getHeight();
                 if (rect.width() > imageWidth || rect.height() > imageHeight) {//说明该取图了
-
-                    int left, top, right, bottom;
-                    int left1, top1, right1, bottom1;
-                    if (rect.left > 0) {
-                        left = 0;
-                        left1 = (int) rect.left;
-                    } else {
-                        left = (int) Math.abs(rect.left);
-                        left1 = 0;
-                    }
-                    if (rect.top > 0) {
-                        top = 0;
-                        top1 = (int) rect.top;
-                    } else {
-                        top = (int) Math.abs(rect.top);
-                        top1 = 0;
-                    }
-                    if (rect.right > viewWidth) {
-                        right = (int) (rect.width() - (rect.right - viewWidth));
-                        right1 = viewWidth;
-                    } else {
-                        right = (int) rect.width();
-                        right1 = (int) rect.right;
-                    }
-                    if (rect.bottom > viewHeight) {
-                        bottom = (int) (rect.height() - (rect.bottom - viewHeight));
-                        bottom1 = viewHeight;
-                    } else {
-                        bottom = (int) rect.height();
-                        bottom1 = (int) rect.bottom;
-                    }
-                    float scale = rect.height() / originalImageSize[1];
-                    float cacheLengthLeft, cacheLengthTop, cacheLengthRight, cacheLengthBottom;
-                    if (left - TOTAL_CACHE_LENGTH > 0) {
-                        cacheLengthLeft = TOTAL_CACHE_LENGTH;
-                    } else {
-                        cacheLengthLeft = left;
-                    }
-                    if (top - TOTAL_CACHE_LENGTH > 0) {
-                        cacheLengthTop = TOTAL_CACHE_LENGTH;
-                    } else {
-                        cacheLengthTop = top;
-                    }
-                    if (right + TOTAL_CACHE_LENGTH > rect.width()) {
-                        cacheLengthRight = rect.width() - right;
-                    } else {
-                        cacheLengthRight = TOTAL_CACHE_LENGTH;
-                    }
-                    if (bottom + TOTAL_CACHE_LENGTH > rect.height()) {
-                        cacheLengthBottom = rect.height() - bottom;
-                    } else {
-                        cacheLengthBottom = TOTAL_CACHE_LENGTH;
-                    }
-
-//                    Rect subsamplingRect = new Rect((int) (left/scale), (int) (top/scale), (int) (right/scale), (int) (bottom/scale));
-//                    showRect = new Rect(left1,top1,right1,bottom1);
-                    Rect subsamplingRect = new Rect((int) ((left - cacheLengthLeft) / scale), (int) ((top - cacheLengthTop) / scale), (int) ((right + cacheLengthRight) / scale), (int) ((bottom + cacheLengthBottom) / scale));
-                    showRect = new Rect((int) (left1 - cacheLengthLeft), (int) (top1 - cacheLengthTop), (int) (right1 + cacheLengthRight), (int) (bottom1 + cacheLengthBottom));
                     if (task != null) {
                         task.cancel(true);
                     }
-                    task = new TileLoadTask(PhotoViewSuperBigImageHelper.this, skiaImageRegionDecoder, subsamplingRect, rect);
+                    task = new BitmapLoadTask(PhotoViewSuperBigImageHelper.this, skiaImageRegionDecoder, rect,originalImageSize);
                     execute(task);
                 } else {
-                    setSubsamplingScaleBitmap(null, null);
+                    setSubsamplingScaleBitmap(null);
                 }
             }
         }
     };
 
-    void onMatrixChanged(RectF rectF) {
-        matrixChangedRectF = rectF;
-        toGetBigImage();
-    }
 
-    void setSubsamplingScaleBitmap(Bitmap subsamplingScaleBitmap, RectF decoderRect) {
-        if (decoderRect != null && matrixChangedRectF != null && decoderRect.left == matrixChangedRectF.left && decoderRect.right == matrixChangedRectF.right
+    void setSubsamplingScaleBitmap(DecoderBitmap decoderBitmap) {
+        RectF decoderRect;
+        if (decoderBitmap != null && matrixChangedRectF != null && (decoderRect = decoderBitmap.decoderRect) != null
+                && decoderRect.left == matrixChangedRectF.left && decoderRect.right == matrixChangedRectF.right
                 && decoderRect.top == matrixChangedRectF.top && decoderRect.bottom == matrixChangedRectF.bottom) {
-            if (showMatrixChangedRectF == null) {
-                showMatrixChangedRectF = new RectF(decoderRect.left, decoderRect.top, decoderRect.right, decoderRect.bottom);
-            } else {
-                showMatrixChangedRectF.set(decoderRect.left, decoderRect.top, decoderRect.right, decoderRect.bottom);
+            Bitmap bitmap = decoderBitmap.bitmap;
+            Bitmap subsamplingScaleBitmap = photoView.getSubsamplingScaleBitmap();
+            if (subsamplingScaleBitmap != null && subsamplingScaleBitmap != bitmap){
+                subsamplingScaleBitmap.recycle();
             }
-            photoView.setSubsamplingScaleBitmap(subsamplingScaleBitmap, showRect);
+            showingMatrixRectF = decoderRect;
+            showingViewRect = decoderBitmap.showViewRect;
+            photoView.setSubsamplingScaleBitmap(decoderBitmap.bitmap, showingViewRect);
         }else {
+            showingMatrixRectF = null;
+            showingViewRect = null;
             photoView.setSubsamplingScaleBitmap(null, null);
-            showMatrixChangedRectF = null;
         }
     }
 
@@ -213,7 +160,7 @@ class PhotoViewSuperBigImageHelper {
                 float min = photoView.getMinimumScale();
 
                 photoView.setScaleLevels(min, (min + maxScale) / 2, maxScale);
-                TilesInitTask task = new TilesInitTask(photoView.getContext(), this, skiaImageRegionDecoder, Uri.parse(filePath));
+                DecoderInitTask task = new DecoderInitTask(photoView.getContext(), this, skiaImageRegionDecoder, Uri.parse(filePath));
                 execute(task);
             }
         }
@@ -229,13 +176,13 @@ class PhotoViewSuperBigImageHelper {
         asyncTask.executeOnExecutor(executor);
     }
 
-    private static class TilesInitTask extends AsyncTask<Void, Void, Boolean> {
+    private static class DecoderInitTask extends AsyncTask<Void, Void, Boolean> {
         private final WeakReference<PhotoViewSuperBigImageHelper> viewRef;
         private final WeakReference<Context> contextRef;
         private final WeakReference<ImageRegionDecoder> decoderRef;
         private final Uri source;
 
-        TilesInitTask(Context context, PhotoViewSuperBigImageHelper view, ImageRegionDecoder decoder, Uri source) {
+        DecoderInitTask(Context context, PhotoViewSuperBigImageHelper view, ImageRegionDecoder decoder, Uri source) {
             this.viewRef = new WeakReference<>(view);
             this.contextRef = new WeakReference<>(context);
             this.decoderRef = new WeakReference<>(decoder);
@@ -265,21 +212,25 @@ class PhotoViewSuperBigImageHelper {
         }
     }
 
-    private static class TileLoadTask extends AsyncTask<Void, Void, Bitmap> {
+    private static class BitmapLoadTask extends AsyncTask<Void, Void, DecoderBitmap> {
         private final WeakReference<PhotoViewSuperBigImageHelper> viewRef;
         private final WeakReference<ImageRegionDecoder> decoderRef;
-        private final Rect fileSRect;
         private final RectF decoderRect;
+        private final int[] originalImageSize;
+        private final int viewWidth;
+        private final int viewHeight;
 
-        TileLoadTask(PhotoViewSuperBigImageHelper view, ImageRegionDecoder decoder, Rect fileSRect, RectF decoderRect) {
+        BitmapLoadTask(PhotoViewSuperBigImageHelper view, ImageRegionDecoder decoder, RectF decoderRect,int[] originalImageSize) {
             this.viewRef = new WeakReference<>(view);
             this.decoderRef = new WeakReference<>(decoder);
-            this.fileSRect = fileSRect;
-            this.decoderRect = decoderRect;
+            this.decoderRect = new RectF(decoderRect.left,decoderRect.top,decoderRect.right,decoderRect.bottom);
+            this.originalImageSize = originalImageSize;
+            viewWidth = view.getWidth();
+            viewHeight = view.getHeight();
         }
 
         @Override
-        protected Bitmap doInBackground(Void... params) {
+        protected DecoderBitmap doInBackground(Void... params) {
             try {
                 PhotoViewSuperBigImageHelper view = viewRef.get();
                 ImageRegionDecoder decoder = decoderRef.get();
@@ -287,9 +238,79 @@ class PhotoViewSuperBigImageHelper {
                     view.decoderLock.readLock().lock();
                     try {
                         if (decoder.isReady()) {
-                            int inSampleSize = BitmapUtils.getMaxInSampleSize(fileSRect.width(), fileSRect.height());
+                            RectF rect = decoderRect;
+                            int left, top, right, bottom;
+                            int left1, top1, right1, bottom1;
+                            if (rect.left > 0) {
+                                left = 0;
+                                left1 = (int) rect.left;
+                            } else {
+                                left = (int) Math.abs(rect.left);
+                                left1 = 0;
+                            }
+                            if (rect.top > 0) {
+                                top = 0;
+                                top1 = (int) rect.top;
+                            } else {
+                                top = (int) Math.abs(rect.top);
+                                top1 = 0;
+                            }
+                            if (rect.right > viewWidth) {
+                                right = (int) (rect.width() - (rect.right - viewWidth));
+                                right1 = viewWidth;
+                            } else {
+                                right = (int) rect.width();
+                                right1 = (int) rect.right;
+                            }
+                            if (rect.bottom > viewHeight) {
+                                bottom = (int) (rect.height() - (rect.bottom - viewHeight));
+                                bottom1 = viewHeight;
+                            } else {
+                                bottom = (int) rect.height();
+                                bottom1 = (int) rect.bottom;
+                            }
+                            float scale = rect.height() / originalImageSize[1];
+                            float cacheLengthLeft, cacheLengthTop, cacheLengthRight, cacheLengthBottom;
+                            if (left - TOTAL_CACHE_LENGTH > 0) {
+                                cacheLengthLeft = TOTAL_CACHE_LENGTH;
+                            } else {
+                                cacheLengthLeft = left;
+                            }
+                            if (top - TOTAL_CACHE_LENGTH > 0) {
+                                cacheLengthTop = TOTAL_CACHE_LENGTH;
+                            } else {
+                                cacheLengthTop = top;
+                            }
+                            if (right + TOTAL_CACHE_LENGTH > rect.width()) {
+                                cacheLengthRight = rect.width() - right;
+                            } else {
+                                cacheLengthRight = TOTAL_CACHE_LENGTH;
+                            }
+                            if (bottom + TOTAL_CACHE_LENGTH > rect.height()) {
+                                cacheLengthBottom = rect.height() - bottom;
+                            } else {
+                                cacheLengthBottom = TOTAL_CACHE_LENGTH;
+                            }
+
+//                    Rect subsamplingRect = new Rect((int) (left/scale), (int) (top/scale), (int) (right/scale), (int) (bottom/scale));
+//                    showRect = new Rect(left1,top1,right1,bottom1);
+                            Rect subsamplingRect = new Rect((int) ((left - cacheLengthLeft) / scale), (int) ((top - cacheLengthTop) / scale), (int) ((right + cacheLengthRight) / scale), (int) ((bottom + cacheLengthBottom) / scale));
+                            Rect showViewRect = new Rect((int) (left1 - cacheLengthLeft), (int) (top1 - cacheLengthTop), (int) (right1 + cacheLengthRight), (int) (bottom1 + cacheLengthBottom));
+                            if (view.cacheDecoderBitmap != null && (!view.cacheDecoderBitmap.bitmap.isRecycled()) && view.cacheDecoderBitmap.subsamplingRect.left == subsamplingRect.left
+                                    && view.cacheDecoderBitmap.subsamplingRect.top == subsamplingRect.top
+                                    && view.cacheDecoderBitmap.subsamplingRect.right == subsamplingRect.right
+                                    && view.cacheDecoderBitmap.subsamplingRect.bottom == subsamplingRect.bottom){
+                                return new DecoderBitmap(view.cacheDecoderBitmap.bitmap,showViewRect,rect);
+                            }
+                            int inSampleSize = BitmapUtils.getMaxInSampleSize(subsamplingRect.width(), subsamplingRect.height());
                             // Update tile's file sRect according to rotation
-                            return decoder.decodeRegion(fileSRect, inSampleSize);
+                            Bitmap bitmap = decoder.decodeRegion(subsamplingRect, inSampleSize);
+                            if (view.cacheDecoderBitmap == null){
+                                view.cacheDecoderBitmap = new CacheDecoderBitmap(bitmap,subsamplingRect);
+                            }else {
+                                view.cacheDecoderBitmap.setCacheDecoderBitmap(bitmap,subsamplingRect);
+                            }
+                            return new DecoderBitmap(bitmap,showViewRect,rect);
                         }
                     } finally {
                         view.decoderLock.readLock().unlock();
@@ -301,11 +322,38 @@ class PhotoViewSuperBigImageHelper {
         }
 
         @Override
-        protected void onPostExecute(Bitmap bitmap) {
+        protected void onPostExecute(DecoderBitmap decoderBitmap) {
             final PhotoViewSuperBigImageHelper subsamplingScaleImageView = viewRef.get();
             if (subsamplingScaleImageView != null) {
-                subsamplingScaleImageView.setSubsamplingScaleBitmap(bitmap, decoderRect);
+                subsamplingScaleImageView.setSubsamplingScaleBitmap(decoderBitmap);
             }
+        }
+
+    }
+    private static class DecoderBitmap{
+        Bitmap bitmap;
+        Rect showViewRect;
+        RectF decoderRect;
+
+        public DecoderBitmap(Bitmap bitmap, Rect showViewRect, RectF decoderRect) {
+            this.bitmap = bitmap;
+            this.showViewRect = showViewRect;
+            this.decoderRect = decoderRect;
+        }
+    }
+
+    private static class CacheDecoderBitmap{
+        Bitmap bitmap;
+        Rect subsamplingRect;
+
+        public CacheDecoderBitmap(Bitmap bitmap, Rect subsamplingRect) {
+            this.bitmap = bitmap;
+            this.subsamplingRect = subsamplingRect;
+        }
+
+        public void setCacheDecoderBitmap(Bitmap bitmap, Rect subsamplingRect) {
+            this.bitmap = bitmap;
+            this.subsamplingRect = subsamplingRect;
         }
     }
 
@@ -318,13 +366,13 @@ class PhotoViewSuperBigImageHelper {
     }
 
     void moving() {
-        if (isSuperBigImage && showRect != null && matrixChangedRectF != null && showMatrixChangedRectF != null) {
-            float moveX = matrixChangedRectF.left - showMatrixChangedRectF.left;
-            float moveY = matrixChangedRectF.top - showMatrixChangedRectF.top;
-            int left = (int) (showRect.left + moveX);
-            int top = (int) (showRect.top + moveY);
-            int right = (int) (showRect.right + moveX);
-            int bottom = (int) (showRect.bottom + moveY);
+        if (isSuperBigImage && showingViewRect != null && matrixChangedRectF != null && showingMatrixRectF != null) {
+            float moveX = matrixChangedRectF.left - showingMatrixRectF.left;
+            float moveY = matrixChangedRectF.top - showingMatrixRectF.top;
+            int left = (int) (showingViewRect.left + moveX);
+            int top = (int) (showingViewRect.top + moveY);
+            int right = (int) (showingViewRect.right + moveX);
+            int bottom = (int) (showingViewRect.bottom + moveY);
             Rect rect = new Rect(left, top, right, bottom);
             photoView.setShowRect(rect);
         }
