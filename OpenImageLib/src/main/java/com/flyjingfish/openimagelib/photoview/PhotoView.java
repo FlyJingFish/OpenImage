@@ -84,7 +84,9 @@ public class PhotoView extends AppCompatImageView {
             if (onMatrixChangedListener != null){
                 onMatrixChangedListener.onMatrixChanged(rect);
             }
-            photoViewSuperBigImageHelper.onMatrixChanged(rect);
+            if (!attacher.isExitMode()){
+                photoViewSuperBigImageHelper.onMatrixChanged(rect);
+            }
         });
         //We always pose as a Matrix scale type, though we can change to another scale type
         //via the attacher
