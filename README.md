@@ -43,11 +43,13 @@ RecyclerView场景  | 聊天页面 | 打开视频
 
 8，支持传入包含图片的 **RecyclerView**、**ViewPager**、**ViewPager2**、**ListView**、**GridView** 和 **多个ImageView** 的调用方式，甚至 **WebView**，傻瓜式调用，无需关心图片切换后该返回到哪个位置
 
-9，支持长图和长图阅读模式
+9，支持Gif图
 
-10，支持显示超大图细节
+10，支持长图和长图阅读模式
 
-11，支持自定义大图切换效果（PageTransformer）
+11，支持显示超大图细节
+
+12，支持自定义大图切换效果（PageTransformer）
 
 ## 前言
 
