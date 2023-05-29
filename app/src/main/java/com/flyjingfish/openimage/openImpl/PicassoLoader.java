@@ -17,15 +17,20 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.flyjingfish.openimageglidelib.BitmapUtils;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
-import com.google.common.base.Charsets;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
+import okhttp3.Cache;
+import okhttp3.HttpUrl;
+import okio.ByteString;
 
 
 public class PicassoLoader {
+    private static final String PICASSO_CACHE = "picasso-cache";
+    private static final int MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024; // 5MB
+    private static final int MAX_DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
+
     private final Context context;
     private final String imageUrl;
     private final OnLoadBigImageListener onLoadBigImageListener;
@@ -36,7 +41,7 @@ public class PicassoLoader {
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             myTarget = null;//这句不能删除否则图片加载异常
             if (onLoadBigImageListener != null){
-                String cacheFile = cacheDir.getAbsolutePath() + "/" + hashKeyForDisk(imageUrl)+".1";
+                String cacheFile = cacheDir.getAbsolutePath() + "/" + urlForDiskName(imageUrl)+".1";
                 Log.e("picasso-file",new File(cacheFile).exists()+"=="+ cacheFile);
                 onLoadBigImageListener.onLoadImageSuccess(new BitmapDrawable(context.getResources(),bitmap),cacheFile);
             }
@@ -75,7 +80,7 @@ public class PicassoLoader {
                     .onlyScaleDown().centerInside().tag(tag).into(myTarget);
         }
 //        Picasso.get().load(imageUrl).;
-        Log.e("picasso-url",""+ hashKeyForDisk(imageUrl));
+        Log.e("picasso-url",""+ urlForDiskName(imageUrl));
 
         if (context instanceof LifecycleOwner){
             LifecycleOwner owner = (LifecycleOwner) context;
@@ -91,37 +96,24 @@ public class PicassoLoader {
         }
     }
 
-    public static String hashKeyForDisk(@NonNull String key) {
-        String var2;
-        try {
-            MessageDigest mDigest = MessageDigest.getInstance("MD5");
-            mDigest.update(key.getBytes(Charsets.UTF_8));
-            var2 = bytesToHexString(mDigest.digest());
-        } catch (NoSuchAlgorithmException var5) {
-            var2 = String.valueOf(key.hashCode());
-        }
-
-        return var2;
+    public static String urlForDiskName(@NonNull String url) {
+        return key(url);
     }
 
-    private static String bytesToHexString(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-
-        for(int var4 = bytes.length; i < var4; ++i) {
-            String hex = Integer.toHexString(255 & bytes[i]);
-            if (hex.length() == 1) {
-                sb.append('0');
-            }
-
-            sb.append(hex);
-        }
-
-        return sb.toString();
+    /**
+     *
+     * @param url @see {@link Cache#key(HttpUrl)}
+     * @return
+     */
+    public static String key(String url) {
+        return ByteString.encodeUtf8(url).md5().hex();
     }
 
-    private static final String PICASSO_CACHE = "picasso-cache";
-
+    /**
+     * see {@link com.squareup.picasso.Utils#createDefaultCacheDir(Context)}
+     * @param context
+     * @return
+     */
     public static File createDefaultCacheDir(Context context) {
         File cache = new File(context.getApplicationContext().getCacheDir(), PICASSO_CACHE);
         if (!cache.exists()) {
@@ -131,8 +123,12 @@ public class PicassoLoader {
         return cache;
     }
 
-    private static final int MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024; // 5MB
-    private static final int MAX_DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
+
+    /**
+     * see {@link com.squareup.picasso.Utils#calculateDiskCacheSize(File)}
+     * @param dir
+     * @return
+     */
     public static long calculateDiskCacheSize(File dir) {
         long size = MIN_DISK_CACHE_SIZE;
 

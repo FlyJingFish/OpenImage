@@ -48,7 +48,7 @@ public class PicassoDownloader {
             if (isDestroy[0]) {
                 return;
             }
-            String cacheFile = cacheDir.getAbsolutePath() + "/" + PicassoLoader.hashKeyForDisk(downloadUrl) + ".1";
+            String cacheFile = cacheDir.getAbsolutePath() + "/" + PicassoLoader.urlForDiskName(downloadUrl) + ".1";
             SaveImageUtils.INSTANCE.saveFile(context.getApplicationContext(), new File(cacheFile), openImageUrl.getType() == MediaType.VIDEO, new SaveImageUtils.OnSaveFinish() {
                 @Override
                 public void onFinish(String sucPath) {
@@ -110,7 +110,7 @@ public class PicassoDownloader {
             }
         });
         if (openImageUrl.getType() == MediaType.VIDEO) {
-            String cacheFile = cacheDir.getAbsolutePath() + "/" + PicassoLoader.hashKeyForDisk(downloadUrl) + ".22";
+            String cacheFile = cacheDir.getAbsolutePath() + "/" + PicassoLoader.urlForDiskName(downloadUrl) + ".22";
             File localFile = new File(cacheFile);
             if (localFile.exists()){
                 SaveImageUtils.INSTANCE.saveFile(context.getApplicationContext(), new File(cacheFile), openImageUrl.getType() == MediaType.VIDEO, new SaveImageUtils.OnSaveFinish() {
@@ -149,7 +149,7 @@ public class PicassoDownloader {
                     Sink sink;
                     BufferedSink bufferedSink = null;
                     //这是里的mContext是我提前获取了android的context
-                    String cacheFile = cacheDir.getAbsolutePath() + "/" + PicassoLoader.hashKeyForDisk(downloadUrl) + ".22";
+                    String cacheFile = cacheDir.getAbsolutePath() + "/" + PicassoLoader.urlForDiskName(downloadUrl) + ".22";
                     File localFile = new File(cacheFile);
                     try {
                         sink = Okio.sink(localFile);
