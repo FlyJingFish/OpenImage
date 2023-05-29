@@ -240,6 +240,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                     coverAnim.start();
                 } else if (!isTransitionEnd) {
                     smallCoverImageView.setVisibility(View.GONE);
+                    smallCoverImageView.setAlpha(0f);
                     photoView.setAlpha(1f);
                     isStartCoverAnim = false;
                     loadPrivateImageFinish(true);
@@ -249,6 +250,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             } else {
                 hideLoading(loadingView);
                 smallCoverImageView.setVisibility(View.GONE);
+                smallCoverImageView.setAlpha(0f);
                 photoView.setAlpha(1f);
                 loadPrivateImageFinish(true);
             }
