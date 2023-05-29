@@ -16,6 +16,7 @@ import java.io.InputStream;
 class BitmapUtils {
     private static final int ARGB_8888_MEMORY_BYTE = 4;
     private static final int MAX_BITMAP_SIZE = 100 * 1024 * 1024;   // 100 MB
+    private static final String ASSET_SCHEME = "file:///android_asset/";
 
     /**
      * 获取图片的缩放比例
@@ -130,6 +131,12 @@ class BitmapUtils {
         }
         return url.startsWith("http://")|| url.startsWith("https://");
     }
+    public static boolean isAsset(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return false;
+        }
+        return url.startsWith("file:///android_asset/");
+    }
     public static int[] getImageSize(Context context, String url) {
         int[] mediaExtraInfo = new int[2];
         InputStream inputStream = null;
@@ -138,6 +145,9 @@ class BitmapUtils {
             options.inJustDecodeBounds = true;
             if (isContent(url)) {
                 inputStream = PictureContentResolver.getContentResolverOpenInputStream(context, Uri.parse(url));
+            } else if (isAsset(url)){
+                String fileName = url.substring(ASSET_SCHEME.length());
+                inputStream = context.getResources().getAssets().open(fileName);
             } else {
                 inputStream = new FileInputStream(url);
             }
@@ -160,6 +170,9 @@ class BitmapUtils {
             options.inJustDecodeBounds = true;
             if (isContent(path)) {
                 inputStream = PictureContentResolver.getContentResolverOpenInputStream(context, Uri.parse(path));
+            } else if (isAsset(path)){
+                String fileName = path.substring(ASSET_SCHEME.length());
+                inputStream = context.getResources().getAssets().open(fileName);
             } else {
                 inputStream = new FileInputStream(path);
             }

@@ -17,7 +17,10 @@ import androidx.annotation.NonNull;
 
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
+import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
+import java.net.URLDecoder;
 import java.util.concurrent.Executor;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -40,6 +43,8 @@ class PhotoViewSuperBigImageHelper {
     private boolean isInitDecoder;
     private static float TOTAL_CACHE_LENGTH;
     private CacheDecoderBitmap cacheDecoderBitmap;
+    private static final String FILE_SCHEME = "file:///";
+    private static final String ASSET_SCHEME = "file:///android_asset/";
 
     PhotoViewSuperBigImageHelper(PhotoView photoView) {
         this.photoView = photoView;
@@ -160,7 +165,7 @@ class PhotoViewSuperBigImageHelper {
                 float min = photoView.getMinimumScale();
 
                 photoView.setScaleLevels(min, (min + maxScale) / 2, maxScale);
-                DecoderInitTask task = new DecoderInitTask(photoView.getContext(), this, skiaImageRegionDecoder, Uri.parse(filePath));
+                DecoderInitTask task = new DecoderInitTask(photoView.getContext(), this, skiaImageRegionDecoder, filePath);
                 execute(task);
             }
         }
@@ -180,13 +185,13 @@ class PhotoViewSuperBigImageHelper {
         private final WeakReference<PhotoViewSuperBigImageHelper> viewRef;
         private final WeakReference<Context> contextRef;
         private final WeakReference<ImageRegionDecoder> decoderRef;
-        private final Uri source;
+        private final String filePath;
 
-        DecoderInitTask(Context context, PhotoViewSuperBigImageHelper view, ImageRegionDecoder decoder, Uri source) {
+        DecoderInitTask(Context context, PhotoViewSuperBigImageHelper view, ImageRegionDecoder decoder, String filePath) {
             this.viewRef = new WeakReference<>(view);
             this.contextRef = new WeakReference<>(context);
             this.decoderRef = new WeakReference<>(decoder);
-            this.source = source;
+            this.filePath = filePath;
         }
 
         @Override
@@ -195,7 +200,7 @@ class PhotoViewSuperBigImageHelper {
                 Context context = contextRef.get();
                 ImageRegionDecoder decoder = decoderRef.get();
                 if (context != null && decoder != null) {
-                    decoder.init(context, source);
+                    decoder.init(context, stringToUri(filePath));
                     return true;
                 }
             } catch (Exception ignored) {
@@ -210,7 +215,33 @@ class PhotoViewSuperBigImageHelper {
                 subsamplingScaleImageView.isInitDecoder = xyo;
             }
         }
+
+        public Uri stringToUri(@NonNull String uri) {
+            if (!uri.contains("://")) {
+                if (uri.startsWith("/")) {
+                    uri = uri.substring(1);
+                }
+                uri = FILE_SCHEME + uri;
+            }
+            return getImageUri(Uri.parse(uri));
+        }
+
+        private Uri getImageUri(@NonNull Uri uri) {
+            String uriString = uri.toString();
+            if (uriString.startsWith(FILE_SCHEME)) {
+                File uriFile = new File(uriString.substring(FILE_SCHEME.length() - 1));
+                if (!uriFile.exists()) {
+                    try {
+                        uri = Uri.parse(URLDecoder.decode(uriString, "UTF-8"));
+                    } catch (UnsupportedEncodingException ignored) {
+                    }
+                }
+            }
+            return uri;
+        }
     }
+
+
 
     private static class BitmapLoadTask extends AsyncTask<Void, Void, DecoderBitmap> {
         private final WeakReference<PhotoViewSuperBigImageHelper> viewRef;
