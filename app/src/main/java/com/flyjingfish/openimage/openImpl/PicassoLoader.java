@@ -41,7 +41,7 @@ public class PicassoLoader {
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             myTarget = null;//这句不能删除否则图片加载异常
             if (onLoadBigImageListener != null){
-                String cacheFile = cacheDir.getAbsolutePath() + "/" + urlForDiskName(imageUrl)+".1";
+                String cacheFile = getPicassoCacheFile(cacheDir,imageUrl);
                 Log.e("picasso-file",new File(cacheFile).exists()+"=="+ cacheFile);
                 onLoadBigImageListener.onLoadImageSuccess(new BitmapDrawable(context.getResources(),bitmap),cacheFile);
             }
@@ -94,6 +94,10 @@ public class PicassoLoader {
                 }
             });
         }
+    }
+
+    public static String getPicassoCacheFile(File cacheDir,String imageUrl){
+        return cacheDir.getAbsolutePath() + "/" + urlForDiskName(imageUrl)+".1";
     }
 
     public static String urlForDiskName(@NonNull String url) {

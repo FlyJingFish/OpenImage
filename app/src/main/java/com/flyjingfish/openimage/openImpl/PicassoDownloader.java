@@ -48,7 +48,7 @@ public class PicassoDownloader {
             if (isDestroy[0]) {
                 return;
             }
-            String cacheFile = cacheDir.getAbsolutePath() + "/" + PicassoLoader.urlForDiskName(downloadUrl) + ".1";
+            String cacheFile = PicassoLoader.getPicassoCacheFile(cacheDir,downloadUrl);
             SaveImageUtils.INSTANCE.saveFile(context.getApplicationContext(), new File(cacheFile), openImageUrl.getType() == MediaType.VIDEO, new SaveImageUtils.OnSaveFinish() {
                 @Override
                 public void onFinish(String sucPath) {
