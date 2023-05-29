@@ -84,7 +84,6 @@ public class PicassoDownloader {
         this.lifecycleOwner = lifecycleOwner;
         this.openImageUrl = openImageUrl;
         this.downloadUrl = openImageUrl.getType() == MediaType.VIDEO ? openImageUrl.getVideoUrl() : openImageUrl.getImageUrl();
-        ;
         this.onDownloadMediaListener = onDownloadMediaListener;
         cacheDir = PicassoLoader.createDefaultCacheDir(context);
     }

@@ -1,9 +1,13 @@
 package com.flyjingfish.openimage.openImpl;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.StatFs;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,16 +17,13 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.flyjingfish.openimageglidelib.BitmapUtils;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
+import com.google.common.base.Charsets;
 import com.squareup.picasso.Picasso;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import kotlin.jvm.internal.Intrinsics;
-import kotlin.text.Charsets;
 
 public class PicassoLoader {
     private final Context context;
@@ -90,13 +91,11 @@ public class PicassoLoader {
         }
     }
 
-    public static String hashKeyForDisk(@NotNull String key) {
-        Intrinsics.checkNotNullParameter(key, "key");
-
+    public static String hashKeyForDisk(@NonNull String key) {
         String var2;
         try {
             MessageDigest mDigest = MessageDigest.getInstance("MD5");
-            mDigest.update( key.getBytes(Charsets.UTF_8));
+            mDigest.update(key.getBytes(Charsets.UTF_8));
             var2 = bytesToHexString(mDigest.digest());
         } catch (NoSuchAlgorithmException var5) {
             var2 = String.valueOf(key.hashCode());
@@ -130,5 +129,28 @@ public class PicassoLoader {
             cache.mkdirs();
         }
         return cache;
+    }
+
+    private static final int MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024; // 5MB
+    private static final int MAX_DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
+    public static long calculateDiskCacheSize(File dir) {
+        long size = MIN_DISK_CACHE_SIZE;
+
+        try {
+            StatFs statFs = new StatFs(dir.getAbsolutePath());
+            //noinspection deprecation
+            long blockCount =
+                    SDK_INT < JELLY_BEAN_MR2 ? (long) statFs.getBlockCount() : statFs.getBlockCountLong();
+            //noinspection deprecation
+            long blockSize =
+                    SDK_INT < JELLY_BEAN_MR2 ? (long) statFs.getBlockSize() : statFs.getBlockSizeLong();
+            long available = blockCount * blockSize;
+            // Target 2% of the total space.
+            size = available / 50;
+        } catch (IllegalArgumentException ignored) {
+        }
+
+        // Bound inside min/max size for disk cache.
+        return Math.max(Math.min(size, MAX_DISK_CACHE_SIZE), MIN_DISK_CACHE_SIZE);
     }
 }

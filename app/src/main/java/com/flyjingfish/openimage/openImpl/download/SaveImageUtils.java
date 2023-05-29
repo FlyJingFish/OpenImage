@@ -63,6 +63,9 @@ public enum SaveImageUtils {
             }
         }else {
             mimeType = BitmapUtils.getImageTypeWithMime(context, var10001);
+            if (TextUtils.isEmpty(mimeType)){
+                mimeType = "jpg";
+            }
         }
         name = name + '.' + mimeType;
         if (Build.VERSION.SDK_INT >= 29) {
@@ -184,6 +187,7 @@ public enum SaveImageUtils {
 
             suc = true;
         } catch (Exception ignored) {
+            ignored.printStackTrace();
         } finally {
             try {
                 if (fosfrom != null){
