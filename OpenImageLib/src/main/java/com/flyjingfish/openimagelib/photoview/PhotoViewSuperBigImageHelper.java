@@ -162,9 +162,11 @@ class PhotoViewSuperBigImageHelper {
                 skiaImageRegionDecoder = new SkiaImageRegionDecoder();
                 isSuperBigImage = true;
                 float maxScale = Math.max(originalImageSize[0], originalImageSize[1]) * 1f / Math.max(imageWidth, imageHeight)/scale;
-                float min = photoView.getMinimumScale();
 
-                photoView.setScaleLevels(min, (min + maxScale) / 2, maxScale);
+                try {
+                    photoView.setMaximumScale(maxScale);
+                } catch (Exception ignored) {
+                }
                 DecoderInitTask task = new DecoderInitTask(photoView.getContext(), this, skiaImageRegionDecoder, filePath);
                 execute(task);
             }

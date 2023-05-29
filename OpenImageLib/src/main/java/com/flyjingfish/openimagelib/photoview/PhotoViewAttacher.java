@@ -21,9 +21,7 @@ import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.transition.Fade;
 import android.transition.Transition;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -67,7 +65,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
     private int mZoomDuration = DEFAULT_ZOOM_DURATION;
-    private boolean isSetScaleLevels = false;
+    private boolean isSetMaxScale = false;
     private float mMinScale = DEFAULT_MIN_SCALE;
     private float mMidScale = DEFAULT_MID_SCALE;
     private float mMaxScale = DEFAULT_MAX_SCALE;
@@ -196,7 +194,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     parent.requestDisallowInterceptTouchEvent(true);
                 }
             }
-            if (mImageView instanceof PhotoView){
+            if (mImageView instanceof PhotoView) {
                 ((PhotoView) mImageView).moving();
             }
         }
@@ -206,22 +204,22 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             mCurrentFlingRunnable = new FlingRunnable(mImageView.getContext());
             mCurrentFlingRunnable.fling(getImageViewWidth(mImageView),
                     getImageViewHeight(mImageView), (int) velocityX, (int) velocityY);
-            if (mImageView instanceof PhotoView){
+            if (mImageView instanceof PhotoView) {
                 ((PhotoView) mImageView).clearBitmap();
             }
             mImageView.post(mCurrentFlingRunnable);
         }
 
         @Override
-        public void onScale(boolean doubleFinger,float scaleFactor, float focusX, float focusY) {
+        public void onScale(boolean doubleFinger, float scaleFactor, float focusX, float focusY) {
             if (getScale() < mMaxScale || scaleFactor < 1f) {
                 if (mScaleChangeListener != null) {
                     mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
                 }
                 mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
                 checkAndDisplayMatrix();
-                if (mImageView instanceof PhotoView){
-                    if (doubleFinger){
+                if (mImageView instanceof PhotoView) {
+                    if (doubleFinger) {
                         ((PhotoView) mImageView).clearBitmap();
                     }
                 }
@@ -305,7 +303,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     float scale = getScale();
                     float x = ev.getX();
                     float y = ev.getY();
-                    if (mImageView instanceof PhotoView){
+                    if (mImageView instanceof PhotoView) {
                         ((PhotoView) mImageView).clearBitmap();
                     }
                     if (scale < getMediumScale()) {
@@ -331,7 +329,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         screenOrientationEvent = new ScreenOrientationEvent(mImageView.getContext());
         registerDisplayListener();
     }
+
     static HashSet<String> onTransitionEndSet = new HashSet<>();
+
     private void ensureCanLayout() {
         final Activity activity = ((Activity) mImageView.getContext());
         if (activity instanceof OpenImageActivity) {
@@ -352,20 +352,20 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     photosViewModel.transitionEndLiveData.removeObserver(transitionEndObserver);
                 }
             });
-        }else if (activity instanceof FragmentActivity){
+        } else if (activity instanceof FragmentActivity) {
             final String activityKey = activity.toString();
             final Transition transition = activity.getWindow().getSharedElementEnterTransition();
             ((FragmentActivity) activity).getLifecycle().addObserver(new LifecycleEventObserver() {
                 @Override
                 public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
-                    if (event == Lifecycle.Event.ON_DESTROY){
+                    if (event == Lifecycle.Event.ON_DESTROY) {
                         onTransitionEndSet.remove(activityKey);
                         source.getLifecycle().removeObserver(this);
                     }
                 }
             });
             if (transition != null) {
-                if (onTransitionEndSet.contains(activityKey)){
+                if (onTransitionEndSet.contains(activityKey)) {
                     setCanLayoutListener();
                     return;
                 }
@@ -376,14 +376,14 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         setCanLayoutListener();
                     }
                 });
-            }else {
+            } else {
                 setCanLayoutListener();
             }
-        }else {
+        } else {
             final String activityKey = activity.toString();
             final Transition transition = activity.getWindow().getSharedElementEnterTransition();
             if (transition != null) {
-                if (onTransitionEndSet.contains(activityKey)){
+                if (onTransitionEndSet.contains(activityKey)) {
                     isCanLayout = true;
                     return;
                 }
@@ -394,7 +394,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         isCanLayout = true;
                     }
                 });
-            }else {
+            } else {
                 isCanLayout = true;
             }
 
@@ -429,8 +429,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
     }
 
-    private void setCanLayoutListener(){
-        if (mImageView.isAttachedToWindow()){
+    private void setCanLayoutListener() {
+        if (mImageView.isAttachedToWindow()) {
             isCanLayout = true;
             return;
         }
@@ -594,7 +594,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
         return handled;
     }
+
     boolean isScaling;
+
     public void setAllowParentInterceptOnEdge(boolean allow) {
         mAllowParentInterceptOnEdge = allow;
     }
@@ -612,6 +614,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     public void setMaximumScale(float maximumScale) {
         Util.checkZoomLevels(mMinScale, mMidScale, maximumScale);
         mMaxScale = maximumScale;
+        isSetMaxScale = true;
     }
 
     public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
@@ -619,7 +622,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         mMinScale = minimumScale;
         mMidScale = mediumScale;
         mMaxScale = maximumScale;
-        isSetScaleLevels = true;
     }
 
     public void setOnLongClickListener(OnLongClickListener listener) {
@@ -702,7 +704,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     || scaleType == ShapeImageView.ShapeScaleType.AUTO_END_CENTER_CROP) {
                 update();
             }
-        }else {
+        } else {
             update();
         }
     }
@@ -980,19 +982,21 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         mTempDst = new RectF(0, 0, viewWidth, viewWidth * scaleImageHW);
                         isBigImage = true;
                     } else {
-                        if (!isSetScaleLevels){
-                            if (scaleImageHW > 1) {
-                                if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
-                                    mMinScale = DEFAULT_MIN_SCALE;
-                                    //设置中等缩放为适宽的缩放
-                                    mMidScale = widthScale / heightScale;
+                        if (scaleImageHW > 1) {
+                            if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
+                                mMinScale = DEFAULT_MIN_SCALE;
+                                //设置中等缩放为适宽的缩放
+                                mMidScale = widthScale / heightScale;
+                                if (!isSetMaxScale) {
                                     mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
                                 }
-                            } else {
-                                if (maxScale * drawableWidth > DEFAULT_MID_SCALE * viewWidth) {
-                                    mMinScale = DEFAULT_MIN_SCALE;
-                                    //设置中等缩放为适宽的缩放
-                                    mMidScale = heightScale / widthScale;
+                            }
+                        } else {
+                            if (maxScale * drawableWidth > DEFAULT_MID_SCALE * viewWidth) {
+                                mMinScale = DEFAULT_MIN_SCALE;
+                                //设置中等缩放为适宽的缩放
+                                mMidScale = heightScale / widthScale;
+                                if (!isSetMaxScale) {
                                     mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
                                 }
                             }
@@ -1078,19 +1082,21 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                             mTargetHeight = targetWidth * scaleImageHW;
                             isBigImage = true;
                         } else {
-                            if (!isSetScaleLevels){
-                                if (scaleImageHW > 1) {
-                                    if (maxScale * drawableHeight > DEFAULT_MID_SCALE * targetHeight) {
-                                        mMinScale = DEFAULT_MIN_SCALE;
-                                        //设置中等缩放为适宽的缩放
-                                        mMidScale = widthScale / heightScale;
+                            if (scaleImageHW > 1) {
+                                if (maxScale * drawableHeight > DEFAULT_MID_SCALE * targetHeight) {
+                                    mMinScale = DEFAULT_MIN_SCALE;
+                                    //设置中等缩放为适宽的缩放
+                                    mMidScale = widthScale / heightScale;
+                                    if (!isSetMaxScale) {
                                         mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
                                     }
-                                } else {
-                                    if (maxScale * drawableWidth > DEFAULT_MID_SCALE * targetWidth) {
-                                        mMinScale = DEFAULT_MIN_SCALE;
-                                        //设置中等缩放为适宽的缩放
-                                        mMidScale = heightScale / widthScale;
+                                }
+                            } else {
+                                if (maxScale * drawableWidth > DEFAULT_MID_SCALE * targetWidth) {
+                                    mMinScale = DEFAULT_MIN_SCALE;
+                                    //设置中等缩放为适宽的缩放
+                                    mMidScale = heightScale / widthScale;
+                                    if (!isSetMaxScale) {
                                         mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
                                     }
                                 }
@@ -1330,7 +1336,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             float t = interpolate();
             float scale = mZoomStart + t * (mZoomEnd - mZoomStart);
             float deltaScale = scale / getScale();
-            onGestureListener.onScale(false,deltaScale, mFocalX, mFocalY);
+            onGestureListener.onScale(false, deltaScale, mFocalX, mFocalY);
             // We haven't hit our target scale yet, so post ourselves again
             if (t < 1f) {
                 Compat.postOnAnimation(mImageView, this);
@@ -1400,7 +1406,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 checkAndDisplayMatrix();
                 mCurrentX = newX;
                 mCurrentY = newY;
-                if (mImageView instanceof PhotoView){
+                if (mImageView instanceof PhotoView) {
                     ((PhotoView) mImageView).moving();
                 }
                 // Post On animation
