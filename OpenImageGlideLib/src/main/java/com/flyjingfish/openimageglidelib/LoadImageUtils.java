@@ -99,7 +99,7 @@ public enum LoadImageUtils {
                 });
     }
 
-    void saveFile(Context context, File resource, boolean video,OnSaveFinish onSaveFinish) {
+    public void saveFile(Context context, File resource, boolean video,OnSaveFinish onSaveFinish) {
         cThreadPool.submit(() -> {
             String sucPath = FileUtils.save(context, resource, video);
             if (onSaveFinish != null){
@@ -109,7 +109,7 @@ public enum LoadImageUtils {
 
     }
 
-    interface OnSaveFinish{
+    public interface OnSaveFinish{
         void onFinish(String sucPath);
     }
 }

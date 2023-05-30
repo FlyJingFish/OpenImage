@@ -4,11 +4,11 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
-import com.flyjingfish.openimageglidelib.GlideDownloadMediaHelper;
+import com.flyjingfish.openimagefulllib.FullGlideDownloadMediaHelper;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener;
 
-public class AppDownloadFileHelper extends GlideDownloadMediaHelper {
+public class AppDownloadFileHelper extends FullGlideDownloadMediaHelper {
     @Override
     public void download(FragmentActivity activity, LifecycleOwner lifecycleOwner, OpenImageUrl openImageUrl, OnDownloadMediaListener onDownloadMediaListener) {
         if (MyImageLoader.loader_os_type == MyImageLoader.GLIDE){

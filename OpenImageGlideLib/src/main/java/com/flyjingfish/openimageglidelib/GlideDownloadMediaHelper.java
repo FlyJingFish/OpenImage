@@ -66,17 +66,14 @@ public class GlideDownloadMediaHelper implements DownloadMediaHelper {
                     @Override
                     public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
                         if (onDownloadMediaListener != null) {
-                            LoadImageUtils.INSTANCE.saveFile(context, resource, openImageUrl.getType() == MediaType.VIDEO, new LoadImageUtils.OnSaveFinish() {
-                                @Override
-                                public void onFinish(String sucPath) {
-                                    if (isDestroy[0]){
-                                        return;
-                                    }
-                                    if (!TextUtils.isEmpty(sucPath)){
-                                        onDownloadMediaListener.onDownloadSuccess(sucPath);
-                                    }else {
-                                        onDownloadMediaListener.onDownloadFailed();
-                                    }
+                            LoadImageUtils.INSTANCE.saveFile(context, resource, openImageUrl.getType() == MediaType.VIDEO, sucPath -> {
+                                if (isDestroy[0]){
+                                    return;
+                                }
+                                if (!TextUtils.isEmpty(sucPath)){
+                                    onDownloadMediaListener.onDownloadSuccess(sucPath);
+                                }else {
+                                    onDownloadMediaListener.onDownloadFailed();
                                 }
                             });
                         }
