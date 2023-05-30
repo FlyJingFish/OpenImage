@@ -42,6 +42,8 @@ public class PicassoDownloader {
     private final File cacheVideoDir;
     private final LifecycleOwner lifecycleOwner;
     private final boolean[] isDestroy = new boolean[]{false};
+    private static final String PICASSO_VIDEO_CACHE = "picasso-video-cache";
+
     com.squareup.picasso.Target myTarget = new com.squareup.picasso.Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -98,7 +100,7 @@ public class PicassoDownloader {
         cacheDir = PicassoLoader.createDefaultCacheDir(context);
         cacheVideoDir = createVideoCacheDir(context);
     }
-    private static final String PICASSO_VIDEO_CACHE = "picasso-video-cache";
+
     public void download() {
         boolean isWeb = BitmapUtils.isWeb(downloadUrl);
         if (onDownloadMediaListener != null) {
