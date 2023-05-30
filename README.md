@@ -283,8 +283,10 @@ OpenImage.with(activity)
         .setOpenImageActivityCls(MyBigImageActivity.class)
         //设置切换图片时前一页面跟随滚动（可不设置）
         .setAutoScrollScanPosition(true)
-        //设置显示下载按钮（可不设置，默认不显示）
+        //设置显示下载按钮（可不设置，默认不显示，打开后默认图片和视频都会显示此按钮）
         .setShowDownload()
+        //设置显示关闭按钮（可不设置，默认不显示，打开后默认只在显示图片时显示，因为视频页面默认有返回按钮，如需都要显示可在此基础上传入更多参数）
+        .setShowClose()
         //设置画廊效果，参数为左右两侧漏出的宽度（可不设置）
         .setGalleryEffect(10)
         //设置切换图片监听（可不设置）
