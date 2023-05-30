@@ -13,6 +13,7 @@ import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.ActivityMainBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
+import com.flyjingfish.openimage.openImpl.PicassoDownloader;
 import com.flyjingfish.openimage.openImpl.PicassoLoader;
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.squareup.picasso.Cache;
@@ -105,6 +106,7 @@ public class MainActivity extends BaseActivity {
         MyApplication.cThreadPool.submit(() -> {
             Glide.get(MainActivity.this).clearDiskCache();
             clearPicassoCache();
+            clearPicassoVideoCache();
             handler.post(() -> Toast.makeText(MainActivity.this,"清理缓存完成",Toast.LENGTH_SHORT).show());
         });
 
@@ -129,6 +131,10 @@ public class MainActivity extends BaseActivity {
 
     private void clearPicassoCache(){
         deleteDirectory(PicassoLoader.createDefaultCacheDir(getApplication()));
+    }
+
+    private void clearPicassoVideoCache(){
+        deleteDirectory(PicassoDownloader.createVideoCacheDir(getApplication()));
     }
 
     private void deleteDirectory(File tempFile) {

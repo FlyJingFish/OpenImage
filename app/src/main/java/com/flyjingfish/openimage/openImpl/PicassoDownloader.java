@@ -39,6 +39,7 @@ public class PicassoDownloader {
     private final OpenImageUrl openImageUrl;
     private final OnDownloadMediaListener onDownloadMediaListener;
     private final File cacheDir;
+    private final File cacheVideoDir;
     private final LifecycleOwner lifecycleOwner;
     private final boolean[] isDestroy = new boolean[]{false};
     com.squareup.picasso.Target myTarget = new com.squareup.picasso.Target() {
@@ -79,6 +80,15 @@ public class PicassoDownloader {
         }
     };
 
+    public static File createVideoCacheDir(Context context) {
+        File cache = new File(context.getApplicationContext().getCacheDir(), PICASSO_VIDEO_CACHE);
+        if (!cache.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            cache.mkdirs();
+        }
+        return cache;
+    }
+
     public PicassoDownloader(Context context, LifecycleOwner lifecycleOwner, OpenImageUrl openImageUrl, OnDownloadMediaListener onDownloadMediaListener) {
         this.context = context;
         this.lifecycleOwner = lifecycleOwner;
@@ -86,8 +96,9 @@ public class PicassoDownloader {
         this.downloadUrl = openImageUrl.getType() == MediaType.VIDEO ? openImageUrl.getVideoUrl() : openImageUrl.getImageUrl();
         this.onDownloadMediaListener = onDownloadMediaListener;
         cacheDir = PicassoLoader.createDefaultCacheDir(context);
+        cacheVideoDir = createVideoCacheDir(context);
     }
-
+    private static final String PICASSO_VIDEO_CACHE = "picasso-video-cache";
     public void download() {
         boolean isWeb = BitmapUtils.isWeb(downloadUrl);
         if (onDownloadMediaListener != null) {
@@ -110,7 +121,7 @@ public class PicassoDownloader {
             }
         });
         if (openImageUrl.getType() == MediaType.VIDEO) {
-            String cacheFile = cacheDir.getAbsolutePath() + "/" + PicassoLoader.urlForDiskName(downloadUrl) + ".22";
+            String cacheFile = cacheVideoDir.getAbsolutePath() + "/" + PicassoLoader.urlForDiskName(downloadUrl) + ".22";
             File localFile = new File(cacheFile);
             if (localFile.exists()){
                 SaveImageUtils.INSTANCE.saveFile(context.getApplicationContext(), new File(cacheFile), openImageUrl.getType() == MediaType.VIDEO, new SaveImageUtils.OnSaveFinish() {

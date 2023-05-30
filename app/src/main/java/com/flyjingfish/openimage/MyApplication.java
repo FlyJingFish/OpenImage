@@ -28,12 +28,13 @@ public class MyApplication extends Application {
         OpenImageConfig.getInstance().setBigImageHelper(new AppGlideBigImageHelper());
         OpenImageConfig.getInstance().setDownloadMediaHelper(new AppDownloadFileHelper());
         initPicasso();
+        okHttpClient = ProgressManager.getInstance().with(new OkHttpClient.Builder()).build();
     }
 
     private void initPicasso(){
         File cacheDir = PicassoLoader.createDefaultCacheDir(this);
         long maxSize = PicassoLoader.calculateDiskCacheSize(cacheDir);
-        okHttpClient = ProgressManager.getInstance().with(new OkHttpClient.Builder().cache(new Cache(cacheDir, maxSize)))
+        OkHttpClient okHttpClient = ProgressManager.getInstance().with(new OkHttpClient.Builder().cache(new Cache(cacheDir, maxSize)))
                 .build();
         Picasso picasso = new Picasso.Builder(this).downloader(new OkHttp3Downloader(okHttpClient)).build();
         Picasso.setSingletonInstance(picasso);
