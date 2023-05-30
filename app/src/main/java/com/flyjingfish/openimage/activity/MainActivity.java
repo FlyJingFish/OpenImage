@@ -105,9 +105,7 @@ public class MainActivity extends BaseActivity {
         MyApplication.cThreadPool.submit(() -> {
             Glide.get(MainActivity.this).clearDiskCache();
             clearPicassoCache();
-            handler.post(() -> {
-                Toast.makeText(MainActivity.this,"清理缓存完成",Toast.LENGTH_SHORT).show();
-            });
+            handler.post(() -> Toast.makeText(MainActivity.this,"清理缓存完成",Toast.LENGTH_SHORT).show());
         });
 
     }
