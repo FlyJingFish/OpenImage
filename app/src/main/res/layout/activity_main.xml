@@ -180,7 +180,7 @@
             android:id="@+id/btn_clear_glide_cache"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="清除Glide缓存"
+            android:text="清除缓存"
             android:textAllCaps="false" />
     </LinearLayout>
 
