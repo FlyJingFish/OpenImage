@@ -149,7 +149,6 @@ public class PicassoDownloader {
                     Sink sink;
                     BufferedSink bufferedSink = null;
                     //这是里的mContext是我提前获取了android的context
-                    String cacheFile = cacheDir.getAbsolutePath() + "/" + PicassoLoader.urlForDiskName(downloadUrl) + ".22";
                     File localFile = new File(cacheFile);
                     try {
                         sink = Okio.sink(localFile);

@@ -114,8 +114,8 @@ public class MainActivity extends BaseActivity {
 
     private void clearPicassoMemory(){
         Picasso picasso = Picasso.get();
-        Class c = picasso.getClass();
         try {
+            Class c = picasso.getClass();
             Field cacheField = c.getDeclaredField("cache");
             cacheField.setAccessible(true);
             Object obj = cacheField.get(picasso);
@@ -123,13 +123,8 @@ public class MainActivity extends BaseActivity {
             Method method = c2.getMethod("clear",null);
             method.setAccessible(true);
             method.invoke(obj);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchFieldException | InvocationTargetException | IllegalAccessException |
+                 NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }
