@@ -589,18 +589,17 @@ Glide 的混淆规则：
 
 ```
 
-## 版本限制
+### 版本限制
 最低SDK版本：minSdkVersion >= 21
  
-## [点此下载apk](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk?raw=true)
  
 ### 常见问题
 
-##### [点此查看常见问题](https://github.com/FlyJingFish/OpenImage/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
+**[点此查看常见问题](https://github.com/FlyJingFish/OpenImage/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)**
 
 ### Thanks
 
-- [PhotoView](https://github.com/Baseflow/PhotoView)
+[PhotoView](https://github.com/Baseflow/PhotoView)
 
 ### 赞赏
 
