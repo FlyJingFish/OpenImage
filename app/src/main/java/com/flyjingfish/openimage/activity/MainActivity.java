@@ -120,7 +120,7 @@ public class MainActivity extends BaseActivity {
             cacheField.setAccessible(true);
             Object obj = cacheField.get(picasso);
             Class c2 = LruCache.class;
-            Method method = c2.getMethod("clear",null);
+            Method method = c2.getMethod("clear");
             method.setAccessible(true);
             method.invoke(obj);
         } catch (NoSuchFieldException | InvocationTargetException | IllegalAccessException |
