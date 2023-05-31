@@ -119,7 +119,12 @@
             android:layout_height="wrap_content"
             android:text="快手"
             android:textAllCaps="false" />
-
+        <Button
+            android:id="@+id/btn_user_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="用户详情"
+            android:textAllCaps="false" />
         <Button
             android:id="@+id/btn_custom"
             android:layout_width="match_parent"

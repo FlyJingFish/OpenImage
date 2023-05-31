@@ -50,4 +50,14 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+    <style name="UserDetailPhotosTheme" >
+        <item name="openImage.indicator.type">image</item>
+        <item name="openImage.indicator.textFormat">@string/pos_text</item>
+        <item name="openImage.viewPager.orientation">horizontal</item>
+        <item name="openImage.touchClose.orientation">horizontal</item>
+        <item name="openImage.viewPager.pageMargin">10dp</item>
+        <item name="openImage.statusBar.fontStyle">dark</item>
+    </style>
+    <style name="Theme.UserDetailTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    </style>
 </resources>

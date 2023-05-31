@@ -86,6 +86,7 @@ public class MainActivity extends BaseActivity {
         binding.btnCustom.setOnClickListener(v -> jump(v, CustomActivity.class));
         binding.btnKuaishou.setOnClickListener(v -> jump(v, KuaiShouDemoActivity.class));
         binding.btnWebView.setOnClickListener(v -> jump(v, WebViewActivity.class));
+        binding.btnUserDetail.setOnClickListener(v -> jump(v, UserDetailListActivity.class));
     }
 
     private void jump(View v, Class<?> cls) {
