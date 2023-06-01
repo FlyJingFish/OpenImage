@@ -20,6 +20,7 @@ import com.flyjingfish.openimagelib.beans.CloseParams;
 import com.flyjingfish.openimagelib.beans.DownloadParams;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.OnExitListener;
+import com.flyjingfish.openimagelib.listener.OnPermissionsInterceptListener;
 import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
@@ -89,6 +90,7 @@ class OpenImage4Params {
     protected Boolean disableTouchClose;
     protected DownloadParams downloadParams;
     protected CloseParams closeParams;
+    protected OnPermissionsInterceptListener onPermissionsInterceptListener;
 
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV, WEB_VIEW
@@ -184,6 +186,11 @@ class OpenImage4Params {
             intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, OpenImageConfig.getInstance().isDisEnableTouchClose());
         }else {
             intent.putExtra(OpenParams.DISABLE_TOUCH_CLOSE, disableTouchClose);
+        }
+        if (onPermissionsInterceptListener != null) {
+            String key = this.toString();
+            intent.putExtra(OpenParams.PERMISSION_LISTENER, key);
+            ImageLoadUtils.getInstance().setPermissionsInterceptListener(key,onPermissionsInterceptListener);
         }
         backViewKey = this.toString();
         return intent;

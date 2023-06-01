@@ -16,7 +16,6 @@ import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.openImpl.PicassoDownloader;
 import com.flyjingfish.openimage.openImpl.PicassoLoader;
 import com.flyjingfish.openimagelib.OpenImageConfig;
-import com.squareup.picasso.Cache;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 

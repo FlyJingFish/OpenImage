@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.transition.Transition;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -48,6 +49,7 @@ import com.flyjingfish.openimagelib.listener.DownloadMediaHelper;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
+import com.flyjingfish.openimagelib.listener.OnPermissionsInterceptListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
@@ -698,8 +700,25 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     }
 
     protected void checkPermissionAndDownload() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestPermissionsCode);
+        OnPermissionsInterceptListener onPermissionsInterceptListener = ImageLoadUtils.getInstance().getPermissionsInterceptListener(onPermissionKey);
+        boolean isPermission;
+        if (onPermissionsInterceptListener != null){
+            String[] permissions = PermissionConfig.getReadPermissionArray();
+            isPermission = onPermissionsInterceptListener.hasPermissions(this,permissions);
+        }else {
+            isPermission = PermissionChecker.isCheckWriteReadStorage(this);
+        }
+        if (!isPermission) {
+            String[] permissions = PermissionConfig.getReadPermissionArray();
+            if (onPermissionsInterceptListener != null){
+                onPermissionsInterceptListener.requestPermission(this, permissions, (isResult) -> {
+                    if (isResult){
+                        downloadMedia();
+                    }
+                });
+            }else {
+                ActivityCompat.requestPermissions(this, permissions, RequestPermissionsCode);
+            }
         } else {
             downloadMedia();
         }
@@ -709,7 +728,14 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == RequestPermissionsCode) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            String[] requestPermissions = PermissionConfig.getReadPermissionArray();
+            int grantCount = 0;
+            for (int grantResult : grantResults) {
+                if (grantResult == PackageManager.PERMISSION_GRANTED){
+                    grantCount ++;
+                }
+            }
+            if (grantCount == requestPermissions.length) {
                 downloadMedia();
             } else if (!TextUtils.isEmpty(requestWriteExternalStoragePermissionsFail)) {
                 Toast.makeText(this, requestWriteExternalStoragePermissionsFail, Toast.LENGTH_SHORT).show();
@@ -882,6 +908,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         showPosition = 0;
         mHandler.removeCallbacksAndMessages(null);
         ImageLoadUtils.getInstance().clearOnSelectMediaListener(onSelectKey);
+        ImageLoadUtils.getInstance().clearPermissionsInterceptListener(onPermissionKey);
         ImageLoadUtils.getInstance().clearCoverDrawable(openCoverKey);
         ImageLoadUtils.getInstance().clearCoverFilePath(openCoverKey);
         ImageLoadUtils.getInstance().clearSmallCoverDrawable(openCoverKey);

@@ -1,7 +1,5 @@
 package com.flyjingfish.openimagelib;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,8 +10,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,12 +19,11 @@ import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
-import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 public class BaseInnerFragment extends Fragment {
 
@@ -39,24 +34,24 @@ public class BaseInnerFragment extends Fragment {
     private final List<String> onItemLongClickListenerKeys = new ArrayList<>();
     protected float currentScale = 1f;
     private List<OpenImageUrl> downloadList;
-    private final List<ActivityResultCallback<Boolean>> activityResultCallbacks = new ArrayList<>();
-    private ActivityResultLauncher<String> launcher;
+    private final List<ActivityResultCallback<Map<String, Boolean>>> activityResultCallbacks = new ArrayList<>();
+    private ActivityResultLauncher<String[]> launcher;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        launcher = registerForActivityResult(new ActivityResultContracts.RequestPermission(),
+        launcher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
                 result -> {
-                    Iterator<ActivityResultCallback<Boolean>> iterator = activityResultCallbacks.iterator();
+                    Iterator<ActivityResultCallback<Map<String, Boolean>>> iterator = activityResultCallbacks.iterator();
                     while (iterator.hasNext()){
-                        ActivityResultCallback<Boolean> activityResultCallback = iterator.next();
+                        ActivityResultCallback<Map<String, Boolean>> activityResultCallback = iterator.next();
                         activityResultCallback.onActivityResult(result);
                         iterator.remove();
                     }
                 });
     }
 
-    private void addActivityResultCallback(ActivityResultCallback<Boolean> activityResultCallback){
+    private void addActivityResultCallback(ActivityResultCallback<Map<String, Boolean>> activityResultCallback){
         activityResultCallbacks.add(activityResultCallback);
     }
 
@@ -193,18 +188,31 @@ public class BaseInnerFragment extends Fragment {
             }
             return;
         }
-        boolean isPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        boolean isPermission = PermissionChecker.isCheckWriteReadStorage(requireContext());
         if (isPermission){
             downloadMedia(openImageUrl,onDownloadMediaListener);
         }else {
+            final String[] permissions = PermissionConfig.getReadPermissionArray();
             addActivityResultCallback(result -> {
-                if (result.equals(true)) {
+                boolean isGranted = false;
+                if (result != null){
+                    int grantCount = 0;
+                    for (String permission : permissions) {
+                        Boolean b = result.get(permission);
+                        if (b != null && b){
+                            grantCount ++;
+                        }
+                    }
+                    isGranted = grantCount==permissions.length;
+                }
+                if (isGranted) {
                     downloadMedia(openImageUrl,onDownloadMediaListener);
                 } else if (!TextUtils.isEmpty(requestWriteExternalStoragePermissionsFail)){
                     Toast.makeText(requireContext(),requestWriteExternalStoragePermissionsFail,Toast.LENGTH_SHORT).show();
                 }
             });
-            launcher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+            launcher.launch(permissions);
         }
     }
 

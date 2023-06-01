@@ -4,12 +4,12 @@ plugins {
 apply from: "../gradle/base.gradle"
 
 android {
-    compileSdkVersion rootProject.ext.sdkVersion
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.flyjingfish.openimage"
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.sdkVersion
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -88,4 +88,6 @@ dependencies {
     // 依赖androidx, 已升级AndroidX的项目集成下面的依赖
     implementation "com.bytedance.tools.codelocator:codelocator-core:2.0.0"
     implementation 'com.github.FlyJingFish:SwitchKeyboard:1.2.1'
+    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.4'
 }

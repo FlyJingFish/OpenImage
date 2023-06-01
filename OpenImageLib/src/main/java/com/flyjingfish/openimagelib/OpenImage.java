@@ -34,6 +34,7 @@ import com.flyjingfish.openimagelib.listener.OnExitListener;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
+import com.flyjingfish.openimagelib.listener.OnPermissionsInterceptListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
@@ -722,6 +723,15 @@ public final class OpenImage extends OpenImage4ParseData {
      */
     public OpenImage enableTouchClose() {
         disableTouchClose = false;
+        return this;
+    }
+
+    /**
+     * 自定义权限申请
+     * @param onPermissionsInterceptListener
+     */
+    public OpenImage setOnPermissionsInterceptListener(OnPermissionsInterceptListener onPermissionsInterceptListener) {
+        this.onPermissionsInterceptListener = onPermissionsInterceptListener;
         return this;
     }
 

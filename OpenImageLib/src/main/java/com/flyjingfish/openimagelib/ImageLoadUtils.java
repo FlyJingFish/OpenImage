@@ -10,6 +10,7 @@ import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
+import com.flyjingfish.openimagelib.listener.OnPermissionsInterceptListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
@@ -41,6 +42,7 @@ class ImageLoadUtils {
     private final HashMap<String, OnUpdateViewListener> onUpdateViewListenerHashMap = new HashMap<>();
     private final HashMap<String, DownloadParams> downloadParamsHashMap = new HashMap<>();
     private final HashMap<String, CloseParams> closeParamsHashMap = new HashMap<>();
+    private final HashMap<String, OnPermissionsInterceptListener> onPermissionsInterceptListenerHashMap = new HashMap<>();
     private final SnowFlakeUtil snowFlakeUtil = new SnowFlakeUtil();
     private boolean isApkInDebug;
 
@@ -363,5 +365,17 @@ class ImageLoadUtils {
 
     public void clearCoverFilePath(String key) {
         coverFilePathHashMap.remove(key);
+    }
+
+    public OnPermissionsInterceptListener getPermissionsInterceptListener(String key) {
+        return onPermissionsInterceptListenerHashMap.get(key);
+    }
+
+    public void setPermissionsInterceptListener(String key, OnPermissionsInterceptListener onPermissionsInterceptListener) {
+        this.onPermissionsInterceptListenerHashMap.put(key, onPermissionsInterceptListener);
+    }
+
+    public void clearPermissionsInterceptListener(String key) {
+        this.onPermissionsInterceptListenerHashMap.remove(key);
     }
 }

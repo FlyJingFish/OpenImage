@@ -38,4 +38,5 @@ class OpenParams {
     public static final String DOWNLOAD_PARAMS = "downloadParams";
     public static final String CLOSE_SHOW = "closeShow";
     public static final String CLOSE_PARAMS = "closeParams";
+    public static final String PERMISSION_LISTENER = "PermissionsInterceptListener";
 }

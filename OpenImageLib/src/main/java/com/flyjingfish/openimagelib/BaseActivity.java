@@ -26,6 +26,7 @@ import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
+import com.flyjingfish.openimagelib.listener.OnPermissionsInterceptListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
@@ -51,6 +52,7 @@ class BaseActivity extends AppCompatActivity {
     int showPosition;
     int selectPos;
     String onSelectKey;
+    String onPermissionKey;
     String openCoverKey;
     String pageTransformersKey;
     String onItemCLickKey;
@@ -329,6 +331,7 @@ class BaseActivity extends AppCompatActivity {
         isNoneClickView = getIntent().getBooleanExtra(OpenParams.NONE_CLICK_VIEW, false);
         imageShapeParams = getIntent().getParcelableExtra(OpenParams.IMAGE_SHAPE_PARAMS);
         wechatExitFillInEffect = getIntent().getBooleanExtra(OpenParams.WECHAT_EXIT_FILL_IN_EFFECT,false);
+        onPermissionKey = getIntent().getStringExtra(OpenParams.PERMISSION_LISTENER);
     }
 
     protected void addOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {

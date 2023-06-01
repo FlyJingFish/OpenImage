@@ -1,5 +1,6 @@
 package com.flyjingfish.openimage.activity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +22,14 @@ import com.flyjingfish.openimage.bean.TestBean;
 import com.flyjingfish.openimage.databinding.ActivityRecyclerviewBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimagelib.OpenImage;
+import com.flyjingfish.openimagelib.OpenImageActivity;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
+import com.flyjingfish.openimagelib.listener.OnPermissionsInterceptListener;
+import com.flyjingfish.openimagelib.listener.OnRequestPermissionListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
+import com.tbruyelle.rxpermissions3.RxPermissions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -152,6 +157,29 @@ public class RecyclerViewActivity extends BaseActivity {
                         .addPageTransformer(new ScaleInTransformer())
                         .setOpenImageStyle(R.style.DefaultPhotosTheme)
                         .setShowDownload()
+                        .setOnPermissionsInterceptListener(new OnPermissionsInterceptListener() {
+                            @SuppressLint("CheckResult")
+                            @Override
+                            public void requestPermission(OpenImageActivity activity, String[] permissionArray, OnRequestPermissionListener call) {
+                                Toast.makeText(activity,"自定义请求权限",Toast.LENGTH_SHORT).show();
+                                RxPermissions rxPermissions = new RxPermissions(activity);
+                                rxPermissions.request(permissionArray).subscribe(call::onCall);
+                            }
+
+                            @Override
+                            public boolean hasPermissions(OpenImageActivity activity, String[] permissionArray) {
+                                Toast.makeText(activity,"自定义获取权限",Toast.LENGTH_SHORT).show();
+                                RxPermissions rxPermissions = new RxPermissions(activity);
+                                int grantedCount = 0;
+                                for (String s : permissionArray) {
+                                    boolean isGranted = rxPermissions.isGranted(s);
+                                    if (isGranted){
+                                        grantedCount ++;
+                                    }
+                                }
+                                return grantedCount == permissionArray.length;
+                            }
+                        })
                         .setOnExitListener(() -> Toast.makeText(RecyclerViewActivity.this,"onExit",Toast.LENGTH_SHORT).show())
                         .setClickPosition(position).show();
 
