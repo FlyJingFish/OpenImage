@@ -8,7 +8,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.transition.Fade;
 import android.transition.Transition;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -120,8 +119,6 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         getWindow().setAllowEnterTransitionOverlap(true);
-        getWindow().setEnterTransition(new Fade());
-        getWindow().setExitTransition(new Fade());
         initPhotosViewModel();
         initRootView();
         parseIntent();
@@ -347,6 +344,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             }
         });
         openImageAdapter.setOnUpdateIndicator(() -> {
+            initIndicator();
             setIndicatorPosition(showPosition, getOpenImageBeans().size());
         });
         viewPager.setCurrentItem(selectPos, false);
@@ -487,7 +485,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     }
 
     private void initStyleConfig() {
-        int themeRes = getIntent().getIntExtra(OpenParams.OPEN_IMAGE_STYLE, 0);
+        themeRes = getIntent().getIntExtra(OpenParams.OPEN_IMAGE_STYLE, 0);
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         if (themeRes != 0) {
             setTheme(themeRes);
@@ -504,45 +502,6 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             indicatorType = AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_indicator_type);
             orientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_viewPager_orientation));
             touchCloseOrientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_touchClose_orientation, -1));
-            if (indicatorType < 2 && getOpenImageBeans().size() > 1) {
-                if (indicatorType == INDICATOR_IMAGE) {//图片样式
-                    float interval = AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_image_interval, -1);
-                    int imageRes = AttrsUtils.getTypeValueResourceId(this, themeRes, R.attr.openImage_indicator_imageRes);
-                    if (interval == -1) {
-                        interval = ScreenUtils.dp2px(this, 4);
-                    }
-                    if (imageRes == 0) {
-                        imageRes = R.drawable.open_image_indicator_image;
-                    }
-                    RecyclerView recyclerView = new RecyclerView(this);
-                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    setIndicatorLayoutParams(layoutParams, themeRes);
-                    rootView.addView(recyclerView, layoutParams);
-
-                    OpenImageOrientation realOrientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_indicator_image_orientation));
-                    imageIndicatorLayoutManager = new LinearLayoutManager(this, realOrientation == OpenImageOrientation.HORIZONTAL ? LinearLayoutManager.HORIZONTAL : LinearLayoutManager.VERTICAL, false);
-                    recyclerView.setLayoutManager(imageIndicatorLayoutManager);
-                    imageIndicatorAdapter = new ImageIndicatorAdapter(getOpenImageBeans().size(), interval, imageRes, realOrientation);
-                    recyclerView.setAdapter(imageIndicatorAdapter);
-                    indicatorView = recyclerView;
-                } else {
-                    int textColor = AttrsUtils.getTypeValueColor(this, themeRes, R.attr.openImage_indicator_textColor, Color.WHITE);
-                    float textSize = AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_textSize);
-                    indicatorTextBinding = OpenImageIndicatorTextBinding.inflate(getLayoutInflater(), rootView, true);
-                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
-                    setIndicatorLayoutParams(layoutParams, themeRes);
-                    indicatorTextBinding.tvShowPos.setLayoutParams(layoutParams);
-                    indicatorTextBinding.tvShowPos.setTextColor(textColor);
-                    if (textSize != 0) {
-                        indicatorTextBinding.tvShowPos.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-                    }
-                    indicatorView = indicatorTextBinding.getRoot();
-                    CharSequence strFormat = AttrsUtils.getTypeValueText(this, themeRes, R.attr.openImage_indicator_textFormat);
-                    if (!TextUtils.isEmpty(strFormat)) {
-                        textFormat = strFormat + "";
-                    }
-                }
-            }
             int pageMargin = (int) AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_viewPager_pageMargin, -1);
             if (pageMargin >= 0) {
                 compositePageTransformer.addTransformer(new MarginPageTransformer(pageMargin));
@@ -569,19 +528,12 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             StatusBarHelper.translucent(this);
             StatusBarHelper.setStatusBarDarkMode(this);
             orientation = OpenImageOrientation.HORIZONTAL;
-            if (getOpenImageBeans().size() > 1) {
-                indicatorTextBinding = OpenImageIndicatorTextBinding.inflate(getLayoutInflater(), rootView, true);
-                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
-                layoutParams.bottomMargin = (int) ScreenUtils.dp2px(this, 10);
-                layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
-                indicatorTextBinding.tvShowPos.setLayoutParams(layoutParams);
-                indicatorView = indicatorTextBinding.getRoot();
-            }
             compositePageTransformer.addTransformer(new MarginPageTransformer((int) ScreenUtils.dp2px(this, 10)));
             startToast = getResources().getString(R.string.download_start_toast);
             successToast = getResources().getString(R.string.download_end_toast);
             errorToast = getResources().getString(R.string.download_error_toast);
         }
+        initIndicator();
         pageTransformersKey = getIntent().getStringExtra(OpenParams.PAGE_TRANSFORMERS);
         List<ViewPager2.PageTransformer> pageTransformers = ImageLoadUtils.getInstance().getPageTransformers(pageTransformersKey);
         if (pageTransformers != null && pageTransformers.size() > 0) {
@@ -607,6 +559,62 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         }
         if (requestWriteExternalStoragePermissionsFail == null) {
             requestWriteExternalStoragePermissionsFail = getString(R.string.request_WRITE_EXTERNAL_STORAGE_permissions_fail);
+        }
+    }
+
+    private void initIndicator(){
+        if (indicatorView != null){
+            return;
+        }
+        if (themeRes != 0) {
+            if (indicatorType < 2 && getOpenImageBeans().size() > 1) {
+                if (indicatorType == INDICATOR_IMAGE) {//图片样式
+                    float interval = AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_image_interval, -1);
+                    int imageRes = AttrsUtils.getTypeValueResourceId(this, themeRes, R.attr.openImage_indicator_imageRes);
+                    if (interval == -1) {
+                        interval = ScreenUtils.dp2px(this, 4);
+                    }
+                    if (imageRes == 0) {
+                        imageRes = R.drawable.open_image_indicator_image;
+                    }
+                    RecyclerView recyclerView = new RecyclerView(this);
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    setIndicatorLayoutParams(layoutParams, themeRes);
+                    rootView.addView(recyclerView, layoutParams);
+
+                    OpenImageOrientation realOrientation = OpenImageOrientation.getOrientation(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_indicator_image_orientation));
+                    imageIndicatorLayoutManager = new LinearLayoutManager(this, realOrientation == OpenImageOrientation.HORIZONTAL ? LinearLayoutManager.HORIZONTAL : LinearLayoutManager.VERTICAL, false);
+                    recyclerView.setLayoutManager(imageIndicatorLayoutManager);
+                    imageIndicatorAdapter = new ImageIndicatorAdapter(getOpenImageBeans().size(), interval, imageRes, realOrientation);
+                    recyclerView.setAdapter(imageIndicatorAdapter);
+                    indicatorView = recyclerView;
+                } else{
+                    int textColor = AttrsUtils.getTypeValueColor(this, themeRes, R.attr.openImage_indicator_textColor, Color.WHITE);
+                    float textSize = AttrsUtils.getTypeValueDimension(this, themeRes, R.attr.openImage_indicator_textSize);
+                    indicatorTextBinding = OpenImageIndicatorTextBinding.inflate(getLayoutInflater(), rootView, true);
+                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
+                    setIndicatorLayoutParams(layoutParams, themeRes);
+                    indicatorTextBinding.tvShowPos.setLayoutParams(layoutParams);
+                    indicatorTextBinding.tvShowPos.setTextColor(textColor);
+                    if (textSize != 0) {
+                        indicatorTextBinding.tvShowPos.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+                    }
+                    indicatorView = indicatorTextBinding.getRoot();
+                    CharSequence strFormat = AttrsUtils.getTypeValueText(this, themeRes, R.attr.openImage_indicator_textFormat);
+                    if (!TextUtils.isEmpty(strFormat)) {
+                        textFormat = strFormat + "";
+                    }
+                }
+            }
+        }else {
+            if (getOpenImageBeans().size() > 1) {
+                indicatorTextBinding = OpenImageIndicatorTextBinding.inflate(getLayoutInflater(), rootView, true);
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) indicatorTextBinding.tvShowPos.getLayoutParams();
+                layoutParams.bottomMargin = (int) ScreenUtils.dp2px(this, 10);
+                layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+                indicatorTextBinding.tvShowPos.setLayoutParams(layoutParams);
+                indicatorView = indicatorTextBinding.getRoot();
+            }
         }
     }
 

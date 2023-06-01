@@ -12,11 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimage.R;
-import com.flyjingfish.openimage.activity.UserDetailListActivity;
-import com.flyjingfish.openimage.bean.ImageEntity;
 import com.flyjingfish.openimage.bean.User;
 import com.flyjingfish.openimage.databinding.MyActivityUserDetailBinding;
-import com.flyjingfish.openimage.databinding.MyActivityViewpagerBinding;
 import com.flyjingfish.openimagelib.BaseInnerFragment;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.OpenImageActivity;
@@ -57,7 +54,7 @@ public class UserDetailActivity extends OpenImageActivity {
 
     @Override
     public TouchCloseLayout getTouchCloseLayout() {
-        return rootBinding.getRoot();
+        return rootBinding.touchLayout;
     }
 
     @Override

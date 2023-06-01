@@ -151,6 +151,9 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         if (onUpdateViewListener != null && data != null && openImageDetails != null) {
             onUpdateViewListener.onAdd(data, updateViewType);
         }
+        if (onUpdateIndicator != null) {
+            onUpdateIndicator.onUpdate();
+        }
     }
 
     /**

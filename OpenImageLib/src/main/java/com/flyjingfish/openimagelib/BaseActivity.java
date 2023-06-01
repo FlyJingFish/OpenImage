@@ -112,6 +112,8 @@ class BaseActivity extends AppCompatActivity {
     MoreViewShowType downloadShowType = MoreViewShowType.BOTH;
     MoreViewShowType closeShowType = MoreViewShowType.IMAGE;
 
+    int themeRes;
+
     List<OpenImageDetail> getOpenImageBeans() {
         return openImageBeans;
     }

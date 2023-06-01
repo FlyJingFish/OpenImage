@@ -14,29 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.flyjingfish.openimage.DataUtils;
 import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimage.R;
-import com.flyjingfish.openimage.adapter.FriendsAdapter;
 import com.flyjingfish.openimage.bean.ImageEntity;
-import com.flyjingfish.openimage.bean.MessageBean;
 import com.flyjingfish.openimage.bean.User;
 import com.flyjingfish.openimage.databinding.ActivityFirendsBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
-import com.flyjingfish.openimage.openImpl.KuaiShouActivity;
-import com.flyjingfish.openimage.openImpl.KuaishouVideoFragmentCreateImpl;
 import com.flyjingfish.openimage.openImpl.UserDetailActivity;
 import com.flyjingfish.openimage.openImpl.UserDetailImageFragmentCreateImpl;
 import com.flyjingfish.openimagelib.OpenImage;
-import com.flyjingfish.openimagelib.beans.OpenImageUrl;
-import com.flyjingfish.openimagelib.enums.UpdateViewType;
-import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
-import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
-import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class UserDetailListActivity extends BaseActivity {
