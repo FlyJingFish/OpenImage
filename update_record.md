@@ -1,5 +1,11 @@
 # OpenImage 更新日志
 
+## 1.9.8
+
+1、适配 Android 13 请求权限的代码
+
+2、提供自定义请求权限的接口 --> OpenImage.setOnPermissionsInterceptListener()
+
 ## 1.9.7
 
 1、修复多个大图页面叠加时下拉显示不正常的问题
