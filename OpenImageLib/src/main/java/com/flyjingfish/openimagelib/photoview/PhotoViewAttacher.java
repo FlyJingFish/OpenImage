@@ -573,7 +573,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 boolean didntScale = !wasScaling && !mScaleDragDetector.isScaling();
                 boolean didntDrag = !wasDragging && !mScaleDragDetector.isDragging();
                 mBlockParentIntercept = didntScale && didntDrag;
-                isScaling = wasScaling;
             }
             // Check to see if the user double tapped
             if (mGestureDetector != null && mGestureDetector.onTouchEvent(ev)) {
@@ -583,8 +582,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
         return handled;
     }
-
-    boolean isScaling;
 
     public void setAllowParentInterceptOnEdge(boolean allow) {
         mAllowParentInterceptOnEdge = allow;
@@ -659,7 +656,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             throw new IllegalArgumentException("Scale must be within the range of minScale and maxScale");
         }
         if (animate) {
-            isScaling = true;
             mImageView.post(new AnimatedZoomRunnable(getScale(), scale,
                     focalX, focalY));
         } else {
