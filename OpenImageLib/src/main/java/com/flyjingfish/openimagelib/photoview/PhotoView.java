@@ -439,9 +439,9 @@ public class PhotoView extends AppCompatImageView {
         if (shapeType == ShapeImageView.ShapeType.OVAL) {
             int height = getHeight();
             int width = getWidth();
-            path.moveTo(paddingLeft, (height - paddingTop - paddingBottom) / 2 + paddingTop);
+            path.moveTo(paddingLeft, (height - paddingTop - paddingBottom) / 2f + paddingTop);
             path.lineTo(paddingLeft, paddingTop);
-            path.lineTo((width - paddingLeft - paddingRight) / 2 + paddingLeft, paddingTop);
+            path.lineTo((width - paddingLeft - paddingRight) / 2f + paddingLeft, paddingTop);
             path.arcTo(new RectF(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom), -90, -90);
         } else {
             float leftTopRadius = ViewUtils.getRtlValue(isRtl ? endTopRadius : startTopRadius, this.leftTopRadius);
@@ -464,9 +464,9 @@ public class PhotoView extends AppCompatImageView {
         int paddingBottom = getPaddingBottom();
         if (shapeType == ShapeImageView.ShapeType.OVAL) {
             int height = getHeight();
-            path.moveTo((width - paddingLeft - paddingRight) / 2 + paddingLeft, paddingTop);
+            path.moveTo((width - paddingLeft - paddingRight) / 2f + paddingLeft, paddingTop);
             path.lineTo(width - paddingRight, paddingTop);
-            path.lineTo(width - paddingRight, (height - paddingTop - paddingBottom) / 2 + paddingTop);
+            path.lineTo(width - paddingRight, (height - paddingTop - paddingBottom) / 2f + paddingTop);
             path.arcTo(new RectF(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom), 0, -90);
         } else {
             float rightTopRadius = ViewUtils.getRtlValue(isRtl ? startTopRadius : endTopRadius, this.rightTopRadius);
@@ -488,9 +488,9 @@ public class PhotoView extends AppCompatImageView {
         int paddingBottom = getPaddingBottom();
         if (shapeType == ShapeImageView.ShapeType.OVAL) {
             int width = getWidth();
-            path.moveTo(paddingLeft, (height - paddingTop - paddingBottom) / 2 + paddingTop);
+            path.moveTo(paddingLeft, (height - paddingTop - paddingBottom) / 2f + paddingTop);
             path.lineTo(paddingLeft, height - paddingBottom);
-            path.lineTo((width - paddingLeft - paddingRight) / 2 + paddingLeft, height - paddingBottom);
+            path.lineTo((width - paddingLeft - paddingRight) / 2f + paddingLeft, height - paddingBottom);
             path.arcTo(new RectF(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom), 90, 90);
         } else {
             float leftBottomRadius = ViewUtils.getRtlValue(isRtl ? endBottomRadius : startBottomRadius, this.leftBottomRadius);
@@ -512,9 +512,9 @@ public class PhotoView extends AppCompatImageView {
         int paddingTop = getPaddingTop();
         int paddingBottom = getPaddingBottom();
         if (shapeType == ShapeImageView.ShapeType.OVAL) {
-            path.moveTo((width - paddingLeft - paddingRight) / 2 + paddingLeft, height - paddingBottom);
+            path.moveTo((width - paddingLeft - paddingRight) / 2f + paddingLeft, height - paddingBottom);
             path.lineTo(width - paddingRight, height - paddingBottom);
-            path.lineTo(width - paddingRight, (height - paddingTop - paddingBottom) / 2 + paddingTop);
+            path.lineTo(width - paddingRight, (height - paddingTop - paddingBottom) / 2f + paddingTop);
             path.arcTo(new RectF(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom), 0, 90);
         } else {
             float rightBottomRadius = ViewUtils.getRtlValue(isRtl ? startBottomRadius : endBottomRadius, this.rightBottomRadius);
