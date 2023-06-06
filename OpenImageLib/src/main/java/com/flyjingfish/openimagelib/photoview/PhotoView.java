@@ -347,11 +347,10 @@ public class PhotoView extends AppCompatImageView {
         attacher.setStartHeight(mStartHeight);
     }
     public void setExitMode(boolean mode) {
-        attacher.setExitMode(mode);
         if (mode){
-            subsamplingScaleBitmap = null;
             clearBitmap();
         }
+        attacher.setExitMode(mode);
     }
 
 
