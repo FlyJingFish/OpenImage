@@ -63,6 +63,7 @@ public class UserDetailActivity extends OpenImageActivity {
         Bundle bundle = getIntent().getBundleExtra(BUNDLE_DATA_KEY);
         user = (User) bundle.getSerializable(MY_DATA_KEY);
         rootBinding.tvName.setText(user.name);
+        rootBinding.tvTitle.setOnClickListener(v -> close(false));
         addOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
