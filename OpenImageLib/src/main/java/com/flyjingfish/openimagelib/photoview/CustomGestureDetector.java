@@ -94,7 +94,7 @@ class CustomGestureDetector {
             return true;
         }
     }
-
+    private float mDownX, mDownY;
     private boolean processTouchEvent(MotionEvent ev) {
         final int action = ev.getAction();
         switch (action & MotionEvent.ACTION_MASK) {
@@ -108,6 +108,8 @@ class CustomGestureDetector {
 
                 mLastTouchX = getActiveX(ev);
                 mLastTouchY = getActiveY(ev);
+                mDownX = mLastTouchX;
+                mDownY = mLastTouchY;
                 mIsDragging = false;
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -122,7 +124,7 @@ class CustomGestureDetector {
                 }
 
                 if (mIsDragging) {
-                    mListener.onDrag(dx, dy);
+                    mListener.onDrag(dx, dy,x- mDownX,y- mDownY);
                     mLastTouchX = x;
                     mLastTouchY = y;
 

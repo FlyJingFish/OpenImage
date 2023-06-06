@@ -135,9 +135,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         return mStartHeight;
     }
 
-    private OnGestureListener onGestureListener = new OnGestureListener() {
+    private final OnGestureListener onGestureListener = new OnGestureListener() {
         @Override
-        public void onDrag(float dx, float dy) {
+        public void onDrag(float dx, float dy, float moveX, float moveY) {
             if (mScaleDragDetector.isScaling()) {
                 return; // Do not drag if we are already scaling
             }
@@ -178,7 +178,13 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                             || (displayRect.bottom == imageHeight && dyBigDx)
                             || (displayRect.left == 0 && dxBigDy))) {
                         if (parent != null) {
-                            parent.requestDisallowInterceptTouchEvent(false);
+                            if ((Math.abs(displayRect.right - imageWidth) < 0.1 || Math.abs(displayRect.left) < 0.1) && Math.abs(moveX) > Math.abs(moveY)){
+                                parent.requestDisallowInterceptTouchEvent(false);
+                            }else if ((Math.abs(displayRect.bottom - imageHeight) < 0.1 || Math.abs(displayRect.top) < 0.1) && Math.abs(moveY) > Math.abs(moveX)){
+                                parent.requestDisallowInterceptTouchEvent(false);
+                            }else {
+                                parent.requestDisallowInterceptTouchEvent(true);
+                            }
                         }
                     } else {
                         if (parent != null) {

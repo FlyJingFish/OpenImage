@@ -2,7 +2,7 @@ package com.flyjingfish.openimagelib.photoview;
 
 interface OnGestureListener {
 
-    void onDrag(float dx, float dy);
+    void onDrag(float dx, float dy,float moveX, float moveY);
 
     void onFling(float startX, float startY, float velocityX,
                  float velocityY);
