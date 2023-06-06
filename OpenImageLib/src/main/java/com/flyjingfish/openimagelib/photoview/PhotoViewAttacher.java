@@ -148,7 +148,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             mBigImageMatrix.postTranslate(dx, dy);
             checkAndDisplayMatrix();
             RectF displayRect = getDisplayRect(getDrawMatrix());
-//            RectF displayRect2 = getDisplayRect(mImageView.getImageMatrix());
             /*
              * Here we decide whether to let the ImageView's parent to start taking
              * over the touch event.
