@@ -2,6 +2,7 @@ package com.flyjingfish.openimagelib.photoview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -36,15 +37,14 @@ class PhotoViewSuperBigImageHelper {
     private int[] originalImageSize;
     private boolean isWeb;
     private RectF matrixChangedRectF;
-    private RectF showingMatrixRectF;
-    private Rect showingViewRect;
     private boolean isOnGlobalLayout;
     private String filePath;
     private boolean isInitDecoder;
     private static float TOTAL_CACHE_LENGTH;
-    private CacheDecoderBitmap cacheDecoderBitmap;
     private static final String FILE_SCHEME = "file:///";
     private static final String ASSET_SCHEME = "file:///android_asset/";
+    private final Matrix mDrawMatrix = new Matrix();
+    private final Matrix mBaseMatrix = new Matrix();
 
     PhotoViewSuperBigImageHelper(PhotoView photoView) {
         this.photoView = photoView;
@@ -81,10 +81,10 @@ class PhotoViewSuperBigImageHelper {
                     if (task != null) {
                         task.cancel(true);
                     }
-                    task = new BitmapLoadTask(PhotoViewSuperBigImageHelper.this, skiaImageRegionDecoder, rect,originalImageSize);
+                    task = new BitmapLoadTask(PhotoViewSuperBigImageHelper.this, skiaImageRegionDecoder, rect, originalImageSize);
                     execute(task);
                 } else {
-                    setSubsamplingScaleBitmap(null);
+                    photoView.clearBitmap();
                 }
             }
         }
@@ -98,16 +98,23 @@ class PhotoViewSuperBigImageHelper {
                 && decoderRect.top == matrixChangedRectF.top && decoderRect.bottom == matrixChangedRectF.bottom) {
             Bitmap bitmap = decoderBitmap.bitmap;
             Bitmap subsamplingScaleBitmap = photoView.getSubsamplingScaleBitmap();
-            if (subsamplingScaleBitmap != null && subsamplingScaleBitmap != bitmap){
+            if (subsamplingScaleBitmap != null && subsamplingScaleBitmap != bitmap) {
                 subsamplingScaleBitmap.recycle();
             }
-            showingMatrixRectF = decoderRect;
-            showingViewRect = decoderBitmap.showViewRect;
-            photoView.setSubsamplingScaleBitmap(decoderBitmap.bitmap, showingViewRect);
-        }else {
-            showingMatrixRectF = null;
-            showingViewRect = null;
-            photoView.setSubsamplingScaleBitmap(null, null);
+            RectF showingViewRect = decoderBitmap.showViewRect;
+            photoView.getAttacher().resetBigImageMatrix();
+            mBaseMatrix.reset();
+            mDrawMatrix.reset();
+            mBaseMatrix.setRectToRect(new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight()),
+                    showingViewRect, Matrix.ScaleToFit.FILL);
+            mDrawMatrix.set(mBaseMatrix);
+            photoView.setSubsamplingScaleBitmap(bitmap, mDrawMatrix);
+        } else {
+            if (decoderBitmap != null && decoderBitmap.bitmap != null && !decoderBitmap.bitmap.isRecycled()) {
+                Bitmap bitmap = decoderBitmap.bitmap;
+                bitmap.recycle();
+            }
+            toGetBigImage();
         }
     }
 
@@ -161,7 +168,7 @@ class PhotoViewSuperBigImageHelper {
 
                 skiaImageRegionDecoder = new SkiaImageRegionDecoder();
                 isSuperBigImage = true;
-                float maxScale = Math.max(originalImageSize[0], originalImageSize[1]) * 1f / Math.max(imageWidth, imageHeight)/scale;
+                float maxScale = Math.max(originalImageSize[0], originalImageSize[1]) * 1f / Math.max(imageWidth, imageHeight) / scale;
 
                 try {
                     photoView.setMaximumScale(maxScale);
@@ -244,7 +251,6 @@ class PhotoViewSuperBigImageHelper {
     }
 
 
-
     private static class BitmapLoadTask extends AsyncTask<Void, Void, DecoderBitmap> {
         private final WeakReference<PhotoViewSuperBigImageHelper> viewRef;
         private final WeakReference<ImageRegionDecoder> decoderRef;
@@ -253,10 +259,10 @@ class PhotoViewSuperBigImageHelper {
         private final int viewWidth;
         private final int viewHeight;
 
-        BitmapLoadTask(PhotoViewSuperBigImageHelper view, ImageRegionDecoder decoder, RectF decoderRect,int[] originalImageSize) {
+        BitmapLoadTask(PhotoViewSuperBigImageHelper view, ImageRegionDecoder decoder, RectF decoderRect, int[] originalImageSize) {
             this.viewRef = new WeakReference<>(view);
             this.decoderRef = new WeakReference<>(decoder);
-            this.decoderRect = new RectF(decoderRect.left,decoderRect.top,decoderRect.right,decoderRect.bottom);
+            this.decoderRect = new RectF(decoderRect.left, decoderRect.top, decoderRect.right, decoderRect.bottom);
             this.originalImageSize = originalImageSize;
             viewWidth = view.getWidth();
             viewHeight = view.getHeight();
@@ -328,22 +334,10 @@ class PhotoViewSuperBigImageHelper {
 //                    Rect subsamplingRect = new Rect((int) (left/scale), (int) (top/scale), (int) (right/scale), (int) (bottom/scale));
 //                    showRect = new Rect(left1,top1,right1,bottom1);
                             Rect subsamplingRect = new Rect((int) ((left - cacheLengthLeft) / scale), (int) ((top - cacheLengthTop) / scale), (int) ((right + cacheLengthRight) / scale), (int) ((bottom + cacheLengthBottom) / scale));
-                            Rect showViewRect = new Rect((int) (left1 - cacheLengthLeft), (int) (top1 - cacheLengthTop), (int) (right1 + cacheLengthRight), (int) (bottom1 + cacheLengthBottom));
-                            if (view.cacheDecoderBitmap != null && (!view.cacheDecoderBitmap.bitmap.isRecycled()) && view.cacheDecoderBitmap.subsamplingRect.left == subsamplingRect.left
-                                    && view.cacheDecoderBitmap.subsamplingRect.top == subsamplingRect.top
-                                    && view.cacheDecoderBitmap.subsamplingRect.right == subsamplingRect.right
-                                    && view.cacheDecoderBitmap.subsamplingRect.bottom == subsamplingRect.bottom){
-                                return new DecoderBitmap(view.cacheDecoderBitmap.bitmap,showViewRect,rect);
-                            }
+                            RectF showViewRect = new RectF((left1 - cacheLengthLeft), (top1 - cacheLengthTop), (right1 + cacheLengthRight), (bottom1 + cacheLengthBottom));
                             int inSampleSize = BitmapUtils.getMaxInSampleSize(subsamplingRect.width(), subsamplingRect.height());
-                            // Update tile's file sRect according to rotation
                             Bitmap bitmap = decoder.decodeRegion(subsamplingRect, inSampleSize);
-                            if (view.cacheDecoderBitmap == null){
-                                view.cacheDecoderBitmap = new CacheDecoderBitmap(bitmap,subsamplingRect);
-                            }else {
-                                view.cacheDecoderBitmap.setCacheDecoderBitmap(bitmap,subsamplingRect);
-                            }
-                            return new DecoderBitmap(bitmap,showViewRect,rect);
+                            return new DecoderBitmap(bitmap, showViewRect, rect);
                         }
                     } finally {
                         view.decoderLock.readLock().unlock();
@@ -363,30 +357,16 @@ class PhotoViewSuperBigImageHelper {
         }
 
     }
-    private static class DecoderBitmap{
+
+    private static class DecoderBitmap {
         Bitmap bitmap;
-        Rect showViewRect;
+        RectF showViewRect;
         RectF decoderRect;
 
-        public DecoderBitmap(Bitmap bitmap, Rect showViewRect, RectF decoderRect) {
+        public DecoderBitmap(Bitmap bitmap, RectF showViewRect, RectF decoderRect) {
             this.bitmap = bitmap;
             this.showViewRect = showViewRect;
             this.decoderRect = decoderRect;
-        }
-    }
-
-    private static class CacheDecoderBitmap{
-        Bitmap bitmap;
-        Rect subsamplingRect;
-
-        public CacheDecoderBitmap(Bitmap bitmap, Rect subsamplingRect) {
-            this.bitmap = bitmap;
-            this.subsamplingRect = subsamplingRect;
-        }
-
-        public void setCacheDecoderBitmap(Bitmap bitmap, Rect subsamplingRect) {
-            this.bitmap = bitmap;
-            this.subsamplingRect = subsamplingRect;
         }
     }
 
@@ -398,19 +378,6 @@ class PhotoViewSuperBigImageHelper {
         return photoView.getWidth();
     }
 
-    void moving() {
-        if (isSuperBigImage && showingViewRect != null && matrixChangedRectF != null && showingMatrixRectF != null) {
-            float moveX = matrixChangedRectF.left - showingMatrixRectF.left;
-            float moveY = matrixChangedRectF.top - showingMatrixRectF.top;
-            int left = (int) (showingViewRect.left + moveX);
-            int top = (int) (showingViewRect.top + moveY);
-            int right = (int) (showingViewRect.right + moveX);
-            int bottom = (int) (showingViewRect.bottom + moveY);
-            Rect rect = new Rect(left, top, right, bottom);
-            photoView.setShowRect(rect);
-        }
-    }
-
     private void toGetBigImage() {
         if (matrixChangedRectF != null && isSuperBigImage) {
             Message message = Message.obtain();
@@ -419,5 +386,9 @@ class PhotoViewSuperBigImageHelper {
             mHandler.removeMessages(REGION);
             mHandler.sendMessageDelayed(message, 200);
         }
+    }
+
+    public Matrix getBaseMatrix() {
+        return mBaseMatrix;
     }
 }

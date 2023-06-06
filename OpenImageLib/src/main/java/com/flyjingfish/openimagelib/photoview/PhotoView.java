@@ -379,7 +379,7 @@ public class PhotoView extends AppCompatImageView {
     private float startBottomRadius;
     private float endTopRadius;
     private float endBottomRadius;
-    private Rect showRect;
+    private Matrix showMatrix;
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
@@ -403,8 +403,8 @@ public class PhotoView extends AppCompatImageView {
     }
 
     private void drawSuperBigImage(Canvas canvas){
-        if (subsamplingScaleBitmap != null && showRect != null){
-            canvas.drawBitmap(subsamplingScaleBitmap,new Rect(0,0,subsamplingScaleBitmap.getWidth(),subsamplingScaleBitmap.getHeight()),showRect,mImagePaint);
+        if (subsamplingScaleBitmap != null && showMatrix != null && !subsamplingScaleBitmap.isRecycled()){
+            canvas.drawBitmap(subsamplingScaleBitmap,showMatrix,mImagePaint);
         }
     }
 
@@ -556,8 +556,8 @@ public class PhotoView extends AppCompatImageView {
         }
     }
 
-    void setSubsamplingScaleBitmap(Bitmap bitmap,Rect rect) {
-        this.showRect = rect;
+    void setSubsamplingScaleBitmap(Bitmap bitmap,Matrix matrix) {
+        this.showMatrix = matrix;
         if (!attacher.isExitMode()){
             this.subsamplingScaleBitmap = bitmap;
         }
@@ -568,18 +568,17 @@ public class PhotoView extends AppCompatImageView {
         return subsamplingScaleBitmap;
     }
 
-    void setShowRect(Rect rect) {
-        this.showRect = rect;
-        invalidate();
-    }
-
-    void moving(){
-        if (photoViewSuperBigImageHelper != null){
-            photoViewSuperBigImageHelper.moving();
-        }
-    }
-
     void clearBitmap(){
         setSubsamplingScaleBitmap(null,null);
+    }
+
+    @Override
+    public void setImageMatrix(Matrix matrix) {
+        if (showMatrix != null){
+            Matrix bigMatrix = getAttacher().getBigImageMatrix();
+            showMatrix.set(photoViewSuperBigImageHelper.getBaseMatrix());
+            showMatrix.postConcat(bigMatrix);
+        }
+        super.setImageMatrix(matrix);
     }
 }

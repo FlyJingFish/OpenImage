@@ -83,6 +83,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private final Matrix mBaseMatrix = new Matrix();
     private final Matrix mDrawMatrix = new Matrix();
     private final Matrix mSuppMatrix = new Matrix();
+    private final Matrix mBigImageMatrix = new Matrix();
     private final RectF mDisplayRect = new RectF();
     private final float[] mMatrixValues = new float[9];
 
@@ -144,6 +145,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 mOnViewDragListener.onDrag(dx, dy);
             }
             mSuppMatrix.postTranslate(dx, dy);
+            mBigImageMatrix.postTranslate(dx, dy);
             checkAndDisplayMatrix();
             RectF displayRect = getDisplayRect(getDrawMatrix());
 //            RectF displayRect2 = getDisplayRect(mImageView.getImageMatrix());
@@ -194,9 +196,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     parent.requestDisallowInterceptTouchEvent(true);
                 }
             }
-            if (mImageView instanceof PhotoView) {
-                ((PhotoView) mImageView).moving();
-            }
         }
 
         @Override
@@ -204,9 +203,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             mCurrentFlingRunnable = new FlingRunnable(mImageView.getContext());
             mCurrentFlingRunnable.fling(getImageViewWidth(mImageView),
                     getImageViewHeight(mImageView), (int) velocityX, (int) velocityY);
-            if (mImageView instanceof PhotoView) {
-                ((PhotoView) mImageView).clearBitmap();
-            }
             mImageView.post(mCurrentFlingRunnable);
         }
 
@@ -217,12 +213,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
                 }
                 mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
+                mBigImageMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
                 checkAndDisplayMatrix();
-                if (mImageView instanceof PhotoView) {
-                    if (doubleFinger) {
-                        ((PhotoView) mImageView).clearBitmap();
-                    }
-                }
             }
         }
 
@@ -303,9 +295,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     float scale = getScale();
                     float x = ev.getX();
                     float y = ev.getY();
-                    if (mImageView instanceof PhotoView) {
-                        ((PhotoView) mImageView).clearBitmap();
-                    }
                     if (scale < getMediumScale()) {
                         setScale(getMediumScale(), x, y, true);
                     } else if (scale >= getMediumScale() && scale < getMaximumScale()) {
@@ -675,6 +664,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     focalX, focalY));
         } else {
             mSuppMatrix.setScale(scale, scale, focalX, focalY);
+            mBigImageMatrix.setScale(scale, scale, focalX, focalY);
             checkAndDisplayMatrix();
         }
     }
@@ -1298,6 +1288,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
 
         mSuppMatrix.postTranslate(deltaX, deltaY);
+        mBigImageMatrix.postTranslate(deltaX, deltaY);
         return true;
     }
 
@@ -1403,12 +1394,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 final int newX = mScroller.getCurrX();
                 final int newY = mScroller.getCurrY();
                 mSuppMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
+                mBigImageMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
                 checkAndDisplayMatrix();
                 mCurrentX = newX;
                 mCurrentY = newY;
-                if (mImageView instanceof PhotoView) {
-                    ((PhotoView) mImageView).moving();
-                }
                 // Post On animation
                 Compat.postOnAnimation(mImageView, this);
             }
@@ -1447,5 +1436,13 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setAutoCropHeightWidthRatio(float autoCropHeightWidthRatio) {
         this.mAutoCropHeightWidthRatio = autoCropHeightWidthRatio;
+    }
+
+    Matrix getBigImageMatrix() {
+        return mBigImageMatrix;
+    }
+
+    void resetBigImageMatrix() {
+        mBigImageMatrix.reset();
     }
 }
