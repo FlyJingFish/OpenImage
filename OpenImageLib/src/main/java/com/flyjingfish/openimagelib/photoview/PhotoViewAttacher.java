@@ -177,27 +177,12 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                             || (displayRect.bottom == imageHeight && dyBigDx)
                             || (displayRect.left == 0 && dxBigDy))) {
                         if (parent != null) {
-//                            if ((Math.abs(displayRect.right - imageWidth) < 0.1 || Math.abs(displayRect.left) < 0.1) && Math.abs(moveX) > Math.abs(moveY)){
-//                                parent.requestDisallowInterceptTouchEvent(false);
-//                            }else if ((Math.abs(displayRect.bottom - imageHeight) < 0.1 || Math.abs(displayRect.top) < 0.1) && Math.abs(moveY) > Math.abs(moveX)){
-//                                parent.requestDisallowInterceptTouchEvent(false);
-//                            }else {
-//                                parent.requestDisallowInterceptTouchEvent(true);
-//                            }
-
                             boolean b1 = Math.abs(moveX) > Math.abs(moveY);
                             boolean b2 = Math.abs(moveY) > Math.abs(moveX);
-                            if (Math.abs(displayRect.right - imageWidth) < 0.1 && b1 && moveX < 0){
-                                parent.requestDisallowInterceptTouchEvent(false);
-                            }else if (Math.abs(displayRect.left) < 0.1 && b1 && moveX > 0){
-                                parent.requestDisallowInterceptTouchEvent(false);
-                            }else if (Math.abs(displayRect.bottom - imageHeight) < 0.1 && b2 && moveY < 0){
-                                parent.requestDisallowInterceptTouchEvent(false);
-                            }else if (Math.abs(displayRect.top) < 0.1 && b2 && moveY > 0){
-                                parent.requestDisallowInterceptTouchEvent(false);
-                            }else {
-                                parent.requestDisallowInterceptTouchEvent(true);
-                            }
+                            parent.requestDisallowInterceptTouchEvent(!((Math.abs(displayRect.right - imageWidth) < 0.1 && b1 && moveX < 0)
+                                    || (Math.abs(displayRect.left) < 0.1 && b1 && moveX > 0)
+                                    || (Math.abs(displayRect.bottom - imageHeight) < 0.1 && b2 && moveY < 0)
+                                    || (Math.abs(displayRect.top) < 0.1 && b2 && moveY > 0)));
                         }
                     } else {
                         if (parent != null) {
