@@ -347,10 +347,10 @@ public class PhotoView extends AppCompatImageView {
         attacher.setStartHeight(mStartHeight);
     }
     public void setExitMode(boolean mode) {
+        attacher.setExitMode(mode);
         if (mode){
             clearBitmap();
         }
-        attacher.setExitMode(mode);
     }
 
 
@@ -568,7 +568,12 @@ public class PhotoView extends AppCompatImageView {
     }
 
     void clearBitmap(){
-        setSubsamplingScaleBitmap(null,null);
+        if (subsamplingScaleBitmap != null && !subsamplingScaleBitmap.isRecycled()){
+            this.subsamplingScaleBitmap.recycle();
+        }
+        this.subsamplingScaleBitmap = null;
+        this.showMatrix = null;
+        invalidate();
     }
 
     @Override

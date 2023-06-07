@@ -384,7 +384,7 @@ class PhotoViewSuperBigImageHelper {
             message.what = REGION;
             message.obj = matrixChangedRectF;
             mHandler.removeMessages(REGION);
-            mHandler.sendMessageDelayed(message, 200);
+            mHandler.sendMessageDelayed(message, 100);
         }
     }
 
