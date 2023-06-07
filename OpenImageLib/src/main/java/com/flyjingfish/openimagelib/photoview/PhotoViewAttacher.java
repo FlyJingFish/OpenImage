@@ -161,6 +161,27 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept && displayRect != null) {
                 int imageWidth = getImageViewWidth(mImageView);
                 int imageHeight = getImageViewHeight(mImageView);
+                if (parent != null) {
+                    boolean moveXBiggerY = Math.abs(moveX) > Math.abs(moveY);
+                    boolean moveYBiggerX = Math.abs(moveY) > Math.abs(moveX);
+                    parent.requestDisallowInterceptTouchEvent(
+                            !(
+                                    ((Math.abs(displayRect.right - imageWidth) < 0.1 || displayRect.right < imageWidth) && moveXBiggerY && moveX < 0)
+                                            || ((Math.abs(displayRect.left) < 0.1 || displayRect.left > 0) && moveXBiggerY && moveX > 0)
+                                            || ((Math.abs(displayRect.bottom - imageHeight) < 0.1 || displayRect.bottom < imageHeight) && moveYBiggerX && moveY < 0)
+                                            || ((Math.abs(displayRect.top) < 0.1 || displayRect.top > 0) && moveYBiggerX && moveY > 0)
+                            )
+                    );
+                }
+            } else {
+                if (parent != null) {
+                    parent.requestDisallowInterceptTouchEvent(true);
+                }
+            }
+//            ViewParent parent = mImageView.getParent();
+//            if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept && displayRect != null) {
+//                int imageWidth = getImageViewWidth(mImageView);
+//                int imageHeight = getImageViewHeight(mImageView);
 //                float displayWidth = displayRect.width();
 //                float displayHeight = displayRect.height();
 //                boolean bigViewWidth = displayWidth > imageWidth;
@@ -203,23 +224,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 //                        parent.requestDisallowInterceptTouchEvent(true);
 //                    }
 //                }
-                if (parent != null) {
-                    boolean moveXBiggerY = Math.abs(moveX) > Math.abs(moveY);
-                    boolean moveYBiggerX = Math.abs(moveY) > Math.abs(moveX);
-                    parent.requestDisallowInterceptTouchEvent(
-                        !(
-                            ((Math.abs(displayRect.right - imageWidth) < 0.1 || displayRect.right < imageWidth) && moveXBiggerY && moveX < 0)
-                            || ((Math.abs(displayRect.left) < 0.1 || displayRect.left > 0) && moveXBiggerY && moveX > 0)
-                            || ((Math.abs(displayRect.bottom - imageHeight) < 0.1 || displayRect.bottom < imageHeight) && moveYBiggerX && moveY < 0)
-                            || ((Math.abs(displayRect.top) < 0.1 || displayRect.top > 0) && moveYBiggerX && moveY > 0)
-                        )
-                    );
-                }
-            } else {
-                if (parent != null) {
-                    parent.requestDisallowInterceptTouchEvent(true);
-                }
-            }
+//            } else {
+//                if (parent != null) {
+//                    parent.requestDisallowInterceptTouchEvent(true);
+//                }
+//            }
         }
 
         @Override
