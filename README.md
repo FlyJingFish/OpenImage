@@ -6,7 +6,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/FlyJingFish/OpenImage.svg)](https://github.com/FlyJingFish/OpenImage/issues)
 [![GitHub license](https://img.shields.io/github/license/FlyJingFish/OpenImage.svg)](https://github.com/FlyJingFish/OpenImage/blob/master/LICENSE)
 
-## 属于你的侵入性低的大图查看器，高仿微信完美的过渡动画，支持自定义视频播放器，也可以自定义加载图片的内核，例如Glide，Picasso或其他的<br><br>如果帮到你点个star推广给更多人吧～
+## 属于你的侵入性低的大图查看器，完美的甚至完胜微信的过渡动画，支持自定义视频播放器，也可以自定义加载图片的内核，例如Glide，Picasso或其他的<br><br>如果帮到你点个star推广给更多人吧～
 
 ## [点此下载apk,也可扫下边二维码下载](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk?raw=true)
 
@@ -84,7 +84,7 @@ allprojects {
 
 ```gradle
 //OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.9.9'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.0.0'
 ```
 #### B、引入只带有图片引擎的版本（只支持查看图片）
 
@@ -92,7 +92,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:1.9.9'
 
 ```gradle
 //OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.9.9'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:2.0.0'
 ```
 
 #### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
@@ -102,7 +102,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:1.9.9'
 ```gradle
 //OpenImageLib 是基础库，没有引入图片引擎和视频播放器
 //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:1.9.9'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:2.0.0'
 
 ```
 
