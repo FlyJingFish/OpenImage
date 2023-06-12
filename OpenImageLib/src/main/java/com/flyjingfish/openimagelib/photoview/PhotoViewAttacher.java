@@ -700,6 +700,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
     }
 
+    public ShapeImageView.ShapeScaleType getSrcScaleType(){
+        return mSrcScaleType;
+    }
+
     public boolean isZoomable() {
         return mZoomEnabled;
     }

@@ -147,6 +147,10 @@ public class PhotoView extends AppCompatImageView {
         }
     }
 
+    public ShapeImageView.ShapeScaleType getSrcScaleType(){
+        return attacher.getSrcScaleType();
+    }
+
     @Override
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);

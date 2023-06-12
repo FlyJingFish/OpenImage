@@ -6,6 +6,7 @@ import android.app.SharedElementCallback;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.transition.Transition;
@@ -1033,6 +1034,13 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                     if (shareView instanceof PhotoView) {
                         ((PhotoView) shareView).setStartWidth(startWidth);
                         ((PhotoView) shareView).setStartHeight(startHeight);
+                        if ((exitView.getScaleType() == ImageView.ScaleType.CENTER && ((PhotoView) shareView).getSrcScaleType() == ShapeImageView.ShapeScaleType.CENTER)
+                                || (exitView.getScaleType() == ImageView.ScaleType.CENTER_INSIDE && ((PhotoView) shareView).getSrcScaleType() == ShapeImageView.ShapeScaleType.CENTER_INSIDE)){
+                            Drawable drawable = exitView.getDrawable();
+                            if (drawable != null && (drawable.getIntrinsicWidth()*1f/drawable.getIntrinsicHeight() != exitView.getWidth()*1f/exitView.getHeight())){
+                                ((PhotoView) shareView).setImageDrawable(drawable);
+                            }
+                        }
                     }
                     sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);
                 }

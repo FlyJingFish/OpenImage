@@ -5,6 +5,7 @@ import com.flyjingfish.openimagelib.enums.MediaType;
 
 public class ImageEntity implements OpenImageUrl {
     public String url;
+    public String coverUrl;
     public TestBean testBean;
     public ImageEntity(String url) {
         this.url = url;
@@ -25,7 +26,7 @@ public class ImageEntity implements OpenImageUrl {
 
     @Override
     public String getCoverImageUrl() {
-        return url;
+        return coverUrl != null?coverUrl:url;
     }
 
     @Override

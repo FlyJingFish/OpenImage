@@ -29,7 +29,8 @@ public class ScaleTypeActivity extends BaseActivity {
         binding = ActivityScaleTypeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         itemData = new ImageEntity();
-        itemData.url = "https://pics4.baidu.com/feed/50da81cb39dbb6fd95aa0c599b8d0d1e962b3708.jpeg?token=bf17224f51a6f4bb389e787f9c487940";
+        itemData.url = "http://pic1.win4000.com/wallpaper/2018-08-15/5b739582b7e78.jpg";
+        itemData.coverUrl = "http://pic1.win4000.com/wallpaper/2018-08-15/5b739582b7e78_270_152.jpg";
         setData();
         binding.seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
