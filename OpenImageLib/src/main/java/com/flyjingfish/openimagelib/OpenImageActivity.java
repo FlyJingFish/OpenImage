@@ -1,6 +1,5 @@
 package com.flyjingfish.openimagelib;
 
-import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.app.SharedElementCallback;
 import android.content.pm.PackageManager;
@@ -10,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.transition.Transition;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -26,7 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -973,14 +970,11 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             if (backViewType == BackViewType.SHARE_WECHAT) {
                 addWechatEffect(shareView);
             }
-            if (shareView instanceof PhotoView) {
-                if (((PhotoView) shareView).getSrcScaleType() == ShapeImageView.ShapeScaleType.CENTER
-                        || ((PhotoView) shareView).getSrcScaleType() == ShapeImageView.ShapeScaleType.CENTER_INSIDE){
-                    Drawable drawable = exitView.getDrawable();
-                    if (drawable != null){
-                        ((PhotoView) shareView).setImageDrawableExit(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
-                    }
-                }
+            Drawable drawable;
+            if ((shareView instanceof PhotoView) && (((PhotoView) shareView).getSrcScaleType() == ShapeImageView.ShapeScaleType.CENTER
+                    || ((PhotoView) shareView).getSrcScaleType() == ShapeImageView.ShapeScaleType.CENTER_INSIDE)
+                    && exitView != null && (drawable = exitView.getDrawable()) != null) {
+                ((PhotoView) shareView).setExitDrawableWidthHeight(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
             }
             setEnterSharedElementCallback(new SharedElementCallback() {
                 @Override

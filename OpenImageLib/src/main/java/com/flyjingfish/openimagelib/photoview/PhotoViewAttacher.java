@@ -103,6 +103,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float exitStartWidth;
     private float exitStartHeight;
     public boolean isCanLayout;
+    private int exitDrawableWidth, exitDrawableHeight;
 
     public void setStartWidth(float mStartWidth) {
         this.mStartWidth = mStartWidth;
@@ -760,7 +761,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         matrix.set(mSuppMatrix);
     }
 
-    int exitDrawableWidth, exitDrawableHeight;
     public void setExitDrawableWidthHeight(int width,int height) {
         exitDrawableWidth = width;
         exitDrawableHeight = height;

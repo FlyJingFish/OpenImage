@@ -160,7 +160,7 @@ public class PhotoView extends AppCompatImageView {
         startGif();
     }
 
-    public void setImageDrawableExit(int requestWidth, int requestHeight) {
+    public void setExitDrawableWidthHeight(int requestWidth, int requestHeight) {
         attacher.setExitDrawableWidthHeight(requestWidth, requestHeight);
     }
 
