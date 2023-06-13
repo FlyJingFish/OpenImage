@@ -935,11 +935,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         if (mScaleType == ScaleType.CENTER) {
             if (isExitMode) {
-                float exitScale1 = 1f;
+                float exitDrawableScale = 1f;
                 if (exitDrawableWidth != 0 && exitDrawableHeight != 0){
-                    exitScale1 = exitDrawableWidth *1f/drawableWidth;
+                    exitDrawableScale = exitDrawableWidth *1f/drawableWidth;
                 }
-                float exitScale = (1 / exitFloat) * exitScale1;
+                float exitScale = (1 / exitFloat) * exitDrawableScale;
                 mBaseMatrix.postScale(exitScale, exitScale);
                 mBaseMatrix.postTranslate((viewWidth - drawableWidth * exitScale) / 2F,
                         (viewHeight - drawableHeight * exitScale) / 2F);
@@ -968,7 +968,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     (viewHeight - drawableHeight * scale) / 2F);
 
         } else if (mScaleType == ScaleType.CENTER_INSIDE) {
-            float exitScale1 = 1f;
+            float exitDrawableScale = 1f;
             if (isExitMode && exitDrawableWidth != 0 && exitDrawableHeight != 0) {
                 final float widthScale1 = mStartWidth / exitDrawableWidth;
                 final float heightScale1 = mStartHeight / exitDrawableHeight;
@@ -976,9 +976,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 final float widthScale2 = mStartWidth / drawableWidth;
                 final float heightScale2 = mStartHeight / drawableHeight;
                 float scale2 = Math.min(1.0f, Math.min(widthScale2, heightScale2));
-                exitScale1 = ((exitDrawableWidth * scale1) / (drawableWidth * scale2));
+                exitDrawableScale = (exitDrawableWidth * scale1) / (drawableWidth * scale2);
             }
-            float scale = Math.min(1.0f, Math.min(widthScale * exitScale1, heightScale * exitScale1));
+            float scale = Math.min(1.0f, Math.min(widthScale * exitDrawableScale, heightScale * exitDrawableScale));
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
                     (viewHeight - drawableHeight * scale) / 2F);
