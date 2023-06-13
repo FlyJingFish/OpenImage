@@ -973,6 +973,15 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             if (backViewType == BackViewType.SHARE_WECHAT) {
                 addWechatEffect(shareView);
             }
+            if (shareView instanceof PhotoView) {
+                if (((PhotoView) shareView).getSrcScaleType() == ShapeImageView.ShapeScaleType.CENTER
+                        || ((PhotoView) shareView).getSrcScaleType() == ShapeImageView.ShapeScaleType.CENTER_INSIDE){
+                    Drawable drawable = exitView.getDrawable();
+                    if (drawable != null){
+                        ((PhotoView) shareView).setImageDrawableExit(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
+                    }
+                }
+            }
             setEnterSharedElementCallback(new SharedElementCallback() {
                 @Override
                 public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
@@ -1034,13 +1043,6 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                     if (shareView instanceof PhotoView) {
                         ((PhotoView) shareView).setStartWidth(startWidth);
                         ((PhotoView) shareView).setStartHeight(startHeight);
-                        if ((exitView.getScaleType() == ImageView.ScaleType.CENTER && ((PhotoView) shareView).getSrcScaleType() == ShapeImageView.ShapeScaleType.CENTER)
-                                || (exitView.getScaleType() == ImageView.ScaleType.CENTER_INSIDE && ((PhotoView) shareView).getSrcScaleType() == ShapeImageView.ShapeScaleType.CENTER_INSIDE)){
-                            Drawable drawable = exitView.getDrawable();
-                            if (drawable != null && (drawable.getIntrinsicWidth()*1f/drawable.getIntrinsicHeight() != exitView.getWidth()*1f/exitView.getHeight())){
-                                ((PhotoView) shareView).setImageDrawable(drawable);
-                            }
-                        }
                     }
                     sharedElements.put(OpenParams.SHARE_VIEW + showPosition, shareView);
                 }

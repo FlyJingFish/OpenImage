@@ -9,6 +9,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
@@ -88,6 +89,10 @@ abstract class BaseFragment extends BaseInnerFragment {
                 onTransitionEnd();
             }
         });
+    }
+
+    void setTransitionEndListener(Observer<Boolean> observer){
+        photosViewModel.transitionEndLiveData.observe(getViewLifecycleOwner(), observer);
     }
 
     /**

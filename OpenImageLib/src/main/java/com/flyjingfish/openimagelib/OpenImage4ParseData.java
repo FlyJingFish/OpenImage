@@ -454,7 +454,8 @@ class OpenImage4ParseData extends OpenImage4Params {
                 startActivity(intent, viewPair, null);
             }
         };
-        OpenImageConfig.getInstance().getBigImageHelper().loadImage(context, ImageLoadUtils.getInstance().getImageLoadSuccess(openImageUrl.getImageUrl()) ? openImageUrl.getImageUrl() : openImageUrl.getCoverImageUrl(), new OnLoadBigImageListener() {
+        ShapeImageView.ShapeScaleType shapeScaleType = getShapeScaleType();
+        OpenImageConfig.getInstance().getBigImageHelper().loadImage(context, (ImageLoadUtils.getInstance().getImageLoadSuccess(openImageUrl.getImageUrl()) && shapeScaleType != ShapeImageView.ShapeScaleType.CENTER_INSIDE && shapeScaleType != ShapeImageView.ShapeScaleType.CENTER) ? openImageUrl.getImageUrl() : openImageUrl.getCoverImageUrl(), new OnLoadBigImageListener() {
             @Override
             public void onLoadImageSuccess(Drawable drawable, String filePath) {
                 handler.removeCallbacksAndMessages(null);

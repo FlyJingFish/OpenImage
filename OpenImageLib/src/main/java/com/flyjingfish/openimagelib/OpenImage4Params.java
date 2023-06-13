@@ -151,7 +151,7 @@ class OpenImage4Params {
             intent.putExtra(OpenParams.DISABLE_CLICK_CLOSE, disableClickClose);
         }
         intent.putExtra(OpenParams.AUTO_SCROLL_SELECT, isAutoScrollScanPosition);
-        ShapeImageView.ShapeScaleType shapeScaleType = srcImageViewShapeScaleType != null ? srcImageViewShapeScaleType : ShapeImageView.ShapeScaleType.getType(srcImageViewScaleType);
+        ShapeImageView.ShapeScaleType shapeScaleType = getShapeScaleType();
         if (shapeScaleType != null){
             intent.putExtra(OpenParams.SRC_SCALE_TYPE, shapeScaleType.ordinal());
         }
@@ -194,6 +194,10 @@ class OpenImage4Params {
         }
         backViewKey = this.toString();
         return intent;
+    }
+
+    ShapeImageView.ShapeScaleType getShapeScaleType(){
+        return srcImageViewShapeScaleType != null ? srcImageViewShapeScaleType : ShapeImageView.ShapeScaleType.getType(srcImageViewScaleType);
     }
 
     protected class ExitOnBackView4ListView extends ExitOnBackView {

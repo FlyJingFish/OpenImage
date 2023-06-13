@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
+import androidx.lifecycle.Observer;
 
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
@@ -248,11 +249,18 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                     isStartCoverAnim = true;
                 }
             } else {
-                hideLoading(loadingView);
-                smallCoverImageView.setVisibility(View.GONE);
-                smallCoverImageView.setAlpha(0f);
-                photoView.setAlpha(1f);
-                loadPrivateImageFinish(true);
+                Observer<Boolean> observer = (Observer<Boolean>) aBoolean -> {
+                    hideLoading(loadingView);
+                    smallCoverImageView.setVisibility(View.GONE);
+                    smallCoverImageView.setAlpha(0f);
+                    photoView.setAlpha(1f);
+                    loadPrivateImageFinish(true);
+                };
+                if (photoView.getAlpha() == 0f && (srcScaleType == ShapeImageView.ShapeScaleType.CENTER_INSIDE || srcScaleType == ShapeImageView.ShapeScaleType.CENTER) && !isTransitionEnd){
+                    setTransitionEndListener(observer);
+                }else {
+                    observer.onChanged(isTransitionEnd);
+                }
             }
 
             isLoadSuccess = true;

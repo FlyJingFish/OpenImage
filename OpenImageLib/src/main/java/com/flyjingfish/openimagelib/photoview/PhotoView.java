@@ -25,7 +25,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -159,6 +158,10 @@ public class PhotoView extends AppCompatImageView {
             attacher.update();
         }
         startGif();
+    }
+
+    public void setImageDrawableExit(int requestWidth, int requestHeight) {
+        attacher.setExitDrawableWidthHeight(requestWidth, requestHeight);
     }
 
     @Override
