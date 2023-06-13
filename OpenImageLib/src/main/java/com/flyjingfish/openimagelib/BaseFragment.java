@@ -91,7 +91,7 @@ abstract class BaseFragment extends BaseInnerFragment {
         });
     }
 
-    void setTransitionEndListener(@NonNull Observer<Boolean> observer){
+    protected void setTransitionEndListener(@NonNull Observer<Boolean> observer){
         photosViewModel.transitionEndLiveData.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
