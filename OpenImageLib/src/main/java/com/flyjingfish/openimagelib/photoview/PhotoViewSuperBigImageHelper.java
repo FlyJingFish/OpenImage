@@ -151,6 +151,7 @@ class PhotoViewSuperBigImageHelper {
     private class MyOnGlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
         @Override
         public void onGlobalLayout() {
+            TOTAL_CACHE_LENGTH = Math.max(photoView.getWidth()/2f,ScreenUtils.dp2px(photoView.getContext(), 100));
             isOnGlobalLayout = true;
             photoView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         }
