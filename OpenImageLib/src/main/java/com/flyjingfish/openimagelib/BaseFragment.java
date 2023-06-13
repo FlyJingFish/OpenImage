@@ -91,8 +91,14 @@ abstract class BaseFragment extends BaseInnerFragment {
         });
     }
 
-    void setTransitionEndListener(Observer<Boolean> observer){
-        photosViewModel.transitionEndLiveData.observe(getViewLifecycleOwner(), observer);
+    void setTransitionEndListener(@NonNull Observer<Boolean> observer){
+        photosViewModel.transitionEndLiveData.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                photosViewModel.transitionEndLiveData.removeObserver(this);
+                observer.onChanged(aBoolean);
+            }
+        });
     }
 
     /**
