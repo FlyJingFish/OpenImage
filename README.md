@@ -84,7 +84,7 @@ allprojects {
 
 ```gradle
 //OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.0.1'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.0.2'
 ```
 #### B、引入只带有图片引擎的版本（只支持查看图片）
 
@@ -92,7 +92,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.0.1'
 
 ```gradle
 //OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:2.0.1'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:2.0.2'
 ```
 
 #### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
@@ -102,7 +102,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:2.0.1'
 ```gradle
 //OpenImageLib 是基础库，没有引入图片引擎和视频播放器
 //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:2.0.1'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:2.0.2'
 
 ```
 
@@ -139,7 +139,7 @@ for (ImageEntity data : datas) {
 
 //在点击时调用（以下以RecyclerView为例介绍）
 OpenImage.with(activity)
-        //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView，setNoneClickView）
+        //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView，setClickWebView，setNoneClickView）
         .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
            @Override
            public int getImageViewId(OpenImageUrl data, int position) {
@@ -219,7 +219,7 @@ public class ImageEntity implements OpenImageUrl {
 
 //在点击时调用（以下以RecyclerView为例介绍）
 OpenImage.with(activity)
-        //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView，setNoneClickView）
+        //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView，setClickWebView，setNoneClickView）
         .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
            @Override
            public int getImageViewId(OpenImageUrl data, int position) {
@@ -258,7 +258,7 @@ OpenImage.with(activity)
 
 //在点击时调用，按需使用即可（以下以RecyclerView为例介绍）
 OpenImage.with(activity)
-         //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView）
+         //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView，setClickWebView）
          .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
            @Override
            public int getImageViewId(OpenImageUrl data, int position) {

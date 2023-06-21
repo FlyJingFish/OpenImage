@@ -1,5 +1,25 @@
 # OpenImage 更新日志
 
+## 2.0.2
+
+1、新增 setClickRecyclerView(RecyclerView, LayoutManagerFindVisiblePosition, SourceImageViewIdGet) 方法，传入 `LayoutManagerFindVisiblePosition` 即可支持更多自定义的 LayoutManager
+
+使用方式：
+
+```java
+openImage.setClickRecyclerView(binding.rv.rv, new LayoutManagerFindVisiblePosition() {
+            @Override
+            public int findFirstVisibleItemPosition() {
+                return customLayoutManager.findFirstVisibleItemPosition();
+            }
+    
+            @Override
+            public int findLastVisibleItemPosition() {
+                return customLayoutManager.findLastVisibleItemPosition();
+            }
+        }, (data, position1) -> R.id.iv_image)
+```
+
 ## 2.0.1
 
 1、针对 getCoverImageUrl() 和 getImageUrl() 返回链接不同时，修复 Center 和 CenterInside 打开和关闭页面时的显示问题
