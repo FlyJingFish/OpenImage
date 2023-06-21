@@ -37,6 +37,7 @@ import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnPermissionsInterceptListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
+import com.flyjingfish.openimagelib.listener.LayoutManagerFindVisiblePosition;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
@@ -119,20 +120,38 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 设置点击的ImageView所在容器
+     * 设置点击的 ImageView 所在的 RecyclerView 容器
      *
      * @param recyclerView         展示数据的RecyclerView
      * @param sourceImageViewIdGet 展示数据的RecyclerView 的图片Id
      * @return {@link OpenImage}
      */
     public OpenImage setClickRecyclerView(RecyclerView recyclerView, SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet) {
+        return setClickRecyclerView(recyclerView,null,sourceImageViewIdGet);
+    }
+
+    /**
+     * 设置点击的 ImageView 所在的 RecyclerView 容器<br/>
+     * 如果你使用了除 <br/>
+     * {@link androidx.recyclerview.widget.LinearLayoutManager}、<br/>
+     * {@link androidx.recyclerview.widget.GridLayoutManager}、<br/>
+     * {@link androidx.recyclerview.widget.StaggeredGridLayoutManager}<br/>
+     * 之外的{@link RecyclerView.LayoutManager}，可在此设置 {@link LayoutManagerFindVisiblePosition} 并返回相应的参数即可，这样可以获得支持更多的自定义{@link RecyclerView.LayoutManager}
+     *
+     * @param recyclerView         展示数据的RecyclerView
+     * @param layoutManagerFindVisiblePosition 返回您自定义或三方库的 {@link RecyclerView.LayoutManager} 第一个和最后一个可见 Item 的位置
+     * @param sourceImageViewIdGet 展示数据的RecyclerView 的图片Id
+     * @return {@link OpenImage}
+     */
+    public OpenImage setClickRecyclerView(RecyclerView recyclerView, LayoutManagerFindVisiblePosition layoutManagerFindVisiblePosition, SourceImageViewIdGet<OpenImageUrl> sourceImageViewIdGet) {
         this.recyclerView = recyclerView;
+        this.layoutManagerFindVisiblePosition = layoutManagerFindVisiblePosition;
         this.sourceImageViewIdGet = sourceImageViewIdGet;
         return this;
     }
 
     /**
-     * 设置点击的ImageView所在容器
+     * 设置点击的 ImageView 所在的 ViewPager2 容器
      *
      * @param viewPager2           展示数据的ViewPager2
      * @param sourceImageViewIdGet 展示数据的ViewPager2 的图片Id
@@ -145,7 +164,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 设置点击的ImageView所在容器
+     * 设置点击的 ImageView 所在的 ViewPager 容器
      *
      * @param viewPager          展示数据的ViewPager
      * @param sourceImageViewGet 展示数据的ViewPager 的图片ImageView
@@ -158,7 +177,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 设置点击的ImageView所在容器
+     * 设置点击的 ImageView 所在的 GridView 容器
      *
      * @param gridView             展示数据的GridView
      * @param sourceImageViewIdGet 展示数据的GridView 的图片Id
@@ -171,7 +190,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 设置点击的ImageView所在容器
+     * 设置点击的 ImageView 所在的 ListView 容器
      *
      * @param listView             展示数据的ListView
      * @param sourceImageViewIdGet 展示数据的ListView 的图片Id

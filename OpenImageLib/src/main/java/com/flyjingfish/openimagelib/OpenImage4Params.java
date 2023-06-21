@@ -22,6 +22,7 @@ import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.OnExitListener;
 import com.flyjingfish.openimagelib.listener.OnPermissionsInterceptListener;
 import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
+import com.flyjingfish.openimagelib.listener.LayoutManagerFindVisiblePosition;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
@@ -38,6 +39,7 @@ class OpenImage4Params {
     protected final List<OpenImageUrl> openImageUrls = new ArrayList<>();
     protected List<ImageView> imageViews;
     protected RecyclerView recyclerView;
+    protected LayoutManagerFindVisiblePosition layoutManagerFindVisiblePosition;
     protected AbsListView absListView;
     protected ViewPager2 viewPager2;
     protected ViewPager viewPager;
@@ -155,9 +157,6 @@ class OpenImage4Params {
         if (shapeScaleType != null){
             intent.putExtra(OpenParams.SRC_SCALE_TYPE, shapeScaleType.ordinal());
         }
-//        if (imageDiskMode != null){
-//            intent.putExtra(OpenParams.IMAGE_DISK_MODE, imageDiskMode.ordinal());
-//        }
         intent.putExtra(OpenParams.ERROR_RES_ID, errorResId);
         intent.putExtra(OpenParams.TOUCH_CLOSE_SCALE, OpenImageConfig.getInstance().getTouchCloseScale());
         intent.putExtra(OpenParams.OPEN_IMAGE_STYLE, openImageStyle);
@@ -437,7 +436,10 @@ class OpenImage4Params {
             int firstPos = 0;
             int lastPos = 0;
             RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-            if (layoutManager instanceof LinearLayoutManager) {
+            if (layoutManagerFindVisiblePosition != null){
+                firstPos = layoutManagerFindVisiblePosition.findFirstVisibleItemPosition();
+                lastPos = layoutManagerFindVisiblePosition.findLastVisibleItemPosition();
+            }else if (layoutManager instanceof LinearLayoutManager) {
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
                 firstPos = linearLayoutManager.findFirstVisibleItemPosition();
                 lastPos = linearLayoutManager.findLastVisibleItemPosition();

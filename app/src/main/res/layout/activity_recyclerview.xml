@@ -49,6 +49,16 @@
             android:textColor="@color/white"
             android:background="@drawable/bg_title"
             android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/btn_c"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:text="自定义"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_title"
+            android:layout_weight="1"/>
     </LinearLayout>
     <include android:id="@+id/rv" layout="@layout/layout_recyclerview"/>
 </LinearLayout>

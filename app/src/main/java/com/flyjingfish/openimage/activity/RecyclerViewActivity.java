@@ -23,12 +23,16 @@ import com.flyjingfish.openimage.databinding.ActivityRecyclerviewBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.OpenImageActivity;
-import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.listener.OnPermissionsInterceptListener;
 import com.flyjingfish.openimagelib.listener.OnRequestPermissionListener;
+import com.flyjingfish.openimagelib.listener.LayoutManagerFindVisiblePosition;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexWrap;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 import com.tbruyelle.rxpermissions3.RxPermissions;
 
 import org.json.JSONArray;
@@ -36,10 +40,12 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class RecyclerViewActivity extends BaseActivity {
 
     private ActivityRecyclerviewBinding binding;
+    private FlexboxLayoutManager customLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,27 @@ public class RecyclerViewActivity extends BaseActivity {
             loadData();
         });
 
+        binding.btnC.setOnClickListener(v -> {
+            setSelect(4);
+            customLayoutManager = new FlexboxLayoutManager(this){
+                @Override
+                public RecyclerView.LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
+                    if (lp instanceof RecyclerView.LayoutParams){
+                        return new LayoutParams(lp);
+                    }else if (lp instanceof ViewGroup.MarginLayoutParams){
+                        return new LayoutParams(lp);
+                    }else {
+                        return new LayoutParams(lp);
+                    }
+                }
+            };
+            customLayoutManager.setFlexWrap(FlexWrap.WRAP);
+            customLayoutManager.setFlexDirection(FlexDirection.ROW);
+            customLayoutManager.setJustifyContent(JustifyContent.FLEX_START);
+            binding.rv.rv.setLayoutManager(customLayoutManager);
+            loadData();
+        });
+
     }
 
     private int layoutType;
@@ -80,6 +107,7 @@ public class RecyclerViewActivity extends BaseActivity {
         binding.btnH.setSelected(pos == 1);
         binding.btnG.setSelected(pos == 2);
         binding.btnP.setSelected(pos == 3);
+        binding.btnC.setSelected(pos == 4);
     }
 
     private void loadData() {
@@ -111,16 +139,24 @@ public class RecyclerViewActivity extends BaseActivity {
 
     private class RvAdapter extends RecyclerView.Adapter<RvAdapter.MyHolder> {
         List<ImageEntity> datas;
+        int[] randoms ;
 
         public RvAdapter(List<ImageEntity> datas) {
             this.datas = datas;
+            randoms = new int[datas.size()];
+            for (int i = 0; i < datas.size(); i++) {
+                int random = 1 + new Random().nextInt(3);
+                randoms[i] = random;
+            }
         }
 
         @NonNull
         @Override
         public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view;
-            if (layoutType == 3) {
+            if (layoutType == 4) {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_flex, parent, false);
+            }else if (layoutType == 3) {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_staggered, parent, false);
             } else {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listview, parent, false);
@@ -130,29 +166,41 @@ public class RecyclerViewActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyHolder holder, int position) {
-            if (layoutType == 1) {
+            if (layoutType == 4) {
+                ViewGroup.LayoutParams layoutParams = holder.ivImage.getLayoutParams();
+                layoutParams.width = (int) ScreenUtils.dp2px(RecyclerViewActivity.this, 86 * randoms[position]);
+                holder.ivImage.setLayoutParams(layoutParams);
+            }else if (layoutType == 1) {
                 ViewGroup.LayoutParams layoutParams = holder.ivImage.getLayoutParams();
                 layoutParams.width = (int) ScreenUtils.dp2px(RecyclerViewActivity.this, 100);
                 layoutParams.height = (int) ScreenUtils.dp2px(RecyclerViewActivity.this, 100);
+                holder.ivImage.setLayoutParams(layoutParams);
             } else if (layoutType == 0 || layoutType == 2) {
                 ViewGroup.LayoutParams layoutParams = holder.ivImage.getLayoutParams();
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 layoutParams.height = (int) ScreenUtils.dp2px(RecyclerViewActivity.this, 220);
+                holder.ivImage.setLayoutParams(layoutParams);
             }
-            if (layoutType == 3) {
-                MyImageLoader.getInstance().load(holder.ivImage, datas.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
-            } else {
-                MyImageLoader.getInstance().load(holder.ivImage, datas.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
-
-            }
+            MyImageLoader.getInstance().load(holder.ivImage, datas.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
             holder.ivImage.setOnClickListener(v -> {
-                OpenImage.with(RecyclerViewActivity.this).setClickRecyclerView(binding.rv.rv, new SourceImageViewIdGet() {
-                    @Override
-                    public int getImageViewId(OpenImageUrl data, int position) {
-                        return R.id.iv_image;
-                    }
-                }).setAutoScrollScanPosition(true)
-                        .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
+                OpenImage openImage = OpenImage.with(RecyclerViewActivity.this);
+                if (layoutType == 4){
+                    openImage.setClickRecyclerView(binding.rv.rv, new LayoutManagerFindVisiblePosition() {
+                        @Override
+                        public int findFirstVisibleItemPosition() {
+                            return customLayoutManager.findFirstVisibleItemPosition();
+                        }
+
+                        @Override
+                        public int findLastVisibleItemPosition() {
+                            return customLayoutManager.findLastVisibleItemPosition();
+                        }
+                    }, (data, position1) -> R.id.iv_image);
+                }else {
+                    openImage.setClickRecyclerView(binding.rv.rv, (data, position12) -> R.id.iv_image);
+                }
+                openImage.setAutoScrollScanPosition(true)
+                        .setSrcImageViewScaleType(holder.ivImage.getScaleType(), true)
                         .setImageUrlList(datas)
                         .addPageTransformer(new ScaleInTransformer())
                         .setOpenImageStyle(R.style.DefaultPhotosTheme)

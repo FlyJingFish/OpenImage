@@ -76,14 +76,14 @@ class OpenImage4ParseData extends OpenImage4Params {
             }
 
             RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-            if (!(layoutManager instanceof LinearLayoutManager || layoutManager instanceof StaggeredGridLayoutManager)) {
-                throw new IllegalArgumentException("只支持使用继承自LinearLayoutManager和StaggeredGridLayoutManager的RecyclerView");
+            if (!(layoutManager instanceof LinearLayoutManager || layoutManager instanceof StaggeredGridLayoutManager || layoutManagerFindVisiblePosition != null)) {
+                throw new IllegalArgumentException("只支持使用继承自 LinearLayoutManager 和 StaggeredGridLayoutManager 的 RecyclerView，或在调用setClickRecyclerView时设置了 LayoutManagerFindVisiblePosition 接口");
             }
             srcViewType = SrcViewType.RV;
 
             openImageDetails = new ArrayList<>();
             viewPair = initShareView(openImageDetails);
-            if (checkIllegalException4ShareView(viewPair,"请确保是否调用了setClickPosition并且参数设置正确，或 SourceImageViewIdGet 返回的 ImageView 的Id正确")){
+            if (checkIllegalException4ShareView(viewPair,"请确保是否调用了 setClickPosition 并且参数设置正确，或 SourceImageViewIdGet 返回的 ImageView 的Id正确")){
                 return;
             }
             View shareViewClick = viewPair.first;
@@ -627,6 +627,7 @@ class OpenImage4ParseData extends OpenImage4Params {
                     if (event == Lifecycle.Event.ON_DESTROY) {
                         context = null;
                         recyclerView = null;
+                        layoutManagerFindVisiblePosition = null;
                         absListView = null;
                         viewPager = null;
                         viewPager2 = null;
