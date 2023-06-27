@@ -426,6 +426,14 @@ public class StatusBarHelper {
             }
         }
         if (sStatusBarHeight <= 0) {
+            int height = 0;
+            int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                height = context.getResources().getDimensionPixelSize(resourceId);
+            }
+            sStatusBarHeight = height;
+        }
+        if (sStatusBarHeight <= 0) {
             if (sVirtualDensity == -1) {
                 sStatusBarHeight = (int) ScreenUtils.dp2px(context, STATUS_BAR_DEFAULT_HEIGHT_DP);
             } else {
