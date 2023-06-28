@@ -214,6 +214,7 @@ public class OpenImageConfig {
     }
 
     /**
+     * 全局设置关闭预加载<br>
      * 关闭预加载，关闭后不会预加载，页面回收会更频繁
      */
     public void closePreload() {

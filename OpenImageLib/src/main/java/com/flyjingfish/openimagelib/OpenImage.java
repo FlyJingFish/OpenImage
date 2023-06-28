@@ -774,6 +774,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
+     * 局部设置关闭预加载，可通过{@link OpenImageConfig#closePreload()}全局设置，设置此参数全局设置在此次调用中暂时失效<br>
      * 关闭预加载，关闭后不会预加载，页面回收会更频繁
      */
     public OpenImage closePreload() {
