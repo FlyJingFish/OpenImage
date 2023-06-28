@@ -1,5 +1,25 @@
 # OpenImage 更新日志
 
+## 2.0.3
+
+1、新增预加载配置，对于图片和视频都适用，视频可在切换页面后秒播
+
+- 全局设置
+```java
+    OpenImageConfig.getInstance().setPreloadCount(lazyPreload,preloadCount);
+```
+- 局部设置
+- 
+```java
+    OpenImage.with(Context context).setPreloadCount(lazyPreload,preloadCount);
+```
+
+2、优化视频播放速度，通过设置预加载切换页面后可实现视频秒播效果
+
+3、修改状态栏高度获取方法，保证Android 11以上能获取到正确的高度
+
+4、升级 [ShapeImageView](https://github.com/FlyJingFish/ShapeImageView) 库至最新版本 1.5.4
+
 ## 2.0.2
 
 1、新增 setClickRecyclerView(RecyclerView, LayoutManagerFindVisiblePosition, SourceImageViewIdGet) 方法，传入 `LayoutManagerFindVisiblePosition` 即可支持更多自定义的 LayoutManager
