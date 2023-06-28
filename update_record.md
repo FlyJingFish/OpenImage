@@ -9,7 +9,6 @@
     OpenImageConfig.getInstance().setPreloadCount(lazyPreload,preloadCount);
 ```
 - 局部设置
-- 
 ```java
     OpenImage.with(Context context).setPreloadCount(lazyPreload,preloadCount);
 ```
