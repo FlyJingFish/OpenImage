@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.IntRange;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -751,6 +752,18 @@ public final class OpenImage extends OpenImage4ParseData {
      */
     public OpenImage setOnPermissionsInterceptListener(OnPermissionsInterceptListener onPermissionsInterceptListener) {
         this.onPermissionsInterceptListener = onPermissionsInterceptListener;
+        return this;
+    }
+
+    /**
+     * 局部设置预加载个数，可通过{@link OpenImageConfig#setPreloadCount(boolean, int)}全局设置，设置此参数全局设置在此次调用中暂时失效</br>
+     * 不设置时默认时 lazyPreload = true , preloadCount = 1
+     * @param lazyPreload 是否懒加载 true 的话打开页面时不会预加载，滑动一个时才开始预加载；false的话打开页面时就开始预加载
+     * @param preloadCount 预加载个数，对应于{@link androidx.viewpager2.widget.ViewPager2#setOffscreenPageLimit(int)}
+     */
+    public OpenImage setPreloadCount(boolean lazyPreload,@IntRange(from = 1) int preloadCount) {
+        this.lazyPreload = lazyPreload;
+        this.preloadCount = preloadCount;
         return this;
     }
 

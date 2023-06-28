@@ -306,11 +306,11 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 showPosition = position;
+                if (lazyPreload && viewPager.getOffscreenPageLimit() != preloadCount){
+                    viewPager.setOffscreenPageLimit(preloadCount);
+                }
                 setIndicatorPosition(position, getOpenImageBeans().size());
                 showMoreView();
-                if (position != selectPos && viewPager.getOffscreenPageLimit() != 1) {
-                    viewPager.setOffscreenPageLimit(1);
-                }
                 if (isFirstBacked && onBackView != null) {
                     onBackView.onScrollPos(getOpenImageBeans().get(showPosition).viewPosition);
                 }
@@ -347,6 +347,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             initIndicator();
             setIndicatorPosition(showPosition, getOpenImageBeans().size());
         });
+        if (!lazyPreload){
+            viewPager.setOffscreenPageLimit(preloadCount);
+        }
         viewPager.setCurrentItem(selectPos, false);
     }
 

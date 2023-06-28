@@ -94,6 +94,9 @@ class OpenImage4Params {
     protected CloseParams closeParams;
     protected OnPermissionsInterceptListener onPermissionsInterceptListener;
 
+    protected int preloadCount = OpenImageConfig.getInstance().getPreloadCount();
+    protected boolean lazyPreload = OpenImageConfig.getInstance().isLazyPreload();
+
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV, WEB_VIEW
     }
@@ -191,6 +194,8 @@ class OpenImage4Params {
             intent.putExtra(OpenParams.PERMISSION_LISTENER, key);
             ImageLoadUtils.getInstance().setPermissionsInterceptListener(key,onPermissionsInterceptListener);
         }
+        intent.putExtra(OpenParams.PRELOAD_COUNT, preloadCount);
+        intent.putExtra(OpenParams.LAZY_PRELOAD, lazyPreload);
         backViewKey = this.toString();
         return intent;
     }

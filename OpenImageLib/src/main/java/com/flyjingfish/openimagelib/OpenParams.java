@@ -39,4 +39,6 @@ class OpenParams {
     public static final String CLOSE_SHOW = "closeShow";
     public static final String CLOSE_PARAMS = "closeParams";
     public static final String PERMISSION_LISTENER = "PermissionsInterceptListener";
+    public static final String PRELOAD_COUNT = "preloadCount";
+    public static final String LAZY_PRELOAD = "lazyPreload";
 }

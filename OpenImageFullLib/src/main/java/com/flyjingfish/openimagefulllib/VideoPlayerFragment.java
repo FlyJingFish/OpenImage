@@ -117,6 +117,7 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
 
     private void play(){
         if (isTransitionEnd && isLoadImageFinish && !isPlayed){
+            startPlay();
             if (getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
                 toPlay4Resume();
             }else {
@@ -134,7 +135,29 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
         }
     }
 
+    /**
+     * 从2.0.3开始播放逻辑从这里改为从{@link VideoPlayerFragment#startPlay()}播放,使用本库中的播放器可以预加载，保持最快速度播放
+     */
     protected void toPlay4Resume(){
+
+    }
+
+    /**
+     * 从2.0.3新增此方法；开始播放，如果生命周期 在 onResume 下立刻开始播放，否则开始预加载，加载完毕后自动暂停，当 生命周期回到 onResume 下可实现快速开始播放
+     *
+     */
+    protected void startPlay(){
+        readyPlay();
+        videoPlayer.startPlayLogic();
+        if (getLifecycle().getCurrentState() != Lifecycle.State.RESUMED){
+            videoPlayer.onVideoPause();
+        }
+    }
+
+    /**
+     * 准备播放的参数
+     */
+    protected void readyPlay(){
         gsyVideoHelper = videoPlayer.playUrl(openImageUrl.getVideoUrl());
         if (gsyVideoHelper.getGsyVideoOptionBuilder() != null){
             gsyVideoHelper.getGsyVideoOptionBuilder().setVideoAllCallBack(new GSYSampleCallBack(){
@@ -145,7 +168,6 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
                 }
             });
         }
-        videoPlayer.startPlayLogic();
     }
 
     @Override

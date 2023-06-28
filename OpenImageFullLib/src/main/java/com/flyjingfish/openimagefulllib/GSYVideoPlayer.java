@@ -2,6 +2,7 @@ package com.flyjingfish.openimagefulllib;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.media.AudioManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Surface;
@@ -156,6 +157,24 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     }
 
     @Override
+    protected void startPrepare() {
+        super.startPrepare();
+        mAudioManager.abandonAudioFocus(onAudioFocusChangeListener);
+    }
+
+    @Override
+    public void startAfterPrepared() {
+        super.startAfterPrepared();
+        if (mCurrentState == CURRENT_STATE_PLAYING) {
+            mAudioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        }else if (mCurrentState == CURRENT_STATE_PAUSE) {
+            updateStartImage();
+            startDismissControlViewTimer();
+        }
+
+    }
+
+    @Override
     public int getCurrentVideoHeight() {
         GSYVideoType.setShowType(showType);
         return super.getCurrentVideoHeight();
@@ -199,6 +218,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         isUserInput = false;
         if (!userInput && ((oldState == CURRENT_STATE_PLAYING && state == CURRENT_STATE_PAUSE)||(oldState == CURRENT_STATE_PAUSE && state == CURRENT_STATE_PLAYING))){
             if (state == CURRENT_STATE_PLAYING){
+                updateStartImage();
                 startDismissControlViewTimer();
             }
             return;

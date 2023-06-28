@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.danikula.videocache.StorageUtils;
 import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.ActivityMainBinding;
@@ -107,6 +108,7 @@ public class MainActivity extends BaseActivity {
             Glide.get(MainActivity.this).clearDiskCache();
             clearPicassoCache();
             clearPicassoVideoCache();
+            clearVideoCache();
             handler.post(() -> Toast.makeText(MainActivity.this,"清理缓存完成",Toast.LENGTH_SHORT).show());
         });
 
@@ -129,6 +131,12 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void clearVideoCache(){
+        String path = StorageUtils.getIndividualCacheDirectory
+                (getApplicationContext()).getAbsolutePath()
+                + File.separator;
+        deleteDirectory(new File(path));
+    }
     private void clearPicassoCache(){
         deleteDirectory(PicassoLoader.createDefaultCacheDir(getApplication()));
     }

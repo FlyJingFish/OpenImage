@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.transition.Fade;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.ArrayMap;
@@ -115,6 +116,9 @@ class BaseActivity extends AppCompatActivity {
     MoreViewShowType closeShowType = MoreViewShowType.IMAGE;
 
     int themeRes;
+
+    int preloadCount;
+    boolean lazyPreload;
 
     List<OpenImageDetail> getOpenImageBeans() {
         return openImageBeans;
@@ -332,6 +336,8 @@ class BaseActivity extends AppCompatActivity {
         imageShapeParams = getIntent().getParcelableExtra(OpenParams.IMAGE_SHAPE_PARAMS);
         wechatExitFillInEffect = getIntent().getBooleanExtra(OpenParams.WECHAT_EXIT_FILL_IN_EFFECT,false);
         onPermissionKey = getIntent().getStringExtra(OpenParams.PERMISSION_LISTENER);
+        preloadCount = getIntent().getIntExtra(OpenParams.PRELOAD_COUNT,1);
+        lazyPreload = getIntent().getBooleanExtra(OpenParams.LAZY_PRELOAD, false);
     }
 
     protected void addOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {

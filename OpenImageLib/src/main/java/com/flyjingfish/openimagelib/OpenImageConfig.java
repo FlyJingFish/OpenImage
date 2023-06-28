@@ -1,6 +1,8 @@
 package com.flyjingfish.openimagelib;
 
 import androidx.annotation.FloatRange;
+import androidx.annotation.IntDef;
+import androidx.annotation.IntRange;
 
 import com.flyjingfish.openimagelib.listener.BigImageHelper;
 import com.flyjingfish.openimagelib.listener.DownloadMediaHelper;
@@ -28,6 +30,9 @@ public class OpenImageConfig {
     private float touchCloseScale;
     private boolean isFixSharedAnimMemoryLeaks = true;
     private boolean isFixAndroid12OnBackPressed = true;
+
+    private int preloadCount = 1;
+    private boolean lazyPreload = true;
 
     private OpenImageConfig() {
     }
@@ -183,5 +188,23 @@ public class OpenImageConfig {
      */
     public void setSupportSuperBigImage(boolean supportSuperBigImage) {
         this.supportSuperBigImage = supportSuperBigImage;
+    }
+
+    public int getPreloadCount() {
+        return preloadCount;
+    }
+
+    public boolean isLazyPreload() {
+        return lazyPreload;
+    }
+
+    /**
+     * 全局设置预加载个数
+     * @param lazyPreload 是否懒加载 true 的话打开页面时不会预加载，滑动一个时才开始预加载；false的话打开页面时就开始预加载
+     * @param preloadCount 预加载个数，对应于{@link androidx.viewpager2.widget.ViewPager2#setOffscreenPageLimit(int)}
+     */
+    public void setPreloadCount(boolean lazyPreload,@IntRange(from = 1) int preloadCount) {
+        this.lazyPreload = lazyPreload;
+        this.preloadCount = preloadCount;
     }
 }
