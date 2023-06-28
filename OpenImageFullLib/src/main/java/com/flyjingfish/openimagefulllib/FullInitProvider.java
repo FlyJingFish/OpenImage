@@ -20,6 +20,7 @@ public class FullInitProvider extends ContentProvider {
         if (OpenImageConfig.getInstance().getDownloadMediaHelper() == null || OpenImageConfig.getInstance().getDownloadMediaHelper() != fullGlideDownloadMediaHelper){
             OpenImageConfig.getInstance().setDownloadMediaHelper(fullGlideDownloadMediaHelper);
         }
+        OpenImageConfig.getInstance().setPreloadCount(false,4);
         return true;
     }
 

@@ -756,8 +756,13 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 局部设置预加载个数，可通过{@link OpenImageConfig#setPreloadCount(boolean, int)}全局设置，设置此参数全局设置在此次调用中暂时失效</br>
-     * 不设置时默认时 lazyPreload = true , preloadCount = 1
+     * 局部设置预加载个数，可通过{@link OpenImageConfig#setPreloadCount(boolean, int)}全局设置，设置此参数全局设置在此次调用中暂时失效<br><br>
+     *
+     * <p>不设置时，默认是
+     * <ul>
+     *  <li>如果你用的是 「OpenImageLib」 或 「OpenImageGlideLib」默认是 lazyPreload = true , preloadCount = 1
+     *  <li>如果你用的是 「OpenImageFullLib」默认是 lazyPreload = false , preloadCount = 4
+     * </ul>
      * @param lazyPreload 是否懒加载 true 的话打开页面时不会预加载，滑动一个时才开始预加载；false的话打开页面时就开始预加载
      * @param preloadCount 预加载个数，对应于{@link androidx.viewpager2.widget.ViewPager2#setOffscreenPageLimit(int)}
      */
