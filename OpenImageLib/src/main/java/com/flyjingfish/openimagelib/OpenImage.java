@@ -756,7 +756,8 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 局部设置预加载个数，可通过{@link OpenImageConfig#setPreloadCount(boolean, int)}全局设置，设置此参数全局设置在此次调用中暂时失效<br><br>
+     * 局部设置预加载个数，可通过{@link OpenImageConfig#setPreloadCount(boolean, int)}全局设置，设置此参数全局设置在此次调用中暂时失效<br>
+     * 打开预加载，对于图片来说可以提前加载出来，对于视频来说可以拥有切换秒播的效果<br>
      *
      * <p>不设置时，默认是
      * <ul>
@@ -769,6 +770,15 @@ public final class OpenImage extends OpenImage4ParseData {
     public OpenImage setPreloadCount(boolean lazyPreload,@IntRange(from = 1) int preloadCount) {
         this.lazyPreload = lazyPreload;
         this.preloadCount = preloadCount;
+        return this;
+    }
+
+    /**
+     * 关闭预加载，关闭后不会预加载，页面回收会更频繁
+     */
+    public OpenImage closePreload() {
+        this.lazyPreload = true;
+        this.preloadCount = -1;
         return this;
     }
 

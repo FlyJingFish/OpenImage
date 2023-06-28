@@ -212,4 +212,12 @@ public class OpenImageConfig {
         this.lazyPreload = lazyPreload;
         this.preloadCount = preloadCount;
     }
+
+    /**
+     * 关闭预加载，关闭后不会预加载，页面回收会更频繁
+     */
+    public void closePreload() {
+        this.lazyPreload = true;
+        this.preloadCount = -1;
+    }
 }
