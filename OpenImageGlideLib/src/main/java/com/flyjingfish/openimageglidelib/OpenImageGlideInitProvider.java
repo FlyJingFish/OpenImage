@@ -1,26 +1,23 @@
-package com.flyjingfish.openimagefulllib;
+package com.flyjingfish.openimageglidelib;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.flyjingfish.openimageglidelib.GlideDownloadMediaHelper;
 import com.flyjingfish.openimagelib.OpenImageConfig;
 
-public class FullInitProvider extends ContentProvider {
+public class OpenImageGlideInitProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
-        //初始化视频加载，如果有多个请每次在调用openImage.show之前设置一遍
-        if (OpenImageConfig.getInstance().getVideoFragmentCreate() == null){
-            OpenImageConfig.getInstance().setVideoFragmentCreate(new VideoFragmentCreateImpl());
+        //初始化大图加载器
+        if (OpenImageConfig.getInstance().getBigImageHelper() == null){
+            OpenImageConfig.getInstance().setBigImageHelper(new GlideBigImageHelper());
         }
-        FullGlideDownloadMediaHelper fullGlideDownloadMediaHelper = FullGlideDownloadMediaHelper.getInstance();
         //初始化下载原图或视频类
-        if (OpenImageConfig.getInstance().getDownloadMediaHelper() == null || OpenImageConfig.getInstance().getDownloadMediaHelper() != fullGlideDownloadMediaHelper){
-            OpenImageConfig.getInstance().setDownloadMediaHelper(fullGlideDownloadMediaHelper);
+        if (OpenImageConfig.getInstance().getDownloadMediaHelper() == null){
+            OpenImageConfig.getInstance().setDownloadMediaHelper(new GlideDownloadMediaHelper());
         }
-        OpenImageConfig.getInstance().setPreloadCount(false,4);
         return true;
     }
 

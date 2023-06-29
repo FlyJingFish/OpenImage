@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.flyjingfish.openimagefulllib">
 
     <application>
         <provider
-            android:name=".FullInitProvider"
-            android:authorities="${applicationId}.VideoInitProvider"
+            android:name=".OpenImageFullInitProvider"
+            android:authorities="${applicationId}.OpenImageFullInitProvider"
             android:exported="false"
             android:multiprocess="true" />
+
+        <provider
+            android:name="com.flyjingfish.openimageglidelib.OpenImageGlideInitProvider"
+            android:authorities="${applicationId}.OpenImageGlideInitProvider"
+            android:exported="false"
+            android:multiprocess="true"
+            tools:node="remove"/>
     </application>
 </manifest>

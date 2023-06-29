@@ -3,8 +3,8 @@
     package="com.flyjingfish.openimageglidelib">
     <application>
         <provider
-            android:name=".GlideInitProvider"
-            android:authorities="${applicationId}.GlideInitProvider"
+            android:name=".OpenImageGlideInitProvider"
+            android:authorities="${applicationId}.OpenImageGlideInitProvider"
             android:exported="false"
             android:multiprocess="true" />
     </application>
