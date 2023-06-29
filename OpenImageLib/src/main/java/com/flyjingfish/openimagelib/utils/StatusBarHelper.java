@@ -426,12 +426,14 @@ public class StatusBarHelper {
             }
         }
         if (sStatusBarHeight <= 0) {
-            int height = 0;
-            int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                height = context.getResources().getDimensionPixelSize(resourceId);
+            try {
+                int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+                if (resourceId > 0) {
+                    sStatusBarHeight = context.getResources().getDimensionPixelSize(resourceId);
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
-            sStatusBarHeight = height;
         }
         if (sStatusBarHeight <= 0) {
             if (sVirtualDensity == -1) {
