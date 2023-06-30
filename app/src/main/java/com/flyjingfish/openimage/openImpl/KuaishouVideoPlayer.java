@@ -52,14 +52,11 @@ public class KuaishouVideoPlayer extends GSYVideoPlayer {
         seekBar = findViewById(R.id.progress2);
         startBtn = findViewById(R.id.start_btn);
         changeUiToNormal();
-        seekBar.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_MOVE){
-                    seekBar.setAlpha(1f);
-                }
-                return false;
+        seekBar.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_MOVE){
+                seekBar.setAlpha(1f);
             }
+            return false;
         });
         seekBar.setOnSeekBarChangeListener(this);
     }
@@ -85,6 +82,29 @@ public class KuaishouVideoPlayer extends GSYVideoPlayer {
     }
 
     @Override
+    protected void clickStartIcon() {
+        super.clickStartIcon();
+        //以下是为了缓冲时还能暂停
+        if (mCurrentState == CURRENT_STATE_PREPAREING || mCurrentState == CURRENT_STATE_PLAYING_BUFFERING_START){
+            if (mLoadingProgressBar.getVisibility() == VISIBLE){
+                onVideoPause();
+                setViewShowState(startBtn,VISIBLE);
+                setViewShowState(mLoadingProgressBar,GONE);
+                if (mGsyStateUiListener != null) {
+                    mGsyStateUiListener.onStateChanged(CURRENT_STATE_PAUSE);
+                }
+            }else {
+                onVideoResume();
+                setViewShowState(startBtn,GONE);
+                setViewShowState(mLoadingProgressBar,VISIBLE);
+                if (mGsyStateUiListener != null) {
+                    mGsyStateUiListener.onStateChanged(mCurrentState);
+                }
+            }
+        }
+    }
+
+    @Override
     protected void changeUiToNormal() {
         super.changeUiToNormal();
         setViewShowState(startBtn,GONE);
@@ -93,7 +113,9 @@ public class KuaishouVideoPlayer extends GSYVideoPlayer {
     @Override
     protected void changeUiToPlayingShow() {
         super.changeUiToPlayingShow();
-        setViewShowState(startBtn,GONE);
+        if (!mPauseBeforePrepared){
+            setViewShowState(startBtn,GONE);
+        }
         handler.removeMessages(0);
         handler.sendEmptyMessageDelayed(0,1000);
     }
