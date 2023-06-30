@@ -79,9 +79,9 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                             }
                         }
                     })
-                    .setAutoScrollScanPosition(MessageActivity.openAutoScroll)
+                    .setAutoScrollScanPosition(((MessageActivity)v.getContext()).openAutoScroll)
                     .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
-                    .setImageUrlList(messageBeans).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
+                    .setImageUrlList(messageBeans).setWechatExitFillInEffect(((MessageActivity)v.getContext()).openWechatEffect)
                     .setOpenImageStyle(R.style.DefaultPhotosTheme)
                     .setShowDownload()
                     .setOpenImageActivityCls(MessageVpActivity.class, new OnUpdateViewListener() {

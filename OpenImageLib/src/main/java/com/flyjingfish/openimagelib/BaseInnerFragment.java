@@ -11,6 +11,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
@@ -89,8 +92,36 @@ public class BaseInnerFragment extends Fragment {
             ImageLoadUtils.getInstance().clearOnItemLongClickListener(s);
         });
 
-        basePhotosViewModel.onTouchCloseLiveData.observe(getViewLifecycleOwner(), aFloat -> onTouchClose(aFloat));
-        basePhotosViewModel.onTouchScaleLiveData.observe(getViewLifecycleOwner(), aFloat -> onTouchScale(aFloat));
+        basePhotosViewModel.onTouchCloseLiveData.observe(getViewLifecycleOwner(), aFloat -> {
+            if (getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+                onTouchClose(aFloat);
+            }else {
+                getViewLifecycleOwner().getLifecycle().addObserver(new LifecycleEventObserver() {
+                    @Override
+                    public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                        if (event == Lifecycle.Event.ON_RESUME){
+                            onTouchClose(aFloat);
+                            source.getLifecycle().removeObserver(this);
+                        }
+                    }
+                });
+            }
+        });
+        basePhotosViewModel.onTouchScaleLiveData.observe(getViewLifecycleOwner(), aFloat -> {
+            if (getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+                onTouchScale(aFloat);
+            }else {
+                getViewLifecycleOwner().getLifecycle().addObserver(new LifecycleEventObserver() {
+                    @Override
+                    public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                        if (event == Lifecycle.Event.ON_RESUME){
+                            onTouchScale(aFloat);
+                            source.getLifecycle().removeObserver(this);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     /**

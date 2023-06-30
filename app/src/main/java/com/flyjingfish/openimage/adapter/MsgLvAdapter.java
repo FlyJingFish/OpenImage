@@ -128,9 +128,9 @@ OpenImage.with(parent.getContext()).setClickListView(listView, new SourceImageVi
                     return R.id.iv_video;
                 }
             }
-        }) .setAutoScrollScanPosition(MessageActivity.openAutoScroll)
+        }) .setAutoScrollScanPosition(((MessageActivity)v.getContext()).openAutoScroll)
         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
-        .setImageUrlList(allShowData).setWechatExitFillInEffect(MessageActivity.openWechatEffect)
+        .setImageUrlList(allShowData).setWechatExitFillInEffect(((MessageActivity)v.getContext()).openWechatEffect)
 //                    .setOpenImageStyle(R.style.DefaultPhotosTheme)
         .setShowDownload(new DownloadParams()
                 .setDownloadSrc(R.drawable.ic_open_image_download)

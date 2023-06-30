@@ -24,8 +24,8 @@ public class MessageActivity extends BaseActivity {
     private ActivityMessageBinding binding;
     private MenuItem wechatEffect;
     private MenuItem autoScroll;
-    public static boolean openWechatEffect;
-    public static boolean openAutoScroll;
+    public boolean openWechatEffect;
+    public boolean openAutoScroll;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

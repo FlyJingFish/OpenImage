@@ -115,7 +115,9 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
     protected void onTouchScale(float scale) {
         if (scale == 1){
             if (isStartedTouch){
-                videoPlayer.onVideoResume();
+                if (getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+                    videoPlayer.onVideoResume();
+                }
                 isStartedTouch = false;
             }
         }else {
