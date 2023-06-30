@@ -615,7 +615,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 如果以上定义页面样式的方法还不够用，可继承 OpenImageActivity 页面自己去写页面
+     * 如果以上定义页面样式的方法还不够用，可继承 {@link OpenImageActivity} 页面自己去写页面
      *
      * @param openImageActivityCls 自己定义的大图页面，必须继承 {@link OpenImageActivity}
      * @return {@link OpenImage}
@@ -625,7 +625,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 如果以上定义页面样式的方法还不够用，可继承 OpenImageActivity 页面自己去写页面
+     * 如果以上定义页面样式的方法还不够用，可继承 {@link OpenImageActivity} 页面自己去写页面
      *
      * @param openImageActivityCls 自己定义的大图页面，必须继承 {@link OpenImageActivity}
      * @param bundleKey            传给页面的数据 key [ bundle = getIntent().getBundleExtra(bundleKey) ]
@@ -637,7 +637,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 如果以上定义页面样式的方法还不够用，可继承 OpenImageActivity 页面自己去写页面
+     * 如果以上定义页面样式的方法还不够用，可继承 {@link OpenImageActivity} 页面自己去写页面
      *
      * @param openImageActivityCls 自己定义的大图页面，必须继承 {@link OpenImageActivity}
      * @param onUpdateViewListener 如果您想在大图页面加载更多数据并且更新前一页面的列表，那么你可传入此接口
@@ -648,7 +648,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 如果以上定义页面样式的方法还不够用，可继承 OpenImageActivity 页面自己去写页面
+     * 如果以上定义页面样式的方法还不够用，可继承 {@link OpenImageActivity} 页面自己去写页面
      *
      * @param openImageActivityCls 自己定义的大图页面，必须继承 {@link OpenImageActivity}
      * @param bundleKey            传给页面的数据 key [ bundle = getIntent().getBundleExtra(bundleKey) ]
@@ -727,7 +727,7 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 禁用下拉触摸关闭页面功能，设置此项后{@link OpenImageConfig#setDisEnableTouchClose(boolean)} (boolean)} 就不起作用了
+     * 禁用下拉触摸关闭页面功能，设置此项后{@link OpenImageConfig#setDisEnableTouchClose(boolean)} 就不起作用了
      *
      * @return {@link OpenImage}
      */
