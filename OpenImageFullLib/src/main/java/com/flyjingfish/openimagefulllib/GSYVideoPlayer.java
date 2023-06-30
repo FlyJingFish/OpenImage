@@ -141,7 +141,12 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
 
     @Override
     protected void changeUiToPrepareingClear() {
+        View progressView = mLoadingProgressBar;
+        if (mCurrentState == CURRENT_STATE_PREPAREING || mCurrentState == CURRENT_STATE_PLAYING_BUFFERING_START){
+            mLoadingProgressBar = null;
+        }
         super.changeUiToPrepareingClear();
+        mLoadingProgressBar = progressView;
         if (!isHideCover) {
             setViewShowState(mThumbImageViewLayout, VISIBLE);
         }

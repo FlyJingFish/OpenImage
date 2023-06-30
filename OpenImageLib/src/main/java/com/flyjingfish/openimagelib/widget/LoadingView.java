@@ -69,7 +69,11 @@ public class LoadingView extends AppCompatImageView {
 
     @Override
     public void setVisibility(int visibility) {
+        int oldVisibility = getVisibility();
         super.setVisibility(visibility);
+        if (oldVisibility == visibility){
+            return;
+        }
         if (visibility == VISIBLE){
             stopLoadingAnim();
             startLoadingAnim();
