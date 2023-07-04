@@ -118,25 +118,25 @@ public class MsgLvAdapter extends BaseAdapter {
             List<MessageBean> allShowData = new ArrayList<>();
             allShowData.addAll(otherData);//recyclerView 适配器以外的数据
             allShowData.addAll(messageBeans);//recyclerView 适配器的数据
-OpenImage.with(parent.getContext()).setClickListView(listView, new SourceImageViewIdGet<OpenImageUrl>() {
-            @Override
-            public int getImageViewId(OpenImageUrl data, int position1) {
-                MessageBean msgBean = (MessageBean) data;
-                if (msgBean.type == MessageBean.IMAGE){
-                    return R.id.iv_image;
-                }else {
-                    return R.id.iv_video;
-                }
-            }
-        }) .setAutoScrollScanPosition(((MessageActivity)v.getContext()).openAutoScroll)
-        .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
-        .setImageUrlList(allShowData).setWechatExitFillInEffect(((MessageActivity)v.getContext()).openWechatEffect)
-//                    .setOpenImageStyle(R.style.DefaultPhotosTheme)
-        .setShowDownload(new DownloadParams()
-                .setDownloadSrc(R.drawable.ic_open_image_download)
-                .setPercentColor(Color.RED)
-                .setTouchingHide(false))
-        .setClickPosition(position+otherData.size(),position).show();
+            OpenImage.with(parent.getContext()).setClickListView(listView, new SourceImageViewIdGet<OpenImageUrl>() {
+                        @Override
+                        public int getImageViewId(OpenImageUrl data, int position1) {
+                            MessageBean msgBean = (MessageBean) data;
+                            if (msgBean.type == MessageBean.IMAGE){
+                                return R.id.iv_image;
+                            }else {
+                                return R.id.iv_video;
+                            }
+                        }
+                    }) .setAutoScrollScanPosition(((MessageActivity)v.getContext()).openAutoScroll)
+                    .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+                    .setImageUrlList(allShowData).setWechatExitFillInEffect(((MessageActivity)v.getContext()).openWechatEffect)
+            //                    .setOpenImageStyle(R.style.DefaultPhotosTheme)
+                    .setShowDownload(new DownloadParams()
+                            .setDownloadSrc(R.drawable.ic_open_image_download)
+                            .setPercentColor(Color.RED)
+                            .setTouchingHide(false))
+                    .setClickPosition(position+otherData.size(),position).show();
         };
         if (viewType == MessageBean.IMAGE){
             ItemMsgImageBinding binding = ItemMsgImageBinding.bind(holder2.itemView);
