@@ -1,5 +1,15 @@
 # OpenImage 更新日志
 
+## 2.0.5
+
+1、[修复传入ImageView的list 后关闭页面崩溃的bug](https://github.com/FlyJingFish/OpenImage/commit/da2df3a0d1721bdea3f1eadf7c8f71f925755f3e) #11
+
+2、修改 BaseInnerFragment 中 onTouchClose 和 onTouchScale 只在生命周期的 onResume 下才被调用
+
+3、优化播放器，使其在缓冲时点击屏幕不隐藏 LoadingView
+
+4、删除雪花id获取方法以减少运算
+
 ## 2.0.4
 
 1、优化库的初始化速度
