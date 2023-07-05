@@ -43,7 +43,6 @@ class ImageLoadUtils {
     private final HashMap<String, DownloadParams> downloadParamsHashMap = new HashMap<>();
     private final HashMap<String, CloseParams> closeParamsHashMap = new HashMap<>();
     private final HashMap<String, OnPermissionsInterceptListener> onPermissionsInterceptListenerHashMap = new HashMap<>();
-    private final SnowFlakeUtil snowFlakeUtil = new SnowFlakeUtil();
     private boolean isApkInDebug;
 
     private ImageLoadUtils() {
@@ -325,8 +324,8 @@ class ImageLoadUtils {
         onUpdateViewListenerHashMap.remove(key);
     }
 
-    public long getSnowFlakeId(){
-        return snowFlakeUtil.nextId();
+    public long getUniqueId(){
+        return OpenImageDetailIdUtil.nextId();
     }
 
     public DownloadParams getDownloadParams(String key) {

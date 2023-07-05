@@ -13,7 +13,7 @@ class OpenImageDetail implements OpenImageUrl {
     private final long id;
 
     public OpenImageDetail() {
-        id = ImageLoadUtils.getInstance().getSnowFlakeId();
+        id = ImageLoadUtils.getInstance().getUniqueId();
     }
 
     @Override
