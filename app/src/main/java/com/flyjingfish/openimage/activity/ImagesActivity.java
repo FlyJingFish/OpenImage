@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -87,13 +88,7 @@ public class ImagesActivity extends BaseActivity {
                             position = 5;
                             break;
                     }
-                    List<ImageView> imageViews = new ArrayList<>();
-                    imageViews.add(binding.iv1);
-                    imageViews.add(binding.iv2);
-                    imageViews.add(binding.iv3);
-                    imageViews.add(binding.iv4);
-                    imageViews.add(binding.iv5);
-                    imageViews.add(binding.iv6);
+                    List<ImageView> imageViews = Arrays.asList(binding.iv1,binding.iv2,binding.iv3,binding.iv4,binding.iv5,binding.iv6);
                     Iterator<ImageEntity> iterator = datas.iterator();
                     int index = 0;
                     while (iterator.hasNext()){

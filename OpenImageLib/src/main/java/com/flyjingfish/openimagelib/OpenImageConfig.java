@@ -208,7 +208,7 @@ public class OpenImageConfig {
      * @param lazyPreload 是否懒加载 true 的话打开页面时不会预加载，滑动一个时才开始预加载；false的话打开页面时就开始预加载
      * @param preloadCount 预加载个数，对应于{@link androidx.viewpager2.widget.ViewPager2#setOffscreenPageLimit(int)}
      */
-    public void setPreloadCount(boolean lazyPreload,@IntRange(from = 1) int preloadCount) {
+    public void setPreloadCount(boolean lazyPreload,@IntRange(from = 1,to = 10) int preloadCount) {
         this.lazyPreload = lazyPreload;
         this.preloadCount = preloadCount;
     }

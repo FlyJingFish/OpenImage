@@ -105,8 +105,7 @@ public final class OpenImage extends OpenImage4ParseData {
         for (String openImageUrl : openImageUrls) {
             list.add(new SingleImageUrl(openImageUrl, mediaType));
         }
-        setImageUrlList(list);
-        return this;
+        return setImageUrlList(list);
     }
 
     /**
@@ -210,7 +209,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @return {@link OpenImage}
      */
     public OpenImage setClickImageViews(ImageView[] imageViews) {
-        return setClickImageViews(new ArrayList<>(Arrays.asList(imageViews)));
+        return setClickImageViews(Arrays.asList(imageViews));
     }
 
     /**
@@ -220,7 +219,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @return {@link OpenImage}
      */
     public OpenImage setClickImageView(ImageView imageView) {
-        return setClickImageViews(new ArrayList<>(Collections.singletonList(imageView)));
+        return setClickImageViews(Collections.singletonList(imageView));
     }
 
     /**
@@ -230,7 +229,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @return {@link OpenImage}
      */
     public OpenImage setClickImageViews(List<ImageView> imageViews) {
-        this.imageViews = imageViews;
+        this.imageViews = new ArrayList<>(imageViews);
         return this;
     }
 
@@ -767,7 +766,7 @@ public final class OpenImage extends OpenImage4ParseData {
      * @param lazyPreload 是否懒加载 true 的话打开页面时不会预加载，滑动一个时才开始预加载；false的话打开页面时就开始预加载
      * @param preloadCount 预加载个数，对应于{@link androidx.viewpager2.widget.ViewPager2#setOffscreenPageLimit(int)}
      */
-    public OpenImage setPreloadCount(boolean lazyPreload,@IntRange(from = 1) int preloadCount) {
+    public OpenImage setPreloadCount(boolean lazyPreload,@IntRange(from = 1, to = 10) int preloadCount) {
         this.lazyPreload = lazyPreload;
         this.preloadCount = preloadCount;
         return this;
