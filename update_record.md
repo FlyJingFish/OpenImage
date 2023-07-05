@@ -2,7 +2,7 @@
 
 ## 2.0.5
 
-1、[修复传入ImageView的list 后关闭页面崩溃的bug](https://github.com/FlyJingFish/OpenImage/issues/11) # 11
+1、[修复传入ImageView的list 后关闭页面崩溃的bug](https://github.com/FlyJingFish/OpenImage/issues/11)
 
 2、修改 BaseInnerFragment 中 onTouchClose 和 onTouchScale 只在生命周期的 onResume 下才被调用
 
