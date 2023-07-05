@@ -267,7 +267,7 @@ class OpenImage4Params {
             } else if (srcViewType == SrcViewType.VP) {
                 return viewPager != null && viewPager.isAttachedToWindow();
             } else if (srcViewType == SrcViewType.IV) {
-                return true;
+                return imageViews != null && imageViews.size() > 0;
             }
             return false;
         }
