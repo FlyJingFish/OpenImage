@@ -18,8 +18,12 @@ import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.DownloadMediaHelper;
 import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener;
+import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class GlideDownloadMediaHelper implements DownloadMediaHelper {
     @Override
@@ -30,12 +34,14 @@ public class GlideDownloadMediaHelper implements DownloadMediaHelper {
             onDownloadMediaListener.onDownloadStart(isInitOkHttpClient);
         }
         final Context context = activity.getApplicationContext();
-        final boolean[] isDestroy = new boolean[]{false};
+        final String key = UUID.randomUUID().toString();
+        final Map<String, OnDownloadMediaListener> onDownloadMediaListenerHashMap = new HashMap<>();
+        onDownloadMediaListenerHashMap.put(key,onDownloadMediaListener);
         lifecycleOwner.getLifecycle().addObserver(new LifecycleEventObserver() {
             @Override
             public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
                 if (event == Lifecycle.Event.ON_DESTROY){
-                    isDestroy[0] = true;
+                    onDownloadMediaListenerHashMap.clear();
                     source.getLifecycle().removeObserver(this);
                     ProgressManager.getInstance().removeResponseListeners(downloadUrl);
                 }
@@ -45,10 +51,8 @@ public class GlideDownloadMediaHelper implements DownloadMediaHelper {
             ProgressManager.getInstance().addResponseListener(downloadUrl, new ProgressListener() {
                 @Override
                 public void onProgress(ProgressInfo progressInfo) {
-                    if (onDownloadMediaListener != null) {
-                        if (isDestroy[0]){
-                            return;
-                        }
+                    OnDownloadMediaListener onDownloadMediaListener;
+                    if ((onDownloadMediaListener = onDownloadMediaListenerHashMap.get(key)) != null) {
                         onDownloadMediaListener.onDownloadProgress(progressInfo.getPercent());
                     }
                 }
@@ -65,15 +69,15 @@ public class GlideDownloadMediaHelper implements DownloadMediaHelper {
 
                     @Override
                     public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                        if (onDownloadMediaListener != null) {
+                        if (onDownloadMediaListenerHashMap.get(key) != null) {
                             LoadImageUtils.INSTANCE.saveFile(context, resource, openImageUrl.getType() == MediaType.VIDEO, sucPath -> {
-                                if (isDestroy[0]){
-                                    return;
-                                }
-                                if (!TextUtils.isEmpty(sucPath)){
-                                    onDownloadMediaListener.onDownloadSuccess(sucPath);
-                                }else {
-                                    onDownloadMediaListener.onDownloadFailed();
+                                OnDownloadMediaListener onDownloadMediaListener;
+                                if ((onDownloadMediaListener = onDownloadMediaListenerHashMap.get(key)) != null) {
+                                    if (!TextUtils.isEmpty(sucPath)){
+                                        onDownloadMediaListener.onDownloadSuccess(sucPath);
+                                    }else {
+                                        onDownloadMediaListener.onDownloadFailed();
+                                    }
                                 }
                             });
                         }
@@ -82,10 +86,8 @@ public class GlideDownloadMediaHelper implements DownloadMediaHelper {
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
-                        if (isDestroy[0]){
-                            return;
-                        }
-                        if (onDownloadMediaListener != null) {
+                        OnDownloadMediaListener onDownloadMediaListener;
+                        if ((onDownloadMediaListener = onDownloadMediaListenerHashMap.get(key)) != null) {
                             onDownloadMediaListener.onDownloadFailed();
                         }
                     }

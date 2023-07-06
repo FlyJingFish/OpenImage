@@ -86,8 +86,6 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         } else {
             openImageBeans = openImageDetails;
         }
-        ImageLoadUtils.getInstance().clearAllSmallCoverDrawable();
-        ImageLoadUtils.getInstance().clearAllCoverDrawable();
         notifyData(data, openImageDetails, updateViewType);
     }
 
@@ -122,8 +120,6 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
     }
 
     private void setFrontData(Collection<? extends OpenImageUrl> data, UpdateViewType updateViewType) {
-        ImageLoadUtils.getInstance().clearAllSmallCoverDrawable();
-        ImageLoadUtils.getInstance().clearAllCoverDrawable();
         if (updateViewType == UpdateViewType.BACKWARD) {
             updateViewType = UpdateViewType.FORWARD;
         }
@@ -164,8 +160,6 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
      */
     public void replaceData(int position, OpenImageUrl openImageUrl) {
         if (position >= 0 && position < openImageBeans.size()) {
-            ImageLoadUtils.getInstance().clearAllSmallCoverDrawable();
-            ImageLoadUtils.getInstance().clearAllCoverDrawable();
             OpenImageDetail oldData = openImageBeans.get(position);
             OpenImageUrl oldDataUrl = oldData.openImageUrl;
             OpenImageDetail openImageDetail = new OpenImageDetail();
@@ -228,8 +222,6 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         if (openImageBeans == null || position >= openImageBeans.size()) {
             return;
         }
-        ImageLoadUtils.getInstance().clearAllSmallCoverDrawable();
-        ImageLoadUtils.getInstance().clearAllCoverDrawable();
         if (position < openImageBeans.size() - 1) {
             viewPager2.setCurrentItem(position + 1, smoothScroll);
         } else if (position > 0) {

@@ -26,7 +26,6 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
 
     boolean isUserInputPause = false;
     boolean isUserInput = false;
-    boolean isHideCover = false;
     protected OpenImageGSYVideoHelper gsyVideoHelper;
     private int mOldState;
 
@@ -124,18 +123,28 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     }
 
     @Override
-    protected void changeUiToPlayingShow() {
-        super.changeUiToPlayingShow();
-        if (!isHideCover) {
-            setViewShowState(mThumbImageViewLayout, VISIBLE);
+    public void onSurfaceUpdated(Surface surface) {
+        super.onSurfaceUpdated(surface);
+        if (mThumbImageViewLayout != null && mThumbImageViewLayout.getVisibility() == VISIBLE) {
+            mThumbImageViewLayout.setVisibility(INVISIBLE);
         }
     }
 
     @Override
-    protected void changeUiToPreparingShow() {
-        super.changeUiToPreparingShow();
-        if (!isHideCover) {
-            setViewShowState(mThumbImageViewLayout, VISIBLE);
+    protected void setViewShowState(View view, int visibility) {
+        if (view == mThumbImageViewLayout && visibility != VISIBLE) {
+            return;
+        }
+        super.setViewShowState(view, visibility);
+    }
+
+    @Override
+    public void onSurfaceAvailable(Surface surface) {
+        super.onSurfaceAvailable(surface);
+        if (GSYVideoType.getRenderType() != GSYVideoType.TEXTURE) {
+            if (mThumbImageViewLayout != null && mThumbImageViewLayout.getVisibility() == VISIBLE) {
+                mThumbImageViewLayout.setVisibility(INVISIBLE);
+            }
         }
     }
 
@@ -147,18 +156,6 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         }
         super.changeUiToPrepareingClear();
         mLoadingProgressBar = progressView;
-        if (!isHideCover) {
-            setViewShowState(mThumbImageViewLayout, VISIBLE);
-        }
-    }
-
-    @Override
-    public void onSurfaceSizeChanged(Surface surface, int width, int height) {
-        super.onSurfaceSizeChanged(surface, width, height);
-        if (mCurrentState == CURRENT_STATE_PLAYING) {
-            isHideCover = true;
-            setViewShowState(mThumbImageViewLayout, INVISIBLE);
-        }
     }
 
     @Override

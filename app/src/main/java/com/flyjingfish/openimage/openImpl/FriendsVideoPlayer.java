@@ -2,17 +2,11 @@ package com.flyjingfish.openimage.openImpl;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 
 import com.flyjingfish.openimage.R;
-import com.flyjingfish.openimagefulllib.GSYVideoPlayer;
-import com.flyjingfish.openimagelib.photoview.PhotoView;
+import com.flyjingfish.openimagefulllib.OpenImageCoverVideoPlayer;
 
-public class FriendsVideoPlayer extends GSYVideoPlayer {
-
-
-    private PhotoView coverImageView;
-    private PhotoView smallCoverImageView;
+public class FriendsVideoPlayer extends OpenImageCoverVideoPlayer {
 
     public FriendsVideoPlayer(Context context) {
         super(context);
@@ -20,37 +14,14 @@ public class FriendsVideoPlayer extends GSYVideoPlayer {
 
     public FriendsVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
-        coverImageView = new PhotoView(context);
-        coverImageView.setId(R.id.iv_video_player_cover);
-        mThumbImageView = coverImageView;
-        resolveThumbImage(mThumbImageView);
-        smallCoverImageView = findViewById(R.id.iv_small_cover);
         changeUiToNormal();
         mTextureViewContainer.setOnClickListener(null);
         mTextureViewContainer.setOnTouchListener(null);
     }
 
-    public PhotoView getCoverImageView() {
-        return coverImageView;
-    }
-
-    public PhotoView getSmallCoverImageView() {
-        return smallCoverImageView;
-    }
-
-    public View getLoadingView() {
-        return mLoadingProgressBar;
-    }
     @Override
     public int getLayoutId() {
         return R.layout.layout_friends_player;
     }
 
-    @Override
-    protected void setViewShowState(View view, int visibility) {
-        super.setViewShowState(view, visibility);
-        if (view == mThumbImageViewLayout && smallCoverImageView != null){
-            smallCoverImageView.setVisibility(visibility);
-        }
-    }
 }

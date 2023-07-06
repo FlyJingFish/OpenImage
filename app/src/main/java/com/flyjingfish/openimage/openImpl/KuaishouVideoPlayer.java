@@ -12,16 +12,13 @@ import android.widget.SeekBar;
 import androidx.annotation.NonNull;
 
 import com.flyjingfish.openimage.R;
-import com.flyjingfish.openimagefulllib.GSYVideoPlayer;
-import com.flyjingfish.openimagelib.photoview.PhotoView;
+import com.flyjingfish.openimagefulllib.OpenImageCoverVideoPlayer;
 
 import moe.codeest.enviews.ENPlayView;
 
-public class KuaishouVideoPlayer extends GSYVideoPlayer {
+public class KuaishouVideoPlayer extends OpenImageCoverVideoPlayer {
 
 
-    private PhotoView coverImageView;
-    private PhotoView smallCoverImageView;
     private ENPlayView startBtn;
     private SeekBar seekBar;
     private final Handler handler = new Handler(Looper.getMainLooper()){
@@ -44,11 +41,6 @@ public class KuaishouVideoPlayer extends GSYVideoPlayer {
 
     public KuaishouVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
-        coverImageView = new PhotoView(context);
-        coverImageView.setId(R.id.iv_video_player_cover);
-        mThumbImageView = coverImageView;
-        resolveThumbImage(mThumbImageView);
-        smallCoverImageView = findViewById(R.id.iv_small_cover);
         seekBar = findViewById(R.id.progress2);
         startBtn = findViewById(R.id.start_btn);
         changeUiToNormal();
@@ -129,25 +121,11 @@ public class KuaishouVideoPlayer extends GSYVideoPlayer {
     @Override
     protected void setViewShowState(View view, int visibility) {
         super.setViewShowState(view, visibility);
-        if (view == mThumbImageViewLayout && smallCoverImageView != null){
-            smallCoverImageView.setVisibility(visibility);
-        }
         if (view == mBottomProgressBar){
             mBottomProgressBar.setVisibility(VISIBLE);
         }
     }
 
-    public PhotoView getCoverImageView() {
-        return coverImageView;
-    }
-
-    public PhotoView getSmallCoverImageView() {
-        return smallCoverImageView;
-    }
-
-    public View getLoadingView() {
-        return mLoadingProgressBar;
-    }
     @Override
     public int getLayoutId() {
         return R.layout.layout_kuaishou_player;

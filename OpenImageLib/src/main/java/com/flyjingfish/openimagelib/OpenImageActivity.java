@@ -761,7 +761,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         }
         final long downloadId = openImageDetail.getId();
         downloadList.add(openImageDetail);
-        downloadMediaHelper.download(this,this, openImageDetail, new OnDownloadMediaListener() {
+        NetworkHelper.INSTANCE.download(this,this, openImageDetail, new OnDownloadMediaListener() {
             private boolean isWithProgress;
 
             @Override

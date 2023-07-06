@@ -267,7 +267,7 @@ public class BaseInnerFragment extends Fragment {
             return;
         }
         downloadList.add(openImageUrl);
-        downloadMediaHelper.download(requireActivity(), getViewLifecycleOwner(), openImageUrl, new OnDownloadMediaListener() {
+        NetworkHelper.INSTANCE.download(requireActivity(), getViewLifecycleOwner(), openImageUrl, new OnDownloadMediaListener() {
             @Override
             public void onDownloadStart(boolean isWithProgress) {
                 if (onDownloadMediaListener != null){

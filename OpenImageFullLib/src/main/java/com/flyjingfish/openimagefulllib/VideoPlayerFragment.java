@@ -148,6 +148,7 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
      */
     protected void startPlay(){
         readyPlay();
+        videoPlayer.setSeekOnStart(RecordPlayerPosition.INSTANCE.getPlayPosition(beanId));
         videoPlayer.startPlayLogic();
         if (getLifecycle().getCurrentState() != Lifecycle.State.RESUMED){
             videoPlayer.onVideoPause();
@@ -182,6 +183,7 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     public void onPause() {
         super.onPause();
         if (playerKey != null) {
+            RecordPlayerPosition.INSTANCE.setPlayPosition(beanId,videoPlayer.getCurrentPositionWhenPlaying());
             GSYVideoController.pauseByKey(playerKey);
         }
     }

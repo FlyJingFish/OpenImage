@@ -90,7 +90,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         smallCoverImageView.setNoneClickView(isNoneClickView);
         showLoading(loadingView);
         loadingView.setVisibility(View.GONE);
-        if (clickPosition == showPosition && coverDrawable != null) {
+        if (coverDrawable != null) {
             if (TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl())) {
                 smallCoverImageView.setAlpha(0f);
                 photoView.setAlpha(1f);
@@ -101,7 +101,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                 photoView.setAlpha(0f);
                 smallCoverImageView.setImageDrawable(coverDrawable);
             }
-        } else if (clickPosition == showPosition && smallCoverDrawable != null) {
+        } else if (smallCoverDrawable != null) {
             float viewScale = 0;
             if (imageDetail.srcWidth > 0 && imageDetail.srcHeight > 0) {
                 viewScale = imageDetail.srcWidth * 1f / imageDetail.srcHeight;
@@ -202,10 +202,10 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
     }
 
     protected void loadBigImage() {
-        if (clickPosition == showPosition && TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl()) && coverDrawable != null) {
+        if (TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl()) && coverDrawable != null) {
             onImageSuccess(coverDrawable,coverFilePath);
         } else {
-            LoadBigImageHelper.INSTANCE.loadImage(requireContext(), imageDetail.getImageUrl(), new OnLoadBigImageListener() {
+            NetworkHelper.INSTANCE.loadImage(requireContext(), imageDetail.getImageUrl(), new OnLoadBigImageListener() {
                 @Override
                 public void onLoadImageSuccess(Drawable drawable, String filePath) {
                     onImageSuccess(drawable,filePath);
@@ -270,7 +270,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         super.onResume();
         if (!isLoading && !isLoadSuccess && isInitImage) {
             showLoading(loadingView);
-            LoadBigImageHelper.INSTANCE.loadImage(requireContext(), imageDetail.getImageUrl(), new OnLoadBigImageListener() {
+            NetworkHelper.INSTANCE.loadImage(requireContext(), imageDetail.getImageUrl(), new OnLoadBigImageListener() {
                 @Override
                 public void onLoadImageSuccess(Drawable drawable, String filePath) {
                     mHandler.post(() -> {

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.ApplicationInfo;
+import android.os.Looper;
 import android.view.Window;
 
 import androidx.fragment.app.Fragment;
@@ -90,5 +91,9 @@ public class ActivityCompatHelper {
         } catch (Exception e) {
             return true;
         }
+    }
+
+    public static boolean isMainThread(){
+        return Looper.getMainLooper() == Looper.myLooper();
     }
 }

@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.flyjingfish.openimagelib.databinding.OpenImageIndicatorTextBinding;
@@ -383,6 +384,33 @@ class BaseActivity extends AppCompatActivity {
         if (onSelectMediaListener != null) {
             photosViewModel.onRemoveOnSelectMediaListenerLiveData.setValue(onSelectMediaListener.toString());
         }
+    }
+
+    /**
+     * 设置打开页面动画结束监听器
+     * @param observer
+     */
+    protected void setTransitionEndListener(@NonNull Observer<Boolean> observer){
+        if (photosViewModel.transitionEndLiveData.getValue() != null && photosViewModel.transitionEndLiveData.getValue()){
+            observer.onChanged(true);
+        }else {
+            photosViewModel.transitionEndLiveData.observe(this, new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean aBoolean) {
+                    photosViewModel.transitionEndLiveData.removeObserver(this);
+                    observer.onChanged(aBoolean);
+                }
+            });
+        }
+    }
+
+    /**
+     *
+     * @return 页面是否已经打开
+     */
+    protected boolean isTransitionEnd(){
+        Boolean end = photosViewModel.transitionEndLiveData.getValue();
+        return end != null?end:false;
     }
 
     protected boolean isWechatExitFillInEffect() {

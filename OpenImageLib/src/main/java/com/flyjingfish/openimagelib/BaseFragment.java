@@ -44,6 +44,7 @@ abstract class BaseFragment extends BaseInnerFragment {
     protected AnimatorSet coverAnim;
 //    protected ItemLoadHelper itemLoadHelper;
     protected float autoAspectRadio;
+    protected long beanId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,12 +70,15 @@ abstract class BaseFragment extends BaseInnerFragment {
             if (onItemLongClickListener != null){
                 onItemLongClickListeners.add(onItemLongClickListener);
             }
-            coverDrawable = ImageLoadUtils.getInstance().getCoverDrawable(bundle.getString(OpenParams.OPEN_COVER_DRAWABLE));
+            String drawableKey = openImageUrl.toString();
+            coverDrawable = ImageLoadUtils.getInstance().getCoverDrawable(drawableKey);
             coverFilePath = ImageLoadUtils.getInstance().getCoverFilePath(bundle.getString(OpenParams.OPEN_COVER_DRAWABLE));
-            smallCoverDrawable = ImageLoadUtils.getInstance().getSmallCoverDrawable(bundle.getString(OpenParams.OPEN_COVER_DRAWABLE));
+            smallCoverDrawable = ImageLoadUtils.getInstance().getSmallCoverDrawable(drawableKey);
 
             autoAspectRadio = bundle.getFloat(OpenParams.AUTO_ASPECT_RATIO,0);
             isNoneClickView = bundle.getBoolean(OpenParams.NONE_CLICK_VIEW,false);
+
+            beanId = imageDetail.getId();
         }
     }
 

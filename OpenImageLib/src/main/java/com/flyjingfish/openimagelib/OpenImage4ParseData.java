@@ -442,11 +442,11 @@ class OpenImage4ParseData extends OpenImage4Params {
     private void postOpen(Intent intent, Pair<View, String> viewPair) {
         ImageLoadUtils.getInstance().setCanOpenOpenImageActivity(contextKey,false);
         OpenImageUrl openImageUrl = openImageUrls.get(clickDataPosition);
+        final String key = openImageUrl.toString();
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = () -> {
             Drawable drawable;
             if (viewPair != null && viewPair.first instanceof ImageView && (drawable = ((ImageView) viewPair.first).getDrawable()) != null){
-                String key = UUID.randomUUID().toString();
                 intent.putExtra(OpenParams.OPEN_COVER_DRAWABLE, key);
                 ImageLoadUtils.getInstance().setSmallCoverDrawable(key, drawable);
                 startActivity(intent, viewPair, key);
@@ -459,7 +459,6 @@ class OpenImage4ParseData extends OpenImage4Params {
             @Override
             public void onLoadImageSuccess(Drawable drawable, String filePath) {
                 handler.removeCallbacksAndMessages(null);
-                String key = UUID.randomUUID().toString();
                 intent.putExtra(OpenParams.OPEN_COVER_DRAWABLE, key);
                 ImageLoadUtils.getInstance().setCoverDrawable(key, drawable);
                 ImageLoadUtils.getInstance().setCoverFilePath(key, filePath);

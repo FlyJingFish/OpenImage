@@ -10,14 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimagefulllib.VideoPlayerFragment;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.widget.LoadingView;
-import com.shuyu.gsyvideoplayer.listener.GSYStateUiListener;
 
 public class KuaishouPlayerFragment extends VideoPlayerFragment {
 

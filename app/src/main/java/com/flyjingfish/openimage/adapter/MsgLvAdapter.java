@@ -114,6 +114,28 @@ public class MsgLvAdapter extends BaseAdapter {
             otherData.add(messageBean1);
             otherData.add(messageBean3);
             otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
+            otherData.add(messageBean2);
 
             List<MessageBean> allShowData = new ArrayList<>();
             allShowData.addAll(otherData);//recyclerView 适配器以外的数据
