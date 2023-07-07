@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
 import android.widget.SeekBar;
 
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimagefulllib.OpenImageCoverVideoPlayer;
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 
 import moe.codeest.enviews.ENPlayView;
 
@@ -178,6 +180,24 @@ public class KuaishouVideoPlayer extends OpenImageCoverVideoPlayer {
         if (seekBar != null){
             seekBar.setProgress(0);
             seekBar.setSecondaryProgress(0);
+        }
+    }
+
+    @Override
+    public void onSurfaceUpdated(Surface surface) {
+        super.onSurfaceUpdated(surface);
+        if (startBtn != null && startBtn.getVisibility() == VISIBLE) {
+            startBtn.setVisibility(INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onSurfaceAvailable(Surface surface) {
+        super.onSurfaceAvailable(surface);
+        if (GSYVideoType.getRenderType() != GSYVideoType.TEXTURE) {
+            if (startBtn != null && startBtn.getVisibility() == VISIBLE) {
+                startBtn.setVisibility(INVISIBLE);
+            }
         }
     }
 }
