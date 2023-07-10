@@ -1,5 +1,19 @@
 # OpenImage 更新日志
 
+## 2.0.6
+
+1、修复设置预加载后视频播放不正常的bug
+
+2、新增 OpenImageCoverVideoPlayer ，简化播放器设置封面
+
+3、优化播放器播放时隐藏封面的逻辑
+
+4、优化加载和下载原图或视频的过程，防止内存泄漏
+
+5、修改加载点击的图片逻辑，防止因为加载更多数据导致白白被加载
+
+6、记录播放位置，切换回来可以继续播放
+
 ## 2.0.5
 
 1、[修复传入ImageView的list 后关闭页面崩溃的bug](https://github.com/FlyJingFish/OpenImage/issues/11)
