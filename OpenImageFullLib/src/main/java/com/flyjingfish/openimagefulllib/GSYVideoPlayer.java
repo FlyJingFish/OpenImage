@@ -28,6 +28,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     boolean isUserInput = false;
     protected OpenImageGSYVideoHelper gsyVideoHelper;
     private int mOldState;
+    private boolean isOnAudioFocus = false;
 
     public GSYVideoPlayer(Context context) {
         this(context, null);
@@ -37,6 +38,32 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         super(context, attrs);
         initAttrs(context, attrs);
     }
+
+    @Override
+    protected void init(Context context) {
+        super.init(context);
+        onAudioFocusChangeListener = focusChange -> {
+            if (!isOnAudioFocus){
+                return;
+            }
+            switch (focusChange) {
+                case AudioManager.AUDIOFOCUS_GAIN:
+                    onGankAudio();
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS:
+                    onLossAudio();
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                    onLossTransientAudio();
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                    onLossTransientCanDuck();
+                    break;
+            }
+        };
+    }
+
+
 
     void initAttrs(Context context, AttributeSet attrs) {
         pageContextKey = context.toString();
@@ -160,21 +187,12 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     }
 
     @Override
-    protected void startPrepare() {
-        super.startPrepare();
-        mAudioManager.abandonAudioFocus(onAudioFocusChangeListener);
-    }
-
-    @Override
     public void startAfterPrepared() {
         super.startAfterPrepared();
-        if (mCurrentState == CURRENT_STATE_PLAYING) {
-            mAudioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-        }else if (mCurrentState == CURRENT_STATE_PAUSE) {
+        if (mCurrentState == CURRENT_STATE_PAUSE) {
             updateStartImage();
             startDismissControlViewTimer();
         }
-
     }
 
     @Override
@@ -200,6 +218,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         if (isUserInputPause) {
             return;
         }
+        isOnAudioFocus = false;
         boolean seek = true;
         if (this.getGSYVideoManager() != null) {
             long currentPosition = this.getGSYVideoManager().getCurrentPosition();
@@ -210,6 +229,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
 
     @Override
     public void onVideoPause() {
+        isOnAudioFocus = true;
         super.onVideoPause();
     }
 

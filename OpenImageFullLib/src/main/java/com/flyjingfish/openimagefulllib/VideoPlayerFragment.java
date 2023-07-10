@@ -146,7 +146,6 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
             startPlay();
         }
     }
-
     /**
      * 从2.0.3新增此方法；开始播放，如果生命周期 在 onResume 下立刻开始播放，否则开始预加载，加载完毕后自动暂停，当 生命周期回到 onResume 下可实现快速开始播放
      *
