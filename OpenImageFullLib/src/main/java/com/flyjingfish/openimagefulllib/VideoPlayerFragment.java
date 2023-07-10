@@ -26,7 +26,7 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     protected PhotoView smallImageView;
     protected PhotoView photoImageView;
     protected LoadingView loadingView;
-    private OpenImageGSYVideoHelper gsyVideoHelper;
+    protected OpenImageGSYVideoHelper gsyVideoHelper;
 
     @Nullable
     @Override
@@ -118,7 +118,9 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
 
     private void play(){
         if (isTransitionEnd && isLoadImageFinish && !isPlayed){
-            startPlay();
+            if (!lazyPreload){
+                startPlay();
+            }
             if (getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
                 toPlay4Resume();
             }else {
@@ -140,7 +142,9 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
      * 从2.0.3开始播放逻辑从这里改为从{@link VideoPlayerFragment#startPlay()}播放,使用本库中的播放器可以预加载，保持最快速度播放
      */
     protected void toPlay4Resume(){
-
+        if (lazyPreload){
+            startPlay();
+        }
     }
 
     /**

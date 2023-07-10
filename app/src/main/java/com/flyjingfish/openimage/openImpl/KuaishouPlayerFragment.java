@@ -63,6 +63,7 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        videoPlayer.setLooping(true);
         kuaishouViewModel = new ViewModelProvider(requireActivity()).get(KuaishouViewModel.class);
         commentTv.setOnClickListener(v -> kuaishouViewModel.clickLikeLiveData.setValue(true));
         kuaishouViewModel.btnsTranslationYLiveData.observe(getViewLifecycleOwner(), aFloat -> {

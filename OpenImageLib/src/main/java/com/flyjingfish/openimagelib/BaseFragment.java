@@ -45,6 +45,8 @@ abstract class BaseFragment extends BaseInnerFragment {
 //    protected ItemLoadHelper itemLoadHelper;
     protected float autoAspectRadio;
     protected long beanId;
+    protected int preloadCount;
+    protected boolean lazyPreload;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,7 +79,8 @@ abstract class BaseFragment extends BaseInnerFragment {
 
             autoAspectRadio = bundle.getFloat(OpenParams.AUTO_ASPECT_RATIO,0);
             isNoneClickView = bundle.getBoolean(OpenParams.NONE_CLICK_VIEW,false);
-
+            preloadCount = bundle.getInt(OpenParams.PRELOAD_COUNT,1);
+            lazyPreload = bundle.getBoolean(OpenParams.LAZY_PRELOAD, false);
             beanId = imageDetail.getId();
         }
     }

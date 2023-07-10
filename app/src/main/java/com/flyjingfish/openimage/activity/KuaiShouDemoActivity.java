@@ -125,7 +125,7 @@ public class KuaiShouDemoActivity extends BaseActivity {
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
                         .setOpenImageStyle(R.style.KuaishouPhotosTheme)
                         .setVideoFragmentCreate(new KuaishouVideoFragmentCreateImpl())
-                        .disableClickClose().setPreloadCount(false,6);
+                        .disableClickClose();
                 if (mode == Mode.Search){
                     openImage
                             .setImageUrlList(datas)

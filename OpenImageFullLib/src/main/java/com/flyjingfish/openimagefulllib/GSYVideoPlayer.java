@@ -59,12 +59,13 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         builder.setHideStatusBar(true);
         builder.setHideKey(true);
         builder.setUrl(videoUrl);
-        builder.setEnlargeImageRes(R.drawable.video_enlarge);
-        builder.setShrinkImageRes(R.drawable.video_shrink);
+        builder.setEnlargeImageRes(getEnlargeImageRes());
+        builder.setShrinkImageRes(getShrinkImageRes());
         builder.setAutoFullWithSize(true);
         builder.setShowFullAnimation(true);
         builder.setLockLand(true);
         builder.setCacheWithPlay(true);
+        builder.setLooping(isLooping());
         return playUrl(builder);
     }
 

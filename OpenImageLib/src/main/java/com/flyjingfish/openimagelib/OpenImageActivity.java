@@ -292,6 +292,8 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                 bundle.putString(OpenParams.OPEN_COVER_DRAWABLE, openCoverKey);
                 bundle.putFloat(OpenParams.AUTO_ASPECT_RATIO, autoAspectRadio);
                 bundle.putBoolean(OpenParams.NONE_CLICK_VIEW, isNoneClickView());
+                bundle.putInt(OpenParams.PRELOAD_COUNT, preloadCount);
+                bundle.putBoolean(OpenParams.LAZY_PRELOAD, lazyPreload);
                 fragment.setArguments(bundle);
                 return fragment;
             }
