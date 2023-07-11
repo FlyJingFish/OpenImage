@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimagefulllib.OpenImageCoverVideoPlayer;
@@ -115,9 +118,36 @@ public class KuaishouVideoPlayer extends OpenImageCoverVideoPlayer {
     }
 
     @Override
+    protected void changeUiToPlayingBufferingShow() {
+        super.changeUiToPlayingBufferingShow();
+        if (lifecycleOwner == null || lifecycleOwner.getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+            setViewShowState(mLoadingProgressBar,VISIBLE);
+        }else if (lifecycleOwner != null){
+            setViewShowState(mLoadingProgressBar,GONE);
+            lifecycleOwner.getLifecycle().addObserver(new LifecycleEventObserver() {
+                @Override
+                public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                    if (event == Lifecycle.Event.ON_RESUME){
+                        if (mCurrentState == CURRENT_STATE_PLAYING_BUFFERING_START){
+                            postDelayed(() -> {
+                                if (mCurrentState == CURRENT_STATE_PLAYING_BUFFERING_START && mLoadingProgressBar.getVisibility() != VISIBLE){
+                                    setViewShowState(mLoadingProgressBar,VISIBLE);
+                                }
+                            },200);
+                        }
+                        source.getLifecycle().removeObserver(this);
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
     protected void changeUiToPauseShow() {
         super.changeUiToPauseShow();
-        setViewShowState(startBtn,VISIBLE);
+        if (lifecycleOwner == null || lifecycleOwner.getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+            setViewShowState(startBtn,VISIBLE);
+        }
     }
 
     @Override
@@ -186,7 +216,7 @@ public class KuaishouVideoPlayer extends OpenImageCoverVideoPlayer {
     @Override
     public void onSurfaceUpdated(Surface surface) {
         super.onSurfaceUpdated(surface);
-        if (startBtn != null && startBtn.getVisibility() == VISIBLE) {
+        if (mCurrentState == CURRENT_STATE_PLAYING && startBtn != null && startBtn.getVisibility() == VISIBLE) {
             startBtn.setVisibility(INVISIBLE);
         }
     }
@@ -195,7 +225,7 @@ public class KuaishouVideoPlayer extends OpenImageCoverVideoPlayer {
     public void onSurfaceAvailable(Surface surface) {
         super.onSurfaceAvailable(surface);
         if (GSYVideoType.getRenderType() != GSYVideoType.TEXTURE) {
-            if (startBtn != null && startBtn.getVisibility() == VISIBLE) {
+            if (mCurrentState == CURRENT_STATE_PLAYING && startBtn != null && startBtn.getVisibility() == VISIBLE) {
                 startBtn.setVisibility(INVISIBLE);
             }
         }

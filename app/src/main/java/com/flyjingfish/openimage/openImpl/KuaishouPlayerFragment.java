@@ -19,7 +19,7 @@ import com.flyjingfish.openimagelib.widget.LoadingView;
 
 public class KuaishouPlayerFragment extends VideoPlayerFragment {
 
-    protected KuaishouVideoPlayer friendVideoPlayer;
+    protected KuaishouVideoPlayer kuaishouVideoPlayer;
     private View rootView;
     private LinearLayout llBtn;
     private TextView commentTv;
@@ -29,22 +29,22 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
 
     @Override
     protected PhotoView getSmallCoverImageView() {
-        return friendVideoPlayer.getSmallCoverImageView();
+        return kuaishouVideoPlayer.getSmallCoverImageView();
     }
 
     @Override
     protected PhotoView getPhotoView() {
-        return friendVideoPlayer.getCoverImageView();
+        return kuaishouVideoPlayer.getCoverImageView();
     }
 
     @Override
     protected View getItemClickableView() {
-        return friendVideoPlayer.getTextureViewContainer();
+        return kuaishouVideoPlayer.getTextureViewContainer();
     }
 
     @Override
     protected LoadingView getLoadingView() {
-        return (LoadingView) friendVideoPlayer.getLoadingView();
+        return (LoadingView) kuaishouVideoPlayer.getLoadingView();
     }
 
 
@@ -52,8 +52,8 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_kuaishou_play,container,false);
-        friendVideoPlayer = rootView.findViewById(R.id.video_player);
-        videoPlayer = friendVideoPlayer;
+        kuaishouVideoPlayer = rootView.findViewById(R.id.video_player);
+        videoPlayer = kuaishouVideoPlayer;
         llBtn = rootView.findViewById(R.id.ll_btn);
         commentTv = rootView.findViewById(R.id.tv_comment);
         titleTv = rootView.findViewById(R.id.tv_title);
@@ -86,17 +86,17 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
             titleTv.setScaleY(scale);
         });
         kuaishouViewModel.slideStatusLiveData.observe(getViewLifecycleOwner(), aBoolean -> isOpenSlide = aBoolean);
-        friendVideoPlayer.setOnSurfaceTouchListener(() -> {
+        kuaishouVideoPlayer.setOnSurfaceTouchListener(() -> {
             kuaishouViewModel.closeSlideLiveData.setValue(true);
             return isOpenSlide;
         });
         kuaishouViewModel.pausePlayLiveData.observe(getViewLifecycleOwner(), playState -> {
             if (playState.position == showPosition && !playState.consume){
-                friendVideoPlayer.playPause();
+                kuaishouVideoPlayer.playPause();
                 playState.consume = true;
             }
         });
-        friendVideoPlayer.setGSYStateUiListener(state -> {
+        kuaishouVideoPlayer.setGSYStateUiListener(state -> {
             if (getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
                 kuaishouViewModel.playStateLiveData.setValue(new PlayState(state,showPosition));
             }
@@ -106,7 +106,7 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
     @Override
     public void onResume() {
         super.onResume();
-        kuaishouViewModel.playStateLiveData.setValue(new PlayState(friendVideoPlayer.getCurrentState(),showPosition));
+        kuaishouViewModel.playStateLiveData.setValue(new PlayState(kuaishouVideoPlayer.getCurrentState(),showPosition));
     }
 
     boolean isStartedTouch;

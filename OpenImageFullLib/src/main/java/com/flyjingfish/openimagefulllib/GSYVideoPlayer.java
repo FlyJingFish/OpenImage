@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
@@ -24,11 +27,11 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     private boolean mute;//是否需要静音
     protected int showType = GSYVideoType.getShowType();
 
+    protected LifecycleOwner lifecycleOwner;
     boolean isUserInputPause = false;
     boolean isUserInput = false;
     protected OpenImageGSYVideoHelper gsyVideoHelper;
     private int mOldState;
-    private boolean isOnAudioFocus = false;
 
     public GSYVideoPlayer(Context context) {
         this(context, null);
@@ -39,30 +42,39 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         initAttrs(context, attrs);
     }
 
+    public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
+        this.lifecycleOwner = lifecycleOwner;
+    }
+
+    private static class MyOnAudioFocusChangeListener implements AudioManager.OnAudioFocusChangeListener{
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+
+        }
+    }
+
+    private final AudioManager.OnAudioFocusChangeListener EMPTY = new MyOnAudioFocusChangeListener();
+    private final AudioManager.OnAudioFocusChangeListener onStandardAudioFocusChangeListener = onAudioFocusChangeListener;
+
     @Override
     protected void init(Context context) {
         super.init(context);
-        onAudioFocusChangeListener = focusChange -> {
-            if (!isOnAudioFocus){
-                return;
-            }
-            switch (focusChange) {
-                case AudioManager.AUDIOFOCUS_GAIN:
-                    onGankAudio();
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS:
-                    onLossAudio();
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                    onLossTransientAudio();
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                    onLossTransientCanDuck();
-                    break;
-            }
-        };
+        onAudioFocusChangeListener = EMPTY;
     }
 
+    public void requestAudioFocus(){
+        abandonAudioFocus();
+        if (mAudioManager != null && !mReleaseWhenLossAudio) {
+            onAudioFocusChangeListener = onStandardAudioFocusChangeListener;
+            mAudioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        }
+    }
+
+    public void abandonAudioFocus(){
+        if (mAudioManager != null) {
+            mAudioManager.abandonAudioFocus(onAudioFocusChangeListener);
+        }
+    }
 
 
     void initAttrs(Context context, AttributeSet attrs) {
@@ -91,6 +103,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         builder.setAutoFullWithSize(true);
         builder.setShowFullAnimation(true);
         builder.setLockLand(true);
+        builder.setReleaseWhenLossAudio(false);
         builder.setCacheWithPlay(true);
         builder.setLooping(isLooping());
         return playUrl(builder);
@@ -163,7 +176,13 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         if (view == mThumbImageViewLayout && visibility != VISIBLE) {
             return;
         }
-        super.setViewShowState(view, visibility);
+        if ((view == mTopContainer || view == mBottomContainer || view == mStartButton || view == mBottomProgressBar) && visibility == VISIBLE){
+            if (lifecycleOwner == null || lifecycleOwner.getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+                super.setViewShowState(view, visibility);
+            }
+        }else {
+            super.setViewShowState(view, visibility);
+        }
     }
 
     @Override
@@ -218,19 +237,45 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         if (isUserInputPause) {
             return;
         }
-        isOnAudioFocus = false;
         boolean seek = true;
         if (this.getGSYVideoManager() != null) {
             long currentPosition = this.getGSYVideoManager().getCurrentPosition();
             seek = currentPosition < mCurrentPosition;
         }
-        super.onVideoResume(seek);
+        onVideoResume(seek);
+    }
+
+    @Override
+    public void onVideoResume(boolean seek) {
+//        super.onVideoResume(seek);
+        mPauseBeforePrepared = false;
+        if (mCurrentState == CURRENT_STATE_PAUSE || mCurrentState == CURRENT_STATE_PLAYING_BUFFERING_START) {
+            try {
+                if (mCurrentPosition >= 0 && getGSYVideoManager() != null) {
+                    if (seek) {
+                        getGSYVideoManager().seekTo(mCurrentPosition);
+                    }
+                    if (mCurrentState == CURRENT_STATE_PLAYING_BUFFERING_START){
+                        if (!getGSYVideoManager().isPlaying()){
+                            getGSYVideoManager().start();
+                        }
+                    }else {
+                        getGSYVideoManager().start();
+                    }
+                    setStateAndUi(CURRENT_STATE_PLAYING);
+                    requestAudioFocus();
+                    mCurrentPosition = 0;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void onVideoPause() {
-        isOnAudioFocus = true;
         super.onVideoPause();
+        abandonAudioFocus();
     }
 
     @Override

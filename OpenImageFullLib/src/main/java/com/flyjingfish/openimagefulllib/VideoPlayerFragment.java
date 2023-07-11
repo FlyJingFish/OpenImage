@@ -43,6 +43,7 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        videoPlayer.setLifecycleOwner(getViewLifecycleOwner());
         setBackListener();
         playerKey = videoPlayer.getVideoKey();
         videoPlayer.goneAllWidget();
@@ -115,10 +116,9 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
         super.onTransitionEnd();
         play();
     }
-
     private void play(){
         if (isTransitionEnd && isLoadImageFinish && !isPlayed){
-            if (!lazyPreload){
+            if (!lazyPreload) {
                 startPlay();
             }
             if (getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
