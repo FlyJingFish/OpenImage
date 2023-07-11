@@ -100,12 +100,15 @@ public enum LoadImageUtils {
     }
 
     public void saveFile(Context context, File resource, boolean video,OnSaveFinish onSaveFinish) {
-        cThreadPool.submit(() -> {
-            String sucPath = FileUtils.save(context, resource, video);
-            if (onSaveFinish != null){
-                handler.post(() -> onSaveFinish.onFinish(sucPath));
-            }
-        });
+        cThreadPool.submit(() -> saveFileIgnoreThread(context, resource, video, onSaveFinish));
+
+    }
+
+    public void saveFileIgnoreThread(Context context, File resource, boolean video, OnSaveFinish onSaveFinish) {
+        String sucPath = FileUtils.save(context, resource, video);
+        if (onSaveFinish != null){
+            handler.post(() -> onSaveFinish.onFinish(sucPath));
+        }
 
     }
 
