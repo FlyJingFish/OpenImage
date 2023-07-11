@@ -36,7 +36,8 @@ import java.util.concurrent.Executors;
 public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
     private static volatile FullGlideDownloadMediaHelper mInstance;
     private final ExecutorService cThreadPool = Executors.newFixedThreadPool(5);
-    static FullGlideDownloadMediaHelper getInstance(){
+    private File mCacheDir;
+    public static FullGlideDownloadMediaHelper getInstance(){
         if (mInstance == null){
             synchronized (FullGlideDownloadMediaHelper.class){
                 if (mInstance == null){
@@ -45,6 +46,14 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
             }
         }
         return mInstance;
+    }
+
+    /**
+     * 如果你设置了自定义缓存目录则需设置此项，否则功能会异常
+     * @param mCacheDir 视频缓存目录
+     */
+    public void setCacheDir(File mCacheDir) {
+        this.mCacheDir = mCacheDir;
     }
 
     @Override
@@ -93,7 +102,7 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
                 return;
             }else {
                 if (downloadUrl.startsWith("http") && !downloadUrl.contains("127.0.0.1") && !downloadUrl.contains(".m3u8")) {
-                    HttpProxyCacheServer proxyCacheServer = ProxyCacheManager.getProxy(activity.getApplicationContext(), null);
+                    HttpProxyCacheServer proxyCacheServer = ProxyCacheManager.getProxy(activity.getApplicationContext(), mCacheDir);
                     String url = proxyCacheServer.getProxyUrl(downloadUrl);
                     if (!TextUtils.equals(url,downloadUrl)){
                         final CacheListener cacheListener = (cacheFile, url1, percentsAvailable) -> {
