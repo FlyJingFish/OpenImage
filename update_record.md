@@ -2,6 +2,16 @@
 
 ## 2.0.8
 
+1、[增加支持传入 Fragment，防止内存泄漏](https://github.com/FlyJingFish/OpenImage/issues/12)
+
+- 点击的 View 在 Fragment 中使用时传入 Fragment
+```java
+OpenImage.with(Fragment fragment)
+
+```
+
+## 2.0.8
+
 1、优化下载视频，缓存与下载功能相结合，总之下载视频时既省一倍流量又能使播放更加流畅
 
 ## 2.0.7
