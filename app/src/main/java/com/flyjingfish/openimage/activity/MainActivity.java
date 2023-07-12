@@ -17,6 +17,7 @@ import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.openImpl.PicassoDownloader;
 import com.flyjingfish.openimage.openImpl.PicassoLoader;
 import com.flyjingfish.openimagelib.OpenImageConfig;
+import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 
@@ -88,6 +89,7 @@ public class MainActivity extends BaseActivity {
         binding.btnWebView.setOnClickListener(v -> jump(v, WebViewActivity.class));
         binding.btnUserDetail.setOnClickListener(v -> jump(v, UserDetailListActivity.class));
         binding.btnMemoryTest.setOnClickListener(v -> jump(v, MemoryTestActivity.class));
+        binding.btnMemoryTest.setVisibility(ActivityCompatHelper.isApkInDebug(this)?View.VISIBLE:View.GONE);
     }
 
     private void jump(View v, Class<?> cls) {
