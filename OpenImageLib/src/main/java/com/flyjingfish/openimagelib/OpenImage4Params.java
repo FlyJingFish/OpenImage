@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -35,6 +36,7 @@ import java.util.UUID;
 
 class OpenImage4Params {
     protected Context context;
+    protected LifecycleOwner lifecycleOwner;
     protected String contextKey;
     protected final List<OpenImageUrl> openImageUrls = new ArrayList<>();
     protected List<ImageView> imageViews;

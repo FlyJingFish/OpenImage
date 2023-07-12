@@ -618,24 +618,13 @@ class OpenImage4ParseData extends OpenImage4Params {
     }
 
     private void release() {
-        FragmentActivity fragmentActivity = ActivityCompatHelper.getFragmentActivity(context);
-        if (fragmentActivity != null) {
-            fragmentActivity.getLifecycle().addObserver(new LifecycleEventObserver() {
+        if (lifecycleOwner != null) {
+            lifecycleOwner.getLifecycle().addObserver(new LifecycleEventObserver() {
                 @Override
                 public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
                     if (event == Lifecycle.Event.ON_DESTROY) {
-                        context = null;
-                        recyclerView = null;
-                        layoutManagerFindVisiblePosition = null;
-                        absListView = null;
-                        viewPager = null;
-                        viewPager2 = null;
-                        if (imageViews != null) {
-                            imageViews.clear();
-                            imageViews = null;
-                        }
                         source.getLifecycle().removeObserver(this);
-                        releaseImageLoadUtilMap();
+                        releaseAllData();
                     }
                 }
             });
@@ -643,5 +632,25 @@ class OpenImage4ParseData extends OpenImage4Params {
 
     }
 
+    protected void releaseAllData() {
+        context = null;
+        lifecycleOwner = null;
+        recyclerView = null;
+        layoutManagerFindVisiblePosition = null;
+        absListView = null;
+        viewPager = null;
+        viewPager2 = null;
+        parentParamsView = null;
+        if (imageViews != null) {
+            imageViews.clear();
+            imageViews = null;
+        }
+        onPermissionsInterceptListener = null;
+        onExitListener = null;
+        onUpdateViewListener = null;
+        sourceImageViewIdGet = null;
+        sourceImageViewGet = null;
+        releaseImageLoadUtilMap();
 
+    }
 }

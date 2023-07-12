@@ -1,7 +1,9 @@
 package com.flyjingfish.openimagelib;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,6 +18,9 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -31,6 +36,7 @@ import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
+import com.flyjingfish.openimagelib.listener.LayoutManagerFindVisiblePosition;
 import com.flyjingfish.openimagelib.listener.OnExitListener;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
@@ -38,7 +44,6 @@ import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnPermissionsInterceptListener;
 import com.flyjingfish.openimagelib.listener.OnSelectMediaListener;
 import com.flyjingfish.openimagelib.listener.OnUpdateViewListener;
-import com.flyjingfish.openimagelib.listener.LayoutManagerFindVisiblePosition;
 import com.flyjingfish.openimagelib.listener.SourceImageViewGet;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
@@ -56,20 +61,88 @@ import java.util.UUID;
  * 打开大图类
  */
 public final class OpenImage extends OpenImage4ParseData {
+    /**
+     * 注意选择正确的 with 方法，防止内存泄漏
+     * @param fragmentActivity
+     * @return {@link OpenImage}
+     */
+    public static OpenImage with(FragmentActivity fragmentActivity) {
+        return new OpenImage(fragmentActivity);
+    }
+    /**
+     * 注意选择正确的 with 方法，防止内存泄漏
+     * @param fragment
+     * @return {@link OpenImage}
+     */
+    public static OpenImage with(Fragment fragment) {
+        return new OpenImage(fragment);
+    }
+    /**
+     * 注意选择正确的 with 方法，防止内存泄漏
+     * @param context 默认为{@link Activity}
+     * @return {@link OpenImage}
+     */
     public static OpenImage with(Context context) {
-        return new OpenImage(context);
+        return new OpenImage(context,true);
+    }
+    /**
+     * 尽量使用上边的 with 方法，防止内存泄漏。此方法以标记为废弃，不建议使用
+     * @param fragment 尽量不要使用{@link android.app.Fragment},而是使用 androidx 下的{@link androidx.fragment.app.Fragment}，否则不好预防内存泄漏问题
+     * @return {@link OpenImage}
+     */
+    @Deprecated
+    public static OpenImage with(android.app.Fragment fragment) {
+        return new OpenImage(fragment);
     }
 
     private OpenImage() {
     }
 
-    private OpenImage(Context context) {
+    private OpenImage(Context context,boolean observeActivity) {
         if (context instanceof Activity) {
             this.context = context;
             this.contextKey = context.toString();
         } else {
             throw new IllegalArgumentException("context must be activity");
         }
+        if (context instanceof LifecycleOwner){
+            lifecycleOwner = (LifecycleOwner) context;
+        }else if (observeActivity){
+            ((Activity) context).getApplication().registerActivityLifecycleCallbacks(new OpenImageActivityLifecycleCallbacks(){
+                @Override
+                public void onActivityDestroyed(@NonNull Activity activity) {
+                    if (context == activity){
+                        releaseAllData();
+                        activity.getApplication().unregisterActivityLifecycleCallbacks(this);
+                    }
+                }
+            });
+        }
+    }
+
+    private OpenImage(Fragment fragment) {
+        this(fragment.requireContext(),false);
+        lifecycleOwner = fragment.getViewLifecycleOwner();
+    }
+
+    private OpenImage(android.app.Fragment fragment) {
+        this(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M?fragment.getContext():fragment.getActivity(),false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ((Activity) fragment.getContext()).getFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+                @Override
+                public void onFragmentDestroyed(FragmentManager fm, android.app.Fragment f) {
+                    super.onFragmentDestroyed(fm, f);
+                    if (f == fragment){
+                        releaseAllData();
+                        fm.unregisterFragmentLifecycleCallbacks(this);
+                    }
+                }
+            },true);
+        }
+    }
+
+    private OpenImage(FragmentActivity fragmentActivity) {
+        this(((Context) fragmentActivity),false);
     }
 
     /**
