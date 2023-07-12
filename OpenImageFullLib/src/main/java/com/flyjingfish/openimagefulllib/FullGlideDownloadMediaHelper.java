@@ -97,7 +97,6 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
                     }
                 }
             });
-            boolean isInitOkHttpClient = LoadImageUtils.INSTANCE.isInitOkHttpClient();
             FileNameGenerator md5FileNameGenerator = new Md5FileNameGenerator();
             String name = md5FileNameGenerator.generate(downloadUrl);
             File cachePath = mVideoCacheDir == null ? StorageUtils.getIndividualCacheDirectory(application) : mVideoCacheDir;
@@ -105,7 +104,7 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
 
             if (file.exists()) {
                 if (onDownloadMediaListener != null) {
-                    onDownloadMediaListener.onDownloadStart(isInitOkHttpClient);
+                    onDownloadMediaListener.onDownloadStart(false);
                 }
                 LoadImageUtils.INSTANCE.saveFile(application, file, true, sucPath -> {
                     if (isDestroy[0]) {
@@ -136,7 +135,7 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
                         };
                         proxyCacheServer.registerCacheListener(cacheListener, downloadUrl);
                         if (onDownloadMediaListener != null) {
-                            onDownloadMediaListener.onDownloadStart(isInitOkHttpClient);
+                            onDownloadMediaListener.onDownloadStart(true);
                         }
                         cThreadPool.submit(() -> {
                             InputStream inputStream = null;
