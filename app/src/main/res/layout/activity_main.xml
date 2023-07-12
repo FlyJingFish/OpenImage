@@ -182,6 +182,14 @@
             android:textAllCaps="false" />
 
         <Button
+            android:id="@+id/btn_memory_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="测试内存泄漏问题"
+            android:visibility="gone"
+            android:textAllCaps="false" />
+
+        <Button
             android:id="@+id/btn_clear_glide_cache"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -13,8 +13,8 @@ import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import java.util.List;
 
 class BaseSharedElementCallback extends SharedElementCallback {
-    protected final Context context;
-    protected final OpenImage4Params openImage4Params;
+    protected Context context;
+    protected OpenImage4Params openImage4Params;
 
     public BaseSharedElementCallback(Context context,OpenImage4Params openImage4Params) {
         this.context = context;
@@ -31,6 +31,8 @@ class BaseSharedElementCallback extends SharedElementCallback {
         if (openImage4Params.onExitListener != null){
             openImage4Params.onExitListener.onExit();
         }
+        openImage4Params.onExit();
+        context = null;
     }
     private void fixAndroid12Bug(){
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R && OpenImageConfig.getInstance().isFixAndroid12OnBackPressed()) {

@@ -19,7 +19,7 @@ import java.util.Map;
 class ExitSharedElementCallback2 extends BaseSharedElementCallback {
     protected Float startAlpha;
     protected Integer startVisibility;
-    private final ImageView shareExitMapView;
+    private ImageView shareExitMapView;
     private float startSrcAlpha;
     private final boolean showSrcImageView;
     private final boolean isClipSrcImageView;
@@ -36,9 +36,6 @@ class ExitSharedElementCallback2 extends BaseSharedElementCallback {
     @Override
     public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
         super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
-        if (shareExitMapView != null) {
-            new Handler(Looper.getMainLooper()).post(() -> shareExitMapView.setClipBounds(null));
-        }
         if (!showSrcImageView && shareExitMapView != null) {
             shareExitMapView.setAlpha(Math.max(startAlpha, startSrcAlpha));
         }
@@ -54,6 +51,13 @@ class ExitSharedElementCallback2 extends BaseSharedElementCallback {
                 }
             }
         }
+        if (shareExitMapView != null) {
+            new Handler(Looper.getMainLooper()).post(() -> {
+                shareExitMapView.setClipBounds(null);
+                shareExitMapView = null;
+            });
+        }
+        openImage4Params = null;
     }
 
     @Override

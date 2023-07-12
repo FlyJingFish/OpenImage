@@ -2,8 +2,10 @@ package com.flyjingfish.openimagelib;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.FragmentManager;
 import android.app.Instrumentation;
 import android.app.SharedElementCallback;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -630,6 +632,41 @@ class OpenImage4ParseData extends OpenImage4Params {
             });
         }
 
+    }
+    void releaseActivity(final Context context) {
+        ((Activity) context).getApplication().registerActivityLifecycleCallbacks(new OpenImageActivityLifecycleCallbacks(){
+            @Override
+            public void onActivityDestroyed(@NonNull Activity activity) {
+                if (context == activity){
+                    releaseAllData();
+                    activity.getApplication().unregisterActivityLifecycleCallbacks(this);
+                }
+            }
+        });
+    }
+    void releaseAppFragment(final android.app.Fragment fragment) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ((Activity) fragment.getContext()).getFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+                @Override
+                public void onFragmentDestroyed(FragmentManager fm, android.app.Fragment f) {
+                    super.onFragmentDestroyed(fm, f);
+                    if (f == fragment){
+                        releaseAllData();
+                        fm.unregisterFragmentLifecycleCallbacks(this);
+                    }
+                }
+            },true);
+        }else {
+            isReleaseAllData = true;
+        }
+    }
+
+    @Override
+    void onExit() {
+        super.onExit();
+        if (isReleaseAllData){
+            releaseAllData();
+        }
     }
 
     protected void releaseAllData() {

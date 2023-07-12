@@ -98,6 +98,7 @@ class OpenImage4Params {
 
     protected int preloadCount = OpenImageConfig.getInstance().getPreloadCount();
     protected boolean lazyPreload = OpenImageConfig.getInstance().isLazyPreload();
+    boolean isReleaseAllData = false;
 
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV, WEB_VIEW
@@ -231,6 +232,8 @@ class OpenImage4Params {
                 isClipSrcImageView = shareExitViewBean.isClipSrcImageView;
             }
             activity.setExitSharedElementCallback(new ExitSharedElementCallback2(context, shareExitView, showSrcImageView, shareExitView == showCurrentView ? showCurrentViewStartAlpha : null, isClipSrcImageView,OpenImage4Params.this));
+            showCurrentView = null;
+            transitionView = null;
             return shareExitViewBean;
         }
 
@@ -501,4 +504,6 @@ class OpenImage4Params {
         }
         return position;
     }
+
+    void onExit(){}
 }

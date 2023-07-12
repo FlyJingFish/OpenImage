@@ -1,7 +1,6 @@
 package com.flyjingfish.openimagelib;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -108,15 +107,7 @@ public final class OpenImage extends OpenImage4ParseData {
         if (context instanceof LifecycleOwner){
             lifecycleOwner = (LifecycleOwner) context;
         }else if (observeActivity){
-            ((Activity) context).getApplication().registerActivityLifecycleCallbacks(new OpenImageActivityLifecycleCallbacks(){
-                @Override
-                public void onActivityDestroyed(@NonNull Activity activity) {
-                    if (context == activity){
-                        releaseAllData();
-                        activity.getApplication().unregisterActivityLifecycleCallbacks(this);
-                    }
-                }
-            });
+            releaseActivity(context);
         }
     }
 
@@ -127,18 +118,8 @@ public final class OpenImage extends OpenImage4ParseData {
 
     private OpenImage(android.app.Fragment fragment) {
         this(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M?fragment.getContext():fragment.getActivity(),false);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ((Activity) fragment.getContext()).getFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
-                @Override
-                public void onFragmentDestroyed(FragmentManager fm, android.app.Fragment f) {
-                    super.onFragmentDestroyed(fm, f);
-                    if (f == fragment){
-                        releaseAllData();
-                        fm.unregisterFragmentLifecycleCallbacks(this);
-                    }
-                }
-            },true);
-        }
+        lifecycleOwner = null;
+        releaseAppFragment(fragment);
     }
 
     private OpenImage(FragmentActivity fragmentActivity) {

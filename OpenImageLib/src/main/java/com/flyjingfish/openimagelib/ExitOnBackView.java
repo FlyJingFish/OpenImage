@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 class ExitOnBackView implements ImageLoadUtils.OnBackView {
-    private final View transitionView;
+    protected View transitionView;
     private final float transitionViewStartAlpha;
     private final int transitionViewStartVisibility;
     protected boolean isTouchClose;
