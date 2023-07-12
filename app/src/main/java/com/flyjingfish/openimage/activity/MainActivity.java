@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity {
     //  "/storage/emulated/0/Tencent/QQ_Images/a62d96cb210ccb9.jpg",
     //  "content://media/external/images/media/1735525",
     //  "/storage/emulated/0/Tencent/QQ_Images/7ff9ceb717b1dafc.jpg",
-
+//"https://mirror.aarnet.edu.au/pub/TED-talks/911Mothers_2010W-480p.mp4"
     @Override
     public boolean isShowBack() {
         return false;
