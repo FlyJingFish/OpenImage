@@ -48,6 +48,7 @@ import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.listener.UpperLayerFragmentCreate;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
+import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.util.ArrayList;
@@ -98,6 +99,8 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     private OpenImage(Context context,boolean observeActivity) {
+        ImageLoadUtils.getInstance().setApkInDebug(ActivityCompatHelper.isApkInDebug(context));
+        OpenImageLogUtils.init(context);
         if (context instanceof Activity) {
             this.context = context;
             this.contextKey = context.toString();

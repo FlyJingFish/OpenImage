@@ -21,12 +21,15 @@ import com.flyjingfish.openimageglidelib.LoadImageUtils;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener;
+import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 import com.shuyu.gsyvideoplayer.cache.CacheFactory;
 import com.shuyu.gsyvideoplayer.cache.ProxyCacheManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,9 +39,11 @@ import java.util.concurrent.Executors;
 
 public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
     private static volatile FullGlideDownloadMediaHelper mInstance;
-    private final ExecutorService cThreadPool = Executors.newFixedThreadPool(5);
+    private final HashMap<String,ExecutorService> mExecutorServiceHashMap = new HashMap<>();
     private File mVideoCacheDir = null;
     private boolean isDownloadWithCache = true;
+    private static final int RETRY_COUNT = 10;
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     public static FullGlideDownloadMediaHelper getInstance() {
         if (mInstance == null) {
@@ -69,7 +74,6 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
     }
 
     /**
-     *
      * 是否启用下载和缓存同时进行，这将节省一半流量(这项设置只针对视频)
      *
      * @param downloadWithCache 下载和缓存是否同时进行，默认 true
@@ -83,16 +87,19 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
         final String downloadUrl = openImageUrl.getType() == MediaType.VIDEO ? openImageUrl.getVideoUrl() : openImageUrl.getImageUrl();
         if (openImageUrl.getType() == MediaType.VIDEO && CacheFactory.getCacheManager() instanceof ProxyCacheManager) {
             Context application = activity.getApplicationContext();
-            final String key = UUID.randomUUID().toString();
+            final String activityKey = activity.toString();
+            final String listenerKey = UUID.randomUUID().toString();
             final Map<String, OnDownloadMediaListener> onDownloadMediaListenerHashMap = new HashMap<>();
-            onDownloadMediaListenerHashMap.put(key, onDownloadMediaListener);
+            onDownloadMediaListenerHashMap.put(listenerKey, onDownloadMediaListener);
             final boolean[] isDestroy = new boolean[]{false};
+            WeakReference<FragmentActivity> weakReference = new WeakReference<>(activity);
             lifecycleOwner.getLifecycle().addObserver(new LifecycleEventObserver() {
                 @Override
                 public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
                     if (event == Lifecycle.Event.ON_DESTROY) {
                         isDestroy[0] = true;
                         onDownloadMediaListenerHashMap.clear();
+                        weakReference.clear();
                         source.getLifecycle().removeObserver(this);
                     }
                 }
@@ -101,7 +108,6 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
             String name = md5FileNameGenerator.generate(downloadUrl);
             File cachePath = mVideoCacheDir == null ? StorageUtils.getIndividualCacheDirectory(application) : mVideoCacheDir;
             File file = new File(cachePath, name);
-
             if (file.exists()) {
                 if (onDownloadMediaListener != null) {
                     onDownloadMediaListener.onDownloadStart(false);
@@ -111,24 +117,26 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
                         return;
                     }
                     OnDownloadMediaListener onDownloadMediaListener1;
-                    if ((onDownloadMediaListener1 = onDownloadMediaListenerHashMap.get(key)) != null) {
+                    if ((onDownloadMediaListener1 = onDownloadMediaListenerHashMap.get(listenerKey)) != null) {
                         if (!TextUtils.isEmpty(sucPath)) {
                             onDownloadMediaListener1.onDownloadSuccess(sucPath);
                         } else {
                             onDownloadMediaListener1.onDownloadFailed();
                         }
                     }
+                    onDownloadMediaListenerHashMap.clear();
                 });
                 return;
             } else if (isDownloadWithCache) {
                 if (downloadUrl.startsWith("http") && !downloadUrl.contains("127.0.0.1") && !downloadUrl.contains(".m3u8")) {
-                    HttpProxyCacheServer proxyCacheServer = ProxyCacheManager.getProxy(activity.getApplicationContext(), mVideoCacheDir);
+                    HttpProxyCacheServer proxyCacheServer = ProxyCacheManager.getProxy(application, mVideoCacheDir);
                     String url = proxyCacheServer.getProxyUrl(downloadUrl);
                     if (!TextUtils.equals(url, downloadUrl)) {
                         final CacheListener cacheListener = (cacheFile, url1, percentsAvailable) -> {
+                            OpenImageLogUtils.logD("download", "progress=" + percentsAvailable);
                             if (TextUtils.equals(url1, downloadUrl)) {
                                 OnDownloadMediaListener onDownloadMediaListener1;
-                                if ((onDownloadMediaListener1 = onDownloadMediaListenerHashMap.get(key)) != null) {
+                                if ((onDownloadMediaListener1 = onDownloadMediaListenerHashMap.get(listenerKey)) != null) {
                                     onDownloadMediaListener1.onDownloadProgress(percentsAvailable);
                                 }
                             }
@@ -137,73 +145,164 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
                         if (onDownloadMediaListener != null) {
                             onDownloadMediaListener.onDownloadStart(true);
                         }
-                        cThreadPool.submit(() -> {
-                            InputStream inputStream = null;
-                            try {
-                                URL localUrl = new URL(url);
-                                inputStream = localUrl.openStream();
-                                int bufferSize = 1024 * 2;
-                                byte[] buffer = new byte[bufferSize];
-                                int length = 0;
-                                while ((length = inputStream.read(buffer)) != -1) {
-                                    //由于我们只需要启动预取，因此不需要在这里执行任何操作，或者我们可以使用 ByteArrayOutputStream 将数据写入磁盘
-                                }
-                                proxyCacheServer.unregisterCacheListener(cacheListener, downloadUrl);
-                                int retry = 0;
-                                while (proxyCacheServer.getProxyUrl(downloadUrl).startsWith("http") && retry < 3) {
-                                    try {
-                                        Thread.sleep(100);
-                                    } catch (InterruptedException ignored) {
 
+                        Runnable runnable = () -> {
+                            boolean cacheFile = (!proxyCacheServer.getProxyUrl(downloadUrl).startsWith("http"));
+                            if (cacheFile && file.exists()) {
+                                OpenImageLogUtils.logD("download", "runnable-1");
+                                mHandler.post(() -> {
+                                    FragmentActivity activity2 = weakReference.get();
+                                    if (isDestroy[0] || activity2 == null) {
+                                        return;
                                     }
-                                    retry++;
-                                }
-                                boolean cacheFile = (!proxyCacheServer.getProxyUrl(downloadUrl).startsWith("http"));
-                                if (cacheFile && file.exists()) {
-                                    LoadImageUtils.INSTANCE.saveFileIgnoreThread(application, file, true, sucPath -> {
+                                    LoadImageUtils.INSTANCE.saveFile(activity2.getApplicationContext(), file, true, sucPath -> {
                                         if (isDestroy[0]) {
                                             return;
                                         }
                                         OnDownloadMediaListener onDownloadMediaListener1;
-                                        if ((onDownloadMediaListener1 = onDownloadMediaListenerHashMap.get(key)) != null) {
+                                        if ((onDownloadMediaListener1 = onDownloadMediaListenerHashMap.get(listenerKey)) != null) {
                                             if (!TextUtils.isEmpty(sucPath)) {
                                                 onDownloadMediaListener1.onDownloadSuccess(sucPath);
                                             } else {
                                                 onDownloadMediaListener1.onDownloadFailed();
                                             }
                                         }
+                                        onDownloadMediaListenerHashMap.clear();
                                     });
-                                } else {
-                                    new Handler(Looper.getMainLooper()).post(() -> {
-                                        if (isDestroy[0]) {
-                                            return;
-                                        }
-                                        FullGlideDownloadMediaHelper.super.download(activity, lifecycleOwner, openImageUrl, onDownloadMediaListener);
-                                    });
-                                }
+                                });
 
-                            } catch (IOException e) {
-                                new Handler(Looper.getMainLooper()).post(() -> {
-                                    if (isDestroy[0]) {
+                            } else {
+                                OpenImageLogUtils.logD("download", "runnable-2");
+                                mHandler.post(() -> {
+                                    FragmentActivity activity2 = weakReference.get();
+                                    if (isDestroy[0] || activity2 == null) {
                                         return;
                                     }
-                                    FullGlideDownloadMediaHelper.super.download(activity, lifecycleOwner, openImageUrl, onDownloadMediaListener);
+
+                                    FullGlideDownloadMediaHelper.super.download(activity2, lifecycleOwner, openImageUrl, onDownloadMediaListener);
                                 });
-                            } finally {
-                                if (inputStream != null) {
-                                    try {
-                                        inputStream.close();
-                                    } catch (IOException ignored) {
+                            }
+                        };
+                        ExecutorService cThreadPool = mExecutorServiceHashMap.get(activityKey);
+                        if (cThreadPool == null){
+                            cThreadPool = Executors.newFixedThreadPool(5);
+                            mExecutorServiceHashMap.put(activityKey,cThreadPool);
+                        }
+                        InputStream[] inputStreams = new InputStream[1];
+                        lifecycleOwner.getLifecycle().addObserver(new LifecycleEventObserver() {
+                            @Override
+                            public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                                if (event == Lifecycle.Event.ON_DESTROY) {
+                                    InputStream inputStream;
+                                    if ((inputStream = inputStreams[0]) !=  null){
+                                        ExecutorService cThreadPool = mExecutorServiceHashMap.get(activityKey);
+                                        if (cThreadPool == null){
+                                            cThreadPool = Executors.newFixedThreadPool(5);
+                                            mExecutorServiceHashMap.put(activityKey,cThreadPool);
+                                        }
+                                        cThreadPool.submit(() -> {
+                                            try {
+                                                inputStream.close();
+                                            } catch (IOException ignored) {
+                                            }finally {
+                                                ExecutorService cThreadPool1 = mExecutorServiceHashMap.get(activityKey);
+                                                if (cThreadPool1 != null){
+                                                    cThreadPool1.shutdownNow();
+                                                }
+                                            }
+                                        });
+                                    }else {
+                                        ExecutorService cThreadPool = mExecutorServiceHashMap.get(activityKey);
+                                        if (cThreadPool != null){
+                                            cThreadPool.shutdownNow();
+                                        }
                                     }
+                                    mExecutorServiceHashMap.remove(activityKey);
+                                    source.getLifecycle().removeObserver(this);
                                 }
                             }
                         });
+                        submit(cThreadPool,url,downloadUrl,inputStreams,runnable,proxyCacheServer,cacheListener,listenerKey,onDownloadMediaListenerHashMap,0);
                         return;
                     }
                 }
             }
         }
         super.download(activity, lifecycleOwner, openImageUrl, onDownloadMediaListener);
+    }
+
+    private void submit(ExecutorService cThreadPool,String url,String downloadUrl,InputStream[] inputStreams,Runnable runnable,HttpProxyCacheServer proxyCacheServer,final CacheListener cacheListener,final String listenerKey,final Map<String, OnDownloadMediaListener> onDownloadMediaListenerHashMap,int retryCount){
+        cThreadPool.submit(() -> {
+            InputStream inputStream = null;
+            try {
+                URL localUrl = new URL(url);
+                inputStream = localUrl.openStream();
+                inputStreams[0] = inputStream;
+                int bufferSize = 1024 * 2;
+                byte[] buffer = new byte[bufferSize];
+                int length = 0;
+                try {
+                    while ((length = inputStream.read(buffer)) != -1) {
+                        //由于我们只需要启动预取，因此不需要在这里执行任何操作，或者我们可以使用 ByteArrayOutputStream 将数据写入磁盘
+                    }
+                } catch (IOException e) {
+                    OpenImageLogUtils.logD("download","catch2");
+                    if (e instanceof ProtocolException) {
+                        OpenImageLogUtils.logD("download","catch2-retryCount="+retryCount);
+                        mHandler.post(() -> {
+                            if (!onDownloadMediaListenerHashMap.containsKey(listenerKey)){
+                                return;
+                            }
+                            if (retryCount < RETRY_COUNT){
+                                final int newCount = retryCount+1;
+                                mHandler.postDelayed(() -> {
+                                    submit(cThreadPool,url,downloadUrl,inputStreams,runnable,proxyCacheServer,cacheListener,listenerKey,onDownloadMediaListenerHashMap,newCount);
+                                },200);
+                            }else {
+                                OnDownloadMediaListener onDownloadMediaListener1;
+                                if ((onDownloadMediaListener1 = onDownloadMediaListenerHashMap.get(listenerKey)) != null) {
+                                    onDownloadMediaListener1.onDownloadFailed();
+                                }
+                                onDownloadMediaListenerHashMap.clear();
+                            }
+                        });
+                    }else {
+                        runnable.run();
+                    }
+                    return;
+                }
+                proxyCacheServer.unregisterCacheListener(cacheListener, downloadUrl);
+                int retry = 0;
+                while (proxyCacheServer.getProxyUrl(downloadUrl).startsWith("http") && retry < 3) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ignored) {
+
+                    }
+                    retry++;
+                }
+                OpenImageLogUtils.logD("download","success");
+                runnable.run();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                OpenImageLogUtils.logD("download","catch1");
+                mHandler.post(() -> {
+                    OnDownloadMediaListener onDownloadMediaListener1;
+                    if ((onDownloadMediaListener1 = onDownloadMediaListenerHashMap.get(listenerKey)) != null) {
+                        onDownloadMediaListener1.onDownloadFailed();
+                    }
+                    onDownloadMediaListenerHashMap.clear();
+                });
+            } finally {
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException ignored) {
+                    }
+                }
+            }
+        });
     }
 
 

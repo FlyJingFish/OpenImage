@@ -6,10 +6,12 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.flyjingfish.openimagelib.OpenImageConfig;
+import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 
 public class OpenImageGlideInitProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
+        OpenImageLogUtils.init(getContext().getApplicationContext());
         //初始化大图加载器
         if (OpenImageConfig.getInstance().getBigImageHelper() == null){
             OpenImageConfig.getInstance().setBigImageHelper(new GlideBigImageHelper());

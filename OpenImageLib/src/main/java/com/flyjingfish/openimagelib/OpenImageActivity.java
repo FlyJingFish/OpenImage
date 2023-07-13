@@ -765,13 +765,15 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         downloadList.add(openImageDetail);
         NetworkHelper.INSTANCE.download(this,this, openImageDetail, new OnDownloadMediaListener() {
             private boolean isWithProgress;
+            private boolean isStart;
 
             @Override
             public void onDownloadStart(boolean isWithProgress) {
                 this.isWithProgress = isWithProgress;
-                if (downloadToast && !TextUtils.isEmpty(startToast)) {
+                if (downloadToast && !TextUtils.isEmpty(startToast) && !isStart) {
                     Toast.makeText(OpenImageActivity.this, startToast, Toast.LENGTH_SHORT).show();
                 }
+                isStart = true;
             }
 
             @Override

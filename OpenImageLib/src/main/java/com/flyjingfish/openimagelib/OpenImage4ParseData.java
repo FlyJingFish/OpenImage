@@ -35,6 +35,7 @@ import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
+import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.lang.reflect.Field;
@@ -46,7 +47,6 @@ class OpenImage4ParseData extends OpenImage4Params {
 
     protected void goShow() {
         if (ImageLoadUtils.getInstance().isCanOpenOpenImageActivity(contextKey)) {
-            ImageLoadUtils.getInstance().setApkInDebug(ActivityCompatHelper.isApkInDebug(context));
             Activity activity = ActivityCompatHelper.getActivity(context);
             activity.setExitSharedElementCallback(null);
             show4ParseData();
