@@ -1,6 +1,12 @@
 # OpenImage 更新日志
 
-## 2.0.8
+## 2.1.0
+
+1、修复下载较大视频时，中途异常导致下载失败的问题
+
+2、修复下载视频时内存泄漏问题
+
+## 2.0.9
 
 1、[增加支持传入 Fragment，防止内存泄漏](https://github.com/FlyJingFish/OpenImage/issues/12)
 
