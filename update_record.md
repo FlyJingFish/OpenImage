@@ -1,5 +1,10 @@
 # OpenImage 更新日志
 
+## 2.1.1
+
+1、[优化缩放过程，防止缩放时切换图片](https://github.com/FlyJingFish/OpenImage/issues/13)
+
+
 ## 2.1.0
 
 1、修复下载较大视频时，中途异常导致下载失败的问题
