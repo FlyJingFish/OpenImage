@@ -124,7 +124,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private final OnGestureListener onGestureListener = new OnGestureListener() {
         @Override
         public void onDrag(float dx, float dy, float moveX, float moveY) {
+            ViewParent parent = mImageView.getParent();
             if (mScaleDragDetector.isScaling()) {
+                if (parent != null) {
+                    parent.requestDisallowInterceptTouchEvent(true);
+                }
                 return; // Do not drag if we are already scaling
             }
             if (mOnViewDragListener != null) {
@@ -143,7 +147,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
              * on, and the direction of the scroll (i.e. if we're pulling against
              * the edge, aka 'overscrolling', let the parent take over).
              */
-            ViewParent parent = mImageView.getParent();
+
             if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept && displayRect != null) {
                 int imageWidth = getImageViewWidth(mImageView);
                 int imageHeight = getImageViewHeight(mImageView);
