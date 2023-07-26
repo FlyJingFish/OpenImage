@@ -239,6 +239,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     private ViewPager2 findViewPager2(View view){
+        if (view == null){
+            return null;
+        }
         ViewParent viewParent = view.getParent();
         if (viewParent instanceof ViewPager2){
             return (ViewPager2) viewParent;
