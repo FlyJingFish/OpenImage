@@ -25,6 +25,7 @@ import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimagelib.OpenImageActivity;
 import com.flyjingfish.openimagelib.OpenImageConfig;
@@ -104,6 +105,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float exitStartHeight;
     public boolean isCanLayout;
     private int exitDrawableWidth, exitDrawableHeight;
+    private ViewPager2 viewPager2;
 
     public void setStartWidth(float mStartWidth) {
         this.mStartWidth = mStartWidth;
@@ -147,7 +149,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
              * on, and the direction of the scroll (i.e. if we're pulling against
              * the edge, aka 'overscrolling', let the parent take over).
              */
-
             if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept && displayRect != null) {
                 int imageWidth = getImageViewWidth(mImageView);
                 int imageHeight = getImageViewHeight(mImageView);
@@ -226,14 +227,43 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 mBigImageMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
                 checkAndDisplayMatrix();
             }
+            setViewPager2UserInputEnabled(false);
         }
 
     };
+
+    private void setViewPager2UserInputEnabled(boolean enabled){
+        if (viewPager2 != null){
+            viewPager2.setUserInputEnabled(enabled);
+        }
+    }
+
+    private ViewPager2 findViewPager2(View view){
+        ViewParent viewParent = view.getParent();
+        if (viewParent instanceof ViewPager2){
+            return (ViewPager2) viewParent;
+        }else {
+            return findViewPager2((View) viewParent);
+        }
+    }
 
     public PhotoViewAttacher(ImageView imageView) {
         mImageView = imageView;
         imageView.setOnTouchListener(this);
         imageView.addOnLayoutChangeListener(this);
+        imageView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                if (viewPager2 == null || !viewPager2.isAttachedToWindow()){
+                    viewPager2 = findViewPager2(v);
+                }
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+
+            }
+        });
         if (imageView.isInEditMode()) {
             return;
         }
@@ -544,6 +574,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         if (mZoomEnabled && Util.hasDrawable((ImageView) v)) {
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    setViewPager2UserInputEnabled(true);
                     ViewParent parent = v.getParent();
                     // First, disable the Parent from intercepting the touch
                     // event
