@@ -1,10 +1,14 @@
 # OpenImage 更新日志
 
+
+## 2.1.3
+
+1、[彻底优化缩放过程，防止缩放时切换图片](https://github.com/FlyJingFish/OpenImage/issues/13)
+
+
 ## 2.1.2
 
-1、[优化缩放过程，防止缩放时切换图片](https://github.com/FlyJingFish/OpenImage/issues/13)
-
-2、修复视频设置点击和长按监听不起作用的问题
+1、修复视频设置点击和长按监听不起作用的问题
 
 
 ## 2.1.1
