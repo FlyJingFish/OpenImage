@@ -30,6 +30,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.flyjingfish.openimagelib.OpenImageActivity;
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.PhotosViewModel;
+import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.util.HashSet;
@@ -236,6 +237,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         if (viewPager2 != null){
             viewPager2.setUserInputEnabled(enabled);
         }
+        OpenImageLogUtils.logE("setViewPager2UserInputEnabled","="+enabled);
     }
 
     private ViewPager2 findViewPager2(View view){
@@ -575,7 +577,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         boolean handled = false;
         isTouched = true;
         if (mZoomEnabled && Util.hasDrawable((ImageView) v)) {
-            switch (ev.getAction()) {
+            switch (ev.getAction() & MotionEvent.ACTION_MASK) {
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    setViewPager2UserInputEnabled(false);
+                    break;
                 case MotionEvent.ACTION_DOWN:
                     setViewPager2UserInputEnabled(true);
                     ViewParent parent = v.getParent();
