@@ -228,7 +228,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 mBigImageMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
                 checkAndDisplayMatrix();
             }
-            setViewPager2UserInputEnabled(false);
         }
 
     };
@@ -237,7 +236,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         if (viewPager2 != null){
             viewPager2.setUserInputEnabled(enabled);
         }
-        OpenImageLogUtils.logE("setViewPager2UserInputEnabled","="+enabled);
     }
 
     private ViewPager2 findViewPager2(View view){
