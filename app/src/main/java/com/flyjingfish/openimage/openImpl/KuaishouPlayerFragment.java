@@ -39,7 +39,7 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
 
     @Override
     protected View getItemClickableView() {
-        return kuaishouVideoPlayer.getTextureViewContainer();
+        return kuaishouVideoPlayer;
     }
 
     @Override

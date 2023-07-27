@@ -30,7 +30,7 @@ public class FriendsPlayerFragment extends VideoPlayerFragment {
 
     @Override
     protected View getItemClickableView() {
-        return friendVideoPlayer.getTextureViewContainer();
+        return friendVideoPlayer;
     }
 
     @Override

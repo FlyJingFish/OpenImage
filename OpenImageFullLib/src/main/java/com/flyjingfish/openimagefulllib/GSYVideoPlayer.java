@@ -3,6 +3,7 @@ package com.flyjingfish.openimagefulllib;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.media.AudioManager;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Surface;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
@@ -44,6 +46,43 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
 
     public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner;
+    }
+
+    long touchSurfaceDownTime;
+
+    @Override
+    protected void touchSurfaceDown(float x, float y) {
+        super.touchSurfaceDown(x, y);
+        touchSurfaceDownTime = SystemClock.uptimeMillis();
+    }
+
+    @Override
+    protected void touchSurfaceUp() {
+        super.touchSurfaceUp();
+        long time = SystemClock.uptimeMillis();
+        if (time - touchSurfaceDownTime < 500){
+            if (onClickListener != null){
+                onClickListener.onClick(getTextureViewContainer());
+            }
+        }
+    }
+    private OnClickListener onClickListener;
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener l) {
+        if (getTextureViewContainer() != null){
+            onClickListener = l;
+        }else {
+            super.setOnClickListener(l);
+        }
+    }
+
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+        if (getTextureViewContainer() != null){
+            getTextureViewContainer().setOnLongClickListener(l);
+        }else {
+            super.setOnLongClickListener(l);
+        }
     }
 
     private static class MyOnAudioFocusChangeListener implements AudioManager.OnAudioFocusChangeListener{
