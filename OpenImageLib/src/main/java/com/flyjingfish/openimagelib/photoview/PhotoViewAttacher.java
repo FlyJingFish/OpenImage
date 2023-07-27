@@ -233,7 +233,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     };
 
     private void setViewPager2UserInputEnabled(boolean enabled){
-        if (viewPager2 != null){
+        if (viewPager2 != null && viewPager2.isUserInputEnabled() != enabled){
             viewPager2.setUserInputEnabled(enabled);
         }
     }
@@ -259,6 +259,15 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             public void onViewAttachedToWindow(View v) {
                 if (viewPager2 == null || !viewPager2.isAttachedToWindow()){
                     viewPager2 = findViewPager2(v);
+                    if (viewPager2 != null){
+                        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                            @Override
+                            public void onPageSelected(int position) {
+                                super.onPageSelected(position);
+                                setViewPager2UserInputEnabled(true);
+                            }
+                        });
+                    }
                 }
             }
 
