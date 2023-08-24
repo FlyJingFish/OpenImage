@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public interface OpenImageUrl extends Serializable {
     /**
-     * @return 返回应该浏览的大图获取视频的大图封面
+     * @return 返回应该浏览的大图或者视频的大图封面
      */
     String getImageUrl();
 

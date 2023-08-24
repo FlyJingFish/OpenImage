@@ -17,7 +17,7 @@ public class CloseParams {
 
     /**
      *
-     * @param closeSrc 下载按钮资源图
+     * @param closeSrc 关闭按钮资源图
      * @return
      */
     public CloseParams setCloseSrc(@DrawableRes int closeSrc) {
@@ -27,7 +27,7 @@ public class CloseParams {
 
     /**
      *
-     * @param touchingHide 触摸时是否隐藏下载按钮
+     * @param touchingHide 触摸时是否隐藏关闭按钮
      * @return
      */
     public CloseParams setTouchingHide(boolean touchingHide) {
@@ -37,7 +37,7 @@ public class CloseParams {
 
     /**
      *
-     * @param closeLayoutParams 下载按钮布局参数
+     * @param closeLayoutParams 关闭按钮布局参数
      * @return
      */
     public CloseParams setCloseLayoutParams(FrameLayout.LayoutParams closeLayoutParams) {
