@@ -11,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.flyjingfish.openimagelib.photoview.PhotoView;
@@ -215,9 +217,27 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         if (view == mThumbImageViewLayout && visibility != VISIBLE) {
             return;
         }
+        if (view != null){
+            LifecycleEventObserver observer = (LifecycleEventObserver) view.getTag(R.id.gsy_player_view_visibility);
+            if (observer != null){
+                lifecycleOwner.getLifecycle().removeObserver(observer);
+            }
+        }
         if ((view == mTopContainer || view == mBottomContainer || view == mStartButton || view == mBottomProgressBar) && visibility == VISIBLE){
             if (lifecycleOwner == null || lifecycleOwner.getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
                 super.setViewShowState(view, visibility);
+            }else if (lifecycleOwner != null && view != null){
+                LifecycleEventObserver observer = new LifecycleEventObserver() {
+                    @Override
+                    public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                        if (event == Lifecycle.Event.ON_RESUME){
+                            source.getLifecycle().removeObserver(this);
+                            GSYVideoPlayer.super.setViewShowState(view, visibility);
+                        }
+                    }
+                };
+                view.setTag(R.id.gsy_player_view_visibility,observer);
+                lifecycleOwner.getLifecycle().addObserver(observer);
             }
         }else {
             super.setViewShowState(view, visibility);

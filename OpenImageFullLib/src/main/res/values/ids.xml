@@ -3,4 +3,5 @@
     <item type="id" name="image_id"/>
     <item type="id" name="iv_video_player_cover"/>
     <item type="id" name="iv_video_player_cover_small"/>
+    <item type="id" name="gsy_player_view_visibility"/>
 </resources>
