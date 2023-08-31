@@ -99,6 +99,7 @@ class OpenImage4Params {
     protected int preloadCount = OpenImageConfig.getInstance().getPreloadCount();
     protected boolean lazyPreload = OpenImageConfig.getInstance().isLazyPreload();
     boolean isReleaseAllData = false;
+    protected boolean bothLoadCover = OpenImageConfig.getInstance().isBothLoadCover();
 
     protected enum SrcViewType {
         RV, AB_LIST, VP, VP2, IV, WEB_VIEW
@@ -199,6 +200,7 @@ class OpenImage4Params {
         }
         intent.putExtra(OpenParams.PRELOAD_COUNT, preloadCount);
         intent.putExtra(OpenParams.LAZY_PRELOAD, lazyPreload);
+        intent.putExtra(OpenParams.BOTH_LOAD_COVER, bothLoadCover);
         backViewKey = this.toString();
         return intent;
     }

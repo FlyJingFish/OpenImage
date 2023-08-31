@@ -47,6 +47,7 @@ abstract class BaseFragment extends BaseInnerFragment {
     protected long beanId;
     protected int preloadCount;
     protected boolean lazyPreload;
+    protected boolean bothLoadCover;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,11 +77,13 @@ abstract class BaseFragment extends BaseInnerFragment {
             coverDrawable = ImageLoadUtils.getInstance().getCoverDrawable(drawableKey);
             coverFilePath = ImageLoadUtils.getInstance().getCoverFilePath(bundle.getString(OpenParams.OPEN_COVER_DRAWABLE));
             smallCoverDrawable = ImageLoadUtils.getInstance().getSmallCoverDrawable(drawableKey);
+            ImageLoadUtils.getInstance().clearSmallCoverDrawable(drawableKey);
 
             autoAspectRadio = bundle.getFloat(OpenParams.AUTO_ASPECT_RATIO,0);
             isNoneClickView = bundle.getBoolean(OpenParams.NONE_CLICK_VIEW,false);
             preloadCount = bundle.getInt(OpenParams.PRELOAD_COUNT,1);
             lazyPreload = bundle.getBoolean(OpenParams.LAZY_PRELOAD, false);
+            bothLoadCover = bundle.getBoolean(OpenParams.BOTH_LOAD_COVER, false);
             beanId = imageDetail.getId();
         }
     }

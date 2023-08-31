@@ -33,6 +33,7 @@ public class OpenImageConfig {
 
     private int preloadCount = 1;
     private boolean lazyPreload = true;
+    private boolean bothLoadCover = true;
 
     private OpenImageConfig() {
     }
@@ -220,5 +221,22 @@ public class OpenImageConfig {
     public void closePreload() {
         this.lazyPreload = true;
         this.preloadCount = -1;
+    }
+
+
+    public boolean isBothLoadCover() {
+        return bothLoadCover;
+    }
+
+    /**
+     * 全局设置是否同时加载缩略图
+     * <ul>
+     *  <li>设置为true时，加载大图的同时也会加载缩略图，如果缩略图优先加载出来则会先显示缩略图，后显示大图，否则如果大图先加载出来则不会再显示缩略图
+     *  <li>设置为false时，只会加载大图，缩略图不会加载
+     * </ul>
+     * @param bothLoadCover 是否同时加载缩略图
+     */
+    public void setBothLoadCover(boolean bothLoadCover) {
+        this.bothLoadCover = bothLoadCover;
     }
 }

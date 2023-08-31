@@ -90,6 +90,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         smallCoverImageView.setNoneClickView(isNoneClickView);
         showLoading(loadingView);
         loadingView.setVisibility(View.GONE);
+        boolean isLoadSmallCover = false;
         if (coverDrawable != null) {
             if (TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl())) {
                 smallCoverImageView.setAlpha(0f);
@@ -107,20 +108,20 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                 viewScale = imageDetail.srcWidth * 1f / imageDetail.srcHeight;
             }
             float imageScale = smallCoverDrawable.getIntrinsicWidth() * 1f / smallCoverDrawable.getIntrinsicHeight();
+            smallCoverImageView.setAlpha(1f);
+            photoView.setAlpha(0f);
+            smallCoverImageView.setImageDrawable(smallCoverDrawable);
             if (imageScale == viewScale) {
                 setCoverImageView();
-                smallCoverImageView.setAlpha(1f);
-                photoView.setAlpha(0f);
-                smallCoverImageView.setImageDrawable(smallCoverDrawable);
                 shouldUseSmallCoverAnim = true;
-            } else {
-                smallCoverImageView.setAlpha(1f);
-                photoView.setAlpha(0f);
-                smallCoverImageView.setImageDrawable(smallCoverDrawable);
             }
         } else {
             smallCoverImageView.setAlpha(0f);
             photoView.setAlpha(1f);
+            isLoadSmallCover = true;
+        }
+        if (isLoadSmallCover){
+            loadSmallImage();
         }
         loadBigImage();
         setOnListener();
@@ -200,7 +201,25 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             clickableViewRootView.setOnClickListener(view1 -> close());
         }
     }
+    protected void loadSmallImage() {
+        if (!TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl()) && bothLoadCover) {
+            NetworkHelper.INSTANCE.loadImage(requireContext(), imageDetail.getCoverImageUrl(), new OnLoadBigImageListener() {
+                @Override
+                public void onLoadImageSuccess(Drawable drawable, String filePath) {
+                    if (!isLoadSuccess){
+                        smallCoverImageView.setAlpha(1f);
+                        photoView.setAlpha(0f);
+                        smallCoverImageView.setImageDrawable(drawable);
+                    }
+                }
 
+                @Override
+                public void onLoadImageFailed() {
+
+                }
+            },getViewLifecycleOwner());
+        }
+    }
     protected void loadBigImage() {
         if (TextUtils.equals(imageDetail.getImageUrl(), imageDetail.getCoverImageUrl()) && coverDrawable != null) {
             onImageSuccess(coverDrawable,coverFilePath);

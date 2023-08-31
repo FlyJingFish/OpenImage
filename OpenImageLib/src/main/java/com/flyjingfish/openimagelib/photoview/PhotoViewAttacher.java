@@ -30,9 +30,11 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.flyjingfish.openimagelib.OpenImageActivity;
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.PhotosViewModel;
+import com.flyjingfish.openimagelib.R;
 import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
+import java.lang.ref.WeakReference;
 import java.util.HashSet;
 
 /**
@@ -249,7 +251,40 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             return findViewPager2((View) viewParent);
         }
     }
+    private static class MyOnPageChangeCallback extends ViewPager2.OnPageChangeCallback{
+        private WeakReference<ViewPager2> viewPager2Ref;
 
+        public MyOnPageChangeCallback(ViewPager2 viewPager2) {
+            viewPager2Ref = new WeakReference<>(viewPager2);
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            super.onPageSelected(position);
+            setViewPager2UserInputEnabled();
+        }
+
+        private void setViewPager2UserInputEnabled(){
+            ViewPager2 viewPager2 = viewPager2Ref.get();
+            if (viewPager2 != null && !viewPager2.isUserInputEnabled()){
+                viewPager2.setUserInputEnabled(true);
+            }
+        }
+
+        private void clearViewPager2Ref(){
+            viewPager2Ref.clear();
+        }
+    }
+    private void registerOnPageChangeCallback(){
+        if (viewPager2 == null){
+            return;
+        }
+        Boolean userInputEnable = (Boolean) viewPager2.getTag(R.id.open_image_viewPager2_userInput);
+        if (userInputEnable == null || !userInputEnable){
+            viewPager2.registerOnPageChangeCallback(new MyOnPageChangeCallback(viewPager2));
+            viewPager2.setTag(R.id.open_image_viewPager2_userInput,true);
+        }
+    }
     public PhotoViewAttacher(ImageView imageView) {
         mImageView = imageView;
         imageView.setOnTouchListener(this);
@@ -259,21 +294,12 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             public void onViewAttachedToWindow(View v) {
                 if (viewPager2 == null || !viewPager2.isAttachedToWindow()){
                     viewPager2 = findViewPager2(v);
-                    if (viewPager2 != null){
-                        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                            @Override
-                            public void onPageSelected(int position) {
-                                super.onPageSelected(position);
-                                setViewPager2UserInputEnabled(true);
-                            }
-                        });
-                    }
+                    registerOnPageChangeCallback();
                 }
             }
 
             @Override
             public void onViewDetachedFromWindow(View v) {
-
             }
         });
         if (imageView.isInEditMode()) {

@@ -120,6 +120,7 @@ class BaseActivity extends AppCompatActivity {
 
     int preloadCount;
     boolean lazyPreload;
+    boolean bothLoadCover;
 
     List<OpenImageDetail> getOpenImageBeans() {
         return openImageBeans;
@@ -339,6 +340,7 @@ class BaseActivity extends AppCompatActivity {
         onPermissionKey = getIntent().getStringExtra(OpenParams.PERMISSION_LISTENER);
         preloadCount = getIntent().getIntExtra(OpenParams.PRELOAD_COUNT,1);
         lazyPreload = getIntent().getBooleanExtra(OpenParams.LAZY_PRELOAD, false);
+        bothLoadCover = getIntent().getBooleanExtra(OpenParams.BOTH_LOAD_COVER, false);
     }
 
     protected void addOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="open_image_upper_layer_container" type="id"/>
+    <item name="open_image_viewPager2_userInput" type="id"/>
 </resources>

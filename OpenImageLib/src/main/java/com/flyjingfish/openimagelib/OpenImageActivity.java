@@ -294,6 +294,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                 bundle.putBoolean(OpenParams.NONE_CLICK_VIEW, isNoneClickView());
                 bundle.putInt(OpenParams.PRELOAD_COUNT, preloadCount);
                 bundle.putBoolean(OpenParams.LAZY_PRELOAD, lazyPreload);
+                bundle.putBoolean(OpenParams.BOTH_LOAD_COVER, bothLoadCover);
                 fragment.setArguments(bundle);
                 return fragment;
             }
@@ -332,6 +333,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                     }else {
                         downloadImageView.setPercent(progress);
                     }
+                }
+                if (!viewPager.isUserInputEnabled()){
+                    viewPager.setUserInputEnabled(true);
                 }
             }
 

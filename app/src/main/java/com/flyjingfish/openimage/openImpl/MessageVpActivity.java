@@ -1,7 +1,6 @@
 package com.flyjingfish.openimage.openImpl;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -10,15 +9,9 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.flyjingfish.openimage.DataUtils;
 import com.flyjingfish.openimage.MyApplication;
-import com.flyjingfish.openimage.adapter.MsgRvAdapter;
-import com.flyjingfish.openimage.bean.ImageEntity;
 import com.flyjingfish.openimage.bean.MessageBean;
-import com.flyjingfish.openimage.databinding.MyActivityViewpagerBinding;
-import com.flyjingfish.openimagelib.BaseInnerFragment;
 import com.flyjingfish.openimagelib.OpenImageActivity;
-import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.databinding.OpenImageActivityViewpagerBinding;
-import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.widget.TouchCloseLayout;
 
 import org.json.JSONArray;
