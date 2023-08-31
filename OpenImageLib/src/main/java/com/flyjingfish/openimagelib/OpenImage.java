@@ -845,7 +845,7 @@ public final class OpenImage extends OpenImage4ParseData {
      *  <li>设置为true时，加载大图的同时也会加载缩略图，如果缩略图优先加载出来则会先显示缩略图，后显示大图，否则如果大图先加载出来则不会再显示缩略图
      *  <li>设置为false时，只会加载大图，缩略图不会加载
      * </ul>
-     * @param bothLoadCover 是否同时加载缩略图
+     * @param bothLoadCover 是否同时加载缩略图，默认为 true
      */
     public OpenImage setBothLoadCover(boolean bothLoadCover) {
         this.bothLoadCover = bothLoadCover;
