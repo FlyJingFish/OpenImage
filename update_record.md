@@ -1,5 +1,26 @@
 # OpenImage 更新日志
 
+## 2.1.4
+
+1、[新增同时加载缩略图](https://github.com/FlyJingFish/OpenImage/issues/14)，新版本默认开启，详细内容可看方法说明
+
+- 全局设置
+
+```java
+OpenImageConfig.getInstance().setBothLoadCover()
+```
+
+- 局部设置
+
+```java
+OpenImage.with(context).setBothLoadCover()
+```
+
+2、修复 PhotoViewAttacher 内存泄漏问题
+
+3、修复播放器UI显示问题
+
+4、修改方法说明中错别字
 
 ## 2.1.3
 
