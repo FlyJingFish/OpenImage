@@ -17,7 +17,10 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -28,9 +31,12 @@ class SkiaImageRegionDecoder implements ImageRegionDecoder {
     private BitmapRegionDecoder decoder;
     private final ReadWriteLock decoderLock = new ReentrantReadWriteLock(true);
 
-    private static final String FILE_PREFIX = "file://";
-    private static final String ASSET_PREFIX = FILE_PREFIX + "/android_asset/";
-    private static final String RESOURCE_PREFIX = ContentResolver.SCHEME_ANDROID_RESOURCE + "://";
+    public static final String FILE_PREFIX = "file://";
+    public static final String ASSET_PREFIX = FILE_PREFIX + "/android_asset/";
+    public static final String RESOURCE_PREFIX = ContentResolver.SCHEME_ANDROID_RESOURCE + "://";
+
+    private static final String FILE_SCHEME = "file:///";
+    private static final String ASSET_SCHEME = "file:///android_asset/";
 
     private final Bitmap.Config bitmapConfig;
     private boolean isInit;
@@ -146,5 +152,30 @@ class SkiaImageRegionDecoder implements ImageRegionDecoder {
 
     private Lock getDecodeLock() {
         return decoderLock.readLock();
+    }
+
+
+    public static Uri stringToUri(@NonNull String uri) {
+        if (!uri.contains("://")) {
+            if (uri.startsWith("/")) {
+                uri = uri.substring(1);
+            }
+            uri = FILE_SCHEME + uri;
+        }
+        return getImageUri(Uri.parse(uri));
+    }
+
+    private static Uri getImageUri(@NonNull Uri uri) {
+        String uriString = uri.toString();
+        if (uriString.startsWith(FILE_SCHEME)) {
+            File uriFile = new File(uriString.substring(FILE_SCHEME.length() - 1));
+            if (!uriFile.exists()) {
+                try {
+                    uri = Uri.parse(URLDecoder.decode(uriString, "UTF-8"));
+                } catch (UnsupportedEncodingException ignored) {
+                }
+            }
+        }
+        return uri;
     }
 }

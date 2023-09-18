@@ -116,14 +116,13 @@ class CustomGestureDetector {
                 final float x = getActiveX(ev);
                 final float y = getActiveY(ev);
                 final float dx = x - mLastTouchX, dy = y - mLastTouchY;
-
-                if (!mIsDragging) {
+                if (!mIsDragging && x > 0 && y > 0 && mLastTouchX > 0 && mLastTouchY > 0) {
                     // Use Pythagoras to see if drag length is larger than
                     // touch slop
                     mIsDragging = Math.sqrt((dx * dx) + (dy * dy)) >= mTouchSlop;
                 }
 
-                if (mIsDragging) {
+                if (mIsDragging && x > 0 && y > 0 && mLastTouchX > 0 && mLastTouchY > 0) {
                     mListener.onDrag(dx, dy,x- mDownX,y- mDownY);
                     mLastTouchX = x;
                     mLastTouchY = y;

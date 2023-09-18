@@ -219,6 +219,12 @@
                 android:name="android.max_aspect"
                 android:value="2.2" />
         </activity>
+        <activity
+            android:name=".activity.PhotoViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

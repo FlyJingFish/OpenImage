@@ -189,6 +189,13 @@
             android:textAllCaps="false" />
 
         <Button
+            android:id="@+id/btn_photo_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="测试原本的PhotoView"
+            android:textAllCaps="false" />
+
+        <Button
             android:id="@+id/btn_clear_glide_cache"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

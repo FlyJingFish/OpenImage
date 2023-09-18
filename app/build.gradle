@@ -91,4 +91,5 @@ dependencies {
     implementation 'com.github.tbruyelle:rxpermissions:0.12'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.4'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 }

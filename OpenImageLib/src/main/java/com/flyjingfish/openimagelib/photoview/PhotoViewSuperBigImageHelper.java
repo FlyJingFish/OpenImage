@@ -16,6 +16,7 @@ import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
 
+import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 import java.io.File;
@@ -36,13 +37,12 @@ class PhotoViewSuperBigImageHelper {
     private final ReadWriteLock decoderLock = new ReentrantReadWriteLock(true);
     private int[] originalImageSize;
     private boolean isWeb;
+    private int rotate;
     private RectF matrixChangedRectF;
     private boolean isOnGlobalLayout;
     private String filePath;
     private boolean isInitDecoder;
     private static float TOTAL_CACHE_LENGTH;
-    private static final String FILE_SCHEME = "file:///";
-    private static final String ASSET_SCHEME = "file:///android_asset/";
     private final Matrix mDrawMatrix = new Matrix();
     private final Matrix mBaseMatrix = new Matrix();
 
@@ -81,7 +81,7 @@ class PhotoViewSuperBigImageHelper {
                     if (task != null) {
                         task.cancel(true);
                     }
-                    task = new BitmapLoadTask(PhotoViewSuperBigImageHelper.this, skiaImageRegionDecoder, rect, originalImageSize);
+                    task = new BitmapLoadTask(PhotoViewSuperBigImageHelper.this, skiaImageRegionDecoder, rect, originalImageSize,rotate);
                     execute(task);
                 } else {
                     photoView.clearBitmap();
@@ -131,9 +131,10 @@ class PhotoViewSuperBigImageHelper {
         }
         imageWidth = drawable.getIntrinsicWidth();
         imageHeight = drawable.getIntrinsicHeight();
-        LoadImageUtils.INSTANCE.loadImageForSize(photoView.getContext(), filePath, (filePath1, originalImageSize, isWeb) -> {
+        LoadImageUtils.INSTANCE.loadImageForSize(photoView.getContext(), filePath, (filePath1, originalImageSize, isWeb,rotate) -> {
             PhotoViewSuperBigImageHelper.this.originalImageSize = originalImageSize;
             PhotoViewSuperBigImageHelper.this.isWeb = isWeb;
+            PhotoViewSuperBigImageHelper.this.rotate = rotate;
             if (isOnGlobalLayout) {
                 init();
                 return;
@@ -210,7 +211,7 @@ class PhotoViewSuperBigImageHelper {
                 Context context = contextRef.get();
                 ImageRegionDecoder decoder = decoderRef.get();
                 if (context != null && decoder != null) {
-                    decoder.init(context, stringToUri(filePath));
+                    decoder.init(context, SkiaImageRegionDecoder.stringToUri(filePath));
                     return true;
                 }
             } catch (Exception ignored) {
@@ -226,29 +227,7 @@ class PhotoViewSuperBigImageHelper {
             }
         }
 
-        public Uri stringToUri(@NonNull String uri) {
-            if (!uri.contains("://")) {
-                if (uri.startsWith("/")) {
-                    uri = uri.substring(1);
-                }
-                uri = FILE_SCHEME + uri;
-            }
-            return getImageUri(Uri.parse(uri));
-        }
 
-        private Uri getImageUri(@NonNull Uri uri) {
-            String uriString = uri.toString();
-            if (uriString.startsWith(FILE_SCHEME)) {
-                File uriFile = new File(uriString.substring(FILE_SCHEME.length() - 1));
-                if (!uriFile.exists()) {
-                    try {
-                        uri = Uri.parse(URLDecoder.decode(uriString, "UTF-8"));
-                    } catch (UnsupportedEncodingException ignored) {
-                    }
-                }
-            }
-            return uri;
-        }
     }
 
 
@@ -259,12 +238,14 @@ class PhotoViewSuperBigImageHelper {
         private final int[] originalImageSize;
         private final int viewWidth;
         private final int viewHeight;
+        private final int rotate;
 
-        BitmapLoadTask(PhotoViewSuperBigImageHelper view, ImageRegionDecoder decoder, RectF decoderRect, int[] originalImageSize) {
+        BitmapLoadTask(PhotoViewSuperBigImageHelper view, ImageRegionDecoder decoder, RectF decoderRect, int[] originalImageSize,int rotate) {
             this.viewRef = new WeakReference<>(view);
             this.decoderRef = new WeakReference<>(decoder);
             this.decoderRect = new RectF(decoderRect.left, decoderRect.top, decoderRect.right, decoderRect.bottom);
             this.originalImageSize = originalImageSize;
+            this.rotate = rotate;
             viewWidth = view.getWidth();
             viewHeight = view.getHeight();
         }
@@ -337,7 +318,11 @@ class PhotoViewSuperBigImageHelper {
                             Rect subsamplingRect = new Rect((int) ((left - cacheLengthLeft) / scale), (int) ((top - cacheLengthTop) / scale), (int) ((right + cacheLengthRight) / scale), (int) ((bottom + cacheLengthBottom) / scale));
                             RectF showViewRect = new RectF((left1 - cacheLengthLeft), (top1 - cacheLengthTop), (right1 + cacheLengthRight), (bottom1 + cacheLengthBottom));
                             int inSampleSize = BitmapUtils.getMaxInSampleSize(subsamplingRect.width(), subsamplingRect.height());
-                            Bitmap bitmap = decoder.decodeRegion(subsamplingRect, inSampleSize);
+                            RectF subsamplingRectF= new RectF(subsamplingRect.left,subsamplingRect.top,subsamplingRect.right,subsamplingRect.bottom);
+                            Matrix matrix = new Matrix();
+                            matrix.setRotate(rotate);
+                            matrix.mapRect(subsamplingRectF);
+                            Bitmap bitmap = decoder.decodeRegion(new Rect((int) subsamplingRectF.left, (int) subsamplingRectF.top, (int) subsamplingRectF.right, (int) subsamplingRectF.bottom), inSampleSize);
                             return new DecoderBitmap(bitmap, showViewRect, rect);
                         }
                     } finally {
@@ -352,7 +337,7 @@ class PhotoViewSuperBigImageHelper {
         @Override
         protected void onPostExecute(DecoderBitmap decoderBitmap) {
             final PhotoViewSuperBigImageHelper subsamplingScaleImageView = viewRef.get();
-            if (subsamplingScaleImageView != null) {
+            if (subsamplingScaleImageView != null && decoderBitmap != null) {
                 subsamplingScaleImageView.setSubsamplingScaleBitmap(decoderBitmap);
             }
         }

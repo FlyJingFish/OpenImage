@@ -1,5 +1,11 @@
 # OpenImage 更新日志
 
+## 2.1.5
+
+1、[修复大图旋转问题](https://github.com/FlyJingFish/OpenImage/issues/15)
+
+2、修复部分手机双指放大时图片跳动问题
+
 ## 2.1.4
 
 1、[新增同时加载缩略图](https://github.com/FlyJingFish/OpenImage/issues/14)，新版本默认开启，详细内容可看方法说明

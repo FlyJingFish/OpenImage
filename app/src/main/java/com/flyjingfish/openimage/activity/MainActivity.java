@@ -90,6 +90,8 @@ public class MainActivity extends BaseActivity {
         binding.btnUserDetail.setOnClickListener(v -> jump(v, UserDetailListActivity.class));
         binding.btnMemoryTest.setOnClickListener(v -> jump(v, MemoryTestActivity.class));
         binding.btnMemoryTest.setVisibility(ActivityCompatHelper.isApkInDebug(this)?View.VISIBLE:View.GONE);
+        binding.btnPhotoView.setOnClickListener(v -> jump(v, PhotoViewActivity.class));
+        binding.btnPhotoView.setVisibility(ActivityCompatHelper.isApkInDebug(this)?View.VISIBLE:View.GONE);
     }
 
     private void jump(View v, Class<?> cls) {
