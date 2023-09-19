@@ -400,6 +400,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
      * 展示添加的更多View时回调此方法，调用时机是切换图片或停止拖动图片时
      */
     protected void showMoreView() {
+        if (showPosition >= getOpenImageBeans().size()){
+            return;
+        }
         OpenImageDetail openImageDetail = getOpenImageBeans().get(showPosition);
         MediaType mediaType = openImageDetail.getType();
         if (moreViewOptions.size() > 0) {
@@ -442,6 +445,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
      * 隐藏添加的更多View时回调此方法，调用时机是切换图片或开始拖动图片时
      */
     protected void touchHideMoreView() {
+        if (showPosition >= getOpenImageBeans().size()){
+            return;
+        }
         OpenImageDetail openImageDetail = getOpenImageBeans().get(showPosition);
         MediaType mediaType = openImageDetail.getType();
         if (moreViewOptions.size() > 0) {
@@ -751,6 +757,9 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
     }
 
     protected void downloadMedia() {
+        if (showPosition >= getOpenImageBeans().size()){
+            return;
+        }
         final OpenImageDetail openImageDetail = getOpenImageBeans().get(showPosition);
         DownloadMediaHelper downloadMediaHelper = OpenImageConfig.getInstance().getDownloadMediaHelper();
         if (downloadMediaHelper == null) {

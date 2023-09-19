@@ -227,7 +227,7 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         } else if (position > 0) {
             viewPager2.setCurrentItem(position - 1, smoothScroll);
         }
-        if (smoothScroll) {
+        if (smoothScroll && !(position == 0 && openImageBeans.size() == 1)) {
             viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                 @Override
                 public void onPageScrollStateChanged(int state) {
@@ -263,7 +263,7 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
 
     @Override
     public long getItemId(int position) {
-        if (openImageBeans == null) {
+        if (openImageBeans == null || position >= openImageBeans.size()) {
             return position;
         }
         OpenImageDetail openImageDetail = openImageBeans.get(position);
