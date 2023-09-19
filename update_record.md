@@ -1,5 +1,9 @@
 # OpenImage 更新日志
 
+## 2.1.6
+
+1、修复删除到最后一个Item时不回调onRemove的问题
+
 ## 2.1.5
 
 1、[修复大图旋转问题](https://github.com/FlyJingFish/OpenImage/issues/15)
