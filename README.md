@@ -27,29 +27,29 @@ RecyclerView场景  | 聊天页面 | 打开视频
 
 ## 特色功能
 
-1，支持自定义图片加载引擎
+1、支持自定义图片加载引擎
 
-2，支持多种图片缓存模式
+2、支持多种图片缓存模式
 
-3，支持聊天界面的查看大图功能
+3、支持聊天界面的查看大图功能
 
-4，支持任意定制属于你的大图查看页面UI，多种定制方式总有一种适合你（[点此查看更多使用说明](https://github.com/FlyJingFish/OpenImage/wiki)）
+4、支持任意定制属于你的大图查看页面UI，多种定制方式总有一种适合你（[点此查看更多使用说明](https://github.com/FlyJingFish/OpenImage/wiki)）
 
-5，支持打开后的大图页面数据的**增、删、改、查**（[点此查看更多使用说明](https://github.com/FlyJingFish/OpenImage/wiki#%E6%B3%A8%E6%84%8F-setopenimageactivitycls-%E8%BF%98%E6%94%AF%E6%8C%81%E8%AE%BE%E7%BD%AE%E6%9B%B4%E6%96%B0%E6%95%B0%E6%8D%AE%E6%9B%B4%E5%A4%9A%E8%AF%A6%E7%BB%86%E5%86%85%E5%AE%B9%E8%AF%B7%E7%9C%8B%E8%BF%99%E4%B8%A4%E4%B8%AA-demo-kuaishoudemoactivity%E6%88%96msgrvadapter)）
+5、支持打开后的大图页面数据的**增、删、改、查**（[点此查看更多使用说明](https://github.com/FlyJingFish/OpenImage/wiki#%E6%B3%A8%E6%84%8F-setopenimageactivitycls-%E8%BF%98%E6%94%AF%E6%8C%81%E8%AE%BE%E7%BD%AE%E6%9B%B4%E6%96%B0%E6%95%B0%E6%8D%AE%E6%9B%B4%E5%A4%9A%E8%AF%A6%E7%BB%86%E5%86%85%E5%AE%B9%E8%AF%B7%E7%9C%8B%E8%BF%99%E4%B8%A4%E4%B8%AA-demo-kuaishoudemoactivity%E6%88%96msgrvadapter)）
 
-6，支持全部 **ImageView.ScaleType** 显示模式的图片打开大图效果，并且新增**startCrop、endCrop、autoStartCenterCrop、autoEndCenterCrop**四种显示模式
+6、支持全部 **ImageView.ScaleType** 显示模式的图片打开大图效果，并且新增**startCrop、endCrop、autoStartCenterCrop、autoEndCenterCrop**四种显示模式
 
-7，支持图片和视频混合数据
+7、支持图片和视频混合数据
 
-8，支持传入包含图片的 **RecyclerView**、**ViewPager**、**ViewPager2**、**ListView**、**GridView** 和 **多个ImageView** 的调用方式，甚至 **WebView**，傻瓜式调用，无需关心图片切换后该返回到哪个位置
+8、支持传入包含图片的 **RecyclerView**、**ViewPager**、**ViewPager2**、**ListView**、**GridView** 和 **多个ImageView** 的调用方式，甚至 **WebView**，傻瓜式调用，无需关心图片切换后该返回到哪个位置
 
-9，支持Gif图
+9、支持Gif图
 
-10，支持长图和长图阅读模式
+10、支持长图和长图阅读模式
 
-11，支持显示超大图及放大后的清晰细节图
+11、支持显示超大图及放大后的清晰细节图
 
-12，支持自定义大图切换效果（PageTransformer）
+12、支持自定义大图切换效果（PageTransformer）
 
 ## 前言
 
@@ -63,7 +63,7 @@ RecyclerView场景  | 聊天页面 | 打开视频
 
 
 
-#### 首先、在项目根目录下的build.gradle添加(1.5.6及之后版本仓库地址改为Maven Central)
+#### 首先、在项目根目录下的build.gradle添加
 
 ```gradle
 allprojects {
@@ -76,7 +76,6 @@ allprojects {
 
 **你可以选择下面三种的其中一种，在module下的build.gradle添加。**
 
-<img src="https://github.com/FlyJingFish/OpenImage/blob/master/screenshot/warning_maven_central.svg"/>
 
 #### A、直接引入完整版（同时支持查看图片和视频）
 
