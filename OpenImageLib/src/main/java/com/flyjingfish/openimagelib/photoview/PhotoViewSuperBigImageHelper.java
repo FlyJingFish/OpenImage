@@ -6,7 +6,6 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,13 +15,10 @@ import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
 
-import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
+import com.flyjingfish.openimagelib.utils.BitmapUtils;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.net.URLDecoder;
 import java.util.concurrent.Executor;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;

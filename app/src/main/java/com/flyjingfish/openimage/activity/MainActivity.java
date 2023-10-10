@@ -47,7 +47,9 @@ public class MainActivity extends BaseActivity {
         setContentView(binding.getRoot());
         if (MyImageLoader.loader_os_type == MyImageLoader.GLIDE) {
             binding.rbGlide.setChecked(true);
-        } else {
+        } else if (MyImageLoader.loader_os_type == MyImageLoader.COIL){
+            binding.rbCoil.setChecked(true);
+        } else{
             binding.rbPicasso.setChecked(true);
         }
         if (MyImageLoader.imageDiskMode == MyImageLoader.ImageDiskMode.CONTAIN_ORIGINAL) {
@@ -59,7 +61,7 @@ public class MainActivity extends BaseActivity {
         }
         binding.cbRead.setChecked(OpenImageConfig.getInstance().isReadMode());
         binding.cbRead.setOnCheckedChangeListener((buttonView, isChecked) -> OpenImageConfig.getInstance().setReadMode(isChecked));
-        binding.rgImageOs.setOnCheckedChangeListener((group, checkedId) -> MyImageLoader.loader_os_type = (checkedId == R.id.rb_glide ? MyImageLoader.GLIDE : MyImageLoader.PICASSO));
+        binding.rgImageOs.setOnCheckedChangeListener((group, checkedId) -> MyImageLoader.loader_os_type = (checkedId == R.id.rb_glide ? MyImageLoader.GLIDE : (checkedId == R.id.rb_coil ? MyImageLoader.COIL : MyImageLoader.PICASSO)));
         binding.rgCacheType.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
                 case R.id.rb_original:

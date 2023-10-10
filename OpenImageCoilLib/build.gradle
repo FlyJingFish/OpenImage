@@ -1,0 +1,20 @@
+apply from: "$rootDir/gradle/lib.gradle"
+
+apply from: "$rootDir/gradle/publish.gradle"
+apply plugin: "kotlin-parcelize"
+apply plugin: "kotlin-android"
+
+android {
+    buildFeatures {
+        viewBinding true
+    }
+//    kotlinOptions {
+//        jvmTarget = "1.8"
+//    }
+}
+
+dependencies {
+    api project(path: ':OpenImageLib')
+    api("io.coil-kt:coil:2.4.0")
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}

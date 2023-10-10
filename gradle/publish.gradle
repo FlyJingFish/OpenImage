@@ -1,63 +1,152 @@
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
+task androidJavadocs(type: Javadoc) {
+    // 设置源码所在的位置
+    source = android.sourceSets.main.java.srcDirs
+}
+
+// 将文档打包成jar,生成javadoc.jar
+task androidJavadocsJar(type: Jar) {
+    // 指定文档名称
+    archiveClassifier.set('javadoc')
+    from androidJavadocs.destinationDir
+}
+
+// 将源码打包 ，生成sources.jar
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
     from android.sourceSets.main.java.srcDirs
+
+    exclude "**/R.class"
+    exclude "**/BuildConfig.class"
 }
 
+//配置需要上传到maven仓库的文件
 artifacts {
-    archives sourcesJar
+    archives androidSourcesJar //将源码打包进aar,这样使用方可以看到方法注释.
+    archives androidJavadocsJar //将注释打包进aar
 }
 
-signing {
-    sign configurations.archives
-}
+//afterEvaluate {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                groupId = PROJ_GROUP
+                artifactId = PROJ_NAME
+                version = PROJ_VERSION
+//                from components.mavenJava
+                artifact("$buildDir/outputs/aar/"+PROJ_NAME+"-release.aar")
+                artifact androidSourcesJar
+                pom {
+                    name = PROJ_BASENAME
 
-group = PROJ_GROUP
-version = PROJ_VERSION
+                    description = PROJ_DESCRIPTION
+                    url = PROJ_WEBSITEURL
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                name PROJ_BASENAME
-                artifactId PROJ_NAME
-                packaging 'aar'
-                description PROJ_DESCRIPTION
-                url PROJ_WEBSITEURL
-
-                scm {
-                    connection PROJ_VCSURL
-                    developerConnection PROJ_VCSURL
-                    url PROJ_WEBSITEURL
-                }
-
-                licenses {
-                    license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    scm {
+                        connection = PROJ_VCSURL
+                        developerConnection = PROJ_VCSURL
+                        url = PROJ_WEBSITEURL
                     }
-                }
 
-                developers {
-                    developer {
-                        id DEVELOPER_ID
-                        name DEVELOPER_NAME
-                        email DEVELOPER_EMAIL
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = DEVELOPER_ID
+                            name = DEVELOPER_NAME
+                            email = DEVELOPER_EMAIL
+                        }
                     }
                 }
             }
         }
+        repositories {
+            maven {
+                allowInsecureProtocol = false
+                def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+                def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                name = "nexus"
+                credentials {
+                    username ossrhUsername
+                    password ossrhPassword
+                }
+            }
+            maven {
+                // change URLs to point to your repos, e.g. http://my.org/repo
+                def releasesRepoUrl = layout.buildDirectory.dir('repos/releases')
+                def snapshotsRepoUrl = layout.buildDirectory.dir('repos/snapshots')
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                name = "myProject"
+            }
+        }
     }
-}
+    signing {
+        sign publishing.publications
+    }
+//}
+
+
+
+//task sourcesJar(type: Jar) {
+//    classifier = 'sources'
+//    from android.sourceSets.main.java.srcDirs
+//}
+//artifacts {
+//    archives sourceJar
+//}
+//signing {
+//    sign configurations.archives
+//}
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+//
+//            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+//                authentication(userName: ossrhUsername, password: ossrhPassword)
+//            }
+//
+//            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+//                authentication(userName: ossrhUsername, password: ossrhPassword)
+//            }
+//
+//            pom.project {
+//                name PROJ_BASENAME
+//                artifactId PROJ_NAME
+//                packaging 'aar'
+//                description PROJ_DESCRIPTION
+//                url PROJ_WEBSITEURL
+//
+//                scm {
+//                    connection PROJ_VCSURL
+//                    developerConnection PROJ_VCSURL
+//                    url PROJ_WEBSITEURL
+//                }
+//
+//                licenses {
+//                    license {
+//                        name 'The Apache License, Version 2.0'
+//                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                    }
+//                }
+//
+//                developers {
+//                    developer {
+//                        id DEVELOPER_ID
+//                        name DEVELOPER_NAME
+//                        email DEVELOPER_EMAIL
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+// 生成文档注释

@@ -1,4 +1,4 @@
-package com.flyjingfish.openimagelib.photoview;
+package com.flyjingfish.openimage.openImpl;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -8,12 +8,13 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.request.target.Target;
 
 import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-class BitmapUtils {
+public class BitmapUtils {
     private static final int ARGB_8888_MEMORY_BYTE = 4;
     private static final int MAX_BITMAP_SIZE = 100 * 1024 * 1024;   // 100 MB
     private static final String ASSET_SCHEME = "file:///android_asset/";
@@ -26,7 +27,7 @@ class BitmapUtils {
      * @return
      */
     public static int[] getMaxImageSize(int imageWidth, int imageHeight) {
-        int maxWidth = 0, maxHeight = 0;
+        int maxWidth = Target.SIZE_ORIGINAL, maxHeight = Target.SIZE_ORIGINAL;
         if (imageWidth == 0 && imageHeight == 0) {
             return new int[]{maxWidth, maxHeight};
         }
@@ -44,27 +45,6 @@ class BitmapUtils {
             decodeAttemptSuccess = true;
         }
         return new int[]{maxWidth, maxHeight};
-    }
-
-    public static int getMaxInSampleSize(int imageWidth, int imageHeight) {
-        int maxWidth = 0, maxHeight = 0;
-        if (imageWidth == 0 && imageHeight == 0) {
-            return 1;
-        }
-        int inSampleSize = BitmapUtils.computeSize(imageWidth, imageHeight);
-        long totalMemory = getTotalMemory();
-        boolean decodeAttemptSuccess = false;
-        while (!decodeAttemptSuccess) {
-            maxWidth = imageWidth / inSampleSize;
-            maxHeight = imageHeight / inSampleSize;
-            int bitmapSize = maxWidth * maxHeight * ARGB_8888_MEMORY_BYTE;
-            if (bitmapSize > totalMemory) {
-                inSampleSize *= 2;
-                continue;
-            }
-            decodeAttemptSuccess = true;
-        }
-        return inSampleSize;
     }
 
     /**
@@ -119,24 +99,28 @@ class BitmapUtils {
             }
         }
     }
+
     public static boolean isContent(String url) {
         if (TextUtils.isEmpty(url)) {
             return false;
         }
         return url.startsWith("content://");
     }
-    public static boolean isWeb(String url) {
-        if (TextUtils.isEmpty(url)) {
-            return false;
-        }
-        return url.startsWith("http://")|| url.startsWith("https://");
-    }
+
     public static boolean isAsset(String url) {
         if (TextUtils.isEmpty(url)) {
             return false;
         }
         return url.startsWith("file:///android_asset/");
     }
+
+    public static boolean isWeb(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return false;
+        }
+        return url.startsWith("http://") || url.startsWith("https://");
+    }
+
     public static int[] getImageSize(Context context, String url) {
         int[] mediaExtraInfo = new int[2];
         InputStream inputStream = null;
@@ -144,8 +128,8 @@ class BitmapUtils {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             if (isContent(url)) {
-                inputStream = PictureContentResolver.getContentResolverOpenInputStream(context, Uri.parse(url));
-            } else if (isAsset(url)){
+                inputStream = getContentResolverOpenInputStream(context, Uri.parse(url));
+            } else if (isAsset(url)) {
                 String fileName = url.substring(ASSET_SCHEME.length());
                 inputStream = context.getResources().getAssets().open(fileName);
             } else {
@@ -162,15 +146,15 @@ class BitmapUtils {
         return mediaExtraInfo;
     }
 
-    public static String getImageTypeWithMime(Context context,String path) {
+    public static String getImageTypeWithMime(Context context, String path) {
         InputStream inputStream = null;
         String type = "";
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             if (isContent(path)) {
-                inputStream = PictureContentResolver.getContentResolverOpenInputStream(context, Uri.parse(path));
-            } else if (isAsset(path)){
+                inputStream = getContentResolverOpenInputStream(context, Uri.parse(path));
+            } else if (isAsset(path)) {
                 String fileName = path.substring(ASSET_SCHEME.length());
                 inputStream = context.getResources().getAssets().open(fileName);
             } else {
@@ -195,4 +179,14 @@ class BitmapUtils {
         Log.d("ImageUtil", "getImageTypeWithMime: path = " + path + ", type2 = " + type);
         return type;
     }
+
+    public static InputStream getContentResolverOpenInputStream(Context context, Uri uri) {
+        try {
+            return context.getContentResolver().openInputStream(uri);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

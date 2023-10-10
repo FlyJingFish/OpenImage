@@ -1,4 +1,4 @@
-package com.flyjingfish.openimageglidelib;
+package com.flyjingfish.openimagelib.utils;
 
 import android.content.Context;
 import android.media.MediaScannerConnection;

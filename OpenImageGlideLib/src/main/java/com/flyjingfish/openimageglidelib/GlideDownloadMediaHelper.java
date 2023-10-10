@@ -19,6 +19,7 @@ import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.DownloadMediaHelper;
 import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
+import com.flyjingfish.openimagelib.utils.SaveImageUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -70,7 +71,7 @@ public class GlideDownloadMediaHelper implements DownloadMediaHelper {
                     @Override
                     public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
                         if (onDownloadMediaListenerHashMap.get(key) != null) {
-                            LoadImageUtils.INSTANCE.saveFile(context, resource, openImageUrl.getType() == MediaType.VIDEO, sucPath -> {
+                            SaveImageUtils.INSTANCE.saveFile(context, resource, openImageUrl.getType() == MediaType.VIDEO, sucPath -> {
                                 OnDownloadMediaListener onDownloadMediaListener;
                                 if ((onDownloadMediaListener = onDownloadMediaListenerHashMap.get(key)) != null) {
                                     if (!TextUtils.isEmpty(sucPath)){

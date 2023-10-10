@@ -1,4 +1,4 @@
-package com.flyjingfish.openimagelib.photoview;
+package com.flyjingfish.openimagecoillib;
 
 import android.content.Context;
 import android.net.Uri;

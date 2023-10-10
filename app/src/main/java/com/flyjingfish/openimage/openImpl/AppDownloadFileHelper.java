@@ -13,6 +13,8 @@ public class AppDownloadFileHelper extends FullGlideDownloadMediaHelper {
     public void download(FragmentActivity activity, LifecycleOwner lifecycleOwner, OpenImageUrl openImageUrl, OnDownloadMediaListener onDownloadMediaListener) {
         if (MyImageLoader.loader_os_type == MyImageLoader.GLIDE){
             super.download(activity, lifecycleOwner, openImageUrl, onDownloadMediaListener);
+        }else if (MyImageLoader.loader_os_type == MyImageLoader.COIL){
+            new CoilDownloader(activity,lifecycleOwner, openImageUrl, onDownloadMediaListener).download();
         }else {
             new PicassoDownloader(activity,lifecycleOwner, openImageUrl, onDownloadMediaListener).download();
         }

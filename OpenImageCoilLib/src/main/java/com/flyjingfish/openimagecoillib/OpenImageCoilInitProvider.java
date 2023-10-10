@@ -1,26 +1,24 @@
-package com.flyjingfish.openimageglidelib;
+package com.flyjingfish.openimagecoillib;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 
-public class OpenImageGlideInitProvider extends ContentProvider {
+public class OpenImageCoilInitProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
-        Log.e("onCreate","OpenImageGlideInitProvider");
         OpenImageLogUtils.init(getContext().getApplicationContext());
         //初始化大图加载器
         if (OpenImageConfig.getInstance().getBigImageHelper() == null){
-            OpenImageConfig.getInstance().setBigImageHelper(new GlideBigImageHelper());
+            OpenImageConfig.getInstance().setBigImageHelper(new CoilBigImageHelper());
         }
         //初始化下载原图或视频类
         if (OpenImageConfig.getInstance().getDownloadMediaHelper() == null){
-            OpenImageConfig.getInstance().setDownloadMediaHelper(new GlideDownloadMediaHelper());
+            OpenImageConfig.getInstance().setDownloadMediaHelper(new CoilDownloadMediaHelper());
         }
         return true;
     }

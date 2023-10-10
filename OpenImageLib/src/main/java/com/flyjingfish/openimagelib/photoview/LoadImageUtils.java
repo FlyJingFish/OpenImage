@@ -9,6 +9,8 @@ import android.os.Looper;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.flyjingfish.openimagelib.utils.BitmapUtils;
+
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

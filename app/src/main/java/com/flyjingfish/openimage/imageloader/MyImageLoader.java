@@ -1,9 +1,11 @@
 package com.flyjingfish.openimage.imageloader;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.RequestBuilder;
@@ -19,7 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.flyjingfish.openimage.GlideApp;
 import com.flyjingfish.openimage.MyApplication;
-import com.flyjingfish.openimageglidelib.BitmapUtils;
+import com.flyjingfish.openimage.openImpl.BitmapUtils;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 import com.squareup.picasso.Callback;
@@ -30,12 +32,21 @@ import com.squareup.picasso.RequestCreator;
 import java.util.ArrayList;
 import java.util.List;
 
+import coil.Coil;
+import coil.ImageLoader;
+import coil.request.CachePolicy;
+import coil.request.ErrorResult;
+import coil.request.ImageRequest;
+import coil.request.SuccessResult;
+import coil.size.Size;
+import coil.transform.CircleCropTransformation;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class MyImageLoader {
     public static final int GLIDE = 1;
     public static final int PICASSO = 2;
+    public static final int COIL = 3;
     public static int loader_os_type = GLIDE;
     public static ImageDiskMode imageDiskMode = ImageDiskMode.CONTAIN_ORIGINAL;
 
@@ -226,6 +237,57 @@ public class MyImageLoader {
             }else {
                 requestCreator.into(iv);
             }
+        }else if (loader_os_type == COIL){
+            ImageLoader imageLoader = Coil.imageLoader(iv.getContext());
+            ImageRequest.Builder builder = new ImageRequest.Builder(iv.getContext())
+                    .data(url)
+                    .listener(new ImageRequest.Listener() {
+                        @Override
+                        public void onError(@NonNull ImageRequest request, @NonNull ErrorResult result) {
+                            ImageRequest.Listener.super.onError(request, result);
+                        }
+
+                        @Override
+                        public void onSuccess(@NonNull ImageRequest request, @NonNull SuccessResult result) {
+                            ImageRequest.Listener.super.onSuccess(request, result);
+                        }
+                    })
+                    .target(iv);
+            if (isBlur || isCircle || radiusDp != -1) {
+                coil.transform.Transformation[] transformations = new coil.transform.Transformation[0];
+                if (isBlur && !isCircle && radiusDp == -1) {
+                    transformations = new coil.transform.Transformation[]{new  com.flyjingfish.openimage.imageloader.BlurTransformation(iv.getContext(),10,1)};
+                } else if (isBlur && isCircle && radiusDp == -1) {
+                    transformations = new coil.transform.Transformation[]{new com.flyjingfish.openimage.imageloader.BlurTransformation(iv.getContext(),10,1), new CircleCropTransformation()};
+                } else if (isBlur && !isCircle && radiusDp != -1) {
+                    transformations = new coil.transform.Transformation[]{ new com.flyjingfish.openimage.imageloader.BlurTransformation(iv.getContext(),10,1), new coil.transform.RoundedCornersTransformation(dp2px(radiusDp))};
+                } else if (!isBlur && isCircle && radiusDp == -1) {
+                    transformations = new coil.transform.Transformation[]{new CircleCropTransformation()};
+                } else if (!isBlur && !isCircle && radiusDp != -1) {
+                    transformations = new coil.transform.Transformation[]{new coil.transform.RoundedCornersTransformation(dp2px(radiusDp))};
+                }
+                builder.transformations(transformations);
+                if (w > 0 && h > 0)
+                    builder.size(w, h);
+            } else if (w > 0 && h > 0) {
+                builder.size(w, h);
+            } else if (w == Target.SIZE_ORIGINAL && h == Target.SIZE_ORIGINAL) {
+                builder.size(Size.ORIGINAL);
+            }
+//            if (imageDiskMode == ImageDiskMode.RESULT){
+//                builder.networkCachePolicy(CachePolicy.DISABLED);
+//                builder.diskCachePolicy(CachePolicy.DISABLED);
+//            }if (imageDiskMode == ImageDiskMode.CONTAIN_ORIGINAL){
+//                builder.diskCacheStrategy(DiskCacheStrategy.ALL);
+//            }else if (imageDiskMode == ImageDiskMode.NONE){
+//                builder.diskCacheStrategy(DiskCacheStrategy.NONE);
+//            }
+            if (p != -1)
+                builder.placeholder(p);
+            if (err != -1)
+                builder.error(err);
+            ImageRequest request = builder.build();
+            imageLoader.enqueue(request);
         }
     }
 

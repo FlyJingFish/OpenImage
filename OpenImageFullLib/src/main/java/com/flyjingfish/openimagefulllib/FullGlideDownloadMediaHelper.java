@@ -16,12 +16,12 @@ import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.StorageUtils;
 import com.danikula.videocache.file.FileNameGenerator;
 import com.danikula.videocache.file.Md5FileNameGenerator;
-import com.flyjingfish.openimageglidelib.GlideDownloadMediaHelper;
-import com.flyjingfish.openimageglidelib.LoadImageUtils;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.MediaType;
+import com.flyjingfish.openimagelib.listener.DownloadMediaHelper;
 import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener;
 import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
+import com.flyjingfish.openimagelib.utils.SaveImageUtils;
 import com.shuyu.gsyvideoplayer.cache.CacheFactory;
 import com.shuyu.gsyvideoplayer.cache.ProxyCacheManager;
 
@@ -37,7 +37,8 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
+public class FullGlideDownloadMediaHelper implements DownloadMediaHelper {
+    private DownloadMediaHelper defaultDownloadMediaHelper;
     private static volatile FullGlideDownloadMediaHelper mInstance;
     private final HashMap<String,ExecutorService> mExecutorServiceHashMap = new HashMap<>();
     private File mVideoCacheDir = null;
@@ -82,6 +83,13 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
         isDownloadWithCache = downloadWithCache;
     }
 
+    public DownloadMediaHelper getDefaultDownloadMediaHelper() {
+        return defaultDownloadMediaHelper;
+    }
+
+    public void setDefaultDownloadMediaHelper(DownloadMediaHelper defaultDownloadMediaHelper) {
+        this.defaultDownloadMediaHelper = defaultDownloadMediaHelper;
+    }
     @Override
     public void download(FragmentActivity activity, LifecycleOwner lifecycleOwner, OpenImageUrl openImageUrl, OnDownloadMediaListener onDownloadMediaListener) {
         final String downloadUrl = openImageUrl.getType() == MediaType.VIDEO ? openImageUrl.getVideoUrl() : openImageUrl.getImageUrl();
@@ -112,7 +120,7 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
                 if (onDownloadMediaListener != null) {
                     onDownloadMediaListener.onDownloadStart(false);
                 }
-                LoadImageUtils.INSTANCE.saveFile(application, file, true, sucPath -> {
+                SaveImageUtils.INSTANCE.saveFile(application, file, true, sucPath -> {
                     if (isDestroy[0]) {
                         return;
                     }
@@ -155,7 +163,7 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
                                     if (isDestroy[0] || activity2 == null) {
                                         return;
                                     }
-                                    LoadImageUtils.INSTANCE.saveFile(activity2.getApplicationContext(), file, true, sucPath -> {
+                                    SaveImageUtils.INSTANCE.saveFile(activity2.getApplicationContext(), file, true, sucPath -> {
                                         if (isDestroy[0]) {
                                             return;
                                         }
@@ -178,8 +186,9 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
                                     if (isDestroy[0] || activity2 == null) {
                                         return;
                                     }
-
-                                    FullGlideDownloadMediaHelper.super.download(activity2, lifecycleOwner, openImageUrl, onDownloadMediaListener);
+                                    if (defaultDownloadMediaHelper != null){
+                                        defaultDownloadMediaHelper.download(activity2, lifecycleOwner, openImageUrl, onDownloadMediaListener);
+                                    }
                                 });
                             }
                         };
@@ -228,7 +237,10 @@ public class FullGlideDownloadMediaHelper extends GlideDownloadMediaHelper {
                 }
             }
         }
-        super.download(activity, lifecycleOwner, openImageUrl, onDownloadMediaListener);
+
+        if (defaultDownloadMediaHelper != null){
+            defaultDownloadMediaHelper.download(activity, lifecycleOwner, openImageUrl, onDownloadMediaListener);
+        }
     }
 
     private void submit(ExecutorService cThreadPool,String url,String downloadUrl,InputStream[] inputStreams,Runnable runnable,HttpProxyCacheServer proxyCacheServer,final CacheListener cacheListener,final String listenerKey,final Map<String, OnDownloadMediaListener> onDownloadMediaListenerHashMap,int retryCount){

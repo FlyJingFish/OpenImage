@@ -1,4 +1,4 @@
-package com.flyjingfish.openimageglidelib;
+package com.flyjingfish.openimagecoillib;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -7,8 +7,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-
-import com.bumptech.glide.request.target.Target;
 
 import java.io.Closeable;
 import java.io.FileInputStream;
@@ -27,7 +25,7 @@ class BitmapUtils {
      * @return
      */
     public static int[] getMaxImageSize(int imageWidth, int imageHeight) {
-        int maxWidth = Target.SIZE_ORIGINAL, maxHeight = Target.SIZE_ORIGINAL;
+        int maxWidth = Integer.MIN_VALUE, maxHeight = Integer.MIN_VALUE;
         if (imageWidth == 0 && imageHeight == 0) {
             return new int[]{maxWidth, maxHeight};
         }

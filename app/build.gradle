@@ -1,8 +1,8 @@
-plugins {
-    id 'com.android.application'
-}
+apply plugin: "com.android.application"
 apply from: "../gradle/base.gradle"
-
+apply plugin: "kotlin-parcelize"
+apply plugin: "kotlin-android"
+//apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 33
 
@@ -24,6 +24,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+//    kotlinOptions {
+//        jvmTarget = "1.8"
+//    }
     signingConfigs {
         release {
             storeFile file('../openimagekey')
@@ -83,8 +86,12 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
     implementation 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1'
+//    implementation project(path: ':OpenImageCoilLib')
     implementation project(path: ':OpenImageFullLib')
-//    implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:'+PROJ_VERSION
+//    implementation project(path: ':OpenImageGlideLib')
+//    implementation ('io.github.FlyJingFish.OpenImage:OpenImageFullLib:'+PROJ_VERSION){
+//        exclude module: 'OpenImageGlideLib'
+//    }
     // 依赖androidx, 已升级AndroidX的项目集成下面的依赖
     implementation "com.bytedance.tools.codelocator:codelocator-core:2.0.0"
     implementation 'com.github.FlyJingFish:SwitchKeyboard:1.2.1'
@@ -92,4 +99,6 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxjava:3.0.4'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+//    implementation("io.coil-kt:coil:2.4.0")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

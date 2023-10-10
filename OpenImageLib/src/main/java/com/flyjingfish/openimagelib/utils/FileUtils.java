@@ -1,23 +1,15 @@
-package com.flyjingfish.openimage.openImpl.download;
+package com.flyjingfish.openimagelib.utils;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.flyjingfish.openimageglidelib.BitmapUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -25,29 +17,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public enum SaveImageUtils {
-    INSTANCE;
-    private final ExecutorService cThreadPool = Executors.newFixedThreadPool(5);
-    private final Handler handler = new Handler(Looper.getMainLooper());
+public class FileUtils {
 
-    public void saveFile(Context context, File resource, boolean video,OnSaveFinish onSaveFinish) {
-        cThreadPool.submit(() -> {
-            String sucPath = save(context, resource, video);
-            if (onSaveFinish != null){
-                handler.post(() -> onSaveFinish.onFinish(sucPath));
-            }
-        });
-
-    }
-
-    public interface OnSaveFinish{
-        void onFinish(String sucPath);
-    }
-
-    static String save(Context context, File resource, boolean video) {
+    public static String save(Context context, File resource, boolean video) {
         String sucPath = null;
         String name = System.currentTimeMillis() + "";
         String var10001 = resource.getAbsolutePath();
@@ -63,15 +36,12 @@ public enum SaveImageUtils {
             }
         }else {
             mimeType = BitmapUtils.getImageTypeWithMime(context, var10001);
-            if (TextUtils.isEmpty(mimeType)){
-                mimeType = "jpg";
-            }
         }
         name = name + '.' + mimeType;
         if (Build.VERSION.SDK_INT >= 29) {
             ContentResolver resolver = context.getContentResolver();
             ContentValues values = new ContentValues();
-            String relativePath =  (video ? Environment.DIRECTORY_MOVIES:Environment.DIRECTORY_PICTURES) + "/";
+            String relativePath =  (video ?Environment.DIRECTORY_MOVIES:Environment.DIRECTORY_PICTURES) + "/";
             values.put(MediaStore.Images.Media.DESCRIPTION, name);
             values.put(MediaStore.Images.Media.DISPLAY_NAME, name);
             values.put(MediaStore.Images.Media.MIME_TYPE, (video ?"video/":"image/") + mimeType);
@@ -140,38 +110,6 @@ public enum SaveImageUtils {
         return sucPath;
     }
 
-    static class SingleMediaScanner implements MediaScannerConnection.MediaScannerConnectionClient {
-        private MediaScannerConnection mMs;
-        private final String path;
-        private final SingleMediaScanner.ScanListener listener;
-
-        public void onMediaScannerConnected() {
-            this.mMs.scanFile(this.path, null);
-
-        }
-
-        public SingleMediaScanner(@Nullable Context context, @NonNull String path, @Nullable SingleMediaScanner.ScanListener listener) {
-            super();
-            this.path = path;
-            this.listener = listener;
-            this.mMs = new MediaScannerConnection(context, this);
-            this.mMs.connect();
-        }
-
-        @Override
-        public void onScanCompleted(String path, Uri uri) {
-            this.mMs.disconnect();
-            this.mMs = null;
-            if (listener != null) {
-                listener.onScanFinish();
-            }
-        }
-
-        public interface ScanListener {
-            void onScanFinish();
-        }
-    }
-
     static boolean copySdcardFile(File fromFile, File toFile) {
         FileInputStream fosfrom = null;
         FileOutputStream fosto = null;
@@ -187,7 +125,6 @@ public enum SaveImageUtils {
 
             suc = true;
         } catch (Exception ignored) {
-            ignored.printStackTrace();
         } finally {
             try {
                 if (fosfrom != null){

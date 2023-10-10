@@ -13,7 +13,8 @@ import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.module.AppGlideModule;
-import com.flyjingfish.openimageglidelib.LoadImageUtils;
+//import com.flyjingfish.openimagelib.photoview.LoadImageUtils;
+//import com.flyjingfish.openimageglidelib.LoadImageUtils;
 
 import java.io.InputStream;
 
@@ -31,7 +32,7 @@ public class MyAppGlideModule extends AppGlideModule {
     public void registerComponents(Context context, Glide glide, Registry registry) {
         //Glide 底层默认使用 HttpConnection 进行网络请求,这里替换为 Okhttp 后才能使用本框架,进行 Glide 的加载进度监听
         Log.e("MyAppGlideModule","registerComponents"+(Looper.getMainLooper() == Looper.myLooper()));
-        registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(LoadImageUtils.INSTANCE.getOkHttpClient()));
+//        registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(LoadImageUtils.INSTANCE.getOkHttpClient()));
     }
 
     @Override
