@@ -6,7 +6,7 @@
             android:name=".OpenImageCoilInitProvider"
             android:authorities="${applicationId}.OpenImageCoilInitProvider"
             android:exported="false"
-            android:initOrder="100"
+            android:initOrder="80"
             android:multiprocess="true" />
     </application>
 </manifest>

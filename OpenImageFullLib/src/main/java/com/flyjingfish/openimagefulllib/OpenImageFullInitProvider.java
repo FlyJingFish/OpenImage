@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.flyjingfish.openimageglidelib.GlideDownloadMediaHelper;
 import com.flyjingfish.openimagelib.OpenImageConfig;
+import com.flyjingfish.openimagelib.listener.DownloadMediaHelper;
 
 public class OpenImageFullInitProvider extends ContentProvider {
     @Override
@@ -23,11 +24,14 @@ public class OpenImageFullInitProvider extends ContentProvider {
         FullGlideDownloadMediaHelper fullGlideDownloadMediaHelper = FullGlideDownloadMediaHelper.getInstance();
         //初始化下载原图或视频类
         if (OpenImageConfig.getInstance().getDownloadMediaHelper() == null || OpenImageConfig.getInstance().getDownloadMediaHelper() != fullGlideDownloadMediaHelper){
-//            DownloadMediaHelper oldDownloadMediaHelper = OpenImageConfig.getInstance().getDownloadMediaHelper();
-//            if (oldDownloadMediaHelper != null){
-//                fullGlideDownloadMediaHelper.setDefaultDownloadMediaHelper(oldDownloadMediaHelper);
-//            }
-            fullGlideDownloadMediaHelper.setDefaultDownloadMediaHelper(new GlideDownloadMediaHelper());
+            try {
+                fullGlideDownloadMediaHelper.setDefaultDownloadMediaHelper(new GlideDownloadMediaHelper());
+            } catch (NoClassDefFoundError e) {
+                DownloadMediaHelper oldDownloadMediaHelper = OpenImageConfig.getInstance().getDownloadMediaHelper();
+                if (oldDownloadMediaHelper != null){
+                    fullGlideDownloadMediaHelper.setDefaultDownloadMediaHelper(oldDownloadMediaHelper);
+                }
+            }
             OpenImageConfig.getInstance().setDownloadMediaHelper(fullGlideDownloadMediaHelper);
         }
         OpenImageConfig.getInstance().setPreloadCount(false,4);

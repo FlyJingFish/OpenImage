@@ -8,6 +8,7 @@
             android:name=".OpenImageFullInitProvider"
             android:authorities="${applicationId}.OpenImageFullInitProvider"
             android:exported="false"
+            android:initOrder="50"
             android:multiprocess="true" />
 
 <!--        <provider-->

@@ -6,10 +6,10 @@ buildscript {
         mavenCentral()
         maven { url "https://maven.aliyun.com/nexus/content/groups/public" }
         maven { url 'https://jitpack.io' }
-//        maven { url 'https://s01.oss.sonatype.org/content/repositories/iogithubflyjingfish-1043' }
+        maven { url 'https://s01.oss.sonatype.org/content/repositories/iogithubflyjingfish-1252' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.4.2'
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
@@ -22,7 +22,7 @@ allprojects {
         mavenCentral()
         maven { url "https://maven.aliyun.com/nexus/content/groups/public" }
         maven { url 'https://jitpack.io' }
-//        maven { url 'https://s01.oss.sonatype.org/content/repositories/iogithubflyjingfish-1043' }
+        maven { url 'https://s01.oss.sonatype.org/content/repositories/iogithubflyjingfish-1252' }
     }
 }
 task clean(type: Delete) {
@@ -30,6 +30,6 @@ task clean(type: Delete) {
 }
 
 ext {
-    sdkVersion = 30
+    sdkVersion = 31
     minSdkVersion = 21
 }

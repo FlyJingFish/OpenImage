@@ -4,6 +4,7 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
@@ -11,6 +12,7 @@ import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 public class OpenImageCoilInitProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
+        Log.e("onCreate","OpenImageCoilInitProvider");
         OpenImageLogUtils.init(getContext().getApplicationContext());
         //初始化大图加载器
         if (OpenImageConfig.getInstance().getBigImageHelper() == null){

@@ -14,8 +14,14 @@ import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.ActivityMainBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
+import com.flyjingfish.openimage.openImpl.AppDownloadFileHelper;
+import com.flyjingfish.openimage.openImpl.AppGlideBigImageHelper;
 import com.flyjingfish.openimage.openImpl.PicassoDownloader;
 import com.flyjingfish.openimage.openImpl.PicassoLoader;
+import com.flyjingfish.openimagecoillib.CoilDownloadMediaHelper;
+import com.flyjingfish.openimagefulllib.FullGlideDownloadMediaHelper;
+import com.flyjingfish.openimageglidelib.GlideBigImageHelper;
+import com.flyjingfish.openimageglidelib.GlideDownloadMediaHelper;
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import com.squareup.picasso.LruCache;
@@ -61,7 +67,21 @@ public class MainActivity extends BaseActivity {
         }
         binding.cbRead.setChecked(OpenImageConfig.getInstance().isReadMode());
         binding.cbRead.setOnCheckedChangeListener((buttonView, isChecked) -> OpenImageConfig.getInstance().setReadMode(isChecked));
-        binding.rgImageOs.setOnCheckedChangeListener((group, checkedId) -> MyImageLoader.loader_os_type = (checkedId == R.id.rb_glide ? MyImageLoader.GLIDE : (checkedId == R.id.rb_coil ? MyImageLoader.COIL : MyImageLoader.PICASSO)));
+        binding.rgImageOs.setOnCheckedChangeListener((group, checkedId) -> {
+            MyImageLoader.loader_os_type = (checkedId == R.id.rb_glide ? MyImageLoader.GLIDE : (checkedId == R.id.rb_coil ? MyImageLoader.COIL : MyImageLoader.PICASSO));
+            if (MyImageLoader.loader_os_type == MyImageLoader.GLIDE){
+                OpenImageConfig.getInstance().setDownloadMediaHelper(FullGlideDownloadMediaHelper.getInstance());
+                FullGlideDownloadMediaHelper.getInstance().setDefaultDownloadMediaHelper(new GlideDownloadMediaHelper());
+                OpenImageConfig.getInstance().setBigImageHelper(new GlideBigImageHelper());
+            }else if (MyImageLoader.loader_os_type == MyImageLoader.COIL){
+                OpenImageConfig.getInstance().setDownloadMediaHelper(FullGlideDownloadMediaHelper.getInstance());
+                FullGlideDownloadMediaHelper.getInstance().setDefaultDownloadMediaHelper(new CoilDownloadMediaHelper());
+                OpenImageConfig.getInstance().setBigImageHelper(new GlideBigImageHelper());
+            }else {
+                OpenImageConfig.getInstance().setDownloadMediaHelper(new AppDownloadFileHelper());
+                OpenImageConfig.getInstance().setBigImageHelper(new AppGlideBigImageHelper());
+            }
+        });
         binding.rgCacheType.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
                 case R.id.rb_original:

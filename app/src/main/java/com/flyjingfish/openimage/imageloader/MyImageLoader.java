@@ -245,11 +245,13 @@ public class MyImageLoader {
                         @Override
                         public void onError(@NonNull ImageRequest request, @NonNull ErrorResult result) {
                             ImageRequest.Listener.super.onError(request, result);
+                            requestListener.onFailed();
                         }
 
                         @Override
                         public void onSuccess(@NonNull ImageRequest request, @NonNull SuccessResult result) {
                             ImageRequest.Listener.super.onSuccess(request, result);
+                            requestListener.onSuccess();
                         }
                     })
                     .target(iv);

@@ -30,12 +30,9 @@ public class MyApplication extends Application implements ImageLoaderFactory {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        OpenImageConfig.getInstance().setBigImageHelper(new AppGlideBigImageHelper());
-        AppDownloadFileHelper appDownloadFileHelper = new AppDownloadFileHelper();
-        if (OpenImageConfig.getInstance().getDownloadMediaHelper() != null){
-            appDownloadFileHelper.setDefaultDownloadMediaHelper(OpenImageConfig.getInstance().getDownloadMediaHelper());
-        }
-        OpenImageConfig.getInstance().setDownloadMediaHelper(appDownloadFileHelper);
+//        OpenImageConfig.getInstance().setBigImageHelper(new AppGlideBigImageHelper());
+//        AppDownloadFileHelper appDownloadFileHelper = new AppDownloadFileHelper();
+//        OpenImageConfig.getInstance().setDownloadMediaHelper(appDownloadFileHelper);
         initPicasso();
         okHttpClient = ProgressManager.getInstance().with(new OkHttpClient.Builder()).build();
 

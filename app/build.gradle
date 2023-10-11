@@ -86,12 +86,16 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
     implementation 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1'
-//    implementation project(path: ':OpenImageCoilLib')
+    implementation project(path: ':OpenImageCoilLib')
     implementation project(path: ':OpenImageFullLib')
 //    implementation project(path: ':OpenImageGlideLib')
 //    implementation ('io.github.FlyJingFish.OpenImage:OpenImageFullLib:'+PROJ_VERSION){
 //        exclude module: 'OpenImageGlideLib'
 //    }
+//    implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:'+PROJ_VERSION
+//    implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:'+PROJ_VERSION
+//    implementation 'io.github.FlyJingFish.OpenImage:OpenImageCoilLib:'+PROJ_VERSION
+//    implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:'+PROJ_VERSION
     // 依赖androidx, 已升级AndroidX的项目集成下面的依赖
     implementation "com.bytedance.tools.codelocator:codelocator-core:2.0.0"
     implementation 'com.github.FlyJingFish:SwitchKeyboard:1.2.1'
@@ -100,5 +104,5 @@ dependencies {
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 //    implementation("io.coil-kt:coil:2.4.0")
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
