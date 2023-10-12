@@ -1,6 +1,9 @@
 package com.flyjingfish.openimage;
 
+import static android.os.Build.VERSION.SDK_INT;
+
 import android.app.Application;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 
@@ -17,8 +20,11 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import coil.ComponentRegistry;
 import coil.ImageLoader;
 import coil.ImageLoaderFactory;
+import coil.decode.GifDecoder;
+import coil.decode.ImageDecoderDecoder;
 import coil.util.DebugLogger;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -55,8 +61,15 @@ public class MyApplication extends Application implements ImageLoaderFactory {
     @NonNull
     @Override
     public ImageLoader newImageLoader() {
+        ComponentRegistry.Builder builder = new ComponentRegistry.Builder();
+        if (SDK_INT >= 28) {
+            builder.add(new ImageDecoderDecoder.Factory());
+        } else {
+            builder.add(new GifDecoder.Factory());
+        }
         return new ImageLoader.Builder(this).logger(new DebugLogger())
                 .okHttpClient(CoilLoadImageUtils.INSTANCE.getOkHttpClient())
+                .components(builder.build())
             .build();
     }
 }
