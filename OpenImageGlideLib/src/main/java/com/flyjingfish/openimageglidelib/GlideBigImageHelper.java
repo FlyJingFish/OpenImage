@@ -24,6 +24,7 @@ public class GlideBigImageHelper implements BigImageHelper {
                 if (isWeb){
                     LoadImageUtils.INSTANCE.loadWebImage(context, imageUrl, onLoadBigImageListener, this);
                 }else {
+//                    Glide.with(context).load(filePath).
                     RequestOptions requestOptions = new RequestOptions()
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .override(maxImageSize[0], maxImageSize[1]);

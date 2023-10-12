@@ -21,6 +21,7 @@ import com.flyjingfish.openimagelib.beans.OpenImageUrl
 import com.flyjingfish.openimagelib.enums.MediaType
 import com.flyjingfish.openimagelib.listener.DownloadMediaHelper
 import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener
+import com.flyjingfish.openimagelib.utils.SaveImageUtils
 import java.util.UUID
 
 open class CoilDownloadMediaHelper :DownloadMediaHelper{
@@ -62,19 +63,17 @@ open class CoilDownloadMediaHelper :DownloadMediaHelper{
             .data(downloadUrl)
             .lifecycle(lifecycleOwner)
             .memoryCachePolicy(CachePolicy.DISABLED)
-            .decoderFactory { result: SourceResult, options: Options, imageLoader: ImageLoader ->
+            .decoderFactory { result: SourceResult, _: Options, _: ImageLoader ->
                 Decoder {
-                    CoilLoadImageUtils.saveFile(
-                        activity, result.source.file().toFile(), openImageUrl.type == MediaType.VIDEO,object :CoilLoadImageUtils.OnSaveFinish{
-                            override fun onFinish(sucPath: String?) {
-                                if (!TextUtils.isEmpty(sucPath)) {
-                                    onDownloadMediaListenerHashMap[key]?.onDownloadSuccess(sucPath)
-                                } else {
-                                    onDownloadMediaListenerHashMap[key]?.onDownloadFailed()
-                                }
-                            }
+                    SaveImageUtils.INSTANCE.saveFile(
+                        activity, result.source.file().toFile(), openImageUrl.type == MediaType.VIDEO
+                    ) { sucPath ->
+                        if (!TextUtils.isEmpty(sucPath)) {
+                            onDownloadMediaListenerHashMap[key]?.onDownloadSuccess(sucPath)
+                        } else {
+                            onDownloadMediaListenerHashMap[key]?.onDownloadFailed()
                         }
-                    )
+                    }
                     DecodeResult(ColorDrawable(Color.BLACK), false)
                 }
             }

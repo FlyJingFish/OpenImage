@@ -1,7 +1,6 @@
 package com.flyjingfish.openimagecoillib
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import coil.Coil
 import coil.request.ErrorResult
 import coil.request.ImageRequest
@@ -43,7 +42,6 @@ open class CoilBigImageHelper:BigImageHelper {
                                 }
                             })
                             .target { drawable ->
-                                // Handle the result.
                                 onLoadBigImageListener.onLoadImageSuccess(drawable, filePath)
                             }
                             .build()

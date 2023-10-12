@@ -12,7 +12,6 @@ import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 public class OpenImageCoilInitProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
-        Log.e("onCreate","OpenImageCoilInitProvider");
         OpenImageLogUtils.init(getContext().getApplicationContext());
         //初始化大图加载器
         if (OpenImageConfig.getInstance().getBigImageHelper() == null){

@@ -16,7 +16,6 @@ import com.flyjingfish.openimagelib.listener.DownloadMediaHelper;
 public class OpenImageFullInitProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
-        Log.e("onCreate","OpenImageFullInitProvider");
         //初始化视频加载，如果有多个请每次在调用openImage.show之前设置一遍
         if (OpenImageConfig.getInstance().getVideoFragmentCreate() == null){
             OpenImageConfig.getInstance().setVideoFragmentCreate(new VideoFragmentCreateImpl());

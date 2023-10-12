@@ -6,10 +6,13 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.os.Looper
+import android.text.TextUtils
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import coil.Coil
 import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
 import coil.decode.DecodeResult
 import coil.decode.Decoder
 import coil.fetch.SourceResult
@@ -17,9 +20,11 @@ import coil.request.CachePolicy
 import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.Options
+import coil.request.SuccessResult
+import coil.size.Size
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener
-import com.flyjingfish.openimagelib.utils.FileUtils
 import okhttp3.OkHttpClient
+import okhttp3.internal.closeQuietly
 import java.io.File
 import java.util.concurrent.Executors
 
@@ -29,7 +34,7 @@ object CoilLoadImageUtils {
     private var okHttpClient: OkHttpClient? = null
 
     @Synchronized
-    fun initOkHttpClient():OkHttpClient {
+    private fun initOkHttpClient():OkHttpClient {
         val client = ProgressManager.getInstance().with(OkHttpClient.Builder())
             .build()
         okHttpClient = client
@@ -83,6 +88,7 @@ object CoilLoadImageUtils {
         }
     }
 
+    @OptIn(ExperimentalCoilApi::class)
     fun loadWebImage(
         context: Context,
         imageUrl: String?,
@@ -90,48 +96,50 @@ object CoilLoadImageUtils {
         finishListener: OnLocalRealFinishListener
     ) {
         val imageLoader = Coil.imageLoader(context)
+        try {
+            val snap = imageLoader.diskCache?.openSnapshot(imageUrl!!)
+            val dataPath = snap?.data?.toFile()?.absolutePath
+            snap?.closeQuietly()
+            if (!TextUtils.isEmpty(dataPath) && !dataPath!!.endsWith(".tmp") && File(dataPath).exists()){
+                loadImageForSize(context,dataPath,finishListener)
+                return
+            }
+        } catch (_: Exception) {
+
+        }
+        val listener =  object : ImageRequest.Listener{
+            var path: String? = null
+            override fun onError(request: ImageRequest, result: ErrorResult) {
+                super.onError(request, result)
+                onLoadBigImageListener.onLoadImageFailed()
+            }
+
+            override fun onSuccess(request: ImageRequest, result: SuccessResult) {
+                super.onSuccess(request, result)
+                var dataPath: String?
+                try {
+                    val snap = imageLoader.diskCache?.openSnapshot(imageUrl!!)
+                    dataPath = snap?.data?.toFile()?.absolutePath
+                    snap?.closeQuietly()
+                } catch (e: Exception) {
+                    dataPath = path
+                }
+                loadImageForSize(context,dataPath,finishListener)
+            }
+        }
         val request = ImageRequest.Builder(context)
             .data(imageUrl)
             .memoryCachePolicy(CachePolicy.DISABLED)
-            .decoderFactory { result: SourceResult, options: Options, imageLoader: ImageLoader ->
+            .size(Size.ORIGINAL)
+            .decoderFactory { result: SourceResult, _: Options, _: ImageLoader ->
                 Decoder {
-                    loadImageForSize(context,result.source.file().toFile().absolutePath,finishListener)
+                    listener.path = result.source.file().toFile().absolutePath
                     DecodeResult(ColorDrawable(Color.BLACK), false)
                 }
             }
-            .listener(object : ImageRequest.Listener{
-                override fun onError(request: ImageRequest, result: ErrorResult) {
-                    super.onError(request, result)
-                    onLoadBigImageListener.onLoadImageFailed()
-                }
-            }).build()
+            .listener(listener)
+            .build()
+
         imageLoader.enqueue(request)
-    }
-
-    fun saveFile(context: Context?, resource: File?, video: Boolean, onSaveFinish: OnSaveFinish) {
-        cThreadPool.submit {
-            saveFileIgnoreThread(
-                context,
-                resource,
-                video,
-                onSaveFinish
-            )
-        }
-    }
-
-    fun saveFileIgnoreThread(
-        context: Context?,
-        resource: File?,
-        video: Boolean,
-        onSaveFinish: OnSaveFinish?
-    ) {
-        val sucPath = FileUtils.save(context, resource, video)
-        if (onSaveFinish != null) {
-            handler.post { onSaveFinish.onFinish(sucPath) }
-        }
-    }
-
-    interface OnSaveFinish {
-        fun onFinish(sucPath: String?)
     }
 }

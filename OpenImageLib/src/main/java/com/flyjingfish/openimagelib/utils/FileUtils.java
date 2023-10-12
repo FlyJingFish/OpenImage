@@ -18,7 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class FileUtils {
+class FileUtils {
 
     public static String save(Context context, File resource, boolean video) {
         String sucPath = null;

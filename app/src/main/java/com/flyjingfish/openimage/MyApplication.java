@@ -19,6 +19,7 @@ import java.util.concurrent.Executors;
 
 import coil.ImageLoader;
 import coil.ImageLoaderFactory;
+import coil.util.DebugLogger;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 
@@ -54,9 +55,8 @@ public class MyApplication extends Application implements ImageLoaderFactory {
     @NonNull
     @Override
     public ImageLoader newImageLoader() {
-        return new ImageLoader.Builder(this)
-                .okHttpClient(ProgressManager.getInstance().with(new OkHttpClient.Builder())
-                        .build())
+        return new ImageLoader.Builder(this).logger(new DebugLogger())
+                .okHttpClient(CoilLoadImageUtils.INSTANCE.getOkHttpClient())
             .build();
     }
 }

@@ -33,6 +33,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import coil.Coil;
+
 public class MainActivity extends BaseActivity {
     private ActivityMainBinding binding;
     //  "/storage/emulated/0/Tencent/QQ_Images/a62d96cb210ccb9.jpg",
@@ -130,9 +132,18 @@ public class MainActivity extends BaseActivity {
     }
 
     private void clearCache() {
+
+        try {
+            Coil.imageLoader(this).getMemoryCache().clear();
+        } catch (Exception e) {
+        }
         Glide.get(MainActivity.this).clearMemory();
         clearPicassoMemory();
         MyApplication.cThreadPool.submit(() -> {
+            try {
+                Coil.imageLoader(this).getDiskCache().clear();
+            } catch (Exception e) {
+            }
             Glide.get(MainActivity.this).clearDiskCache();
             clearPicassoCache();
             clearPicassoVideoCache();
