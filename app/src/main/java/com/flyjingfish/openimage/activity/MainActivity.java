@@ -18,6 +18,7 @@ import com.flyjingfish.openimage.openImpl.AppDownloadFileHelper;
 import com.flyjingfish.openimage.openImpl.AppGlideBigImageHelper;
 import com.flyjingfish.openimage.openImpl.PicassoDownloader;
 import com.flyjingfish.openimage.openImpl.PicassoLoader;
+import com.flyjingfish.openimagecoillib.CoilBigImageHelper;
 import com.flyjingfish.openimagecoillib.CoilDownloadMediaHelper;
 import com.flyjingfish.openimagefulllib.FullGlideDownloadMediaHelper;
 import com.flyjingfish.openimageglidelib.GlideBigImageHelper;
@@ -76,7 +77,7 @@ public class MainActivity extends BaseActivity {
             }else if (MyImageLoader.loader_os_type == MyImageLoader.COIL){
                 OpenImageConfig.getInstance().setDownloadMediaHelper(FullGlideDownloadMediaHelper.getInstance());
                 FullGlideDownloadMediaHelper.getInstance().setDefaultDownloadMediaHelper(new CoilDownloadMediaHelper());
-                OpenImageConfig.getInstance().setBigImageHelper(new GlideBigImageHelper());
+                OpenImageConfig.getInstance().setBigImageHelper(new CoilBigImageHelper());
             }else {
                 OpenImageConfig.getInstance().setDownloadMediaHelper(new AppDownloadFileHelper());
                 OpenImageConfig.getInstance().setBigImageHelper(new AppGlideBigImageHelper());

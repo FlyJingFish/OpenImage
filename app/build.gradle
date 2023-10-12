@@ -70,17 +70,13 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     //glide
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    implementation 'com.github.bumptech.glide:annotations:4.12.0'
-    implementation 'com.github.bumptech.glide:okhttp3-integration:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'jp.wasabeef:glide-transformations:4.2.0'
     //picasso
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'jp.wasabeef:picasso-transformations:2.4.0'
-    //完整版引入
-//    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.3.3-release-jitpack'
-//    implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer-exo2:v8.3.3-release-jitpack'
+
+    //bannar
     implementation 'io.github.youth5201314:banner:2.2.2'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
@@ -103,6 +99,4 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxjava:3.0.4'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-//    implementation("io.coil-kt:coil:2.4.0")
-//    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

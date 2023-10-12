@@ -166,13 +166,17 @@ public class MyImageLoader {
                 requestBuilder.addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        requestListener.onFailed();
+                        if (requestListener != null){
+                            requestListener.onFailed();
+                        }
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        requestListener.onSuccess();
+                        if (requestListener != null){
+                            requestListener.onSuccess();
+                        }
                         return false;
                     }
                 });
@@ -226,12 +230,16 @@ public class MyImageLoader {
                 requestCreator.into(iv, new Callback() {
                     @Override
                     public void onSuccess() {
-                        requestListener.onSuccess();
+                        if (requestListener != null){
+                            requestListener.onSuccess();
+                        }
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        requestListener.onFailed();
+                        if (requestListener != null){
+                            requestListener.onFailed();
+                        }
                     }
                 });
             }else {
@@ -245,13 +253,27 @@ public class MyImageLoader {
                         @Override
                         public void onError(@NonNull ImageRequest request, @NonNull ErrorResult result) {
                             ImageRequest.Listener.super.onError(request, result);
-                            requestListener.onFailed();
+                            if (requestListener != null){
+                                requestListener.onFailed();
+                            }
                         }
 
                         @Override
                         public void onSuccess(@NonNull ImageRequest request, @NonNull SuccessResult result) {
                             ImageRequest.Listener.super.onSuccess(request, result);
-                            requestListener.onSuccess();
+                            if (requestListener != null){
+                                requestListener.onSuccess();
+                            }
+                        }
+
+                        @Override
+                        public void onCancel(@NonNull ImageRequest request) {
+                            ImageRequest.Listener.super.onCancel(request);
+                        }
+
+                        @Override
+                        public void onStart(@NonNull ImageRequest request) {
+                            ImageRequest.Listener.super.onStart(request);
                         }
                     })
                     .target(iv);
