@@ -81,14 +81,14 @@ allprojects {
 
 请注意如果使用以下导入方式，如果存在[GSYVideoPlayer](https://github.com/CarGuo/GSYVideoPlayer)请升级至 **8.3.3** 或者更高的版本，否则会冲突
 
-- 使用 Glide 作为图片加载器，如果你的项目组存在[Glide](https://github.com/bumptech/glide)请升级至 **4.12.0** 或者更高的版本
+- 使用 Glide 作为图片加载器，如果你的项目组存在[Glide](https://github.com/bumptech/glide)请升级至 **4.12.0** 或者更高的版本，否则会冲突
 
 ```gradle
 //OpenImageFullLib 默认已经包含了OpenImageGlideLib
 implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.1.7'
 ```
 
-- 使用 Coil 作为图片加载器，如果你的项目组存在[Coil](https://github.com/coil-kt/coil)请升级至 **2.4.0** 或者更高的版本
+- 使用 Coil 作为图片加载器，如果你的项目组存在[Coil](https://github.com/coil-kt/coil)请升级至 **2.4.0** 或者更高的版本，否则会冲突
 
 ```gradle
 //OpenImageFullLib 因为已经包含了 OpenImageGlideLib，所以需要排除掉 OpenImageGlideLib，否则会同时存在 Glide 和 Coil
@@ -101,12 +101,16 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageCoilLib:2.1.7'
 
 #### B、引入只带有图片引擎的版本（只支持查看图片）
 
-请注意如果使用以下导入方式，如果你的项目组存在[Glide](https://github.com/bumptech/glide)请升级至 **4.12.0** 或者更高的版本，否则会冲突
+在 Glide 和 Coil 中选一个作为图片加载器
+
+- 使用 Glide 作为图片加载器，如果你的项目组存在[Glide](https://github.com/bumptech/glide)请升级至 **4.12.0** 或者更高的版本，否则会冲突
 
 ```gradle
 //OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
 implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:2.1.7'
 ```
+
+- 使用 Coil 作为图片加载器，如果你的项目组存在[Coil](https://github.com/coil-kt/coil)请升级至 **2.4.0** 或者更高的版本，否则会冲突
 
 ```gradle
 //OpenImageCoilLib 引入Coil（2.4.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
