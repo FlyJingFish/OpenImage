@@ -1,5 +1,29 @@
 # OpenImage 更新日志
 
+## 2.1.7
+
+1、新增 OpenImageCoilLib 库，使用方式如下：
+
+- 如果您只是使用图片功能，则只需要如下引入方式即可：
+
+```gradle
+//OpenImageCoilLib 引入Coil（2.4.0）图片引擎,没有引入视频播放器；
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageCoilLib:2.1.7'
+```
+
+- 如果您想要使用图片和视频功能，则需要按如下配置（引入 OpenImageFullLib 时排除掉 OpenImageGlideLib，否则将会同时存在Glide和Coil）：
+
+```gradle
+//OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
+implementation ('io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.1.7'){
+    exclude module: 'OpenImageGlideLib'
+}
+//OpenImageCoilLib 引入Coil（2.4.0）图片引擎,没有引入视频播放器；
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageCoilLib:2.1.7'
+```
+
+2、重写一些代码，限制外部访问一些方法
+
 ## 2.1.6
 
 1、修复删除到最后一个Item时不回调onRemove的问题

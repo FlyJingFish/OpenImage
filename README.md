@@ -79,19 +79,38 @@ allprojects {
 
 #### A、直接引入完整版（同时支持查看图片和视频）
 
-请注意如果使用以下导入方式，如果你的项目组存在[Glide](https://github.com/bumptech/glide)请升级至 **4.12.0** 或者更高的版本，如果存在[GSYVideoPlayer](https://github.com/CarGuo/GSYVideoPlayer)请升级至 **8.3.3** 或者更高的版本，否则会冲突
+请注意如果使用以下导入方式，如果存在[GSYVideoPlayer](https://github.com/CarGuo/GSYVideoPlayer)请升级至 **8.3.3** 或者更高的版本，否则会冲突
+
+- 使用 Glide 作为图片加载器，如果你的项目组存在[Glide](https://github.com/bumptech/glide)请升级至 **4.12.0** 或者更高的版本
 
 ```gradle
-//OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.1.6'
+//OpenImageFullLib 默认已经包含了OpenImageGlideLib
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.1.7'
 ```
+
+- 使用 Coil 作为图片加载器，如果你的项目组存在[Coil](https://github.com/coil-kt/coil)请升级至 **2.4.0** 或者更高的版本
+
+```gradle
+//OpenImageFullLib 因为已经包含了 OpenImageGlideLib，所以需要排除掉 OpenImageGlideLib，否则会同时存在 Glide 和 Coil
+implementation ('io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.1.7'){
+    exclude module: 'OpenImageGlideLib'
+}
+//OpenImageCoilLib 引入Coil（2.4.0）图片引擎
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageCoilLib:2.1.7'
+```
+
 #### B、引入只带有图片引擎的版本（只支持查看图片）
 
 请注意如果使用以下导入方式，如果你的项目组存在[Glide](https://github.com/bumptech/glide)请升级至 **4.12.0** 或者更高的版本，否则会冲突
 
 ```gradle
 //OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:2.1.6'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:2.1.7'
+```
+
+```gradle
+//OpenImageCoilLib 引入Coil（2.4.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageCoilLib:2.1.7'
 ```
 
 #### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
@@ -101,7 +120,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:2.1.6'
 ```gradle
 //OpenImageLib 是基础库，没有引入图片引擎和视频播放器
 //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:2.1.6'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:2.1.7'
 
 ```
 
