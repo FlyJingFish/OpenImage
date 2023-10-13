@@ -34,7 +34,7 @@ object CoilLoadImageUtils {
     private var okHttpClient: OkHttpClient? = null
 
     @Synchronized
-    private fun initOkHttpClient():OkHttpClient {
+    internal fun initOkHttpClient():OkHttpClient {
         val client = ProgressManager.getInstance().with(OkHttpClient.Builder())
             .build()
         okHttpClient = client
@@ -46,12 +46,12 @@ object CoilLoadImageUtils {
         return client ?: initOkHttpClient()
     }
 
-    fun isInitOkHttpClient(): Boolean {
+    internal fun isInitOkHttpClient(): Boolean {
         return okHttpClient != null
     }
 
-    fun loadImageForSize(
-        context: Context?,
+    internal fun loadImageForSize(
+        context: Context,
         imageUrl: String?,
         finishListener: OnLocalRealFinishListener
     ) {
@@ -89,7 +89,7 @@ object CoilLoadImageUtils {
     }
 
     @OptIn(ExperimentalCoilApi::class)
-    fun loadWebImage(
+    internal fun loadWebImage(
         context: Context,
         imageUrl: String?,
         onLoadBigImageListener: OnLoadBigImageListener,

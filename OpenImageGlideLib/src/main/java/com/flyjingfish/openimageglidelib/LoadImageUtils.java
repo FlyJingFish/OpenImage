@@ -31,7 +31,7 @@ public enum LoadImageUtils {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private OkHttpClient okHttpClient;
 
-    public synchronized void initOkHttpClient(){
+    synchronized void initOkHttpClient(){
         this.okHttpClient = ProgressManager.getInstance().with(new OkHttpClient.Builder())
                 .build();
     }
@@ -43,11 +43,11 @@ public enum LoadImageUtils {
         return okHttpClient;
     }
 
-    public boolean isInitOkHttpClient() {
+    boolean isInitOkHttpClient() {
         return okHttpClient != null;
     }
 
-    public void loadImageForSize(Context context, String imageUrl, OnLocalRealFinishListener finishListener) {
+    void loadImageForSize(Context context, String imageUrl, OnLocalRealFinishListener finishListener) {
         boolean isWeb = BitmapUtils.isWeb(imageUrl);
 
         if (!isWeb) {
@@ -75,7 +75,7 @@ public enum LoadImageUtils {
 
     }
 
-    public void loadWebImage(Context context, String imageUrl, final OnLoadBigImageListener onLoadBigImageListener, OnLocalRealFinishListener finishListener){
+    void loadWebImage(Context context, String imageUrl, final OnLoadBigImageListener onLoadBigImageListener, OnLocalRealFinishListener finishListener){
         RequestOptions requestOptions = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);

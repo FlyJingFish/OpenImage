@@ -18,7 +18,7 @@ open class CoilBigImageHelper:BigImageHelper {
             context,
             imageUrl,
             object : OnLocalRealFinishListener {
-                override fun onGoLoad(filePath: String, maxImageSize: IntArray, isWeb: Boolean) {
+                override fun onGoLoad(filePath: String?, maxImageSize: IntArray, isWeb: Boolean) {
                     if (isWeb) {
                         CoilLoadImageUtils.loadWebImage(
                             context,
