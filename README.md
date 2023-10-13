@@ -6,7 +6,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/FlyJingFish/OpenImage.svg)](https://github.com/FlyJingFish/OpenImage/issues)
 [![GitHub license](https://img.shields.io/github/license/FlyJingFish/OpenImage.svg)](https://github.com/FlyJingFish/OpenImage/blob/master/LICENSE)
 
-## 属于你的侵入性低的大图查看器，完美的甚至完胜微信的过渡动画，支持自定义视频播放器，也可以自定义加载图片的内核，例如Glide，Picasso或其他的<br><br>如果帮到你点个star推广给更多人吧～
+## 属于你的侵入性低的大图查看器，完美的甚至完胜微信的过渡动画，支持自定义视频播放器，也可以自定义加载图片的内核，例如Glide、Picasso、Coil 或其他的<br><br>如果帮到你点个star推广给更多人吧～
 
 ## [点此下载apk,也可扫下边二维码下载](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk?raw=true)
 
