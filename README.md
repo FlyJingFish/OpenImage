@@ -13,7 +13,7 @@
 <img src="/screenshot/download_qrcode.png" alt="show" width="200px" />
 
 ## 多种场景效果演示（不限于以下几种，更多支持[点此查看](https://github.com/FlyJingFish/OpenImage/wiki)）
-
+ 
 RecyclerView场景  | 聊天页面 | 打开视频
  ------ | ------ | ------   
  <img src="/screenshot/Screenrecording_20230519_124228.gif" alt="show" width="240px" />  | <img src="/screenshot/SVID_20220731_203549_1.gif" alt="show" width="240px" /> | <img src="/screenshot/SVID_20220731_203923_1.gif" alt="show" width="240px" /> |
@@ -23,7 +23,7 @@ RecyclerView场景  | 聊天页面 | 打开视频
  <img src="/screenshot/friends_demo.gif" alt="show" width="240px" />  | <img src="/screenshot/Screenrecording_20230518_165929.gif" alt="show" width="240px" /> |  <img src="/screenshot/Screenrecording_20230518_170044.gif" alt="show" width="240px" /> |
 
 
-
+ 
 
 ## 特色功能
 
@@ -79,19 +79,42 @@ allprojects {
 
 #### A、直接引入完整版（同时支持查看图片和视频）
 
-请注意如果使用以下导入方式，如果你的项目组存在[Glide](https://github.com/bumptech/glide)请升级至 **4.12.0** 或者更高的版本，如果存在[GSYVideoPlayer](https://github.com/CarGuo/GSYVideoPlayer)请升级至 **8.3.3** 或者更高的版本，否则会冲突
+请注意如果使用以下导入方式，如果存在[GSYVideoPlayer](https://github.com/CarGuo/GSYVideoPlayer)请升级至 **8.3.3** 或者更高的版本，否则会冲突
+
+- 使用 Glide 作为图片加载器，如果你的项目组存在[Glide](https://github.com/bumptech/glide)请升级至 **4.12.0** 或者更高的版本，否则会冲突
 
 ```gradle
-//OpenImageFullLib 是完整版，如果您不想自定义图片引擎和视频播放器引擎可直接引用以下库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.1.6'
+//OpenImageFullLib 默认已经包含了OpenImageGlideLib
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.1.7'
 ```
+
+- 使用 Coil 作为图片加载器，如果你的项目组存在[Coil](https://github.com/coil-kt/coil)请升级至 **2.4.0** 或者更高的版本，否则会冲突
+
+```gradle
+//OpenImageFullLib 因为已经包含了 OpenImageGlideLib，所以需要排除掉 OpenImageGlideLib，否则会同时存在 Glide 和 Coil
+implementation ('io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.1.7'){
+    exclude module: 'OpenImageGlideLib'
+}
+//OpenImageCoilLib 引入Coil（2.4.0）图片引擎
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageCoilLib:2.1.7'
+```
+
 #### B、引入只带有图片引擎的版本（只支持查看图片）
 
-请注意如果使用以下导入方式，如果你的项目组存在[Glide](https://github.com/bumptech/glide)请升级至 **4.12.0** 或者更高的版本，否则会冲突
+在 Glide 和 Coil 中选一个作为图片加载器
+
+- 使用 Glide 作为图片加载器，如果你的项目组存在[Glide](https://github.com/bumptech/glide)请升级至 **4.12.0** 或者更高的版本，否则会冲突
 
 ```gradle
 //OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:2.1.6'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:2.1.7'
+```
+
+- 使用 Coil 作为图片加载器，如果你的项目组存在[Coil](https://github.com/coil-kt/coil)请升级至 **2.4.0** 或者更高的版本，否则会冲突
+
+```gradle
+//OpenImageCoilLib 引入Coil（2.4.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageCoilLib:2.1.7'
 ```
 
 #### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
@@ -101,7 +124,7 @@ implementation 'io.github.FlyJingFish.OpenImage:OpenImageGlideLib:2.1.6'
 ```gradle
 //OpenImageLib 是基础库，没有引入图片引擎和视频播放器
 //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
-implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:2.1.6'
+implementation 'io.github.FlyJingFish.OpenImage:OpenImageLib:2.1.7'
 
 ```
 
@@ -331,7 +354,7 @@ OpenImage.with(activity)
 ### 额外步骤
 
 #### A、如果您引用的库是 OpenImageLib 您需要实现BigImageHelper接口并设置它，它是加载大图的关键（以下以Glide为例）
-**（如果您使用的是 OpenImageFullLib 或 OpenImageGlideLib 则不需要这一步）**
+**（如果您使用的是 OpenImageFullLib 或 OpenImageGlideLib(OpenImageGlideLib) 则不需要这一步）**
 
 自己定义加载大图时请注意内存溢出问题，详情可看Wiki文档（[点此查看常见问题](https://github.com/FlyJingFish/OpenImage/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98#12%E4%BD%BF%E7%94%A8openimagelib%E8%87%AA%E5%AE%9A%E4%B9%89%E5%A4%A7%E5%9B%BE%E5%BC%95%E6%93%8E%E5%87%BA%E7%8E%B0-%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA-%E6%88%96%E8%80%85%E5%A4%A7%E5%9B%BE%E5%8A%A0%E8%BD%BD%E4%B8%8D%E5%87%BA%E6%9D%A5-%E6%88%96%E8%80%85-%E5%87%BA%E7%8E%B0-trying-to-draw-too-large330750000bytes-bitmap-%E6%8A%A5%E9%94%99%E4%BF%A1%E6%81%AF%E8%AF%A5%E6%80%8E%E4%B9%88%E5%8A%9E)）
 
@@ -545,16 +568,19 @@ public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
 
 # 混淆
 
-### 一，如果您使用的是 OpenImageFullLib 需要遵循以下三方库的规则
+### 1、如果您使用的是 OpenImageFullLib 需要遵循以下三方库的规则
 
 [GSYVideoPlayer](https://github.com/FlyJingFish/GSYVideoPlayer)
 
 [Glide](https://github.com/bumptech/glide)
 
-### 二，如果您使用的是 OpenImageGlideLib 需要遵循以下三方库的规则
+### 2、如果您使用的是 OpenImageGlideLib 需要遵循以下三方库的规则
 [Glide](https://github.com/bumptech/glide)
 
-### 三，如果您使用的是 OpenImageLib 则不需要添加任何混淆规则
+### 3、如果您使用的是 OpenImageCoilLib 需要遵循以下三方库的规则
+[Coil](https://github.com/coil-kt/coil)
+
+### 4、如果您使用的是 OpenImageLib 则不需要添加任何混淆规则
 
 ### 为了方便我将所有的混淆规则直接粘贴如下：
 
@@ -597,10 +623,66 @@ Glide 的混淆规则：
 
 ```
 
+Coil 混淆规则，遵循 [Coroutines](https://github.com/Kotlin/kotlinx.coroutines/blob/master/kotlinx-coroutines-core/jvm/resources/META-INF/proguard/coroutines.pro),[OkHttp](https://github.com/square/okhttp/blob/master/okhttp/src/jvmMain/resources/META-INF/proguard/okhttp3.pro)
+
+```
+# When editing this file, update the following files as well:
+# - META-INF/com.android.tools/proguard/coroutines.pro
+# - META-INF/com.android.tools/r8/coroutines.pro
+
+# ServiceLoader support
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+
+# Most of volatile fields are updated with AFU and should not be mangled
+-keepclassmembers class kotlinx.coroutines.** {
+    volatile <fields>;
+}
+
+# Same story for the standard library's SafeContinuation that also uses AtomicReferenceFieldUpdater
+-keepclassmembers class kotlin.coroutines.SafeContinuation {
+    volatile <fields>;
+}
+
+# These classes are only required by kotlinx.coroutines.debug.AgentPremain, which is only loaded when
+# kotlinx-coroutines-core is used as a Java agent, so these are not needed in contexts where ProGuard is used.
+-dontwarn java.lang.instrument.ClassFileTransformer
+-dontwarn sun.misc.SignalHandler
+-dontwarn java.lang.instrument.Instrumentation
+-dontwarn sun.misc.Signal
+
+# Only used in `kotlinx.coroutines.internal.ExceptionsConstructor`.
+# The case when it is not available is hidden in a `try`-`catch`, as well as a check for Android.
+-dontwarn java.lang.ClassValue
+
+# An annotation used for build tooling, won't be directly accessed.
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+
+
+# Okhttp3
+
+# JSR 305 annotations are for embedding nullability information.
+-dontwarn javax.annotation.**
+
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-adaptresourcefilenames okhttp3/internal/publicsuffix/PublicSuffixDatabase.gz
+
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+# OkHttp platform used only on JVM and when Conscrypt and other security providers are available.
+-dontwarn okhttp3.internal.platform.**
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
+
+```
+
 ### 版本限制
 最低SDK版本：minSdkVersion >= 21
-
-
+ 
+ 
 ### 常见问题
 
 **[点此查看常见问题](https://github.com/FlyJingFish/OpenImage/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)**
