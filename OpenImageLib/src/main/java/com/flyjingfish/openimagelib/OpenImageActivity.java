@@ -701,9 +701,19 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                 downloadTouchingHide = downloadParams.isTouchingHide();
             }
             downloadImageView.setImageResource(downloadSrc);
+            ViewGroup contentView = findViewById(Window.ID_ANDROID_CONTENT);
+            FrameLayout rootView;
+            if (contentView instanceof FrameLayout){
+                rootView = (FrameLayout) contentView;
+            }else {
+                rootView = new FrameLayout(this);
+                rootView.addView(contentView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            }
+
             rootView.addView(downloadImageView, downloadLayoutParams);
             downloadImageView.setOnClickListener(v -> checkPermissionAndDownload());
-
+            downloadImageView.setElevation(10);
+            downloadImageView.setTranslationZ(10);
             ColorStateList percentColors;
             if (downloadParams != null && (percentColors = downloadParams.getPercentColors()) != null) {
                 downloadImageView.setPercentColors(percentColors);
