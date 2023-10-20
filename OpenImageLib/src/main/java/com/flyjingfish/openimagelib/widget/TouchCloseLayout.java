@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.LayoutDirection;
 import android.view.MotionEvent;
@@ -73,7 +72,6 @@ public class TouchCloseLayout extends FrameLayout {
     private OpenImageOrientation orientation;
     private int startX = 0;
     private int startY = 0;
-    private long touchDownTime;
     private ViewPager2 viewPager2;
 
     public TouchCloseLayout(Context context) {
@@ -94,17 +92,15 @@ public class TouchCloseLayout extends FrameLayout {
             case MotionEvent.ACTION_DOWN:
                 startX = (int) ev.getX();
                 startY = (int) ev.getY();
-                touchDownTime = SystemClock.uptimeMillis();
                 break;
             case MotionEvent.ACTION_MOVE:
                 int endX = (int) ev.getX();
                 int endY = (int) ev.getY();
                 int disX = Math.abs(endX - startX);
                 int disY = Math.abs(endY - startY);
-                if ((orientation == OpenImageOrientation.HORIZONTAL && disX > disY && (isRtl?endX < startX:endX > startX) && isCanScroll()) || (orientation == OpenImageOrientation.VERTICAL && disY > disX && endY > startY && isCanScroll())) {
-                    if (onTouchCloseListener != null){
-                        onTouchCloseListener.onStartTouch();
-                    }
+                if ((orientation == OpenImageOrientation.HORIZONTAL && disX > disY && (isRtl?endX < startX:endX > startX) && isCanScroll())
+                        || (orientation == OpenImageOrientation.VERTICAL && disY > disX && endY > startY && isCanScroll())) {
+                    onTouchCloseListener.onStartTouch();
                     return true;
                 } else {
                     return super.onInterceptTouchEvent(ev);
@@ -119,6 +115,10 @@ public class TouchCloseLayout extends FrameLayout {
             return super.onTouchEvent(e);
         }
         switch (e.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                startX = (int) e.getX();
+                startY = (int) e.getY();
+                break;
             case MotionEvent.ACTION_MOVE:
                 if (startDragY == 0) {
                     startDragY = e.getRawY();
@@ -144,20 +144,16 @@ public class TouchCloseLayout extends FrameLayout {
                 if (bgView != null){
                     bgView.setAlpha(scale);
                 }
-                if (onTouchCloseListener != null) {
-                    onTouchCloseListener.onTouchScale(scale);
-                }
+                onTouchCloseListener.onTouchScale(scale);
 
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                long timeSub = (SystemClock.uptimeMillis() - touchDownTime);
+                long timeSub = (e.getEventTime() - e.getDownTime());
                 float distance = orientation == OpenImageOrientation.HORIZONTAL ? touchView.getTranslationX() : touchView.getTranslationY();
                 float speed = distance / timeSub;
                 if (speed > DRAG_SPEED || scale < touchCloseScale) {
-                    if (onTouchCloseListener != null) {
-                        onTouchCloseListener.onTouchClose(scale);
-                    }
+                    onTouchCloseListener.onTouchClose(scale);
                 } else {
                     if (touchView.getTranslationY() != 0 || touchView.getTranslationX() != 0) {
                         touchYAnim.setFloatValues(touchView.getTranslationY(), 0);
@@ -233,9 +229,7 @@ public class TouchCloseLayout extends FrameLayout {
         touchAnim = new AnimatorSet();
         touchScaleXAnim.addUpdateListener(animation -> {
             float scaleX = touchView.getScaleX();
-            if (onTouchCloseListener != null) {
-                onTouchCloseListener.onTouchScale(scaleX);
-            }
+            onTouchCloseListener.onTouchScale(scaleX);
         });
         if (bgViewAnim != null){
             touchAnim.playTogether(touchXAnim, touchYAnim, touchScaleXAnim, touchScaleYAnim, bgViewAnim);
@@ -251,19 +245,13 @@ public class TouchCloseLayout extends FrameLayout {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (onTouchCloseListener != null) {
-                    onTouchCloseListener.onTouchScale(1f);
-                }
-                if (onTouchCloseListener != null){
-                    onTouchCloseListener.onEndTouch();
-                }
+                onTouchCloseListener.onTouchScale(1f);
+                onTouchCloseListener.onEndTouch();
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
-                if (onTouchCloseListener != null){
-                    onTouchCloseListener.onEndTouch();
-                }
+                onTouchCloseListener.onEndTouch();
             }
 
             @Override
