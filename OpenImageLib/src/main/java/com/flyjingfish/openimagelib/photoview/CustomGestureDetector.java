@@ -96,8 +96,8 @@ class CustomGestureDetector {
     }
     private float mDownX, mDownY;
     private boolean processTouchEvent(MotionEvent ev) {
-        final int action = ev.getAction();
-        switch (action & MotionEvent.ACTION_MASK) {
+        final int action = ev.getActionMasked();
+        switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mActivePointerId = ev.getPointerId(0);
 

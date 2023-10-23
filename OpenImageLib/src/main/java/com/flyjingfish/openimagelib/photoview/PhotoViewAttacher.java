@@ -19,6 +19,8 @@ import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.GestureDetectorCompat;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
@@ -64,7 +66,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private final ImageView mImageView;
 
     // Gesture Detectors
-    private GestureDetector mGestureDetector;
+    private GestureDetectorCompat mGestureDetector;
     private CustomGestureDetector mScaleDragDetector;
 
     // These are set so we don't keep allocating them on the heap
@@ -171,44 +173,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     parent.requestDisallowInterceptTouchEvent(true);
                 }
             }
-//            ViewParent parent = mImageView.getParent();
-//            if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept && displayRect != null) {
-//                int imageWidth = getImageViewWidth(mImageView);
-//                int imageHeight = getImageViewHeight(mImageView);
-//                float displayWidth = displayRect.width();
-//                float displayHeight = displayRect.height();
-//                boolean bigViewWidth = displayWidth > imageWidth;
-//                boolean bigViewHeight = displayHeight > imageHeight;
-//                boolean dyBigDx = Math.abs(dy) > Math.abs(dx);
-//                boolean dxBigDy = Math.abs(dx) > Math.abs(dy);
-//                if ((!bigViewWidth) && ((displayRect.top >= 0 && dy >= 1) || (displayRect.bottom <= imageHeight && dy <= -1))
-//                        || (!bigViewHeight) && ((displayRect.left >= 0 && dx >= 1) || (displayRect.right <= imageWidth && dx <= -1))
-//                        || (bigViewWidth && !bigViewHeight) && (dyBigDx && (displayRect.top >= 0 || displayRect.bottom <= imageHeight))
-//                        || (!bigViewWidth && bigViewHeight) && (dxBigDy && (displayRect.left >= 0 || displayRect.right <= imageWidth))
-//                        || ((bigViewHeight && bigViewWidth) && (displayRect.right == imageWidth || displayRect.left == 0 || displayRect.top == 0 || displayRect.bottom == imageHeight))) {
-//                    if (!(bigViewHeight && bigViewWidth) || ((displayRect.top == 0 && dyBigDx)
-//                            || (displayRect.right == imageWidth && dxBigDy)
-//                            || (displayRect.bottom == imageHeight && dyBigDx)
-//                            || (displayRect.left == 0 && dxBigDy))) {
-//                        if (parent != null) {
-//                            parent.requestDisallowInterceptTouchEvent(false);
-//                        }
-//                    } else {
-//                        if (parent != null) {
-//                            parent.requestDisallowInterceptTouchEvent(true);
-//                        }
-//                    }
-//
-//                } else {
-//                    if (parent != null) {
-//                        parent.requestDisallowInterceptTouchEvent(true);
-//                    }
-//                }
-//            } else {
-//                if (parent != null) {
-//                    parent.requestDisallowInterceptTouchEvent(true);
-//                }
-//            }
         }
 
         @Override
@@ -308,7 +272,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         mBaseRotation = 0.0f;
         // Create Gesture Detectors...
         mScaleDragDetector = new CustomGestureDetector(imageView.getContext(), onGestureListener);
-        mGestureDetector = new GestureDetector(imageView.getContext(), new GestureDetector.SimpleOnGestureListener() {
+        mGestureDetector = new GestureDetectorCompat(imageView.getContext(), new GestureDetector.SimpleOnGestureListener() {
 
             // forward long click listener
             @Override
@@ -334,8 +298,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 return false;
             }
 
-        });
-        mGestureDetector.setOnDoubleTapListener(new GestureDetector.OnDoubleTapListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 if (mOnClickListener != null) {
@@ -385,11 +347,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 return true;
             }
 
-            @Override
-            public boolean onDoubleTapEvent(MotionEvent e) {
-                // Wait for the confirmed onDoubleTap() instead
-                return false;
-            }
         });
 
         screenOrientationEvent = new ScreenOrientationEvent(mImageView.getContext());
@@ -609,7 +566,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         boolean handled = false;
         isTouched = true;
         if (mZoomEnabled && Util.hasDrawable((ImageView) v)) {
-            switch (ev.getAction() & MotionEvent.ACTION_MASK) {
+            switch (ev.getActionMasked()) {
                 case MotionEvent.ACTION_POINTER_DOWN:
                     setViewPager2UserInputEnabled(false);
                     break;
@@ -795,32 +752,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         updateBaseMatrix(drawable);
     }
 
-//    private void checkMinMaxValue(Drawable drawable){
-//        RectF displayRect = getDisplayRect(getDrawMatrix());
-//        float displayWidth = displayRect.width();
-//        float displayHeight = displayRect.height();
-//
-//        if (!isReadBigImaged && displayWidth > 0 && displayWidth > 0){
-//            //需要检查图片放大的最大尺寸能不能看到每一个像素
-//            float maxImageWidth = displayWidth * mMaxScale;
-//            float maxImageHeight = displayHeight * mMaxScale;
-//            if (maxImageWidth < viewWidth || maxImageHeight < viewHeight){//说明放大的最大尺寸不好
-//                float maxScaleParam = Math.max(viewWidth/maxImageWidth,viewHeight/maxImageHeight);
-////                    if (maxScaleParam > mMaxScale){
-//                mMinScale = DEFAULT_MIN_SCALE;
-//                mMidScale = widthScale / heightScale;
-//                mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
-////                        float maxScaleCache = maxScaleParam;
-////                        float minScaleCache = DEFAULT_MIN_SCALE;
-////                        float midScaleCache = (minScaleCache + maxScaleCache)/2;
-////                        mMaxScale = maxScaleCache;
-////                        mMinScale = minScaleCache;
-////                        mMinScale = midScaleCache;
-////                    }
-//            }
-//        }
-//    }
-
     /**
      * Get the display matrix
      *
@@ -892,10 +823,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             float addWidthScale;
             float addHeightScale;
             if (exitStartWidth / mTargetWidth < exitStartHeight / mTargetViewHeight || isBigImage) {
-                addWidthScale = (viewWidth - exitStartWidth) * 1f / (mTargetWidth - exitStartWidth);
+                addWidthScale = (viewWidth - exitStartWidth) / (mTargetWidth - exitStartWidth);
                 addHeightScale = addWidthScale;
             } else {
-                addHeightScale = (viewHeight - exitStartHeight) * 1f / (mTargetViewHeight - exitStartHeight);
+                addHeightScale = (viewHeight - exitStartHeight) / (mTargetViewHeight - exitStartHeight);
                 addWidthScale = addHeightScale;
             }
             addWidthScale = Math.max(0f, addWidthScale);
@@ -1117,7 +1048,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 if (mScaleType == ScaleType.FIT_CENTER && (mTargetWidth > 0 || startDstRectF == null)) {
                     float targetWidth = Math.max(mTargetWidth, viewWidth);
                     float targetHeight = Math.max(mTargetViewHeight, viewHeight);
-                    float scaleStartViewHW = mStartHeight * 1f / mStartWidth;
+                    float scaleStartViewHW = mStartHeight / mStartWidth;
                     if (mSrcScaleType == ShapeImageView.ShapeScaleType.CENTER_CROP || autoScaleType == ShapeImageView.ShapeScaleType.CENTER_CROP) {
                         if (scaleImageHW > scaleStartViewHW) {
                             float height = mStartWidth * scaleImageHW;
@@ -1205,10 +1136,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     float addWidthScale;
                     float addHeightScale;
                     if (mStartWidth / mTargetWidth < mStartHeight / mTargetViewHeight || isBigImage) {
-                        addWidthScale = (viewWidth - mStartWidth) * 1f / (mTargetWidth - mStartWidth);
+                        addWidthScale = (viewWidth - mStartWidth) / (mTargetWidth - mStartWidth);
                         addHeightScale = addWidthScale;
                     } else {
-                        addHeightScale = (viewHeight - mStartHeight) * 1f / (mTargetViewHeight - mStartHeight);
+                        addHeightScale = (viewHeight - mStartHeight) / (mTargetViewHeight - mStartHeight);
                         addWidthScale = addHeightScale;
                     }
 
@@ -1235,13 +1166,13 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                             targetWidth = mTargetHeight / scaleImageHW;
                         }
 
-                        float width = viewWidth - mTargetWidth * addWidthScale * (1 - (targetWidth * 1f / mTargetWidth));
+                        float width = viewWidth - mTargetWidth * addWidthScale * (1 - (targetWidth / mTargetWidth));
                         float height;
                         if (isBigImage) {
 //                            height = mTargetHeight-mTargetHeight*addHeightScale*(1-(targetHeight *1f/ mTargetHeight));
                             height = viewHeight + addHeightScale * (mTargetHeight - viewHeight);
                         } else {
-                            height = viewHeight - mTargetHeight * addHeightScale * (1 - (targetHeight * 1f / mTargetHeight));
+                            height = viewHeight - mTargetHeight * addHeightScale * (1 - (targetHeight / mTargetHeight));
                         }
                         mTempDst = new RectF(0, 0, width, height);
                     } else if (mSrcScaleType == ShapeImageView.ShapeScaleType.START_CROP || autoScaleType == ShapeImageView.ShapeScaleType.START_CROP) {
@@ -1431,7 +1362,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             onGestureListener.onScale(false, deltaScale, mFocalX, mFocalY);
             // We haven't hit our target scale yet, so post ourselves again
             if (t < 1f) {
-                Compat.postOnAnimation(mImageView, this);
+                ViewCompat.postOnAnimation(mImageView, this);
             }
         }
 
@@ -1500,7 +1431,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 mCurrentX = newX;
                 mCurrentY = newY;
                 // Post On animation
-                Compat.postOnAnimation(mImageView, this);
+                ViewCompat.postOnAnimation(mImageView, this);
             }
         }
     }
