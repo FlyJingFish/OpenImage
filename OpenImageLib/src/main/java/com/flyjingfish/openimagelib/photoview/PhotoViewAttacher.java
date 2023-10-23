@@ -992,7 +992,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         } else {
             float scaleImageHW = drawableHeight * 1f / drawableWidth;
-            float scaleViewHW = viewHeight * 1f / viewWidth;
+            float scaleViewHW = viewHeight / viewWidth;
             float maxScale = Math.max(widthScale, heightScale);
 
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
