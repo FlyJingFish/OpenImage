@@ -1,5 +1,15 @@
 # OpenImage 更新日志
 
+## 2.1.8
+
+1、修复不能获取View大小时，超长图不能显示为阅读模式的bug
+
+2、完善 TouchCloseLayout
+
+3、修复下载按钮在全屏时点击无效问题
+
+4、升级 [ShapeImageView](https://github.com/FlyJingFish/ShapeImageView) 库至最新版本 1.5.5
+
 ## 2.1.7
 
 1、新增 OpenImageCoilLib 库，使用方式如下：
