@@ -111,12 +111,18 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private int exitDrawableWidth, exitDrawableHeight;
     private ViewPager2 viewPager2;
 
-    public void setStartWidth(float mStartWidth) {
-        this.mStartWidth = mStartWidth;
+    public void setStartWidth(float startWidth) {
+        if (startWidth <= 0){
+            startWidth = 1;
+        }
+        this.mStartWidth = startWidth;
     }
 
-    public void setStartHeight(float mStartHeight) {
-        this.mStartHeight = mStartHeight;
+    public void setStartHeight(float startHeight) {
+        if (startHeight <= 0){
+            startHeight = 1;
+        }
+        this.mStartHeight = startHeight;
     }
 
     public float getStartWidth() {
