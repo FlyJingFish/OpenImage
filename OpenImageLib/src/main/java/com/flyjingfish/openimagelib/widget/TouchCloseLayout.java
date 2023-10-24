@@ -7,7 +7,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.LayoutDirection;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 
 import androidx.annotation.FloatRange;
@@ -63,7 +65,7 @@ public class TouchCloseLayout extends FrameLayout {
     private final boolean isRtl;
     private float startDragX;
     private float startDragY;
-    private static final float DRAG_SPEED = 1f;
+
     private static final float SCALE_CLOSE = .76f;
     private float touchCloseScale = SCALE_CLOSE;
     private View touchView;
@@ -73,6 +75,15 @@ public class TouchCloseLayout extends FrameLayout {
     private int startX = 0;
     private int startY = 0;
     private ViewPager2 viewPager2;
+    private final VelocityTracker velocityTracker = VelocityTracker.obtain();
+
+    private final ViewConfiguration viewConfiguration = ViewConfiguration.get(getContext());
+
+    private final int minVelocity = viewConfiguration.getScaledMinimumFlingVelocity();
+    private final int maxVelocity = viewConfiguration.getScaledMaximumFlingVelocity();
+    private final float DRAG_SPEED = (maxVelocity - minVelocity)/1000f * 0.1f;
+
+    private final int minTouchSlop = viewConfiguration.getScaledTouchSlop();
 
     public TouchCloseLayout(Context context) {
         this(context, null);
@@ -88,6 +99,10 @@ public class TouchCloseLayout extends FrameLayout {
         if (disEnableTouchClose || ev.getPointerCount() > 1) {
             return super.onInterceptTouchEvent(ev);
         }
+        if (ev.getAction() == MotionEvent.ACTION_DOWN){
+            velocityTracker.clear();
+        }
+        velocityTracker.addMovement(ev);
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 startX = (int) ev.getX();
@@ -98,9 +113,10 @@ public class TouchCloseLayout extends FrameLayout {
                 int endY = (int) ev.getY();
                 int disX = Math.abs(endX - startX);
                 int disY = Math.abs(endY - startY);
-                if ((orientation == OpenImageOrientation.HORIZONTAL && disX > disY && (isRtl?endX < startX:endX > startX) && isCanScroll())
-                        || (orientation == OpenImageOrientation.VERTICAL && disY > disX && endY > startY && isCanScroll())) {
+                if ((orientation == OpenImageOrientation.HORIZONTAL && disX > disY && (isRtl?endX < startX:endX > startX) && isCanScroll() && disX > minTouchSlop)
+                        || (orientation == OpenImageOrientation.VERTICAL && disY > disX && endY > startY && isCanScroll() && disY > minTouchSlop)) {
                     onTouchCloseListener.onStartTouch();
+                    getParent().requestDisallowInterceptTouchEvent(true);
                     return true;
                 } else {
                     return super.onInterceptTouchEvent(ev);
@@ -114,6 +130,10 @@ public class TouchCloseLayout extends FrameLayout {
         if (disEnableTouchClose || e.getPointerCount() > 1) {
             return super.onTouchEvent(e);
         }
+        if (e.getAction() == MotionEvent.ACTION_DOWN){
+            velocityTracker.clear();
+        }
+        velocityTracker.addMovement(e);
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 startX = (int) e.getX();
@@ -149,10 +169,9 @@ public class TouchCloseLayout extends FrameLayout {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                long timeSub = (e.getEventTime() - e.getDownTime());
-                float distance = orientation == OpenImageOrientation.HORIZONTAL ? touchView.getTranslationX() : touchView.getTranslationY();
-                float speed = distance / timeSub;
-                if (speed > DRAG_SPEED || scale < touchCloseScale) {
+                velocityTracker.computeCurrentVelocity(1,maxVelocity);
+                float velocity = orientation == OpenImageOrientation.HORIZONTAL ?velocityTracker.getXVelocity():velocityTracker.getYVelocity();
+                if (velocity > DRAG_SPEED || scale < touchCloseScale) {
                     onTouchCloseListener.onTouchClose(scale);
                 } else {
                     if (touchView.getTranslationY() != 0 || touchView.getTranslationX() != 0) {
