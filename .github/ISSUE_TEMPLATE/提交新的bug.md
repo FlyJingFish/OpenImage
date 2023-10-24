@@ -1,6 +1,6 @@
 ---
 name: 提交新的bug
-about: 提交bug请严格按照格式填写，提交前先给个Star～吧，你的支持才能让作者有足够的动力去维护这个项目
+about: 提交bug请严格按照格式填写，**提交前先给个Star～吧**，你的支持才能让作者有足够的动力去维护这个项目
 title: ''
 labels: 'bug'
 assignees: ''

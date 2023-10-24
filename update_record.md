@@ -2,7 +2,7 @@
 
 ## 2.1.8
 
-1、修复不能获取View大小时，超长图不能显示为阅读模式的bug
+1、[修复不能获取View大小时，超长图不能显示为阅读模式的bug](https://github.com/FlyJingFish/OpenImage/issues/19)
 
 2、完善 TouchCloseLayout
 
