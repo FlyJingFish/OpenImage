@@ -165,7 +165,6 @@ public class TouchCloseLayout extends FrameLayout {
                     bgView.setAlpha(scale);
                 }
                 onTouchCloseListener.onTouchScale(scale);
-dd
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
