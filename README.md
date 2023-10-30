@@ -274,7 +274,7 @@ OpenImage.with(activity)
         .show();
 ```
 
-**PS.完整调用示例**
+**PS.完整调用示例 （[点此查看更多使用说明](https://github.com/FlyJingFish/OpenImage/wiki)）**
 
 ```java
 
