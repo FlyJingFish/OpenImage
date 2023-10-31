@@ -95,7 +95,7 @@ task bumpVersion() {
         versionProps['PROJ_VERSION'] = newVersionName
         versionProps.store(versionPropsFile.newWriter(), null)
 
-        File configFile = new File("config.md")
+        File configFile = new File("$rootDir/gradle/config.md")
         String exportText = configFile.text
         String text = exportText.replaceAll("aar_version",newVersionName)
 
