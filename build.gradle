@@ -100,8 +100,7 @@ task bumpVersion() {
         String exportText = configFile.text
         String text = exportText.replaceAll("Lib:"+oldVersionName,"Lib:"+newVersionName)
 
-        File readmeFile = new File("README.md")
-        readmeFile.write(text)
+        configFile.write(text)
         println("升级版本号完成，versionName="+newVersionName)
     }
 }
