@@ -34,3 +34,72 @@ ext {
     sdkVersion = 31
     minSdkVersion = 21
 }
+
+def synchronized getVersionProperty(propName, defValue) {
+    def file = file("version.properties")
+    def ret = defValue
+    if (file.exists() && file.canRead()) {
+        FileInputStream input = new FileInputStream(file)
+        Properties props = new Properties()
+        props.load(input)
+        ret = props.get(propName);
+        input.close()
+    }
+    return ret
+}
+
+
+def getAppVersionName() {
+    String versionName = getVersionProperty("PROJ_VERSION", "1.0.0")
+    return versionName
+}
+
+
+def getAppVersionCode() {
+    String versionName = getAppVersionName()
+    def versions = versionName.split("\\.")
+    def updateVersionString = ""
+    for (int i = 0; i < versions.size(); i++) {
+        def subString = versions[i]
+        if (i == 0) {
+            updateVersionString += subString
+            continue
+        } else if (i >= 3) {
+            break
+        }
+        def subNumber = Integer.parseInt(subString)
+        updateVersionString += String.format("%01d", subNumber)
+    }
+    return Integer.parseInt(updateVersionString)
+}
+
+task bumpVersion() {
+    doLast {
+        def versionName = getAppVersionCode() + 1
+        def str = versionName.toString()
+        def length = str.length()
+        def newVersionName = ""
+        for (int i = 0; i < length; i++) {
+            if (i == 2) {
+                newVersionName += str.charAt(i)
+            } else {
+                newVersionName += str.charAt(i)
+                newVersionName += "."
+            }
+
+        }
+
+        def versionPropsFile = file('version.properties')
+        def versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        versionProps['PROJ_VERSION'] = newVersionName
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        File configFile = new File("$rootDir/gradle/config.md")
+        String exportText = configFile.text
+        String text = exportText.replaceAll("aar_version",newVersionName)
+
+        File readmeFile = new File("README.md")
+        readmeFile.write(text)
+    }
+}
