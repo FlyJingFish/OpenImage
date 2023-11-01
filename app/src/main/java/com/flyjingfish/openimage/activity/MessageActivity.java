@@ -2,6 +2,7 @@ package com.flyjingfish.openimage.activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,9 +14,11 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.databinding.ActivityMessageBinding;
 import com.flyjingfish.openimage.dialog.MessageMenuPop;
+import com.flyjingfish.openimage.fragment.BaseFragment;
 import com.flyjingfish.openimage.fragment.MsgListViewViewFragment;
 import com.flyjingfish.openimage.fragment.MsgRecyclerViewFragment;
 import com.flyjingfish.openimage.openImpl.MessageVpActivity;
+import com.flyjingfish.switchkeyboardlib.SwitchKeyboardUtil;
 
 public class MessageActivity extends BaseActivity {
     private ActivityMessageBinding binding;
@@ -26,6 +29,7 @@ public class MessageActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMessageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        new SwitchKeyboardUtil(this).setSystemUi();
         binding.viewPager.setAdapter(new FragmentStateAdapter(this) {
             @NonNull
             @Override
@@ -74,6 +78,22 @@ public class MessageActivity extends BaseActivity {
         });
         titleBar.getRightImageView().setImageResource(R.drawable.ic_more_white);
         titleBar.getRightImageView().setOnClickListener(messageMenuPop::show);
+    }
+    private Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentByTag("f" + binding.viewPager.getCurrentItem());
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Fragment fragment = getCurrentFragment();
+            if (fragment instanceof BaseFragment){
+                BaseFragment baseFragment = (BaseFragment) fragment;
+                if (baseFragment.onKeyBackDown(keyCode, event)){
+                    return true;
+                }
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

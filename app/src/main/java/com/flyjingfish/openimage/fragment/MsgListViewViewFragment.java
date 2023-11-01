@@ -1,7 +1,9 @@
 package com.flyjingfish.openimage.fragment;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,10 +12,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.flyjingfish.openimage.DataUtils;
+import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimage.bean.MessageBean;
 import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimage.adapter.MsgLvAdapter;
+import com.flyjingfish.openimage.databinding.FragmentMsgLvBinding;
 import com.flyjingfish.openimage.databinding.LayoutListviewBinding;
+import com.flyjingfish.switchkeyboardlib.MenuModeView;
+import com.flyjingfish.switchkeyboardlib.SwitchKeyboardUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,16 +28,91 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MsgListViewViewFragment extends Fragment {
-    private LayoutListviewBinding binding;
-
+public class MsgListViewViewFragment extends BaseFragment {
+    private FragmentMsgLvBinding binding;
+    private SwitchKeyboardUtil switchKeyboardUtil;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = LayoutListviewBinding.inflate(inflater,container,false);
+        binding = FragmentMsgLvBinding.inflate(inflater,container,false);
         binding.listView.setDividerHeight(0);
         loadData();
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        switchKeyboardUtil = new SwitchKeyboardUtil(requireActivity());
+        switchKeyboardUtil.setMenuViewHeightEqualKeyboard(false);
+        switchKeyboardUtil.setUseSwitchAnim(true);
+        switchKeyboardUtil.setUseMenuUpAnim(true);
+        switchKeyboardUtil.setInputEditText(binding.layoutMsg.etContent);
+        switchKeyboardUtil.setAudioBtn(binding.layoutMsg.tvAudio);
+        switchKeyboardUtil.setAudioTouchView(binding.layoutMsg.tvAudioTouch);
+        switchKeyboardUtil.setMenuViewContainer(binding.layoutMsg.llMenu);
+        switchKeyboardUtil.setToggleMenuViews(new MenuModeView(binding.layoutMsg.tvMore,binding.layoutMsg.llMenuBtn),
+                new MenuModeView(binding.layoutMsg.ivFace,binding.layoutMsg.llEmoji));
+        switchKeyboardUtil.setOnKeyboardMenuListener(new SwitchKeyboardUtil.OnKeyboardMenuListener() {
+            @Override
+            public void onScrollToBottom() {
+                scrollToBottom();
+            }
+
+            @Override
+            public void onCallShowKeyboard() {
+
+            }
+
+            @Override
+            public void onCallHideKeyboard() {
+            }
+
+            @Override
+            public void onKeyboardHide(int keyboardHeight) {
+
+            }
+
+            @Override
+            public void onKeyboardShow(int keyboardHeight) {
+                binding.layoutMsg.tvAudio.setImageResource(R.drawable.ic_audio);
+                binding.layoutMsg.ivFace.setImageResource(R.drawable.ic_face);
+            }
+
+
+
+            @Override
+            public void onShowMenuLayout(View layoutView) {
+                binding.layoutMsg.tvAudio.setImageResource(layoutView == binding.layoutMsg.tvAudioTouch?R.drawable.ic_keyboard:R.drawable.ic_audio);
+                binding.layoutMsg.ivFace.setImageResource(layoutView == binding.layoutMsg.llEmoji?R.drawable.ic_keyboard:R.drawable.ic_face);
+            }
+
+            @Override
+            public void onHideMenuViewContainer() {
+                binding.layoutMsg.tvAudio.setImageResource(R.drawable.ic_audio);
+                binding.layoutMsg.ivFace.setImageResource(R.drawable.ic_face);
+            }
+        });
+        binding.listView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN){
+                switchKeyboardUtil.hideMenuAndKeyboard();
+            }
+            return false;
+        });
+        switchKeyboardUtil.attachLifecycle(this);
+        binding.listView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> scrollToBottom());
+
+    }
+    private void scrollToBottom() {
+        if (binding.listView.getAdapter() == null){
+            return;
+        }
+        binding.listView.smoothScrollToPosition(binding.listView.getAdapter().getCount() - 1);
+    }
+
+    @Override
+    public boolean onKeyBackDown(int keyCode, KeyEvent event) {
+        return switchKeyboardUtil.onKeyDown(keyCode, event);
     }
 
     private void loadData() {
