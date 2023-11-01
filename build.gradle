@@ -98,6 +98,6 @@ task bumpVersion() {
         String text = exportText.replaceAll("Lib:"+oldVersionName,"Lib:"+newVersionName)
 
         configFile.write(text)
-        println("升级版本号完成，versionName="+newVersionName)
+        println("升级版本号完成，versionName = "+newVersionName)
     }
 }
