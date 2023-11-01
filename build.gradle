@@ -92,12 +92,13 @@ task bumpVersion() {
         def versionPropsFile = file('version.properties')
         def versionProps = new Properties()
         versionProps.load(new FileInputStream(versionPropsFile))
+        def oldVersionName = versionProps['PROJ_VERSION']
         versionProps['PROJ_VERSION'] = newVersionName
         versionProps.store(versionPropsFile.newWriter(), null)
 
-        File configFile = new File("$rootDir/gradle/config.md")
+        File configFile = new File("README.md")
         String exportText = configFile.text
-        String text = exportText.replaceAll("aar_version",newVersionName)
+        String text = exportText.replaceAll("Lib:"+oldVersionName,"Lib:"+newVersionName)
 
         File readmeFile = new File("README.md")
         readmeFile.write(text)
