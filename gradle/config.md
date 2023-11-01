@@ -13,7 +13,7 @@
 <img src="/screenshot/download_qrcode.png" alt="show" width="200px" />
 
 ## 多种场景效果演示（不限于以下几种，更多支持[点此查看](https://github.com/FlyJingFish/OpenImage/wiki)）
- 
+
 RecyclerView场景  | 聊天页面 | 打开视频
  ------ | ------ | ------   
  <img src="/screenshot/Screenrecording_20230519_124228.gif" alt="show" width="240px" />  | <img src="/screenshot/SVID_20220731_203549_1.gif" alt="show" width="240px" /> | <img src="/screenshot/SVID_20220731_203923_1.gif" alt="show" width="240px" /> |
@@ -23,7 +23,7 @@ RecyclerView场景  | 聊天页面 | 打开视频
  <img src="/screenshot/friends_demo.gif" alt="show" width="240px" />  | <img src="/screenshot/Screenrecording_20230518_165929.gif" alt="show" width="240px" /> |  <img src="/screenshot/Screenrecording_20230518_170044.gif" alt="show" width="240px" /> |
 
 
- 
+
 
 ## 特色功能
 
@@ -274,18 +274,18 @@ OpenImage.with(activity)
         .show();
 ```
 
-**PS.完整调用示例**
+**PS.完整调用示例 （[点此查看更多使用说明](https://github.com/FlyJingFish/OpenImage/wiki)）**
 
 ```java
 
 //在点击时调用，按需使用即可（以下以RecyclerView为例介绍）
 OpenImage.with(activity)
-         //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView，setClickWebView）
-         .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
-           @Override
-           public int getImageViewId(OpenImageUrl data, int position) {
-               return R.id.iv_image;//点击的ImageView的Id或者切换图片后对应的ImageView的Id
-           }
+        //点击ImageView所在的RecyclerView（也支持设置setClickViewPager2，setClickViewPager，setClickGridView，setClickListView，setClickImageView，setClickWebView）
+        .setClickRecyclerView(recyclerView,new SourceImageViewIdGet() {
+@Override
+public int getImageViewId(OpenImageUrl data, int position) {
+        return R.id.iv_image;//点击的ImageView的Id或者切换图片后对应的ImageView的Id
+        }
         })
         //点击的ImageView的ScaleType类型（如果设置不对，打开的动画效果将是错误的）
         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
@@ -320,31 +320,31 @@ OpenImage.with(activity)
         .setGalleryEffect(10)
         //设置切换图片监听（可不设置）
         .setOnSelectMediaListener(new OnSelectMediaListener() {
-            @Override
-            public void onSelect(OpenImageUrl openImageUrl, int position) {
+@Override
+public void onSelect(OpenImageUrl openImageUrl, int position) {
 
-            }
+        }
         })
         //设置点击监听（可不设置）
         .setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
-    
-            }
+@Override
+public void onItemClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
+
+        }
         })
         //设置长按图片监听（可不设置）
         .setOnItemLongClickListener(new OnItemLongClickListener() {
-            @Override
-            public void onItemLongClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
-            
-            }
+@Override
+public void onItemLongClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
+
+        }
         })
         //设置退出大图页面时的监听（可不设置）
         .setOnExitListener(new OnExitListener() {
-            @Override
-            public void onExit() {
-            
-            }
+@Override
+public void onExit() {
+
+        }
         })
         //设置切换大图时的效果（可不设置，本库中目前只有这一个，如需其他效果可参照ScaleInTransformer自行定义效果）
         .addPageTransformer(new ScaleInTransformer())
@@ -360,48 +360,48 @@ OpenImage.with(activity)
 
 ```java
  public class MyApplication extends Application {
-     @Override
-     public void onCreate() {
-         super.onCreate();
-         //初始化大图加载器
-         OpenImageConfig.getInstance().setBigImageHelper(new BigImageHelperImpl());
-     }
- }
- 
- public class BigImageHelperImpl implements BigImageHelper {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //初始化大图加载器
+        OpenImageConfig.getInstance().setBigImageHelper(new BigImageHelperImpl());
+    }
+}
+
+public class BigImageHelperImpl implements BigImageHelper {
     @Override
     public void loadImage(Context context, String imageUrl, OnLoadBigImageListener onLoadBigImageListener) {
         //这个地方只是示例，如果你的项目存在超大图，请注意需要自行处理（否则可能内存溢出或崩溃）
         //不想自己搞的，可直接用 OpenImageGlideLib 或 OpenImageFullLib
         RequestOptions requestOptions = new RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    //这句是为了加载原图，如果你的原图可能是超大图，请注意内存溢出问题，不想自己搞的，可直接用 OpenImageGlideLib 或 OpenImageFullLib
-                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                    .format(DecodeFormat.PREFER_RGB_565);
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                //这句是为了加载原图，如果你的原图可能是超大图，请注意内存溢出问题，不想自己搞的，可直接用 OpenImageGlideLib 或 OpenImageFullLib
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .format(DecodeFormat.PREFER_RGB_565);
         Glide.with(context)
-                    .load(imageUrl).apply(requestOptions).addListener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    onLoadBigImageListener.onLoadImageFailed();
-                    return false;
-                }
+                .load(imageUrl).apply(requestOptions).addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        onLoadBigImageListener.onLoadImageFailed();
+                        return false;
+                    }
 
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    onLoadBigImageListener.onLoadImageSuccess(resource);
-                    return false;
-                }
-            }).into(new CustomTarget<Drawable>() {
-                @Override
-                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        onLoadBigImageListener.onLoadImageSuccess(resource);
+                        return false;
+                    }
+                }).into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
 
-                }
+                    }
 
-                @Override
-                public void onLoadCleared(@Nullable Drawable placeholder) {
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                }
-            });
+                    }
+                });
 
     }
 
@@ -422,138 +422,138 @@ public class MyApplication extends Application {
     }
 }
 public class VideoFragmentCreateImpl implements VideoFragmentCreate {
-   @Override
-   public BaseFragment createVideoFragment() {
-       return new VideoPlayerFragment();
-   }
+    @Override
+    public BaseFragment createVideoFragment() {
+        return new VideoPlayerFragment();
+    }
 }
 
 public class VideoPlayerFragment extends BaseImageFragment<ENDownloadView> {
 
-   private FragmentVideoBinding binding;
-   private String playerKey;
-   private boolean isLoadImageFinish;
-   protected boolean isPlayed;
+    private FragmentVideoBinding binding;
+    private String playerKey;
+    private boolean isLoadImageFinish;
+    protected boolean isPlayed;
 
-   @Override
-   protected ImageView getSmallCoverImageView() {//返回小封面图
-       return binding.videoPlayer.getSmallCoverImageView();
-   }
+    @Override
+    protected ImageView getSmallCoverImageView() {//返回小封面图
+        return binding.videoPlayer.getSmallCoverImageView();
+    }
 
-   @Override
-   protected ImageView getPhotoView() {//返回大封面图，必须在小封面图下边
-       return binding.videoPlayer.getCoverImageView();
-   }
+    @Override
+    protected ImageView getPhotoView() {//返回大封面图，必须在小封面图下边
+        return binding.videoPlayer.getCoverImageView();
+    }
 
-   @Override
-   protected ENDownloadView getLoadingView() {//返回loadingView
-       return (ENDownloadView) binding.videoPlayer.getLoadingView();
-   }
+    @Override
+    protected ENDownloadView getLoadingView() {//返回loadingView
+        return (ENDownloadView) binding.videoPlayer.getLoadingView();
+    }
 
-   @Override
-   protected void hideLoading(ENDownloadView pbLoading) {//隐藏loading需要特殊处理的重写这个
-       super.hideLoading(pbLoading);
-       pbLoading.release();
-       binding.videoPlayer.getStartButton().setVisibility(View.VISIBLE);
-   }
+    @Override
+    protected void hideLoading(ENDownloadView pbLoading) {//隐藏loading需要特殊处理的重写这个
+        super.hideLoading(pbLoading);
+        pbLoading.release();
+        binding.videoPlayer.getStartButton().setVisibility(View.VISIBLE);
+    }
 
-   @Override
-   protected void showLoading(ENDownloadView pbLoading) {//显示loading需要特殊处理的重写这个
-       super.showLoading(pbLoading);
-       pbLoading.start();
-       binding.videoPlayer.getStartButton().setVisibility(View.GONE);
-   }
+    @Override
+    protected void showLoading(ENDownloadView pbLoading) {//显示loading需要特殊处理的重写这个
+        super.showLoading(pbLoading);
+        pbLoading.start();
+        binding.videoPlayer.getStartButton().setVisibility(View.GONE);
+    }
 
-   @Override
-   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-       super.onViewCreated(view, savedInstanceState);
-       binding.videoPlayer.findViewById(R.id.back).setOnClickListener(v -> close());
-       playerKey = binding.videoPlayer.getVideoKey();
-       binding.videoPlayer.goneAllWidget();
-       isPlayed = false;
-   }
-   @Override
-   protected void onTouchClose(float scale) {//下拉关闭回调
-       super.onTouchClose(scale);
-       binding.videoPlayer.findViewById(R.id.surface_container).setVisibility(View.GONE);
-       binding.videoPlayer.goneAllWidget();
-   }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        binding.videoPlayer.findViewById(R.id.back).setOnClickListener(v -> close());
+        playerKey = binding.videoPlayer.getVideoKey();
+        binding.videoPlayer.goneAllWidget();
+        isPlayed = false;
+    }
+    @Override
+    protected void onTouchClose(float scale) {//下拉关闭回调
+        super.onTouchClose(scale);
+        binding.videoPlayer.findViewById(R.id.surface_container).setVisibility(View.GONE);
+        binding.videoPlayer.goneAllWidget();
+    }
 
-   @Override
-   protected void onTouchScale(float scale) {//下拉时回调
-       super.onTouchScale(scale);
-       binding.videoPlayer.goneAllWidget();
-       if (scale == 1){
-           binding.videoPlayer.showAllWidget();
-       }
-   }
+    @Override
+    protected void onTouchScale(float scale) {//下拉时回调
+        super.onTouchScale(scale);
+        binding.videoPlayer.goneAllWidget();
+        if (scale == 1){
+            binding.videoPlayer.showAllWidget();
+        }
+    }
 
-   @Override
-   protected void loadImageFinish(boolean isLoadImageSuccess) {
-       isLoadImageFinish = true;
-       play();
-   }
+    @Override
+    protected void loadImageFinish(boolean isLoadImageSuccess) {
+        isLoadImageFinish = true;
+        play();
+    }
 
-   private void play(){
-       if (isTransitionEnd && isLoadImageFinish && !isPlayed){//这里可以不等封面图加载完就播放，这个是为了更好的效果
-           if (getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
-               toPlay4Resume();
-           }else {
-               getLifecycle().addObserver(new LifecycleEventObserver() {
-                   @Override
-                   public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
-                       if (event == Lifecycle.Event.ON_RESUME){
-                           toPlay4Resume();
-                           source.getLifecycle().removeObserver(this);
-                       }
-                   }
-               });
-           }
+    private void play(){
+        if (isTransitionEnd && isLoadImageFinish && !isPlayed){//这里可以不等封面图加载完就播放，这个是为了更好的效果
+            if (getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+                toPlay4Resume();
+            }else {
+                getLifecycle().addObserver(new LifecycleEventObserver() {
+                    @Override
+                    public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                        if (event == Lifecycle.Event.ON_RESUME){
+                            toPlay4Resume();
+                            source.getLifecycle().removeObserver(this);
+                        }
+                    }
+                });
+            }
 
-           isPlayed = true;
-       }
-   }
+            isPlayed = true;
+        }
+    }
 
-   protected void toPlay4Resume(){
-       binding.videoPlayer.playUrl(openImageBean.getVideoUrl());
-       binding.videoPlayer.startPlayLogic();
-   }
+    protected void toPlay4Resume(){
+        binding.videoPlayer.playUrl(openImageBean.getVideoUrl());
+        binding.videoPlayer.startPlayLogic();
+    }
 
-   @Override
-   protected void onTransitionEnd() {
-       super.onTransitionEnd();
-       play();
-   }
+    @Override
+    protected void onTransitionEnd() {
+        super.onTransitionEnd();
+        play();
+    }
 
-   @Override
-   public void onResume() {
-       super.onResume();
-       if (playerKey != null) {
-           GSYVideoController.resumeByKey(playerKey);
-       }
-   }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (playerKey != null) {
+            GSYVideoController.resumeByKey(playerKey);
+        }
+    }
 
-   @Override
-   public void onPause() {
-       super.onPause();
-       if (playerKey != null) {
-           GSYVideoController.pauseByKey(playerKey);
-       }
-   }
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (playerKey != null) {
+            GSYVideoController.pauseByKey(playerKey);
+        }
+    }
 
-   @Override
-   public void onDestroyView() {
-       super.onDestroyView();
-       if (playerKey != null) {
-           GSYVideoController.cancelByKeyAndDeleteKey(playerKey);
-       }
-   }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (playerKey != null) {
+            GSYVideoController.cancelByKeyAndDeleteKey(playerKey);
+        }
+    }
 
-   @Override
-   public View getExitImageView() {//退出页面时需要保证封面图可见
-       binding.videoPlayer.getThumbImageViewLayout().setVisibility(View.VISIBLE);
-       return super.getExitImageView();
-   }
+    @Override
+    public View getExitImageView() {//退出页面时需要保证封面图可见
+        binding.videoPlayer.getThumbImageViewLayout().setVisibility(View.VISIBLE);
+        return super.getExitImageView();
+    }
 }
 
 ```
@@ -681,8 +681,8 @@ Coil 混淆规则，遵循 [Coroutines](https://github.com/Kotlin/kotlinx.corout
 
 ### 版本限制
 最低SDK版本：minSdkVersion >= 21
- 
- 
+
+
 ### 常见问题
 
 **[点此查看常见问题](https://github.com/FlyJingFish/OpenImage/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)**
