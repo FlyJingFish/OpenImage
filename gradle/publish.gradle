@@ -1,25 +1,6 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
-def synchronized getVersionProperty(propName, defValue) {
-    def file = file("$rootDir/version.properties")
-    def ret = defValue
-    if (file.exists() && file.canRead()) {
-        FileInputStream input = new FileInputStream(file)
-        Properties props = new Properties()
-        props.load(input)
-        ret = props.get(propName);
-        input.close()
-    }
-    return ret
-}
-
-
-def getAppVersionName() {
-    String versionName = getVersionProperty("PROJ_VERSION", "1.0.0")
-    return versionName
-}
-
 task androidJavadocs(type: Javadoc) {
     // 设置源码所在的位置
     source = android.sourceSets.main.java.srcDirs
@@ -47,6 +28,7 @@ artifacts {
     archives androidJavadocsJar //将注释打包进aar
 }
 def appVersionName = getAppVersionName()
+
 afterEvaluate {
     publishing {
         publications {
