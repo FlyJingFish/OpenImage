@@ -17,7 +17,6 @@ def synchronized getVersionProperty(propName, defValue) {
 
 def getAppVersionName() {
     String versionName = getVersionProperty("PROJ_VERSION", "1.0.0")
-    println("versionName======="+versionName)
     return versionName
 }
 

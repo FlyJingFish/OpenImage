@@ -101,5 +101,6 @@ task bumpVersion() {
 
         File readmeFile = new File("README.md")
         readmeFile.write(text)
+        println("升级版本号完成，versionName="+newVersionName)
     }
 }
