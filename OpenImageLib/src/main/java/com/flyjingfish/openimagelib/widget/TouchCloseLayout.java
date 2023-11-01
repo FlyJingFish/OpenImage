@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.LayoutDirection;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -81,7 +82,7 @@ public class TouchCloseLayout extends FrameLayout {
 
     private final int minVelocity = viewConfiguration.getScaledMinimumFlingVelocity();
     private final int maxVelocity = viewConfiguration.getScaledMaximumFlingVelocity();
-    private final float DRAG_SPEED = (maxVelocity - minVelocity)/1000f * 0.1f;
+    private final float DRAG_SPEED = (maxVelocity - minVelocity)/100f * 0.08f;
 
     private final int minTouchSlop = viewConfiguration.getScaledTouchSlop();
 
@@ -168,7 +169,7 @@ public class TouchCloseLayout extends FrameLayout {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                velocityTracker.computeCurrentVelocity(1,maxVelocity);
+                velocityTracker.computeCurrentVelocity(10,maxVelocity);
                 float velocity = orientation == OpenImageOrientation.HORIZONTAL ?velocityTracker.getXVelocity():velocityTracker.getYVelocity();
                 if (velocity > DRAG_SPEED || scale < touchCloseScale) {
                     onTouchCloseListener.onTouchClose(scale);
