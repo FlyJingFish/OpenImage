@@ -46,6 +46,11 @@ public class MainActivity extends BaseActivity {
         return false;
     }
 
+    @Override
+    public String getTitleString() {
+        return getString(R.string.app_name);
+    }
+
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override

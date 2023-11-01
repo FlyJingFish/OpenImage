@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingVertical="4dp"
+        android:elevation="4dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/bg_msg_menu">
+        <TextView
+            android:id="@+id/tv_wechatEffect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp"
+            android:textColor="@color/color_333333"
+            android:textSize="14sp"
+            android:text="打开微信补位效果"/>
+        <TextView
+            android:id="@+id/tv_autoScroll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp"
+            android:textColor="@color/color_333333"
+            android:textSize="14sp"
+            android:text="打开跟随滚动"/>
+    </LinearLayout>
+</LinearLayout>
