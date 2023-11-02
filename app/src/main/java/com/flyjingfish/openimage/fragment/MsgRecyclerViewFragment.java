@@ -10,10 +10,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.flyjingfish.openimage.DataUtils;
 import com.flyjingfish.openimage.R;
+import com.flyjingfish.openimage.activity.MessageActivity;
 import com.flyjingfish.openimage.bean.MessageBean;
 import com.flyjingfish.openimage.MyApplication;
 import com.flyjingfish.openimage.adapter.MsgRvAdapter;
@@ -104,14 +107,29 @@ public class MsgRecyclerViewFragment extends BaseFragment {
             return false;
         });
         switchKeyboardUtil.attachLifecycle(this);
-        binding.rv.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> scrollToBottom());
+
+//        MessageActivity activity = (MessageActivity) requireActivity();
+        View.OnLayoutChangeListener onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> scrollToBottom();
+        binding.rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState != RecyclerView.SCROLL_STATE_IDLE){
+                    binding.rv.removeOnLayoutChangeListener(onLayoutChangeListener);
+                }else {
+                    binding.rv.addOnLayoutChangeListener(onLayoutChangeListener);
+                }
+            }
+        });
 
     }
     private void scrollToBottom() {
         if (binding.rv.getAdapter() == null){
             return;
         }
-        binding.rv.scrollToPosition(binding.rv.getAdapter().getItemCount() - 1);
+        if (getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED && binding.rv.getScrollState() == RecyclerView.SCROLL_STATE_IDLE){
+            binding.rv.scrollToPosition(binding.rv.getAdapter().getItemCount() - 1);
+        }
     }
     private void loadData() {
         MyApplication.cThreadPool.submit(() -> {
@@ -151,7 +169,7 @@ public class MsgRecyclerViewFragment extends BaseFragment {
     private void setData(List<MessageBean> datas) {
         requireActivity().runOnUiThread(() -> {
             binding.rv.setAdapter(new MsgRvAdapter(datas));
-            binding.rv.post(() -> binding.rv.scrollToPosition(binding.rv.getAdapter().getItemCount()-1));
+            binding.rv.post(() ->  scrollToBottom());
 
         });
 

@@ -6,10 +6,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.flyjingfish.openimage.DataUtils;
 import com.flyjingfish.openimage.R;
@@ -100,14 +103,31 @@ public class MsgListViewViewFragment extends BaseFragment {
             return false;
         });
         switchKeyboardUtil.attachLifecycle(this);
-        binding.listView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> scrollToBottom());
+        View.OnLayoutChangeListener onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> scrollToBottom();
+        binding.listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE){
+                    binding.listView.removeOnLayoutChangeListener(onLayoutChangeListener);
+                }else {
+                    binding.listView.addOnLayoutChangeListener(onLayoutChangeListener);
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
 
     }
     private void scrollToBottom() {
         if (binding.listView.getAdapter() == null){
             return;
         }
-        binding.listView.smoothScrollToPosition(binding.listView.getAdapter().getCount() - 1);
+        if (getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+            binding.listView.smoothScrollToPosition(binding.listView.getAdapter().getCount() - 1);
+        }
     }
 
     @Override

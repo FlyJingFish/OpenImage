@@ -60,7 +60,7 @@ public class MessageActivity extends BaseActivity {
                 CharSequence title = textView.getText();
                 boolean isOpen = TextUtils.equals(title,"关闭微信补位效果");
                 openWechatEffect = !isOpen;
-                if (openWechatEffect){
+                if (openWechatEffect && openAutoScroll){
                     Toast.makeText(MessageActivity.this,"打开微信补位效果后，跟随滚动失效",Toast.LENGTH_SHORT).show();
                 }
                 textView.setText(isOpen?"打开微信补位效果":"关闭微信补位效果");
@@ -72,6 +72,9 @@ public class MessageActivity extends BaseActivity {
                 CharSequence title = textView.getText();
                 boolean isAutoScroll = TextUtils.equals(title,"关闭跟随滚动");
                 openAutoScroll = !isAutoScroll;
+                if (openAutoScroll && openWechatEffect){
+                    Toast.makeText(MessageActivity.this,"需要先关闭微信补位效果",Toast.LENGTH_SHORT).show();
+                }
                 textView.setText(isAutoScroll?"打开跟随滚动":"关闭跟随滚动");
                 messageMenuPop.dismiss();
             }
