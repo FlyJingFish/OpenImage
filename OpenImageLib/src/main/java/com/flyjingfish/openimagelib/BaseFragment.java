@@ -107,6 +107,10 @@ abstract class BaseFragment extends BaseInnerFragment {
         return showPosition == clickPosition;
     }
 
+    boolean isInOpening(){
+        return isOpenPosition() && !isTransitionEnd;
+    }
+
     protected void setTransitionEndListener(@NonNull Observer<Boolean> observer){
         photosViewModel.transitionEndLiveData.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override

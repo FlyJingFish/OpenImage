@@ -74,8 +74,8 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         photoView = getPhotoView();
         loadingView = getLoadingView();
         clickableViewRootView = getItemClickableView();
-        smallCoverImageView.setClickOpenImage(isOpenPosition());
-        photoView.setClickOpenImage(isOpenPosition());
+        smallCoverImageView.setClickOpenImage(isInOpening());
+        photoView.setClickOpenImage(isInOpening());
         smallCoverImageView.setSrcScaleType(srcScaleType);
         photoView.setSrcScaleType(srcScaleType);
         photoView.setStartWidth(imageDetail.srcWidth);
