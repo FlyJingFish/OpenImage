@@ -360,6 +360,13 @@ public class PhotoView extends AppCompatImageView {
         }
     }
 
+    public boolean isClickOpenImage() {
+        return attacher.isClickOpenImage();
+    }
+
+    public void setClickOpenImage(boolean clickOpenImage) {
+        attacher.setClickOpenImage(clickOpenImage);
+    }
 
     public void setNoneClickView(boolean noneClickView) {
         attacher.setNoneClickView(noneClickView);

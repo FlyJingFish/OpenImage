@@ -110,6 +110,15 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     public boolean isCanLayout;
     private int exitDrawableWidth, exitDrawableHeight;
     private ViewPager2 viewPager2;
+    private boolean isClickOpenImage;
+
+    public boolean isClickOpenImage() {
+        return isClickOpenImage;
+    }
+
+    public void setClickOpenImage(boolean clickOpenImage) {
+        isClickOpenImage = clickOpenImage;
+    }
 
     public void setStartWidth(float startWidth) {
         if (startWidth <= 0){
@@ -1003,7 +1012,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst;
-            if (isNoneClickView) {
+            if (isNoneClickView || !isClickOpenImage) {
                 if (OpenImageConfig.getInstance().isReadMode()) {
                     boolean bigImageRule = maxScale * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * Math.max(viewWidth, viewHeight);
                     if (bigImageRule) {

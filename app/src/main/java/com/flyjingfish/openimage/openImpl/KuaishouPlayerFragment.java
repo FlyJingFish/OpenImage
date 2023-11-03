@@ -91,14 +91,14 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
             return isOpenSlide;
         });
         kuaishouViewModel.pausePlayLiveData.observe(getViewLifecycleOwner(), playState -> {
-            if (playState.position == showPosition && !playState.consume){
+            if (playState.position == getShowPosition() && !playState.consume){
                 kuaishouVideoPlayer.playPause();
                 playState.consume = true;
             }
         });
         kuaishouVideoPlayer.setGSYStateUiListener(state -> {
             if (getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
-                kuaishouViewModel.playStateLiveData.setValue(new PlayState(state,showPosition));
+                kuaishouViewModel.playStateLiveData.setValue(new PlayState(state,getShowPosition()));
             }
         });
     }
@@ -106,7 +106,7 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
     @Override
     public void onResume() {
         super.onResume();
-        kuaishouViewModel.playStateLiveData.setValue(new PlayState(kuaishouVideoPlayer.getCurrentState(),showPosition));
+        kuaishouViewModel.playStateLiveData.setValue(new PlayState(kuaishouVideoPlayer.getCurrentState(),getShowPosition()));
     }
 
     boolean isStartedTouch;

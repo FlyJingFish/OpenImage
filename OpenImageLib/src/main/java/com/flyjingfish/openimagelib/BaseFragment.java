@@ -19,35 +19,34 @@ import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 abstract class BaseFragment extends BaseInnerFragment {
-
-    protected OpenImageDetail imageDetail;
+    OpenImageDetail imageDetail;
     protected OpenImageUrl openImageUrl;
-    protected int showPosition,clickPosition;
-    protected PhotosViewModel photosViewModel;
-    protected Handler mHandler = new Handler(Looper.getMainLooper());
-    protected boolean isLoadSuccess;
-    protected boolean disableClickClose;
-    protected int errorResId;
-    protected Drawable coverDrawable;
-    protected String coverFilePath;
-    protected Drawable smallCoverDrawable;
-    protected boolean isNoneClickView;
+    int showPosition,clickPosition;
+    PhotosViewModel photosViewModel;
+    Handler mHandler = new Handler(Looper.getMainLooper());
+    boolean isLoadSuccess;
+    boolean disableClickClose;
+    int errorResId;
+    Drawable coverDrawable;
+    String coverFilePath;
+    Drawable smallCoverDrawable;
+    boolean isNoneClickView;
     private String dataKey;
 
     public abstract View getExitImageView();
     protected void onTransitionEnd(){}
     protected boolean isTransitionEnd;
-    protected boolean isInitImage;
-    protected boolean isLoading;
-    protected boolean isStartCoverAnim = true;
-    protected ShapeImageView.ShapeScaleType srcScaleType;
-    protected AnimatorSet coverAnim;
+    boolean isInitImage;
+    boolean isLoading;
+    boolean isStartCoverAnim = true;
+    ShapeImageView.ShapeScaleType srcScaleType;
+    AnimatorSet coverAnim;
 //    protected ItemLoadHelper itemLoadHelper;
-    protected float autoAspectRadio;
+    float autoAspectRadio;
     protected long beanId;
-    protected int preloadCount;
+    int preloadCount;
     protected boolean lazyPreload;
-    protected boolean bothLoadCover;
+    boolean bothLoadCover;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,9 +61,9 @@ abstract class BaseFragment extends BaseInnerFragment {
             int srcScaleTypeInt = bundle.getInt(OpenParams.SRC_SCALE_TYPE,-1);
             srcScaleType = srcScaleTypeInt == -1 ? null : ShapeImageView.ShapeScaleType.values()[srcScaleTypeInt];;
             errorResId = bundle.getInt(OpenParams.ERROR_RES_ID,0);
-            disableClickClose = getArguments().getBoolean(OpenParams.DISABLE_CLICK_CLOSE,false);
-            String onItemCLickKey = getArguments().getString(OpenParams.ON_ITEM_CLICK_KEY);
-            String onItemLongCLickKey = getArguments().getString(OpenParams.ON_ITEM_LONG_CLICK_KEY);
+            disableClickClose = bundle.getBoolean(OpenParams.DISABLE_CLICK_CLOSE,false);
+            String onItemCLickKey = bundle.getString(OpenParams.ON_ITEM_CLICK_KEY);
+            String onItemLongCLickKey = bundle.getString(OpenParams.ON_ITEM_LONG_CLICK_KEY);
             OnItemClickListener onItemClickListener = ImageLoadUtils.getInstance().getOnItemClickListener(onItemCLickKey);
             OnItemLongClickListener onItemLongClickListener = ImageLoadUtils.getInstance().getOnItemLongClickListener(onItemLongCLickKey);
             if (onItemClickListener != null){
@@ -88,6 +87,9 @@ abstract class BaseFragment extends BaseInnerFragment {
         }
     }
 
+    protected int getShowPosition() {
+        return showPosition;
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -99,6 +101,10 @@ abstract class BaseFragment extends BaseInnerFragment {
                 onTransitionEnd();
             }
         });
+    }
+
+    boolean isOpenPosition(){
+        return showPosition == clickPosition;
     }
 
     protected void setTransitionEndListener(@NonNull Observer<Boolean> observer){

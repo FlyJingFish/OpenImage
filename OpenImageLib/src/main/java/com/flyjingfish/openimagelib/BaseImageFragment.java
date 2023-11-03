@@ -74,6 +74,8 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
         photoView = getPhotoView();
         loadingView = getLoadingView();
         clickableViewRootView = getItemClickableView();
+        smallCoverImageView.setClickOpenImage(isOpenPosition());
+        photoView.setClickOpenImage(isOpenPosition());
         smallCoverImageView.setSrcScaleType(srcScaleType);
         photoView.setSrcScaleType(srcScaleType);
         photoView.setStartWidth(imageDetail.srcWidth);
@@ -327,6 +329,8 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             },getViewLifecycleOwner());
         } else if (isLoading && isTransitionEnd) {
             loadingView.setVisibility(View.VISIBLE);
+        } else {
+            loadingView.setVisibility(View.GONE);
         }
     }
 
