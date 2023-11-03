@@ -1012,7 +1012,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst;
-            if (isNoneClickView || !isClickOpenImage) {
+            if (isNoneClickView || (!isExitMode && !isClickOpenImage)) {
                 if (OpenImageConfig.getInstance().isReadMode()) {
                     boolean bigImageRule = maxScale * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * Math.max(viewWidth, viewHeight);
                     if (bigImageRule) {
