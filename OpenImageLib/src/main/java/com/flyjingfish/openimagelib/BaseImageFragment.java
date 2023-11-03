@@ -327,10 +327,8 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
                     });
                 }
             },getViewLifecycleOwner());
-        } else if (isLoading && isTransitionEnd) {
-            loadingView.setVisibility(View.VISIBLE);
-        } else {
-            loadingView.setVisibility(View.GONE);
+        } else if (isTransitionEnd) {
+            loadingView.setVisibility(isLoading?View.VISIBLE:View.GONE);
         }
     }
 
