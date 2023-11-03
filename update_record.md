@@ -1,5 +1,13 @@
 # OpenImage 更新日志
 
+## 2.1.9
+
+1、修复部分手机切换图片第二张不显示问题
+
+2、修复部分手机退到桌面再回来后显示loading的问题
+
+3、优化TouchCloseLayout代码
+
 ## 2.1.8
 
 1、[修复不能获取View大小时，超长图不能显示为阅读模式的bug](https://github.com/FlyJingFish/OpenImage/issues/19)
