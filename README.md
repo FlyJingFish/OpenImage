@@ -8,7 +8,7 @@
 
 ## 属于你的侵入性低的大图查看器，完美的甚至完胜微信的过渡动画，支持自定义视频播放器，也可以自定义加载图片的内核，例如Glide、Coil、Picasso 或其他的<br><br>如果帮到你点个star推广给更多人吧～
 
-**[推荐一个库 AndroidAOP 一个注解就可请求权限，禁止多点，切换线程](https://github.com/FlyJingFish/AndroidAOP)**
+**[推荐一个库 AndroidAOP 一个注解就可请求权限，禁止多点，切换线程等等](https://github.com/FlyJingFish/AndroidAOP)**
 
 ## [点此下载apk,也可扫下边二维码下载](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk?raw=true)
 
