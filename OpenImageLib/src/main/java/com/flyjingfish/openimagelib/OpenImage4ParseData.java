@@ -12,8 +12,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseLongArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -40,8 +43,10 @@ import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 class OpenImage4ParseData extends OpenImage4Params {
 
@@ -455,6 +460,7 @@ class OpenImage4ParseData extends OpenImage4Params {
             }
         };
         ShapeImageView.ShapeScaleType shapeScaleType = getShapeScaleType();
+        long startRecord = SystemClock.uptimeMillis();
         OpenImageConfig.getInstance().getBigImageHelper().loadImage(context, (ImageLoadUtils.getInstance().getImageLoadSuccess(openImageUrl.getImageUrl()) && shapeScaleType != ShapeImageView.ShapeScaleType.CENTER_INSIDE && shapeScaleType != ShapeImageView.ShapeScaleType.CENTER) ? openImageUrl.getImageUrl() : openImageUrl.getCoverImageUrl(), new OnLoadBigImageListener() {
             @Override
             public void onLoadImageSuccess(Drawable drawable, String filePath) {
@@ -463,6 +469,7 @@ class OpenImage4ParseData extends OpenImage4Params {
                 ImageLoadUtils.getInstance().setCoverDrawable(key, drawable);
                 ImageLoadUtils.getInstance().setCoverFilePath(key, filePath);
                 startActivity(intent, viewPair, key);
+                recordTime(key,SystemClock.uptimeMillis() - startRecord);
             }
 
             @Override
@@ -471,7 +478,46 @@ class OpenImage4ParseData extends OpenImage4Params {
                 runnable.run();
             }
         });
-        handler.postDelayed(runnable, 100);
+        handler.postDelayed(runnable, getDelayOpenTimeMs());
+    }
+
+    private static final int MAX_DELAY_MS = 100;
+    private static final Map<String,Long> useTime = new HashMap<>();
+
+    private static long getDelayOpenTimeMs(){
+        int size = useTime.size();
+        long use;
+        if (size > 4){
+            Set<Map.Entry<String,Long>> set = useTime.entrySet();
+            long total = 0;
+            long max = 0;
+            long min = Long.MAX_VALUE;
+            for (Map.Entry<String, Long> stringLongEntry : set) {
+                total += stringLongEntry.getValue();
+                if (stringLongEntry.getValue() > max){
+                    max = stringLongEntry.getValue();
+                }
+                if (stringLongEntry.getValue() < min){
+                    min = stringLongEntry.getValue();
+                }
+            }
+            use = (total - min - max)/(size - 2);
+        }else {
+            use = MAX_DELAY_MS;
+        }
+        use = Math.min(use,MAX_DELAY_MS);
+        return use;
+    }
+
+    private static void recordTime(String key,long time){
+        if (useTime.containsKey(key)){
+            Long oldTime = useTime.get(key);
+            if (oldTime == null || oldTime < time){
+                useTime.put(key,time);
+            }
+        }else {
+            useTime.put(key,time);
+        }
     }
 
     private void startActivity(Intent intent, Pair<View, String> viewPair, String drawableKey) {
