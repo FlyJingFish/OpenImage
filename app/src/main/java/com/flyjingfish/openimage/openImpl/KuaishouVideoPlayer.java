@@ -83,7 +83,7 @@ public class KuaishouVideoPlayer extends OpenImageCoverVideoPlayer {
         super.clickStartIcon();
         //以下是为了缓冲时还能暂停
         if (mCurrentState == CURRENT_STATE_PREPAREING || mCurrentState == CURRENT_STATE_PLAYING_BUFFERING_START){
-            if (mLoadingProgressBar.getVisibility() == VISIBLE){
+            if (!mPauseBeforePrepared){
                 onVideoPause();
                 setViewShowState(startBtn,VISIBLE);
                 setViewShowState(mLoadingProgressBar,GONE);

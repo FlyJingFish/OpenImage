@@ -33,7 +33,7 @@ public class OpenImageFullInitProvider extends ContentProvider {
             }
             OpenImageConfig.getInstance().setDownloadMediaHelper(fullGlideDownloadMediaHelper);
         }
-        OpenImageConfig.getInstance().setPreloadCount(false,4);
+        OpenImageConfig.getInstance().setPreloadCount(false,2);
         return true;
     }
 

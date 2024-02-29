@@ -264,15 +264,20 @@ public class KuaiShouActivity extends OpenImageActivity {
         MyApplication.cThreadPool.submit(() -> {
             List<MessageBean> datas = new ArrayList<>();
 
-            String response1 = DataUtils.getFromAssets(this, "video_data.json");
+            String response1 = DataUtils.getFromAssets(this, "kuaishou.json");
             try {
                 JSONArray jsonArray = new JSONArray(response1);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     MessageBean itemData = new MessageBean();
                     JSONObject jsonObject = jsonArray.optJSONObject(i);
+                    JSONObject firstFrameJson = jsonObject.optJSONObject("firstFrame");
+                    JSONObject videoJson = jsonObject.optJSONObject("video");
+
                     itemData.type = MessageBean.VIDEO;
-                    itemData.videoUrl = jsonObject.getString("videoUrl");
-                    itemData.coverUrl = jsonObject.getString("coverUrl");
+                    itemData.text = jsonObject.getString("attribution");
+                    itemData.videoUrl = videoJson.getString("v1080");
+                    itemData.smallCoverUrl = firstFrameJson.getString("i1080");
+                    itemData.coverUrl = firstFrameJson.getString("i2160");
                     datas.add(itemData);
                 }
             } catch (JSONException e) {

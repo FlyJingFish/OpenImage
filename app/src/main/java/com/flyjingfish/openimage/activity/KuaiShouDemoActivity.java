@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -71,15 +72,20 @@ public class KuaiShouDemoActivity extends BaseActivity {
         MyApplication.cThreadPool.submit(() -> {
             List<MessageBean> datas = new ArrayList<>();
 
-            String response1 = DataUtils.getFromAssets(this, "video_data.json");
+            String response1 = DataUtils.getFromAssets(this, "kuaishou.json");
             try {
                 JSONArray jsonArray = new JSONArray(response1);
-                for (int i = 0; i < jsonArray.length(); i++) {
+                for (int i = 0; i < 6; i++) {
                     MessageBean itemData = new MessageBean();
                     JSONObject jsonObject = jsonArray.optJSONObject(i);
+                    JSONObject firstFrameJson = jsonObject.optJSONObject("firstFrame");
+                    JSONObject videoJson = jsonObject.optJSONObject("video");
+
                     itemData.type = MessageBean.VIDEO;
-                    itemData.videoUrl = jsonObject.getString("videoUrl");
-                    itemData.coverUrl = jsonObject.getString("coverUrl");
+                    itemData.text = jsonObject.getString("attribution");
+                    itemData.videoUrl = videoJson.getString("v1080");
+                    itemData.smallCoverUrl = firstFrameJson.getString("i1080");
+                    itemData.coverUrl = firstFrameJson.getString("i2160");
                     datas.add(itemData);
                 }
             } catch (JSONException e) {
@@ -114,6 +120,7 @@ public class KuaiShouDemoActivity extends BaseActivity {
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.height = (int) ScreenUtils.dp2px(KuaiShouDemoActivity.this, 220);
             MyImageLoader.getInstance().load(holder.ivImage, datas.get(position).getCoverImageUrl(), R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+            holder.tvText.setText(datas.get(position).text);
             holder.ivImage.setOnClickListener(v -> {
                 OpenImage openImage = OpenImage.with(KuaiShouDemoActivity.this)
                         .setClickRecyclerView(binding.rv.rv, new SourceImageViewIdGet() {
@@ -125,6 +132,8 @@ public class KuaiShouDemoActivity extends BaseActivity {
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
                         .setOpenImageStyle(R.style.KuaishouPhotosTheme)
                         .setVideoFragmentCreate(new KuaishouVideoFragmentCreateImpl())
+//                        .setPreloadCount(false,1)
+//                        .closePreload()
                         .disableClickClose();
                 if (mode == Mode.Search){
                     openImage
@@ -185,10 +194,12 @@ public class KuaiShouDemoActivity extends BaseActivity {
 
         class MyHolder extends RecyclerView.ViewHolder {
             ImageView ivImage;
+            TextView tvText;
 
             public MyHolder(@NonNull View itemView) {
                 super(itemView);
                 ivImage = itemView.findViewById(R.id.iv_image);
+                tvText = itemView.findViewById(R.id.tv_title);
             }
         }
     }

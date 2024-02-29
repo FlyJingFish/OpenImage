@@ -328,6 +328,9 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else if (mCurrentState == CURRENT_STATE_PREPAREING){
+            GSYVideoController.cancelByKeyAndDeleteKey(getVideoKey());
+            startPlayLogic();
         }
     }
 

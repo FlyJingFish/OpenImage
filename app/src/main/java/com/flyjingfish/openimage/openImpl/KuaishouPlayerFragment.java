@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.flyjingfish.openimage.R;
+import com.flyjingfish.openimage.bean.MessageBean;
 import com.flyjingfish.openimagefulllib.VideoPlayerFragment;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
 import com.flyjingfish.openimagelib.widget.LoadingView;
@@ -101,6 +102,7 @@ public class KuaishouPlayerFragment extends VideoPlayerFragment {
                 kuaishouViewModel.playStateLiveData.setValue(new PlayState(state,getShowPosition()));
             }
         });
+        titleTv.setText(((MessageBean) openImageUrl).text);
     }
 
     @Override
