@@ -40,7 +40,7 @@ import java.util.Map;
 class BaseActivity extends AppCompatActivity {
     private static final int CHECK_FINISH = 1009;
     private static final long CHECK_DELAY_MS = 2000;
-    private List<OpenImageDetail> openImageBeans;
+    private final List<OpenImageDetail> openImageBeans = new ArrayList<>();
     private String clickContextKey;
     private boolean isNoneClickView;
     private String dataKey;
@@ -304,11 +304,12 @@ class BaseActivity extends AppCompatActivity {
         int srcScaleTypeInt = getIntent().getIntExtra(OpenParams.SRC_SCALE_TYPE, -1);
         srcScaleType = srcScaleTypeInt == -1 ? null : ShapeImageView.ShapeScaleType.values()[srcScaleTypeInt];
         dataKey = getIntent().getStringExtra(OpenParams.IMAGES);
-        openImageBeans = ImageLoadUtils.getInstance().getOpenImageDetailData(dataKey);
-        if (openImageBeans == null) {
+        List<OpenImageDetail> openImageList = ImageLoadUtils.getInstance().getOpenImageDetailData(dataKey);
+        if (openImageList == null) {
             finishAfterTransition();
             return;
         }
+        openImageBeans.addAll(openImageList);
         int clickPosition = getIntent().getIntExtra(OpenParams.CLICK_POSITION, 0);
 
         selectPos = 0;
