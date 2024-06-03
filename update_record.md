@@ -2,7 +2,7 @@
 
 ## 2.2.2
 
-1、fix #30
+1、fix [#30](https://github.com/FlyJingFish/OpenImage/issues/30)
 
 ## 2.2.1
 
