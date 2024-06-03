@@ -310,6 +310,10 @@ class BaseActivity extends AppCompatActivity {
             return;
         }
         openImageBeans.addAll(openImageList);
+        if (openImageBeans.size() == 0){
+            finishAfterTransition();
+            return;
+        }
         int clickPosition = getIntent().getIntExtra(OpenParams.CLICK_POSITION, 0);
 
         selectPos = 0;
