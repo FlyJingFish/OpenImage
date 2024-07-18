@@ -2,6 +2,10 @@
 
 ## 2.2.3
 
+1、fix [#32](https://github.com/FlyJingFish/OpenImage/issues/32)
+
+## 2.2.3
+
 1、fix [#29](https://github.com/FlyJingFish/OpenImage/issues/29)
 
 ## 2.2.2
