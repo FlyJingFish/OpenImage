@@ -1,8 +1,12 @@
 # OpenImage 更新日志
 
+## 2.2.3
+
+1、fix [#29](https://github.com/FlyJingFish/OpenImage/issues/29)
+
 ## 2.2.2
 
-1、fix #30
+1、fix [#30](https://github.com/FlyJingFish/OpenImage/issues/30)
 
 ## 2.2.1
 

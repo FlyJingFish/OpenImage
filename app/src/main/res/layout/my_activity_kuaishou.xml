@@ -54,7 +54,7 @@
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="14dp"
-                android:drawableStart="@drawable/video_back"
+                android:drawableStart="@mipmap/back"
                 android:drawablePadding="20dp"
                 android:text="标题呦～"
                 android:textColor="@color/white" />
