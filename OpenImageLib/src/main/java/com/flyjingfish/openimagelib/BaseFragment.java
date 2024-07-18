@@ -20,6 +20,7 @@ import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 abstract class BaseFragment extends BaseInnerFragment {
     OpenImageDetail imageDetail;
+    @Nullable
     protected OpenImageUrl openImageUrl;
     int showPosition,clickPosition;
     PhotosViewModel photosViewModel;
@@ -55,6 +56,9 @@ abstract class BaseFragment extends BaseInnerFragment {
         if (bundle != null){
             dataKey = bundle.getString(OpenParams.IMAGE);
             imageDetail = ImageLoadUtils.getInstance().getOpenImageDetail(dataKey);
+            if (imageDetail == null){
+                return;
+            }
             openImageUrl = imageDetail.openImageUrl;
             showPosition = bundle.getInt(OpenParams.SHOW_POSITION);
             clickPosition = bundle.getInt(OpenParams.CLICK_POSITION);
@@ -152,6 +156,5 @@ abstract class BaseFragment extends BaseInnerFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ImageLoadUtils.getInstance().clearOpenImageDetail(dataKey);
     }
 }

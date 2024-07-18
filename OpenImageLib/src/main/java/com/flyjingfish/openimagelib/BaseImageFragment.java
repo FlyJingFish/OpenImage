@@ -70,6 +70,10 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (imageDetail == null){
+            requireActivity().finishAfterTransition();
+            return;
+        }
         smallCoverImageView = getSmallCoverImageView();
         photoView = getPhotoView();
         loadingView = getLoadingView();
