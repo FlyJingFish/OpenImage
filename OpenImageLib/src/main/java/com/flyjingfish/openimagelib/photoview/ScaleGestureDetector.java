@@ -24,7 +24,7 @@ import android.view.ViewConfiguration;
  *          callback will be executed when the events occur.
  * </ul>
  */
-public class ScaleGestureDetector {
+class ScaleGestureDetector {
     private static final String TAG = "ScaleGestureDetector";
 
     /**
@@ -181,7 +181,7 @@ public class ScaleGestureDetector {
         mContext = context;
         mListener = listener;
         final ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
-        mSpanSlop = viewConfiguration.getScaledTouchSlop();
+        mSpanSlop = viewConfiguration.getScaledTouchSlop() * 2;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             mMinSpan = viewConfiguration.getScaledMinimumScalingSpan();
         }
