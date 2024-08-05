@@ -2,7 +2,6 @@ package com.flyjingfish.openimagelib.photoview;
 
 import android.content.Context;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
