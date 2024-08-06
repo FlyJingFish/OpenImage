@@ -1,7 +1,8 @@
 package com.flyjingfish.openimagelib;
 
+import android.view.ViewConfiguration;
+
 import androidx.annotation.FloatRange;
-import androidx.annotation.IntDef;
 import androidx.annotation.IntRange;
 
 import com.flyjingfish.openimagelib.listener.BigImageHelper;
@@ -34,6 +35,7 @@ public class OpenImageConfig {
     private int preloadCount = 1;
     private boolean lazyPreload = true;
     private boolean bothLoadCover = true;
+    private int mTouchSlop = -1;
 
     private OpenImageConfig() {
     }
@@ -238,5 +240,17 @@ public class OpenImageConfig {
      */
     public void setBothLoadCover(boolean bothLoadCover) {
         this.bothLoadCover = bothLoadCover;
+    }
+
+    public int getScaledTouchSlop(){
+        return mTouchSlop;
+    }
+
+    /**
+     * 自定义双指触摸阈值
+     * @param slop 判定双指触摸的阈值，默认是{@link ViewConfiguration#getScaledTouchSlop()}
+     */
+    public void getScaledTouchSlop(int slop){
+        mTouchSlop = slop;
     }
 }
