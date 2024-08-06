@@ -4,7 +4,7 @@
 
 1、fix [#33](https://github.com/FlyJingFish/OpenImage/issues/32)
 
-2、新增修改双指触摸阈值方法 OpenImageConfig.getScaledTouchSlop(slop)
+2、新增修改双指触摸阈值方法 `OpenImageConfig.getScaledTouchSlop(slop)`
 
 ## 2.2.4
 
