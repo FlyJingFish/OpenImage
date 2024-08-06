@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
+import com.flyjingfish.openimagelib.OpenImageConfig;
+
 /**
  * Detects scaling transformation gestures using the supplied {@link MotionEvent}s.
  * The {@link OnScaleGestureListener} callback will notify users when a particular
@@ -181,7 +183,10 @@ class ScaleGestureDetector {
         mContext = context;
         mListener = listener;
         final ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
-        mSpanSlop = viewConfiguration.getScaledTouchSlop() * 2;
+        mSpanSlop = OpenImageConfig.getInstance().getScaledTouchSlop();
+        if (mSpanSlop < 0){
+            mSpanSlop = viewConfiguration.getScaledTouchSlop();
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             mMinSpan = viewConfiguration.getScaledMinimumScalingSpan();
         }
