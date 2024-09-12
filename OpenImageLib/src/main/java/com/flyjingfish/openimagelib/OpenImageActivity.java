@@ -484,6 +484,8 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
      * @param total        图片或视频总数
      */
     protected void setIndicatorPosition(int showPosition, int total) {
+        selectPos = showPosition;
+        openActivityData.selectPos = selectPos;
         mHandler.post(() -> {
             if (indicatorType == INDICATOR_IMAGE) {//图片样式
                 if (imageIndicatorAdapter != null) {

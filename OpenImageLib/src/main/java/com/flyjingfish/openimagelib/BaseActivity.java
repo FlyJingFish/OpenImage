@@ -120,6 +120,7 @@ class BaseActivity extends AppCompatActivity {
     int preloadCount;
     boolean lazyPreload;
     boolean bothLoadCover;
+    OpenActivityData openActivityData;
 
     List<OpenImageDetail> getOpenImageBeans() {
         return openImageBeans;
@@ -300,7 +301,7 @@ class BaseActivity extends AppCompatActivity {
 
     protected void parseIntent() {
         OpenActivityDataViewModel openActivityDataViewModel = new ViewModelProvider(this).get(OpenActivityDataViewModel.class);
-        OpenActivityData openActivityData = openActivityDataViewModel.openDataMutableLiveData.getValue();
+        openActivityData = openActivityDataViewModel.openDataMutableLiveData.getValue();
         if (openActivityData == null){
             openActivityData = new OpenActivityData();
             openActivityData.setActivity(this);
