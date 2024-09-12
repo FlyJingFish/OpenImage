@@ -10,10 +10,16 @@ class OpenImageDetail implements OpenImageUrl {
     public int srcHeight;
     public int dataPosition;
     public int viewPosition;
-    private final long id;
+    private long id;
 
     public OpenImageDetail() {
-        id = ImageLoadUtils.getInstance().getUniqueId();
+        
+    }
+    
+    public static OpenImageDetail getNewOpenImageDetail(){
+        OpenImageDetail openImageDetail = new OpenImageDetail();
+        openImageDetail.id = ImageLoadUtils.getInstance().getUniqueId();
+        return openImageDetail;
     }
 
     @Override

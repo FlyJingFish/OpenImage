@@ -162,7 +162,7 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         if (position >= 0 && position < openImageBeans.size()) {
             OpenImageDetail oldData = openImageBeans.get(position);
             OpenImageUrl oldDataUrl = oldData.openImageUrl;
-            OpenImageDetail openImageDetail = new OpenImageDetail();
+            OpenImageDetail openImageDetail = OpenImageDetail.getNewOpenImageDetail();
             openImageDetail.dataPosition = oldData.dataPosition;
             openImageDetail.viewPosition = oldData.viewPosition;
             openImageDetail.srcWidth = oldData.srcWidth;
@@ -270,6 +270,18 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
         return openImageDetail != null ? openImageDetail.getId() : position;
     }
 
+    @Override
+    public boolean containsItem(long itemId) {
+        if (openImageBeans != null){
+            for (OpenImageDetail openImageBean : openImageBeans) {
+                if (openImageBean.getId() == itemId){
+                    return true;
+                }
+            }
+        }
+        return super.containsItem(itemId);
+    }
+
     /**
      * 获取适配器内的数据
      *
@@ -301,7 +313,7 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
             for (OpenImageUrl imageBean : imageDetails) {
                 if (!(imageBean instanceof OpenImageDetail)) {
                     if (imageBean != null && (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO)) {
-                        OpenImageDetail openImageDetail = new OpenImageDetail();
+                        OpenImageDetail openImageDetail = OpenImageDetail.getNewOpenImageDetail();
                         openImageDetail.openImageUrl = imageBean;
                         openImageDetail.dataPosition = oldDataPos + i;
                         if (updateViewType == UpdateViewType.NONE) {
@@ -340,6 +352,8 @@ public class OpenImageFragmentStateAdapter extends FragmentStateAdapter {
     public int getItemCount() {
         return openImageBeans != null ? openImageBeans.size() : 0;
     }
+
+
 
     public void setOnUpdateIndicator(OnUpdateIndicator onUpdateIndicator) {
         this.onUpdateIndicator = onUpdateIndicator;

@@ -52,43 +52,37 @@ abstract class BaseFragment extends BaseInnerFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        if (bundle != null){
-            dataKey = bundle.getString(OpenParams.IMAGE);
-            imageDetail = ImageLoadUtils.getInstance().getOpenImageDetail(dataKey);
-            if (imageDetail == null){
+        OpenFragmentDataViewModel openFragmentDataViewModel = new ViewModelProvider(this).get(OpenFragmentDataViewModel.class);
+        OpenFragmentData openFragmentData = openFragmentDataViewModel.openDataMutableLiveData.getValue();
+        if (openFragmentData == null){
+            openFragmentData = new OpenFragmentData();
+            openFragmentData.setFragment(this);
+            if (openFragmentData.parseIntent()){
                 return;
             }
-            openImageUrl = imageDetail.openImageUrl;
-            showPosition = bundle.getInt(OpenParams.SHOW_POSITION);
-            clickPosition = bundle.getInt(OpenParams.CLICK_POSITION);
-            int srcScaleTypeInt = bundle.getInt(OpenParams.SRC_SCALE_TYPE,-1);
-            srcScaleType = srcScaleTypeInt == -1 ? null : ShapeImageView.ShapeScaleType.values()[srcScaleTypeInt];;
-            errorResId = bundle.getInt(OpenParams.ERROR_RES_ID,0);
-            disableClickClose = bundle.getBoolean(OpenParams.DISABLE_CLICK_CLOSE,false);
-            String onItemCLickKey = bundle.getString(OpenParams.ON_ITEM_CLICK_KEY);
-            String onItemLongCLickKey = bundle.getString(OpenParams.ON_ITEM_LONG_CLICK_KEY);
-            OnItemClickListener onItemClickListener = ImageLoadUtils.getInstance().getOnItemClickListener(onItemCLickKey);
-            OnItemLongClickListener onItemLongClickListener = ImageLoadUtils.getInstance().getOnItemLongClickListener(onItemLongCLickKey);
-            if (onItemClickListener != null){
-                onItemClickListeners.add(onItemClickListener);
-            }
-            if (onItemLongClickListener != null){
-                onItemLongClickListeners.add(onItemLongClickListener);
-            }
-            String drawableKey = openImageUrl.toString();
-            coverDrawable = ImageLoadUtils.getInstance().getCoverDrawable(drawableKey);
-            coverFilePath = ImageLoadUtils.getInstance().getCoverFilePath(bundle.getString(OpenParams.OPEN_COVER_DRAWABLE));
-            smallCoverDrawable = ImageLoadUtils.getInstance().getSmallCoverDrawable(drawableKey);
-            ImageLoadUtils.getInstance().clearSmallCoverDrawable(drawableKey);
-
-            autoAspectRadio = bundle.getFloat(OpenParams.AUTO_ASPECT_RATIO,0);
-            isNoneClickView = bundle.getBoolean(OpenParams.NONE_CLICK_VIEW,false);
-            preloadCount = bundle.getInt(OpenParams.PRELOAD_COUNT,1);
-            lazyPreload = bundle.getBoolean(OpenParams.LAZY_PRELOAD, false);
-            bothLoadCover = bundle.getBoolean(OpenParams.BOTH_LOAD_COVER, false);
-            beanId = imageDetail.getId();
+            openFragmentData.setFragment(null);
+            openFragmentDataViewModel.openDataMutableLiveData.setValue(openFragmentData);
         }
+        dataKey = openFragmentData.dataKey;
+        imageDetail = openFragmentData.imageDetail;
+        openImageUrl = openFragmentData.openImageUrl;
+        showPosition = openFragmentData.showPosition;
+        clickPosition = openFragmentData.clickPosition;
+        srcScaleType = openFragmentData.srcScaleType;
+        errorResId = openFragmentData.errorResId;
+        disableClickClose = openFragmentData.disableClickClose;
+        onItemClickListeners.addAll(openFragmentData.onItemClickListeners);
+        onItemLongClickListeners.addAll(openFragmentData.onItemLongClickListeners);
+        coverDrawable = openFragmentData.coverDrawable;
+        coverFilePath = openFragmentData.coverFilePath;
+        smallCoverDrawable = openFragmentData.smallCoverDrawable;
+
+        autoAspectRadio = openFragmentData.autoAspectRadio;
+        isNoneClickView = openFragmentData.isNoneClickView;
+        preloadCount = openFragmentData.preloadCount;
+        lazyPreload = openFragmentData.lazyPreload;
+        bothLoadCover = openFragmentData.bothLoadCover;
+        beanId = openFragmentData.beanId;
     }
 
     protected int getShowPosition() {

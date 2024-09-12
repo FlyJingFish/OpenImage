@@ -295,7 +295,7 @@ class OpenImage4ParseData extends OpenImage4Params {
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
                 if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
-                    OpenImageDetail openImageDetail = new OpenImageDetail();
+                    OpenImageDetail openImageDetail = OpenImageDetail.getNewOpenImageDetail();
                     openImageDetail.openImageUrl = imageBean;
                     openImageDetail.dataPosition = i;
                     openImageDetail.viewPosition = i;
@@ -313,7 +313,7 @@ class OpenImage4ParseData extends OpenImage4Params {
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
                 if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
-                    OpenImageDetail openImageDetail = new OpenImageDetail();
+                    OpenImageDetail openImageDetail = OpenImageDetail.getNewOpenImageDetail();
                     openImageDetail.openImageUrl = imageBean;
                     openImageDetail.dataPosition = i;
                     if (viewIndex >= firstPos && viewIndex <= lastPos) {
@@ -352,7 +352,7 @@ class OpenImage4ParseData extends OpenImage4Params {
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
                 if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
-                    OpenImageDetail openImageDetail = new OpenImageDetail();
+                    OpenImageDetail openImageDetail = OpenImageDetail.getNewOpenImageDetail();
                     openImageDetail.openImageUrl = imageBean;
                     openImageDetail.dataPosition = i;
                     if (viewIndex >= 0) {
@@ -398,7 +398,7 @@ class OpenImage4ParseData extends OpenImage4Params {
             int shareViewHeight = shareView.getHeight();
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
-                OpenImageDetail openImageDetail = new OpenImageDetail();
+                OpenImageDetail openImageDetail = OpenImageDetail.getNewOpenImageDetail();
                 openImageDetail.openImageUrl = imageBean;
                 openImageDetail.dataPosition = i;
                 openImageDetail.viewPosition = i;
@@ -409,7 +409,7 @@ class OpenImage4ParseData extends OpenImage4Params {
         } else if (srcViewType == SrcViewType.IV){
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
-                OpenImageDetail openImageDetail = new OpenImageDetail();
+                OpenImageDetail openImageDetail = OpenImageDetail.getNewOpenImageDetail();
                 openImageDetail.openImageUrl = imageBean;
                 openImageDetail.dataPosition = i;
                 openImageDetail.viewPosition = i;
@@ -431,7 +431,7 @@ class OpenImage4ParseData extends OpenImage4Params {
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
                 if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
-                    OpenImageDetail openImageDetail = new OpenImageDetail();
+                    OpenImageDetail openImageDetail = OpenImageDetail.getNewOpenImageDetail();
                     openImageDetail.openImageUrl = imageBean;
                     openImageDetail.dataPosition = i;
                     openImageDetail.viewPosition = i;
