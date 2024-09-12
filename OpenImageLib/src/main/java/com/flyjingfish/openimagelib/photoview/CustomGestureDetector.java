@@ -5,6 +5,8 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
+import com.flyjingfish.openimagelib.OpenImageConfig;
+
 /**
  * Does a whole lot of gesture detecting.
  */
@@ -28,7 +30,11 @@ class CustomGestureDetector {
         final ViewConfiguration configuration = ViewConfiguration
                 .get(context);
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
-        mTouchSlop = configuration.getScaledTouchSlop();
+        int touchSlop = OpenImageConfig.getInstance().getScaledTouchSlop();
+        if (touchSlop < 0){
+            touchSlop = configuration.getScaledTouchSlop();
+        }
+        mTouchSlop = touchSlop;
 
         mListener = listener;
         ScaleGestureDetector.OnScaleGestureListener mScaleListener = new ScaleGestureDetector.OnScaleGestureListener() {
