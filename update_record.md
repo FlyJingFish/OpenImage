@@ -4,6 +4,8 @@
 
 1、修复页面重建导致的崩溃问题
 
+2、升级 [ShapeImageView](https://github.com/FlyJingFish/ShapeImageView) 库至最新版本 1.5.6
+
 ## 2.2.5
 
 1、fix [#33](https://github.com/FlyJingFish/OpenImage/issues/33)
