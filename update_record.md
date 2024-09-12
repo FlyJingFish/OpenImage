@@ -1,5 +1,9 @@
 # OpenImage 更新日志
 
+## 2.2.6
+
+1、修复页面重建导致的崩溃问题
+
 ## 2.2.5
 
 1、fix [#33](https://github.com/FlyJingFish/OpenImage/issues/33)
