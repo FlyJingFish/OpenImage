@@ -14,7 +14,7 @@ import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpenFragmentData {
+class OpenFragmentData {
     OpenImageDetail imageDetail;
     @Nullable
     OpenImageUrl openImageUrl;

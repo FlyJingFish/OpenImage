@@ -10,7 +10,7 @@ import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpenActivityData {
+class OpenActivityData {
     final List<OpenImageDetail> openImageBeans = new ArrayList<>();
     String dataKey;
     int showPosition;
