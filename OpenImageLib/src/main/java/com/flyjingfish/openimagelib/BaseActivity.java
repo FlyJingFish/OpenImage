@@ -416,4 +416,12 @@ class BaseActivity extends AppCompatActivity {
     protected boolean isWechatExitFillInEffect() {
         return wechatExitFillInEffect;
     }
+
+    /**
+     *
+     * @return 获取相册适配器
+     */
+    protected OpenImageFragmentStateAdapter getOpenImageAdapter() {
+        return openImageAdapter;
+    }
 }

@@ -341,4 +341,12 @@ public class BaseInnerFragment extends Fragment {
     public boolean onKeyBackDown(){
         return true;
     }
+
+    /**
+     * 获取相册适配器，不建议你在 fragment 强引用，而是在局部使用即可，否则有可能内存泄漏
+     * @return 返回 OpenImageActivity 页面的 openImageAdapter
+     */
+    protected OpenImageFragmentStateAdapter getOpenImageAdapter() {
+        return ((OpenImageActivity) requireActivity()).openImageAdapter;
+    }
 }
