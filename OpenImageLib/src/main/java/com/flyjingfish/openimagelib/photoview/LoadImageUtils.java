@@ -12,6 +12,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.flyjingfish.openimagelib.utils.BitmapUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,22 +20,32 @@ enum LoadImageUtils {
     INSTANCE;
     private final ExecutorService cThreadPool = Executors.newFixedThreadPool(5);
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private ExifInterface getExifInterface(Context context, String filePath) {
+        ExifInterface exifInterface = null;
+        try {
+            if (filePath.startsWith("file:///android_asset/")){
+                String fileName = filePath.replace("file:///android_asset/", "");
+                InputStream inputStream = context.getAssets().open(fileName);
+                exifInterface = new ExifInterface(inputStream);
+                inputStream.close();
+            }else {
+                exifInterface = new ExifInterface(filePath);
+            }
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return exifInterface;
+    }
     public void loadImageForSize(Context context, String filePath, OnLocalRealFinishListener finishListener) {
         boolean isWeb = BitmapUtils.isWeb(filePath);
 
         if (!isWeb) {
             cThreadPool.submit(() -> {
                 int[] size = BitmapUtils.getImageSize(context, filePath);
-                ExifInterface exif;
-                int orientation = ExifInterface.ORIENTATION_NORMAL;
-                try {
-                    exif = new ExifInterface(filePath);
+                ExifInterface exif = getExifInterface(context,filePath);
 
-                    orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                } catch (IOException ignored) {
-
-                }
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
                 int rotate = 0;
                 switch (orientation){
                     case ExifInterface.ORIENTATION_ROTATE_90:
