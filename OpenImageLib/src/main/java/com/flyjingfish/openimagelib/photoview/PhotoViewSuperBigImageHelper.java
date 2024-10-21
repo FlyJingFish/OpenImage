@@ -16,6 +16,7 @@ import android.view.ViewTreeObserver;
 import androidx.annotation.NonNull;
 
 import com.flyjingfish.openimagelib.utils.BitmapUtils;
+import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 import java.lang.ref.WeakReference;
@@ -156,7 +157,12 @@ class PhotoViewSuperBigImageHelper {
 
     private void init() {
         if (!isWeb && originalImageSize != null) {
-            if (originalImageSize[0] > imageWidth && originalImageSize[1] > imageHeight) {
+            boolean isBigImage = originalImageSize[0] > imageWidth && originalImageSize[1] > imageHeight;
+            if (rotate == 90 || rotate == 270){
+                isBigImage = originalImageSize[1] > imageWidth && originalImageSize[0] > imageHeight;
+            }
+
+            if (isBigImage) {
                 int viewWidth = getWidth();
                 int viewHeight = getHeight();
                 final float widthScale = viewWidth * 1f / imageWidth;
@@ -287,6 +293,9 @@ class PhotoViewSuperBigImageHelper {
                                 bottom1 = (int) rect.bottom;
                             }
                             float scale = rect.height() / originalImageSize[1];
+                            if (rotate == 90 || rotate == 270){
+                                scale = rect.height() / originalImageSize[0];
+                            }
                             float cacheLengthLeft, cacheLengthTop, cacheLengthRight, cacheLengthBottom;
                             if (left - TOTAL_CACHE_LENGTH > 0) {
                                 cacheLengthLeft = TOTAL_CACHE_LENGTH;
@@ -315,10 +324,17 @@ class PhotoViewSuperBigImageHelper {
                             RectF showViewRect = new RectF((left1 - cacheLengthLeft), (top1 - cacheLengthTop), (right1 + cacheLengthRight), (bottom1 + cacheLengthBottom));
                             int inSampleSize = BitmapUtils.getMaxInSampleSize(subsamplingRect.width(), subsamplingRect.height());
                             RectF subsamplingRectF= new RectF(subsamplingRect.left,subsamplingRect.top,subsamplingRect.right,subsamplingRect.bottom);
-                            Matrix matrix = new Matrix();
-                            matrix.setRotate(rotate);
-                            matrix.mapRect(subsamplingRectF);
-                            Bitmap bitmap = decoder.decodeRegion(new Rect((int) subsamplingRectF.left, (int) subsamplingRectF.top, (int) subsamplingRectF.right, (int) subsamplingRectF.bottom), inSampleSize);
+                            rotateRect(subsamplingRectF,rotate,originalImageSize);
+                            Bitmap bitmap = null;
+                            try {
+                                bitmap = decoder.decodeRegion(new Rect((int) subsamplingRectF.left, (int) subsamplingRectF.top, (int) subsamplingRectF.right, (int) subsamplingRectF.bottom), inSampleSize);
+                                int pivotX = bitmap.getWidth() / 2; // 旋转中心的X坐标
+                                int pivotY = bitmap.getHeight() / 2; // 旋转中心的Y坐标
+
+                                bitmap = rotateBitmap(bitmap, rotate, pivotX, pivotY);
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
                             return new DecoderBitmap(bitmap, showViewRect, rect);
                         }
                     } finally {
@@ -330,6 +346,15 @@ class PhotoViewSuperBigImageHelper {
             return null;
         }
 
+
+
+        public static Bitmap rotateBitmap(Bitmap source, float angle, int pivotX, int pivotY) {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(angle, pivotX, pivotY);
+            Bitmap newBitmap = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+            OpenImageLogUtils.logE("rotateBitmap","source="+source.getWidth()+","+source.getHeight()+"newBitmap="+newBitmap.getWidth()+","+newBitmap.getHeight());
+            return newBitmap;
+        }
         @Override
         protected void onPostExecute(DecoderBitmap decoderBitmap) {
             final PhotoViewSuperBigImageHelper subsamplingScaleImageView = viewRef.get();
@@ -339,7 +364,25 @@ class PhotoViewSuperBigImageHelper {
         }
 
     }
-
+    public static void rotateRect(RectF subsamplingRectF,int rotate,int[] size){
+        RectF rectF = new RectF(subsamplingRectF.left,subsamplingRectF.top,subsamplingRectF.right,subsamplingRectF.bottom);
+        if (rotate == 90){
+            subsamplingRectF.left = rectF.top;
+            subsamplingRectF.top = size[1]-rectF.right;
+            subsamplingRectF.right = rectF.bottom;
+            subsamplingRectF.bottom = rectF.width()+subsamplingRectF.top;
+        }else if (rotate == 270){
+            subsamplingRectF.left = size[0] - rectF.bottom;
+            subsamplingRectF.top = rectF.left;
+            subsamplingRectF.right = rectF.height()+subsamplingRectF.left;
+            subsamplingRectF.bottom = rectF.right;
+        }else if (rotate == 180){
+            subsamplingRectF.left = size[0] - rectF.left;
+            subsamplingRectF.top = size[1] - rectF.top;
+            subsamplingRectF.right = subsamplingRectF.left+rectF.width();
+            subsamplingRectF.bottom = subsamplingRectF.top+rectF.height();
+        }
+    }
     private static class DecoderBitmap {
         Bitmap bitmap;
         RectF showViewRect;
