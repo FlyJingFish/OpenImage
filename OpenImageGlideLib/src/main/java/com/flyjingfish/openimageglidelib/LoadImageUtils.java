@@ -19,10 +19,9 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
+import com.flyjingfish.openimagelib.utils.ExifHelper;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -57,7 +56,7 @@ public enum LoadImageUtils {
             cThreadPool.submit(() -> {
                 int[] size = BitmapUtils.getImageSize(context, imageUrl);
                 int[] maxImageSize = BitmapUtils.getMaxImageSize(size[0], size[1]);
-                ExifInterface exif = getExifInterface(context,imageUrl);
+                ExifInterface exif = ExifHelper.getExifInterface(context,imageUrl);
 
                 int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
                 int rotate = 0;
@@ -94,23 +93,6 @@ public enum LoadImageUtils {
 
     }
 
-    private ExifInterface getExifInterface(Context context, String filePath) {
-        ExifInterface exifInterface = null;
-        try {
-            if (filePath.startsWith("file:///android_asset/")){
-                String fileName = filePath.replace("file:///android_asset/", "");
-                InputStream inputStream = context.getAssets().open(fileName);
-                exifInterface = new ExifInterface(inputStream);
-                inputStream.close();
-            }else {
-                exifInterface = new ExifInterface(filePath);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return exifInterface;
-    }
 
     void loadWebImage(Context context, String imageUrl, final OnLoadBigImageListener onLoadBigImageListener, OnLocalRealFinishListener finishListener){
         RequestOptions requestOptions = new RequestOptions()
