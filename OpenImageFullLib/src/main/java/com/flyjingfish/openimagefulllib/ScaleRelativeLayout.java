@@ -36,7 +36,7 @@ public class ScaleRelativeLayout extends RelativeLayout {
             invalidateLayout();
 
         });
-
+        initPlayer();
     }
 
     private void initPlayer(){
@@ -66,13 +66,19 @@ public class ScaleRelativeLayout extends RelativeLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        initPlayer();
+        if (attacher != null){
+            attacher.registerDisplayListener();
+        }
+//        initPlayer();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        gsyVideoPlayer = null;
+        if (attacher != null){
+            attacher.unRegisterDisplayListener();
+        }
+//        gsyVideoPlayer = null;
     }
 
     public PhotoViewAttacher getAttacher() {
