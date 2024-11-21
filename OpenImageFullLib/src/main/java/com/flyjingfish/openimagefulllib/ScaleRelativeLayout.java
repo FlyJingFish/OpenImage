@@ -6,10 +6,6 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
@@ -50,14 +46,14 @@ public class ScaleRelativeLayout extends RelativeLayout {
             public void onGlobalLayout() {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 gsyVideoPlayer = Util.getVideoPlayer(ScaleRelativeLayout.this);
-                if (gsyVideoPlayer instanceof OpenImageVideoPlayer){
-                    OpenImageVideoPlayer openImageVideoPlayer = (OpenImageVideoPlayer) gsyVideoPlayer;
+                if (gsyVideoPlayer instanceof ScaleOpenImageVideoPlayer){
+                    ScaleOpenImageVideoPlayer scaleOpenImageVideoPlayer = (ScaleOpenImageVideoPlayer) gsyVideoPlayer;
                     attacher.setOnProxyTouchListener((v, event) -> {
-                        openImageVideoPlayer.getCoverImageView().getAttacher().onTouch(ScaleRelativeLayout.this,event);
+                        scaleOpenImageVideoPlayer.getCoverImageView().getAttacher().onTouch(ScaleRelativeLayout.this,event);
                         return false;
                     });
 
-                    openImageVideoPlayer.getCoverImageView().getAttacher().setOnProxyTouchListener((v, event) -> {
+                    scaleOpenImageVideoPlayer.getCoverImageView().getAttacher().setOnProxyTouchListener((v, event) -> {
                         attacher.onTouch(v,event);
                         return false;
                     });

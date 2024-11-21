@@ -9,15 +9,15 @@ import androidx.annotation.Nullable;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
 
-public class OpenImageVideoPlayer extends OpenImageCoverVideoPlayer {
+public class ScaleOpenImageVideoPlayer extends OpenImageCoverVideoPlayer {
 
     private ScaleRelativeLayout scaleRelativeLayout;
 
-    public OpenImageVideoPlayer(Context context) {
+    public ScaleOpenImageVideoPlayer(Context context) {
         this(context,null);
     }
 
-    public OpenImageVideoPlayer(Context context, AttributeSet attrs) {
+    public ScaleOpenImageVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
         scaleRelativeLayout = findViewById(R.id.rl_video_player_root);
         if (mTopContainer != null){

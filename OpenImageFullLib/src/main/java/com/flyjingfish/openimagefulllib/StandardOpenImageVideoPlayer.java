@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 
-public class StandardOpenImageVideoPlayer extends OpenImageVideoPlayer {
+public class StandardOpenImageVideoPlayer extends ScaleOpenImageVideoPlayer {
 
 
     public StandardOpenImageVideoPlayer(Context context) {
