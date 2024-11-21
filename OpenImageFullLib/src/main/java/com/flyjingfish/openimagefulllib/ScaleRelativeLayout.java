@@ -84,7 +84,7 @@ public class ScaleRelativeLayout extends RelativeLayout {
     }
 
     public ScaleDrawable getDrawable(){
-        return findViewById(R.id.surface_container_drawable);
+        return findViewById(R.id.surface_container);
     }
 
     public void setImageMatrix(Matrix matrix) {

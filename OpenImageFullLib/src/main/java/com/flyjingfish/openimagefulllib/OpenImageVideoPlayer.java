@@ -7,7 +7,6 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
-import com.shuyu.gsyvideoplayer.utils.Debuger;
 
 
 public class OpenImageVideoPlayer extends OpenImageCoverVideoPlayer {
@@ -30,7 +29,6 @@ public class OpenImageVideoPlayer extends OpenImageCoverVideoPlayer {
     @Override
     protected void init(Context context) {
         super.init(context);
-        mTextureViewContainer = findViewById(R.id.surface_container_drawable);
     }
 
     @Override
@@ -46,28 +44,8 @@ public class OpenImageVideoPlayer extends OpenImageCoverVideoPlayer {
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        if (v.getId() == R.id.surface_container_drawable && mCurrentState == CURRENT_STATE_ERROR) {
-            if (!mSurfaceErrorPlay) {
-                onClickUiToggle(null);
-                return;
-            }
-            if (mVideoAllCallBack != null) {
-                Debuger.printfLog("onClickStartError");
-                mVideoAllCallBack.onClickStartError(mOriginUrl, mTitle, this);
-            }
-            prepareVideo();
-        }else if (v.getId() == R.id.surface_container_drawable) {
+        if (v.getId() == R.id.surface_container) {
             onClickUiToggle(null);
-            if (mVideoAllCallBack != null && isCurrentMediaListener()) {
-                if (mIfCurrentIsFullscreen) {
-                    Debuger.printfLog("onClickBlankFullscreen");
-                    mVideoAllCallBack.onClickBlankFullscreen(mOriginUrl, mTitle, OpenImageVideoPlayer.this);
-                } else {
-                    Debuger.printfLog("onClickBlank");
-                    mVideoAllCallBack.onClickBlank(mOriginUrl, mTitle, OpenImageVideoPlayer.this);
-                }
-            }
-            startDismissControlViewTimer();
         }
     }
 }

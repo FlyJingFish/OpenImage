@@ -62,4 +62,17 @@ public class ScaleDrawable extends FrameLayout {
         return intrinsicHeight;
     }
 
+    @Override
+    public void setOnTouchListener(OnTouchListener l) {
+    }
+
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener l) {
+
+    }
+
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+
+    }
 }
