@@ -8,6 +8,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.flyjingfish.openimagecoillib'
 //    kotlinOptions {
 //        jvmTarget = "1.8"
 //    }
