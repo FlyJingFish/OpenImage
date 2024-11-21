@@ -7,4 +7,6 @@ dependencies {
     //完整版引入
     api 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.3.3-release-jitpack'
     api 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer-exo2:v8.3.3-release-jitpack'
+
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
 }

@@ -7,7 +7,7 @@ import androidx.core.text.TextUtilsCompat;
 
 import java.util.Locale;
 
-class ViewUtils {
+public class ViewUtils {
 
     public static int getViewPaddingLeft(View view){
         boolean isRtl = false;

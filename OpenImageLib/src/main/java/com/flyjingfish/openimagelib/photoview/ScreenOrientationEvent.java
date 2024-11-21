@@ -5,7 +5,7 @@ import android.hardware.display.DisplayManager;
 import android.os.Handler;
 import android.os.Looper;
 
-class ScreenOrientationEvent {
+public class ScreenOrientationEvent {
     private OnOrientationListener onOrientationListener;
     private DisplayManager mDisplayManager;
 

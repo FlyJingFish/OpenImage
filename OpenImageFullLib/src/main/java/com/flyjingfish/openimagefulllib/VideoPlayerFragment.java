@@ -27,16 +27,22 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     protected PhotoView photoImageView;
     protected LoadingView loadingView;
     protected OpenImageGSYVideoHelper gsyVideoHelper;
+    public static boolean Scaling = false;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.open_image_fragment_video,container,false);
-        OpenImageVideoPlayer videoPlayer = rootView.findViewById(R.id.video_player);
+        if (Scaling){
+            rootView = inflater.inflate(R.layout.open_image_fragment_video,container,false);
+        }else {
+            rootView = inflater.inflate(R.layout.open_image_fragment_video2,container,false);
+        }
+        OpenImageCoverVideoPlayer videoPlayer = rootView.findViewById(R.id.video_player);
         this.videoPlayer = videoPlayer;
         smallImageView = videoPlayer.getSmallCoverImageView();
         photoImageView = videoPlayer.getCoverImageView();
         loadingView = (LoadingView) videoPlayer.getLoadingView();
+        photoImageView.setZoomable(Scaling);
         return rootView;
     }
 

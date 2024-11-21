@@ -26,7 +26,7 @@ import com.flyjingfish.openimagelib.OpenImageConfig;
  *          callback will be executed when the events occur.
  * </ul>
  */
-class ScaleGestureDetector {
+public class ScaleGestureDetector {
     private static final String TAG = "ScaleGestureDetector";
 
     /**

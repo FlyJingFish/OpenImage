@@ -1,12 +1,12 @@
-package com.flyjingfish.openimagelib.photoview;
+package com.flyjingfish.openimagefulllib;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +14,7 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewParent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
@@ -33,6 +34,14 @@ import com.flyjingfish.openimagelib.OpenImageActivity;
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.PhotosViewModel;
 import com.flyjingfish.openimagelib.R;
+import com.flyjingfish.openimagelib.photoview.OnMatrixChangedListener;
+import com.flyjingfish.openimagelib.photoview.OnScaleChangedListener;
+import com.flyjingfish.openimagelib.photoview.OnSingleFlingListener;
+import com.flyjingfish.openimagelib.photoview.OnViewDragListener;
+import com.flyjingfish.openimagelib.photoview.OnViewTapListener;
+import com.flyjingfish.openimagelib.photoview.PhotoView;
+import com.flyjingfish.openimagelib.photoview.ScreenOrientationEvent;
+import com.flyjingfish.openimagelib.photoview.ViewUtils;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.lang.ref.WeakReference;
@@ -63,7 +72,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private boolean mAllowParentInterceptOnEdge = true;
     private boolean mBlockParentIntercept = false;
 
-    private final ImageView mImageView;
+    private final ScaleRelativeLayout mImageView;
 
     // Gesture Detectors
     private GestureDetectorCompat mGestureDetector;
@@ -200,7 +209,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         @Override
         public void onScale(boolean doubleFinger, float scaleFactor, float focusX, float focusY) {
-            if (getScale() < mMaxScale || scaleFactor < 1f) {
+            float curScale = getScale();
+            Log.e("onScale","curScale="+curScale+",doubleFinger="+doubleFinger+",scaleFactor="+scaleFactor+",focusX="+focusX+",focusY="+focusY);
+            if (curScale < mMaxScale || scaleFactor < 1f) {
                 if (mScaleChangeListener != null) {
                     mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
                 }
@@ -263,7 +274,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             viewPager2.setTag(R.id.open_image_viewPager2_userInput,true);
         }
     }
-    public PhotoViewAttacher(ImageView imageView) {
+    public PhotoViewAttacher(ScaleRelativeLayout imageView) {
         mImageView = imageView;
         imageView.setOnTouchListener(this);
         imageView.addOnLayoutChangeListener(this);
@@ -578,15 +589,15 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
-        if (onProxyTouchListener != null && v instanceof PhotoView){
+        if (onProxyTouchListener != null && v instanceof ScaleRelativeLayout){
             onProxyTouchListener.onTouch(v,ev);
         }
-        if (!(v instanceof PhotoView)){
+        if (!(v instanceof ScaleRelativeLayout)){
             v = mImageView;
         }
         boolean handled = false;
         isTouched = true;
-        if (mZoomEnabled && Util.hasDrawable((ImageView) v)) {
+        if (mZoomEnabled && Util.hasDrawable((ScaleRelativeLayout) v)) {
             switch (ev.getActionMasked()) {
                 case MotionEvent.ACTION_POINTER_DOWN:
                     setViewPager2UserInputEnabled(false);
@@ -769,7 +780,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void update() {
-        Drawable drawable = mImageView.getDrawable();
+        ScaleDrawable drawable = mImageView.getDrawable();
         updateBaseMatrix(drawable);
     }
 
@@ -824,7 +835,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
      * Resets the Matrix back to FIT_CENTER, and then displays its contents
      */
     private void resetMatrix() {
-        Drawable drawable = mImageView.getDrawable();
+        ScaleDrawable drawable = mImageView.getDrawable();
         ShapeImageView.ShapeScaleType autoScaleType = null;
         if (drawable != null && (mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_START_CENTER_CROP || mSrcScaleType == ShapeImageView.ShapeScaleType.AUTO_END_CENTER_CROP)) {
             final int drawableWidth = drawable.getIntrinsicWidth();
@@ -898,7 +909,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
      * @return RectF - Displayed Rectangle
      */
     private RectF getDisplayRect(Matrix matrix) {
-        Drawable d = mImageView.getDrawable();
+        ScaleDrawable d = mImageView.getDrawable();
         if (d != null) {
             mDisplayRect.set(0, 0, d.getIntrinsicWidth(),
                     d.getIntrinsicHeight());
@@ -937,7 +948,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
      *
      * @param drawable - Drawable being displayed
      */
-    private void updateBaseMatrix(Drawable drawable) {
+    private void updateBaseMatrix(ScaleDrawable drawable) {
         if (drawable == null) {
             return;
         }
@@ -1243,6 +1254,55 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
 
+    void updateScaleConfig() {
+        ScaleDrawable drawable = mImageView.getDrawable();
+        if (drawable == null) {
+            return;
+        }
+        final float viewWidth = getImageViewWidth(mImageView);
+        final float viewHeight = getImageViewHeight(mImageView);
+        final int drawableWidth = drawable.getIntrinsicWidth();
+        final int drawableHeight = drawable.getIntrinsicHeight();
+        final float widthScale = viewWidth / drawableWidth;
+        final float heightScale = viewHeight / drawableHeight;
+
+
+        float scaleImageHW = drawableHeight * 1f / drawableWidth;
+        float maxScale = Math.max(widthScale, heightScale);
+
+        if (OpenImageConfig.getInstance().isReadMode()) {
+            boolean bigImageRule = maxScale * drawableHeight > OpenImageConfig.getInstance().getReadModeRule() * Math.max(viewWidth, viewHeight);
+            if (bigImageRule) {
+                isBigImage = true;
+            } else {
+                if (scaleImageHW > 1) {
+                    if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
+                        mMinScale = DEFAULT_MIN_SCALE;
+                        //设置中等缩放为适宽的缩放
+                        mMidScale = widthScale / heightScale;
+                        if (!isSetMaxScale) {
+                            mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+                        }
+                    }
+                } else {
+                    if (maxScale * drawableWidth > DEFAULT_MID_SCALE * viewWidth) {
+                        mMinScale = DEFAULT_MIN_SCALE;
+                        //设置中等缩放为适宽的缩放
+                        mMidScale = heightScale / widthScale;
+                        if (!isSetMaxScale) {
+                            mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+    }
+
+
     private RectF startDstRectF;
     private boolean isBigImage;
     private boolean isTouched;
@@ -1345,11 +1405,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         return true;
     }
 
-    private int getImageViewWidth(ImageView imageView) {
+    private int getImageViewWidth(ScaleRelativeLayout imageView) {
         return imageView.getWidth() - ViewUtils.getViewPaddingLeft(imageView) - ViewUtils.getViewPaddingRight(imageView);
     }
 
-    private int getImageViewHeight(ImageView imageView) {
+    private int getImageViewHeight(ScaleRelativeLayout imageView) {
         return imageView.getHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
     }
 
@@ -1504,4 +1564,5 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     public void setOnProxyTouchListener(View.OnTouchListener onTouchListener){
         onProxyTouchListener = onTouchListener;
     }
+
 }

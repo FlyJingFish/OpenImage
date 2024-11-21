@@ -91,7 +91,7 @@ public abstract class BaseImageFragment<T extends View> extends BaseFragment {
             smallCoverImageView.setAutoCropHeightWidthRatio(autoAspectRadio);
             photoView.setAutoCropHeightWidthRatio(autoAspectRadio);
         }
-        photoView.setZoomable(imageDetail.getType() == MediaType.IMAGE);
+//        photoView.setZoomable(imageDetail.getType() == MediaType.IMAGE);
         photoView.setNoneClickView(isNoneClickView);
         smallCoverImageView.setNoneClickView(isNoneClickView);
         showLoading(loadingView);

@@ -378,4 +378,23 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         this.showType = showType;
         GSYVideoType.setShowType(showType);
     }
+
+    @Override
+    public void onVideoSizeChanged() {
+        super.onVideoSizeChanged();
+        if (onVideoSizeChangedListener != null){
+            onVideoSizeChangedListener.onVideoSizeChanged(getCurrentVideoWidth(),getCurrentVideoHeight());
+        }
+    }
+
+    public interface OnVideoSizeChangedListener{
+        void onVideoSizeChanged(int width, int height);
+    }
+
+    private OnVideoSizeChangedListener onVideoSizeChangedListener;
+
+    public void setOnVideoSizeChangedListener(OnVideoSizeChangedListener onVideoSizeChangedListener) {
+        this.onVideoSizeChangedListener = onVideoSizeChangedListener;
+    }
+
 }
