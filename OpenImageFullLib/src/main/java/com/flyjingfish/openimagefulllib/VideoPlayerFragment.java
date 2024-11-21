@@ -27,7 +27,7 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
     protected PhotoView photoImageView;
     protected LoadingView loadingView;
     protected OpenImageGSYVideoHelper gsyVideoHelper;
-    public static boolean Scaling = false;
+    public static boolean Scaling = true;
 
     @Nullable
     @Override
