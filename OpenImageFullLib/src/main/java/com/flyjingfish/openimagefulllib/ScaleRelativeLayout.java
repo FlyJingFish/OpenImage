@@ -112,15 +112,6 @@ public class ScaleRelativeLayout extends RelativeLayout {
         drawable.setScaleX(scaleX);
         drawable.setScaleY(scaleY);
     }
-//    private OnTouchListener onTouchListener;
-//    @Override
-//    public void setOnTouchListener(OnTouchListener l) {
-//        onTouchListener = l;
-////        gsyVideoPlayer.setOnTouchListener(l);
-//        if (gsyVideoPlayer != null){
-//            gsyVideoPlayer.setProxyOnTouchListener(onTouchListener);
-//        }
-//    }
 
 
     @Override

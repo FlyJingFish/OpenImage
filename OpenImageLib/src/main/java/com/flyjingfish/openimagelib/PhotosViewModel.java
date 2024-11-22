@@ -10,7 +10,7 @@ import com.flyjingfish.openimagelib.live_data.UnPeekLiveData;
 
 public class PhotosViewModel extends AndroidViewModel {
     MutableLiveData<Boolean> closeViewLiveData = new MutableLiveData<>();
-    public UnPeekLiveData<Boolean> transitionEndLiveData = new UnPeekLiveData<>();
+    public MutableLiveData<Boolean> transitionEndLiveData = new MutableLiveData<>();
     MutableLiveData<Float> onTouchScaleLiveData = new MutableLiveData<>();
     MutableLiveData<Float> onTouchCloseLiveData = new MutableLiveData<>();
     MutableLiveData<String> onAddItemListenerLiveData = new MutableLiveData<>();
