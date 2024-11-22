@@ -55,7 +55,6 @@ public class ScaleDrawable extends FrameLayout {
                     intrinsicWidth = drawableWidth;
                     intrinsicHeight = drawableHeight;
 
-                    Log.e("onStateChanged","intrinsicWidth="+intrinsicWidth+",intrinsicHeight="+intrinsicHeight);
                     setLayoutParams(layoutParams);
 
                     if (viewParent instanceof ScaleRelativeLayout){

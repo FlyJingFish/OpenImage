@@ -69,7 +69,6 @@ public class ScaleRelativeLayout extends RelativeLayout {
         if (attacher != null){
             attacher.registerDisplayListener();
         }
-//        initPlayer();
     }
 
     @Override
@@ -78,7 +77,6 @@ public class ScaleRelativeLayout extends RelativeLayout {
         if (attacher != null){
             attacher.unRegisterDisplayListener();
         }
-//        gsyVideoPlayer = null;
     }
 
     public VideoPlayerAttacher getAttacher() {
@@ -106,7 +104,6 @@ public class ScaleRelativeLayout extends RelativeLayout {
         float centerY = mDrawRect.centerY();
         float x = centerX - getWidth()/2;
         float y = centerY - getHeight()/2;
-        Log.e("invalidateLayout", mDrawRect +",centerX="+mDrawRect.centerX()+",centerY="+mDrawRect.centerY());
         drawable.setTranslationX(x);
         drawable.setTranslationY(y);
         drawable.setScaleX(scaleX);

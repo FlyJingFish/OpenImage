@@ -211,9 +211,7 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
 
         @Override
         public void onScale(boolean doubleFinger, float scaleFactor, float focusX, float focusY) {
-            float curScale = getScale();
-            Log.e("onScale","curScale="+curScale+",doubleFinger="+doubleFinger+",scaleFactor="+scaleFactor+",focusX="+focusX+",focusY="+focusY);
-            if (curScale < mMaxScale || scaleFactor < 1f) {
+            if (getScale() < mMaxScale || scaleFactor < 1f) {
                 if (mScaleChangeListener != null) {
                     mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
                 }
