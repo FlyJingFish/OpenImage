@@ -83,7 +83,7 @@ allprojects {
 
 #### A、直接引入完整版（同时支持查看图片和视频）
 
-请注意如果使用以下导入方式，如果你的项目组存在[GSYVideoPlayer](https://github.com/CarGuo/GSYVideoPlayer)请升级至 **8.3.3** 或者更高的版本，否则会冲突
+请注意如果使用以下导入方式，如果你的项目组存在[GSYVideoPlayer](https://github.com/CarGuo/GSYVideoPlayer)请升级至 **10.0.0**（从2.3.0开始升级至 10.0.0，之前是8.3.0，并且需要升级AGP到8.1.1以上） 或者更高的版本，否则会冲突
 
 - 使用 Glide 作为图片加载器，如果你的项目组存在[Glide](https://github.com/bumptech/glide)请升级至 **4.12.0** 或者更高的版本，否则会冲突
 
