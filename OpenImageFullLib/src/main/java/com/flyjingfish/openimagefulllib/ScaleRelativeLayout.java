@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
