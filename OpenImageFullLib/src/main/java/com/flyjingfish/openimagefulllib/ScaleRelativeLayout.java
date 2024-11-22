@@ -135,15 +135,8 @@ public class ScaleRelativeLayout extends RelativeLayout {
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
         attacher.setOnClickListener(v -> {
-            if (l != null){
-                l.onClick(v);
-            }
             gsyVideoPlayer.onClick(getDrawable());
         });
     }
 
-    @Override
-    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
-        attacher.setOnLongClickListener(l);
-    }
 }
