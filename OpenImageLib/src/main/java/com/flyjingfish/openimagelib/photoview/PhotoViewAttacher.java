@@ -1255,7 +1255,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         }
         resetMatrix();
-        if (onChangedListener != null){
+        if (onChangedListener != null && !isExitMode){
             onChangedListener.onChanged();
         }
     }

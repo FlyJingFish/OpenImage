@@ -1261,7 +1261,7 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
 
         }
         resetMatrix();
-        if (onChangedListener != null){
+        if (onChangedListener != null && !isExitMode){
             onChangedListener.onChanged();
         }
     }

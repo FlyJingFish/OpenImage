@@ -226,4 +226,12 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
             videoPlayer.getBackButton().setOnClickListener(v -> close());
         }
     }
+
+    @Override
+    public View getExitImageView() {
+        if (videoPlayer instanceof ScaleOpenImageVideoPlayer scaleOpenImageVideoPlayer){
+            scaleOpenImageVideoPlayer.getAttacher().setExitMode(true);
+        }
+        return super.getExitImageView();
+    }
 }

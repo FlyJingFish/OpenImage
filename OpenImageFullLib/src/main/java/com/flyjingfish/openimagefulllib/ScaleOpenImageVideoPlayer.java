@@ -48,4 +48,8 @@ public class ScaleOpenImageVideoPlayer extends OpenImageCoverVideoPlayer {
             onClickUiToggle(null);
         }
     }
+
+    public VideoPlayerAttacher getAttacher(){
+        return scaleRelativeLayout.getAttacher();
+    }
 }
