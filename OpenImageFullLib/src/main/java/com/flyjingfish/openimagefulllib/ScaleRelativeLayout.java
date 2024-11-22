@@ -11,13 +11,16 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.flyjingfish.openimagelib.photoview.PhotoViewAttacher;
+
 
 public class ScaleRelativeLayout extends RelativeLayout {
 
-    private VideoPlayerAttacher attacher;
+    private final VideoPlayerAttacher attacher;
     private final RectF mDrawRect = new RectF();
 
     private GSYVideoPlayer gsyVideoPlayer;
+    private ScaleDrawable scaleDrawable;
 
     public ScaleRelativeLayout(@NonNull Context context) {
         this(context,null);
@@ -37,7 +40,6 @@ public class ScaleRelativeLayout extends RelativeLayout {
         });
         initPlayer();
     }
-
     private void initPlayer(){
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @SuppressLint("ClickableViewAccessibility")
@@ -47,12 +49,29 @@ public class ScaleRelativeLayout extends RelativeLayout {
                 gsyVideoPlayer = Util.getVideoPlayer(ScaleRelativeLayout.this);
                 if (gsyVideoPlayer instanceof ScaleOpenImageVideoPlayer){
                     ScaleOpenImageVideoPlayer scaleOpenImageVideoPlayer = (ScaleOpenImageVideoPlayer) gsyVideoPlayer;
-                    attacher.setOnProxyTouchListener((v, event) -> {
-                        scaleOpenImageVideoPlayer.getCoverImageView().getAttacher().onTouch(ScaleRelativeLayout.this,event);
-                        return false;
+                    PhotoViewAttacher photoViewAttacher = scaleOpenImageVideoPlayer.getCoverImageView().getAttacher();
+                    attacher.setOnChangedListener(() -> {
+                        // 视频变了
+                        float scaleX = photoViewAttacher.getValue(Matrix.MSCALE_X);
+                        float translateX = photoViewAttacher.getValue(Matrix.MTRANS_X);
+                        float translateY = photoViewAttacher.getValue(Matrix.MTRANS_Y);
+                        attacher.setScale(scaleX);
+                        attacher.postTranslate(translateX,translateY);
+                    });
+                    scaleOpenImageVideoPlayer.getCoverImageView().getAttacher().setOnChangedListener(() -> {
+                        // 图片变了
+                        float scaleX = attacher.getValue(Matrix.MSCALE_X);
+                        float translateX = attacher.getValue(Matrix.MTRANS_X);
+                        float translateY = attacher.getValue(Matrix.MTRANS_Y);
+                        photoViewAttacher.setScale(scaleX);
+                        photoViewAttacher.postTranslate(translateX,translateY);
                     });
 
-                    scaleOpenImageVideoPlayer.getCoverImageView().getAttacher().setOnProxyTouchListener((v, event) -> {
+                    attacher.setOnProxyTouchListener((v, event) -> {
+                        photoViewAttacher.onTouch(ScaleRelativeLayout.this,event);
+                        return false;
+                    });
+                    photoViewAttacher.setOnProxyTouchListener((v, event) -> {
                         attacher.onTouch(v,event);
                         return false;
                     });
@@ -83,14 +102,17 @@ public class ScaleRelativeLayout extends RelativeLayout {
     }
 
     public ScaleDrawable getDrawable(){
-        return findViewById(R.id.surface_container);
+        if (scaleDrawable == null){
+            scaleDrawable = findViewById(R.id.surface_container);
+        }
+        return scaleDrawable;
     }
 
     public void setImageMatrix(Matrix matrix) {
     }
 
 
-    public void invalidateLayout(){
+    private void invalidateLayout(){
 
         ScaleDrawable drawable = getDrawable();
         if (drawable.getIntrinsicWidth() == 0 || drawable.getIntrinsicHeight() == 0){

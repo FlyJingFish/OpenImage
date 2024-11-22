@@ -725,6 +725,12 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
     }
 
+    public void postTranslate(float dx, float dy) {
+        mSuppMatrix.postTranslate(dx, dy);
+        mBigImageMatrix.postTranslate(dx, dy);
+        checkAndDisplayMatrix();
+    }
+
     /**
      * Set the zoom interpolator
      *
@@ -818,6 +824,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float getValue(Matrix matrix, int whichValue) {
         matrix.getValues(mMatrixValues);
         return mMatrixValues[whichValue];
+    }
+
+    public float getValue(int whichValue) {
+        return getValue(mSuppMatrix, whichValue);
     }
 
     /**
@@ -930,6 +940,12 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setNoneClickView(boolean noneClickView) {
         isNoneClickView = noneClickView;
+    }
+
+    private OnChangedListener onChangedListener;
+
+    public void setOnChangedListener(OnChangedListener onChangedListener) {
+        this.onChangedListener = onChangedListener;
     }
 
     /**
@@ -1239,7 +1255,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         }
         resetMatrix();
-
+        if (onChangedListener != null){
+            onChangedListener.onChanged();
+        }
     }
 
 

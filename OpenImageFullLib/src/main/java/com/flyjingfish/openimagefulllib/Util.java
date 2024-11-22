@@ -18,7 +18,7 @@ class Util {
     }
 
     static boolean hasDrawable(ScaleRelativeLayout imageView) {
-        return imageView.getDrawable() != null;
+        return imageView.getDrawable() != null && imageView.getDrawable().isReady();
     }
 
     static boolean isSupportedScaleType(final ImageView.ScaleType scaleType) {

@@ -22,6 +22,8 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoViewBridge;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class GSYVideoPlayer extends StandardGSYVideoPlayer {
@@ -382,7 +384,7 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     public void onVideoSizeChanged() {
         super.onVideoSizeChanged();
-        if (onVideoSizeChangedListener != null){
+        for (OnVideoSizeChangedListener onVideoSizeChangedListener : onVideoSizeChangedListeners) {
             onVideoSizeChangedListener.onVideoSizeChanged(getCurrentVideoWidth(),getCurrentVideoHeight());
         }
     }
@@ -391,10 +393,17 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         void onVideoSizeChanged(int width, int height);
     }
 
-    private OnVideoSizeChangedListener onVideoSizeChangedListener;
+    private final List<OnVideoSizeChangedListener> onVideoSizeChangedListeners = new ArrayList<>();
 
-    public void setOnVideoSizeChangedListener(OnVideoSizeChangedListener onVideoSizeChangedListener) {
-        this.onVideoSizeChangedListener = onVideoSizeChangedListener;
+    public void addOnVideoSizeChangedListener(OnVideoSizeChangedListener onVideoSizeChangedListener) {
+        this.onVideoSizeChangedListeners.add(onVideoSizeChangedListener);
     }
 
+    public void removeOnVideoSizeChangedListener(OnVideoSizeChangedListener onVideoSizeChangedListener) {
+        this.onVideoSizeChangedListeners.remove(onVideoSizeChangedListener);
+    }
+
+    public boolean isShowingThumb(){
+        return mThumbImageViewLayout != null && mThumbImageViewLayout.getVisibility() == VISIBLE;
+    }
 }

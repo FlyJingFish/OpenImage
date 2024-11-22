@@ -32,6 +32,7 @@ import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.PhotosViewModel;
 import com.flyjingfish.openimagelib.R;
 import com.flyjingfish.openimagelib.photoview.CustomGestureDetector;
+import com.flyjingfish.openimagelib.photoview.OnChangedListener;
 import com.flyjingfish.openimagelib.photoview.OnGestureListener;
 import com.flyjingfish.openimagelib.photoview.OnMatrixChangedListener;
 import com.flyjingfish.openimagelib.photoview.OnOutsidePhotoTapListener;
@@ -734,7 +735,11 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
             checkAndDisplayMatrix();
         }
     }
-
+    public void postTranslate(float dx, float dy) {
+        mSuppMatrix.postTranslate(dx, dy);
+        mBigImageMatrix.postTranslate(dx, dy);
+        checkAndDisplayMatrix();
+    }
     /**
      * Set the zoom interpolator
      *
@@ -829,7 +834,9 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
         matrix.getValues(mMatrixValues);
         return mMatrixValues[whichValue];
     }
-
+    public float getValue(int whichValue) {
+        return getValue(mSuppMatrix, whichValue);
+    }
     /**
      * Resets the Matrix back to FIT_CENTER, and then displays its contents
      */
@@ -942,6 +949,11 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
         isNoneClickView = noneClickView;
     }
 
+    private OnChangedListener onChangedListener;
+
+    public void setOnChangedListener(OnChangedListener onChangedListener) {
+        this.onChangedListener = onChangedListener;
+    }
     /**
      * Calculate Matrix for FIT_CENTER
      *
@@ -1249,7 +1261,9 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
 
         }
         resetMatrix();
-
+        if (onChangedListener != null){
+            onChangedListener.onChanged();
+        }
     }
 
 
