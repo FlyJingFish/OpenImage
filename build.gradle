@@ -49,8 +49,9 @@ task clean(type: Delete) {
 }
 
 ext {
-    sdkVersion = 34
-    minSdkVersion = 21
+    compileSdk = 34
+    targetSdk = 31
+    minSdk = 21
 }
 
 def synchronized getVersionProperty(propName, defValue) {

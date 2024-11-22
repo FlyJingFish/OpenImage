@@ -1,9 +1,9 @@
 android {
-    compileSdkVersion rootProject.ext.sdkVersion
+    compileSdk rootProject.ext.compileSdk
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.sdkVersion
+        minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.targetSdk
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
