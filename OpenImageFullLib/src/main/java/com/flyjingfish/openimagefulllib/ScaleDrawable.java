@@ -16,7 +16,6 @@ import com.shuyu.gsyvideoplayer.listener.GSYStateUiListener;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 
 public class ScaleDrawable extends FrameLayout {
-    private final Rect mTempRect = new Rect();
     private int intrinsicWidth;
     private int intrinsicHeight;
     public ScaleDrawable(@NonNull Context context) {
@@ -34,17 +33,31 @@ public class ScaleDrawable extends FrameLayout {
             @Override
             public void onGlobalLayout() {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                mTempRect.set(0,0,getWidth(),getHeight());
                 GSYVideoPlayer gsyVideoPlayer = Util.getVideoPlayer(getParent());
                 gsyVideoPlayer.setOnVideoSizeChangedListener((videoWidth, videoHeight) -> {
+                    ViewParent viewParent = ScaleDrawable.this.getParent();
                     ViewGroup.LayoutParams layoutParams = getLayoutParams();
-                    float scale = videoHeight*1f/videoWidth;
-                    layoutParams.height = (int) (getWidth()*scale);
-                    intrinsicWidth = getWidth();
-                    intrinsicHeight = layoutParams.height;
+                    int viewWidth = ((ViewGroup) viewParent).getWidth();
+                    int viewHeight = ((ViewGroup) viewParent).getHeight();
+                    float viewScale = viewHeight*1f/viewWidth;
+                    float videoScale = videoHeight*1f/videoWidth;
+                    int drawableWidth;
+                    int drawableHeight;
+                    if (videoScale > viewScale){
+                        drawableWidth = (int) (viewHeight / videoScale);
+                        drawableHeight = viewHeight;
+                        layoutParams.width = drawableWidth;
+                    }else {
+                        drawableWidth = viewWidth;
+                        drawableHeight = (int) (viewWidth * videoScale);
+                        layoutParams.height = drawableHeight;
+                    }
+                    intrinsicWidth = drawableWidth;
+                    intrinsicHeight = drawableHeight;
+
                     Log.e("onStateChanged","intrinsicWidth="+intrinsicWidth+",intrinsicHeight="+intrinsicHeight);
                     setLayoutParams(layoutParams);
-                    ViewParent viewParent = ScaleDrawable.this.getParent();
+
                     if (viewParent instanceof ScaleRelativeLayout){
                         ((ScaleRelativeLayout) viewParent).getAttacher().updateScaleConfig();
                     }
