@@ -10,7 +10,7 @@ import com.flyjingfish.openimagelib.OpenImageConfig;
 /**
  * Does a whole lot of gesture detecting.
  */
-class CustomGestureDetector {
+public class CustomGestureDetector {
 
     private static final int INVALID_POINTER_ID = -1;
 
@@ -26,7 +26,7 @@ class CustomGestureDetector {
     private final float mMinimumVelocity;
     private OnGestureListener mListener;
 
-    CustomGestureDetector(Context context, OnGestureListener listener) {
+    public CustomGestureDetector(Context context, OnGestureListener listener) {
         final ViewConfiguration configuration = ViewConfiguration
                 .get(context);
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();

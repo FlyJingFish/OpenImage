@@ -14,8 +14,6 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewParent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
 
@@ -34,7 +32,11 @@ import com.flyjingfish.openimagelib.OpenImageActivity;
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.PhotosViewModel;
 import com.flyjingfish.openimagelib.R;
+import com.flyjingfish.openimagelib.photoview.CustomGestureDetector;
+import com.flyjingfish.openimagelib.photoview.OnGestureListener;
 import com.flyjingfish.openimagelib.photoview.OnMatrixChangedListener;
+import com.flyjingfish.openimagelib.photoview.OnOutsidePhotoTapListener;
+import com.flyjingfish.openimagelib.photoview.OnPhotoTapListener;
 import com.flyjingfish.openimagelib.photoview.OnScaleChangedListener;
 import com.flyjingfish.openimagelib.photoview.OnSingleFlingListener;
 import com.flyjingfish.openimagelib.photoview.OnViewDragListener;
@@ -52,7 +54,7 @@ import java.util.HashSet;
  * It is made public in case you need to subclass something other than AppCompatImageView and still
  * gain the functionality that {@link PhotoView} offers
  */
-public class PhotoViewAttacher implements View.OnTouchListener,
+public class VideoPlayerAttacher implements View.OnTouchListener,
         View.OnLayoutChangeListener {
 
     private static final float DEFAULT_MAX_SCALE = 3.0f;
@@ -274,7 +276,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             viewPager2.setTag(R.id.open_image_viewPager2_userInput,true);
         }
     }
-    public PhotoViewAttacher(ScaleRelativeLayout imageView) {
+    public VideoPlayerAttacher(ScaleRelativeLayout imageView) {
         mImageView = imageView;
         imageView.setOnTouchListener(this);
         imageView.addOnLayoutChangeListener(this);

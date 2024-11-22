@@ -1,6 +1,6 @@
 package com.flyjingfish.openimagelib.photoview;
 
-import android.widget.ImageView;
+import android.view.View;
 
 /**
  * A callback to be invoked when the Photo is tapped with a single
@@ -18,5 +18,5 @@ public interface OnPhotoTapListener {
      * @param y    where the user tapped from the top of the Drawable, as percentage of the
      *             Drawable height.
      */
-    void onPhotoTap(ImageView view, float x, float y);
+    void onPhotoTap(View view, float x, float y);
 }

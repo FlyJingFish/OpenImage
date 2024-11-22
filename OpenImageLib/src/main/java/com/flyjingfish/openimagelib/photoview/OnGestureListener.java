@@ -1,6 +1,6 @@
 package com.flyjingfish.openimagelib.photoview;
 
-interface OnGestureListener {
+public interface OnGestureListener {
 
     void onDrag(float dx, float dy,float moveX, float moveY);
 

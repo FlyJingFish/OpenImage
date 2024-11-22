@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 
 public class ScaleRelativeLayout extends RelativeLayout {
 
-    private PhotoViewAttacher attacher;
+    private VideoPlayerAttacher attacher;
     private final RectF mDrawRect = new RectF();
 
     private GSYVideoPlayer gsyVideoPlayer;
@@ -30,7 +30,7 @@ public class ScaleRelativeLayout extends RelativeLayout {
 
     public ScaleRelativeLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        attacher = new PhotoViewAttacher(ScaleRelativeLayout.this);
+        attacher = new VideoPlayerAttacher(ScaleRelativeLayout.this);
         attacher.setOnMatrixChangeListener(rect -> {
             mDrawRect.set(rect.left,rect.top,rect.right,rect.bottom);
             invalidateLayout();
@@ -81,7 +81,7 @@ public class ScaleRelativeLayout extends RelativeLayout {
 //        gsyVideoPlayer = null;
     }
 
-    public PhotoViewAttacher getAttacher() {
+    public VideoPlayerAttacher getAttacher() {
         return attacher;
     }
 
