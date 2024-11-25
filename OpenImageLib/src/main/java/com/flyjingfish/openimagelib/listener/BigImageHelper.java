@@ -5,6 +5,4 @@ import android.widget.ImageView;
 
 public interface BigImageHelper {
     void loadImage(Context context, String imageUrl,OnLoadBigImageListener onLoadBigImageListener);
-    @Deprecated
-    default void loadImage(Context context, String imageUrl,ImageView imageView){}
 }
