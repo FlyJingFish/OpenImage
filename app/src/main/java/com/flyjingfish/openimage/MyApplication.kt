@@ -37,8 +37,6 @@ class MyApplication : Application(), ImageLoaderFactory,SingletonImageLoader.Fac
         initPicasso()
         okHttpClient = ProgressManager.getInstance().with(OkHttpClient.Builder()).build()
 
-        FullGlideDownloadMediaHelper.getInstance().isDownloadWithCache = false
-        FullGlideDownloadMediaHelper.getInstance().defaultDownloadMediaHelper = Coil3DownloadMediaHelper()
     }
 
     private fun initPicasso() {
