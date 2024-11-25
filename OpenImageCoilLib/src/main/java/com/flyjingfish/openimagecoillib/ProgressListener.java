@@ -1,8 +1,6 @@
 package com.flyjingfish.openimagecoillib;
 
 
-import com.flyjingfish.openimagecoillib.ProgressInfo;
-
 interface ProgressListener {
     /**
      * 进度监听

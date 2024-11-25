@@ -3,8 +3,6 @@ package com.flyjingfish.openimagecoillib;
 import android.os.Handler;
 import android.os.SystemClock;
 
-import com.flyjingfish.openimagecoillib.ProgressInfo;
-
 import java.io.IOException;
 import java.util.List;
 
