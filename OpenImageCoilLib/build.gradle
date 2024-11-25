@@ -16,9 +16,9 @@ android {
 
 dependencies {
     api project(path: ':OpenImageLib')
-    api("io.coil-kt:coil:2.4.0")
-    implementation("io.coil-kt.coil3:coil:3.0.3")
-    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.3")
+    compileOnly("io.coil-kt:coil:2.4.0")
+    compileOnly("io.coil-kt.coil3:coil:3.0.3")
+    compileOnly("io.coil-kt.coil3:coil-network-okhttp:3.0.3")
 //    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 

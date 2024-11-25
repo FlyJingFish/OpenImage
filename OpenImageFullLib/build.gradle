@@ -13,7 +13,7 @@ dependencies {
     //完整版引入
     api 'com.github.CarGuo.GSYVideoPlayer:gsyvideoplayer-java:v10.0.0'
     api 'com.github.CarGuo.GSYVideoPlayer:gsyvideoplayer-exo2:v10.0.0'
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    compileOnly 'androidx.viewpager2:viewpager2:1.0.0'
 }
 
 

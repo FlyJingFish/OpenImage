@@ -6,7 +6,6 @@ version = rootProject.version
 
 def appVersionName = getAppVersionName()
 
-println "appVersionName: $appVersionName"
 mavenPublishing {
     coordinates(PROJ_GROUP, PROJ_NAME, appVersionName)
 
