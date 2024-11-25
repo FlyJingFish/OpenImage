@@ -15,3 +15,10 @@ dependencies {
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     api 'io.github.FlyJingFish:ShapeImageView:1.5.6'
 }
+
+
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+
+mavenPublishing {
+    configure(new AndroidSingleVariantLibrary("release", true, true))
+}

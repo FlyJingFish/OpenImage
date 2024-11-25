@@ -4,19 +4,18 @@ import android.content.ContentProvider
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
-import coil.Coil
+import coil3.imageLoader
 import com.flyjingfish.openimagelib.OpenImageConfig
 import com.flyjingfish.openimagelib.utils.OpenImageLogUtils
 
 class OpenImageCoilInitProvider : ContentProvider() {
     override fun onCreate(): Boolean {
         OpenImageLogUtils.init(context!!.applicationContext)
-        var isCoil3 = false
-        try {
-            val clazz: Class<*> = Coil::class.java
-            clazz.toString()
+        val isCoil3: Boolean = try {
+            val imageLoader = context!!.imageLoader
+            true
         } catch (e: NoClassDefFoundError) {
-            isCoil3 = true
+            false
         }
         //初始化大图加载器
         if (OpenImageConfig.getInstance().bigImageHelper == null) {

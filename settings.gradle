@@ -1,3 +1,29 @@
+pluginManagement {
+    repositories {
+        if (TestType == "0"){
+            mavenLocal()
+        }else if (TestType == "1"){
+            maven { url "https://s01.oss.sonatype.org/content/repositories/iogithubflyjingfish-"+SonatypeTestCode }
+        }
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        if (TestType == "0"){
+            mavenLocal()
+        }else if (TestType == "1"){
+            maven { url "https://s01.oss.sonatype.org/content/repositories/iogithubflyjingfish-"+SonatypeTestCode }
+        }
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+
+}
 rootProject.name = "OpenImage"
 include ':app'
 include ':OpenImageLib'
