@@ -14,11 +14,19 @@ public class OpenImageCoilInitProvider extends ContentProvider {
         OpenImageLogUtils.init(getContext().getApplicationContext());
         //初始化大图加载器
         if (OpenImageConfig.getInstance().getBigImageHelper() == null){
-            OpenImageConfig.getInstance().setBigImageHelper(new CoilBigImageHelper());
+            try {
+                OpenImageConfig.getInstance().setBigImageHelper(new CoilBigImageHelper());
+            } catch (NoClassDefFoundError e) {
+                OpenImageConfig.getInstance().setBigImageHelper(new Coil3BigImageHelper());
+            }
         }
         //初始化下载原图或视频类
         if (OpenImageConfig.getInstance().getDownloadMediaHelper() == null){
-            OpenImageConfig.getInstance().setDownloadMediaHelper(new CoilDownloadMediaHelper());
+            try {
+                OpenImageConfig.getInstance().setDownloadMediaHelper(new CoilDownloadMediaHelper());
+            } catch (NoClassDefFoundError e) {
+                OpenImageConfig.getInstance().setDownloadMediaHelper(new Coil3DownloadMediaHelper());
+            }
         }
         return true;
     }
