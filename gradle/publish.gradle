@@ -26,15 +26,11 @@ artifacts {
 }
 
 afterEvaluate {
-//    println("Components: " + components*.name)
     publishing {
         publications {
             mavenJava(MavenPublication) {
-//                from components.release
+                from components.findByName('release')
                 artifactId = PROJ_NAME
-                afterEvaluate {
-                    from components.findByName('release')
-                }
                 artifact androidSourcesJar
                 pom {
                     packaging = "aar"
