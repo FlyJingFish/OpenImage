@@ -9,9 +9,9 @@ import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.util.DebugLogger
-//import coil3.SingletonImageLoader
-//import coil3.gif.AnimatedImageDecoder
-//import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.SingletonImageLoader
+import coil3.gif.AnimatedImageDecoder
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import com.flyjingfish.openimage.openImpl.PicassoLoader
 import com.flyjingfish.openimage.openImpl.download.ProgressManager
 import com.flyjingfish.openimagecoillib.Coil3DownloadMediaHelper
@@ -24,7 +24,7 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 import java.util.concurrent.Executors
 
-class MyApplication : Application(), ImageLoaderFactory {
+class MyApplication : Application(), ImageLoaderFactory,SingletonImageLoader.Factory  {
     var okHttpClient: OkHttpClient? = null
         private set
 
@@ -64,24 +64,24 @@ class MyApplication : Application(), ImageLoaderFactory {
             .build()
     }
 
-//    override fun newImageLoader(context: Context): coil3.ImageLoader {
-//        val builder = coil3.ComponentRegistry.Builder()
-//        if (VERSION.SDK_INT >= 28) {
-//            builder.add(AnimatedImageDecoder.Factory())
-//        } else {
-//            builder.add(coil3.gif.GifDecoder.Factory())
-//        }
-//        builder.add(
-//            OkHttpNetworkFetcherFactory(
-//                callFactory = {
-//                    Coil3LoadImageUtils.getOkHttpClient()
-//                }
-//            )
-//        )
-//        return coil3.ImageLoader.Builder(this)
-//            .components(builder.build())
-//            .build();
-//    }
+    override fun newImageLoader(context: Context): coil3.ImageLoader {
+        val builder = coil3.ComponentRegistry.Builder()
+        if (VERSION.SDK_INT >= 28) {
+            builder.add(AnimatedImageDecoder.Factory())
+        } else {
+            builder.add(coil3.gif.GifDecoder.Factory())
+        }
+        builder.add(
+            OkHttpNetworkFetcherFactory(
+                callFactory = {
+                    Coil3LoadImageUtils.getOkHttpClient()
+                }
+            )
+        )
+        return coil3.ImageLoader.Builder(this)
+            .components(builder.build())
+            .build();
+    }
 
     companion object {
         @JvmField
