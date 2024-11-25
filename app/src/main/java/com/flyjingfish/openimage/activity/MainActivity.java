@@ -18,6 +18,8 @@ import com.flyjingfish.openimage.openImpl.AppDownloadFileHelper;
 import com.flyjingfish.openimage.openImpl.AppGlideBigImageHelper;
 import com.flyjingfish.openimage.openImpl.PicassoDownloader;
 import com.flyjingfish.openimage.openImpl.PicassoLoader;
+import com.flyjingfish.openimagecoillib.Coil3BigImageHelper;
+import com.flyjingfish.openimagecoillib.Coil3DownloadMediaHelper;
 import com.flyjingfish.openimagecoillib.CoilBigImageHelper;
 import com.flyjingfish.openimagecoillib.CoilDownloadMediaHelper;
 import com.flyjingfish.openimagefulllib.FullGlideDownloadMediaHelper;
@@ -34,6 +36,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import coil.Coil;
+import coil3.ImageLoadersKt;
+import coil3.SingletonImageLoaders_androidKt;
 
 public class MainActivity extends BaseActivity {
     private ActivityMainBinding binding;
@@ -82,9 +86,22 @@ public class MainActivity extends BaseActivity {
                 FullGlideDownloadMediaHelper.getInstance().setDefaultDownloadMediaHelper(new GlideDownloadMediaHelper());
                 OpenImageConfig.getInstance().setBigImageHelper(new GlideBigImageHelper());
             }else if (MyImageLoader.loader_os_type == MyImageLoader.COIL){
+                boolean isCoil3;
+                try {
+                    SingletonImageLoaders_androidKt.getImageLoader(this);
+                    isCoil3 = true;
+                } catch (NoClassDefFoundError e) {
+                    isCoil3 = false;
+                }
                 OpenImageConfig.getInstance().setDownloadMediaHelper(FullGlideDownloadMediaHelper.getInstance());
-                FullGlideDownloadMediaHelper.getInstance().setDefaultDownloadMediaHelper(new CoilDownloadMediaHelper());
-                OpenImageConfig.getInstance().setBigImageHelper(new CoilBigImageHelper());
+                if (isCoil3){
+                    FullGlideDownloadMediaHelper.getInstance().setDefaultDownloadMediaHelper(new Coil3DownloadMediaHelper());
+                    OpenImageConfig.getInstance().setBigImageHelper(new Coil3BigImageHelper());
+                }else {
+                    FullGlideDownloadMediaHelper.getInstance().setDefaultDownloadMediaHelper(new CoilDownloadMediaHelper());
+                    OpenImageConfig.getInstance().setBigImageHelper(new CoilBigImageHelper());
+                }
+
             }else {
                 OpenImageConfig.getInstance().setDownloadMediaHelper(new AppDownloadFileHelper());
                 OpenImageConfig.getInstance().setBigImageHelper(new AppGlideBigImageHelper());
