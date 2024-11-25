@@ -29,9 +29,10 @@ afterEvaluate {
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                from components.findByName('release')
                 artifactId = PROJ_NAME
                 artifact androidSourcesJar
+                artifact(tasks["bundleReleaseAar"])
+                from components.findByName('release')
                 pom {
                     packaging = "aar"
                     name = PROJ_BASENAME
