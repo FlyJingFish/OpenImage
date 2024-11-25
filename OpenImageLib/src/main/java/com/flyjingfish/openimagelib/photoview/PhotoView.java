@@ -26,6 +26,7 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
@@ -183,11 +184,11 @@ public class PhotoView extends AppCompatImageView {
 
     private void startGif(){
         Drawable drawable = getDrawable();
-        if (drawable instanceof Animatable2Compat) {
+        if (drawable instanceof Animatable) {
             post(() -> {
                 drawable.setVisible(true,false);
-                if (!((Animatable2Compat) drawable).isRunning()){
-                    ((Animatable2Compat) drawable).start();
+                if (!((Animatable) drawable).isRunning()){
+                    ((Animatable) drawable).start();
                 }
             });
         }

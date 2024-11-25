@@ -236,8 +236,10 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
         ViewParent viewParent = view.getParent();
         if (viewParent instanceof ViewPager2){
             return (ViewPager2) viewParent;
-        }else {
+        }else if (viewParent instanceof View){
             return findViewPager2((View) viewParent);
+        }else {
+            return null;
         }
     }
     private static class MyOnPageChangeCallback extends ViewPager2.OnPageChangeCallback{
