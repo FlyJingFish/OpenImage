@@ -10,7 +10,7 @@
 
 **[推荐一个库 AndroidAOP 一个注解就可请求权限，禁止多点，切换线程等等](https://github.com/FlyJingFish/AndroidAOP)**
 
-## [点此下载apk,也可扫下边二维码下载](https://github.com/FlyJingFish/OpenImage/blob/master/apk/release/app-release.apk?raw=true)
+## [点此下载apk,也可扫下边二维码下载](https://github.com/FlyJingFish/OpenImage/blob/master/apk/coil2/release/app-coil2-release.apk?raw=true)
 
 <img src="/screenshot/download_qrcode.png" alt="show" width="200px" />
 
