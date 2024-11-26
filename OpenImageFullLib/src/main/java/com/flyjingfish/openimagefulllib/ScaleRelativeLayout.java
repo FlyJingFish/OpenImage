@@ -118,13 +118,13 @@ public class ScaleRelativeLayout extends RelativeLayout {
         if (drawable.getIntrinsicWidth() == 0 || drawable.getIntrinsicHeight() == 0){
             return;
         }
-        float scaleX = mDrawRect.width()*1f/drawable.getIntrinsicWidth();
-        float scaleY = mDrawRect.height()*1f/drawable.getIntrinsicHeight();
+        float scaleX = mDrawRect.width() /drawable.getIntrinsicWidth();
+        float scaleY = mDrawRect.height() /drawable.getIntrinsicHeight();
 
         float centerX = mDrawRect.centerX();
         float centerY = mDrawRect.centerY();
-        float x = centerX - getWidth()/2;
-        float y = centerY - getHeight()/2;
+        float x = centerX - getWidth()/2f;
+        float y = centerY - getHeight()/2f;
         drawable.setTranslationX(x);
         drawable.setTranslationY(y);
         drawable.setScaleX(scaleX);
