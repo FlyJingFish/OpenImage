@@ -35,7 +35,15 @@ android {
             keyPassword '123456'
         }
     }
-
+    flavorDimensions "env"
+    productFlavors {
+        coil2 {
+            dimension "env"
+        }
+        coil3 {
+            dimension "env"
+        }
+    }
     buildTypes {
         debug {
             minifyEnabled false
@@ -97,11 +105,33 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'com.github.bumptech.glide:annotations:4.12.0'
     implementation 'com.github.bumptech.glide:okhttp3-integration:4.12.0'
-    implementation "io.coil-kt:coil:2.4.0"
-    implementation "io.coil-kt:coil-gif:2.4.0"
+//    if (TestCoil == "3"){
+//        compileOnly "io.coil-kt:coil:2.4.0"
+//        compileOnly "io.coil-kt:coil-gif:2.4.0"
+//        implementation("io.coil-kt.coil3:coil:3.0.3")
+//        implementation("io.coil-kt.coil3:coil-gif:3.0.3")
+//        implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.3")
+//    }else {
+//        implementation "io.coil-kt:coil:2.4.0"
+//        implementation "io.coil-kt:coil-gif:2.4.0"
+//        compileOnly("io.coil-kt.coil3:coil:3.0.3")
+//        compileOnly("io.coil-kt.coil3:coil-gif:3.0.3")
+//        compileOnly("io.coil-kt.coil3:coil-network-okhttp:3.0.3")
+//    }
+
+    coil2Implementation "io.coil-kt:coil:2.4.0"
+    coil2Implementation "io.coil-kt:coil-gif:2.4.0"
+
+    coil3Implementation("io.coil-kt.coil3:coil:3.0.3")
+    coil3Implementation("io.coil-kt.coil3:coil-gif:3.0.3")
+    coil3Implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.3")
+
+    compileOnly "io.coil-kt:coil:2.4.0"
+    compileOnly "io.coil-kt:coil-gif:2.4.0"
     compileOnly("io.coil-kt.coil3:coil:3.0.3")
     compileOnly("io.coil-kt.coil3:coil-gif:3.0.3")
     compileOnly("io.coil-kt.coil3:coil-network-okhttp:3.0.3")
+
 
     if (TestType == "0"){
         implementation project(path: ':OpenImageFullLib')

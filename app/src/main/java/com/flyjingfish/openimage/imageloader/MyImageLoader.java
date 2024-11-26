@@ -247,7 +247,7 @@ public class MyImageLoader {
         }else if (loader_os_type == COIL){
             boolean isCoil3;
             try {
-                SingletonImageLoaders_androidKt.getImageLoader(this);
+                SingletonImageLoaders_androidKt.getImageLoader(iv.getContext());
                 isCoil3 = true;
             } catch (NoClassDefFoundError e) {
                 isCoil3 = false;
