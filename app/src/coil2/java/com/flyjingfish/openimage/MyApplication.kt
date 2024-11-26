@@ -1,6 +1,5 @@
 package com.flyjingfish.openimage
 
-import android.content.Context
 import android.os.Build.VERSION
 import coil.ComponentRegistry
 import coil.ImageLoader
@@ -8,7 +7,6 @@ import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.util.DebugLogger
-import com.flyjingfish.openimagecoillib.Coil3LoadImageUtils
 import com.flyjingfish.openimagecoillib.CoilLoadImageUtils
 import java.util.concurrent.Executors
 
