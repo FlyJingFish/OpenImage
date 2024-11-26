@@ -154,18 +154,35 @@ public class MainActivity extends BaseActivity {
     }
 
     private void clearCache() {
-
+        boolean isCoil3;
         try {
-            Coil.imageLoader(this).getMemoryCache().clear();
+            SingletonImageLoaders_androidKt.getImageLoader(this);
+            isCoil3 = true;
+        } catch (NoClassDefFoundError e) {
+            isCoil3 = false;
+        }
+        try {
+            if (isCoil3){
+                SingletonImageLoaders_androidKt.getImageLoader(this).getMemoryCache().clear();
+            }else {
+                Coil.imageLoader(this).getMemoryCache().clear();
+            }
         } catch (Exception e) {
         }
+
         Glide.get(MainActivity.this).clearMemory();
         clearPicassoMemory();
+        boolean finalIsCoil3 = isCoil3;
         MyApplication.cThreadPool.submit(() -> {
             try {
-                Coil.imageLoader(this).getDiskCache().clear();
+                if (finalIsCoil3){
+                    SingletonImageLoaders_androidKt.getImageLoader(this).getDiskCache().clear();
+                }else {
+                    Coil.imageLoader(this).getDiskCache().clear();
+                }
             } catch (Exception e) {
             }
+
             Glide.get(MainActivity.this).clearDiskCache();
             clearPicassoCache();
             clearPicassoVideoCache();
