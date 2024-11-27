@@ -739,16 +739,10 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
             checkAndDisplayMatrix();
         }
     }
-    public void setScaleIgnoreBounds(float scale) {
-        mSuppMatrix.setScale(scale, scale, (mImageView.getRight()) / 2,
-                (mImageView.getBottom()) / 2);
-        mBigImageMatrix.setScale(scale, scale, (mImageView.getRight()) / 2,
-                (mImageView.getBottom()) / 2);
-        checkAndDisplayMatrix();
-    }
-    public void postTranslate(float dx, float dy) {
-        mSuppMatrix.postTranslate(dx, dy);
-        mBigImageMatrix.postTranslate(dx, dy);
+
+    public void syncMatrixValue(float[] values) {
+        mSuppMatrix.setValues(values);
+        mBigImageMatrix.setValues(values);
         checkAndDisplayMatrix();
     }
     /**
@@ -845,8 +839,10 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
         matrix.getValues(mMatrixValues);
         return mMatrixValues[whichValue];
     }
-    public float getValue(int whichValue) {
-        return getValue(mSuppMatrix, whichValue);
+
+    public float[] getMatrixValues() {
+        mSuppMatrix.getValues(mMatrixValues);
+        return mMatrixValues;
     }
     /**
      * Resets the Matrix back to FIT_CENTER, and then displays its contents

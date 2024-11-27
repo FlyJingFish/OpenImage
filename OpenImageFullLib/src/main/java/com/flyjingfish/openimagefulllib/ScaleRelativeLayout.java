@@ -1,7 +1,6 @@
 package com.flyjingfish.openimagefulllib;
 
 import android.content.Context;
-import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.ViewTreeObserver;
@@ -33,7 +32,6 @@ public class ScaleRelativeLayout extends RelativeLayout {
     public ScaleRelativeLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs,0);
     }
-
     public ScaleRelativeLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         attacher = new VideoPlayerAttacher(ScaleRelativeLayout.this);
@@ -101,19 +99,11 @@ public class ScaleRelativeLayout extends RelativeLayout {
     }
 
     private void syncAttacher(){
-        float scaleX = photoViewAttacher.getValue(Matrix.MSCALE_X);
-        float translateX = photoViewAttacher.getValue(Matrix.MTRANS_X);
-        float translateY = photoViewAttacher.getValue(Matrix.MTRANS_Y);
-        attacher.setScaleIgnoreBounds(scaleX);
-        attacher.postTranslate(translateX,translateY);
+        attacher.syncMatrixValue(photoViewAttacher.getMatrixValues());
     }
 
     private void syncPhotoAttacher(){
-        float scaleX = attacher.getValue(Matrix.MSCALE_X);
-        float translateX = attacher.getValue(Matrix.MTRANS_X);
-        float translateY = attacher.getValue(Matrix.MTRANS_Y);
-        photoViewAttacher.setScaleIgnoreBounds(scaleX);
-        photoViewAttacher.postTranslate(translateX,translateY);
+        photoViewAttacher.syncMatrixValue(attacher.getMatrixValues());
     }
 
     @Override
