@@ -47,7 +47,9 @@ import com.flyjingfish.openimagelib.photoview.ViewUtils;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * The component of {@link PhotoView} which does the work allowing for zooming, scaling, panning, etc.
@@ -89,6 +91,7 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
     private final float[] mMatrixValues = new float[9];
 
     // Listeners
+    private final List<OnMatrixChangedListener> mMatrixChangeListeners = new ArrayList<>();
     private OnMatrixChangedListener mMatrixChangeListener;
     private OnPhotoTapListener mPhotoTapListener;
     private OnOutsidePhotoTapListener mOutsidePhotoTapListener;
@@ -591,12 +594,6 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
 
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
-        if (onProxyTouchListener != null && v instanceof ScaleRelativeLayout){
-            onProxyTouchListener.onTouch(v,ev);
-        }
-        if (!(v instanceof ScaleRelativeLayout)){
-            v = mImageView;
-        }
         boolean handled = false;
         isTouched = true;
         if (mZoomEnabled && Util.hasDrawable((ScaleRelativeLayout) v)) {
@@ -694,7 +691,12 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
     public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
         mMatrixChangeListener = listener;
     }
-
+    public void addOnMatrixChangeListener(OnMatrixChangedListener listener) {
+        mMatrixChangeListeners.add(listener);
+    }
+    public void removeOnMatrixChangeListener(OnMatrixChangedListener listener) {
+        mMatrixChangeListeners.remove(listener);
+    }
     public void setOnPhotoTapListener(OnPhotoTapListener listener) {
         mPhotoTapListener = listener;
     }
@@ -736,6 +738,13 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
             mBigImageMatrix.setScale(scale, scale, focalX, focalY);
             checkAndDisplayMatrix();
         }
+    }
+    public void setScaleIgnoreBounds(float scale) {
+        mSuppMatrix.setScale(scale, scale, (mImageView.getRight()) / 2,
+                (mImageView.getBottom()) / 2);
+        mBigImageMatrix.setScale(scale, scale, (mImageView.getRight()) / 2,
+                (mImageView.getBottom()) / 2);
+        checkAndDisplayMatrix();
     }
     public void postTranslate(float dx, float dy) {
         mSuppMatrix.postTranslate(dx, dy);
@@ -891,12 +900,22 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
 
 
     private void setImageViewMatrix(Matrix matrix) {
-        mImageView.setImageMatrix(matrix);
+        RectF displayRect = getDisplayRect(matrix);
+        if (displayRect == null) {
+            return;
+        }
+        mImageView.setImageRectF(displayRect);
         // Call MatrixChangedListener if needed
-        if (mMatrixChangeListener != null) {
-            RectF displayRect = getDisplayRect(matrix);
-            if (displayRect != null) {
-                mMatrixChangeListener.onMatrixChanged(displayRect);
+        List<OnMatrixChangedListener> listeners = new ArrayList<>();
+        if (mMatrixChangeListener != null){
+            listeners.add(mMatrixChangeListener);
+        }
+        if (!mMatrixChangeListeners.isEmpty()){
+            listeners.addAll(mMatrixChangeListeners);
+        }
+        if (!listeners.isEmpty()) {
+            for (OnMatrixChangedListener listener : listeners) {
+                listener.onMatrixChanged(displayRect);
             }
         }
     }
@@ -1572,12 +1591,6 @@ public class VideoPlayerAttacher implements View.OnTouchListener,
 
     void resetBigImageMatrix() {
         mBigImageMatrix.reset();
-    }
-
-    private View.OnTouchListener onProxyTouchListener;
-
-    public void setOnProxyTouchListener(View.OnTouchListener onTouchListener){
-        onProxyTouchListener = onTouchListener;
     }
 
 }
