@@ -140,4 +140,6 @@ dependencies {
         implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:'+TestVersion
         implementation 'io.github.FlyJingFish.OpenImage:OpenImageCoilLib:'+TestVersion
     }
+
+    implementation 'io.github.lucksiege:pictureselector:v3.11.2'
 }
