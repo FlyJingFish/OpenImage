@@ -21,6 +21,7 @@
         android:roundIcon="@mipmap/icon_logo"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/Theme.OpenImage">
         <meta-data
