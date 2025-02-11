@@ -1,5 +1,9 @@
 # OpenImage 更新日志
 
+## 2.3.7
+
+1、尝试修复 [#34](https://github.com/FlyJingFish/OpenImage/issues/34)，待观察
+
 ## 2.3.6
 
 1、修改图片和视频同步缩放的方式，防止出现缩放大小不同步的问题
