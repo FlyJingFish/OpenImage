@@ -1,5 +1,10 @@
 # OpenImage 更新日志
 
+## 2.3.8
+
+1、优化超大图查看细节时的不清晰问题
+
+
 ## 2.3.7
 
 1、尝试修复 [#34](https://github.com/FlyJingFish/OpenImage/issues/34)，待观察
