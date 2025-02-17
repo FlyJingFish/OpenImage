@@ -29,6 +29,8 @@ class PhotoViewSuperBigImageHelper {
     private final PhotoView photoView;
     private int imageWidth;
     private int imageHeight;
+    private int viewWidth;
+    private int viewHeight;
     private boolean isSuperBigImage;
     private SkiaImageRegionDecoder skiaImageRegionDecoder;
     private final ReadWriteLock decoderLock = new ReentrantReadWriteLock(true);
@@ -151,6 +153,8 @@ class PhotoViewSuperBigImageHelper {
         public void onGlobalLayout() {
             TOTAL_CACHE_LENGTH = Math.max(photoView.getWidth()/2f,ScreenUtils.dp2px(photoView.getContext(), 100));
             isOnGlobalLayout = true;
+            viewWidth = photoView.getWidth();
+            viewHeight = photoView.getHeight();
             photoView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         }
     }
@@ -322,7 +326,10 @@ class PhotoViewSuperBigImageHelper {
 //                    showRect = new Rect(left1,top1,right1,bottom1);
                             Rect subsamplingRect = new Rect((int) ((left - cacheLengthLeft) / scale), (int) ((top - cacheLengthTop) / scale), (int) ((right + cacheLengthRight) / scale), (int) ((bottom + cacheLengthBottom) / scale));
                             RectF showViewRect = new RectF((left1 - cacheLengthLeft), (top1 - cacheLengthTop), (right1 + cacheLengthRight), (bottom1 + cacheLengthBottom));
-                            int inSampleSize = BitmapUtils.getMaxInSampleSize(subsamplingRect.width(), subsamplingRect.height());
+//                            int inSampleSize = BitmapUtils.getMaxInSampleSize(subsamplingRect.width(), subsamplingRect.height());
+                            int scaleH = (int) (subsamplingRect.height()*1f/viewHeight);
+                            int scaleW = (int) (subsamplingRect.width()*1f/viewWidth);
+                            int inSampleSize = Math.max(Math.min(scaleH,scaleW),1);
                             RectF subsamplingRectF= new RectF(subsamplingRect.left,subsamplingRect.top,subsamplingRect.right,subsamplingRect.bottom);
                             rotateRect(subsamplingRectF,rotate,originalImageSize);
                             Bitmap bitmap = null;
