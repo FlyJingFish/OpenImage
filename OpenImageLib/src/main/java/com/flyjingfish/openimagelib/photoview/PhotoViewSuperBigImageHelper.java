@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -324,12 +325,16 @@ class PhotoViewSuperBigImageHelper {
 
 //                    Rect subsamplingRect = new Rect((int) (left/scale), (int) (top/scale), (int) (right/scale), (int) (bottom/scale));
 //                    showRect = new Rect(left1,top1,right1,bottom1);
-                            Rect subsamplingRect = new Rect((int) ((left - cacheLengthLeft) / scale), (int) ((top - cacheLengthTop) / scale), (int) ((right + cacheLengthRight) / scale), (int) ((bottom + cacheLengthBottom) / scale));
-                            RectF showViewRect = new RectF((left1 - cacheLengthLeft), (top1 - cacheLengthTop), (right1 + cacheLengthRight), (bottom1 + cacheLengthBottom));
-//                            int inSampleSize = BitmapUtils.getMaxInSampleSize(subsamplingRect.width(), subsamplingRect.height());
-                            int scaleH = (int) (subsamplingRect.height()*1f/viewHeight);
-                            int scaleW = (int) (subsamplingRect.width()*1f/viewWidth);
-                            int inSampleSize = Math.max(Math.min(scaleH,scaleW),1);
+//                            Rect subsamplingRect = new Rect((int) ((left - cacheLengthLeft) / scale), (int) ((top - cacheLengthTop) / scale), (int) ((right + cacheLengthRight) / scale), (int) ((bottom + cacheLengthBottom) / scale));
+//                            RectF showViewRect = new RectF((left1 - cacheLengthLeft), (top1 - cacheLengthTop), (right1 + cacheLengthRight), (bottom1 + cacheLengthBottom));
+                            Rect subsamplingRect = new Rect((int) ((left ) / scale), (int) ((top ) / scale), (int) ((right ) / scale), (int) ((bottom ) / scale));
+                            RectF showViewRect = new RectF((left1 ), (top1), (right1 ), (bottom1 ));
+//                            int inSampleSize2 = BitmapUtils.getMaxInSampleSize(subsamplingRect.width(), subsamplingRect.height());
+//                            int scaleH = (int) (subsamplingRect.height()*1f/viewHeight);
+//                            int scaleW = (int) (subsamplingRect.width()*1f/viewWidth);
+//                            int inSampleSize = Math.max(Math.min(scaleH,scaleW),1);
+                            int inSampleSize = calculateInSampleSize(subsamplingRect, (int) showViewRect.width(), (int) showViewRect.height());
+//                            int inSampleSize = calculateInSampleSize(subsamplingRect, viewWidth, viewHeight);
                             RectF subsamplingRectF= new RectF(subsamplingRect.left,subsamplingRect.top,subsamplingRect.right,subsamplingRect.bottom);
                             rotateRect(subsamplingRectF,rotate,originalImageSize);
                             Bitmap bitmap = null;
@@ -339,6 +344,7 @@ class PhotoViewSuperBigImageHelper {
                                 int pivotY = bitmap.getHeight() / 2; // 旋转中心的Y坐标
 
                                 bitmap = rotateBitmap(bitmap, rotate, pivotX, pivotY);
+//                                OpenImageLogUtils.logE("inSampleSize",inSampleSize+"=="+"==="+bitmap.getWidth()+"=="+bitmap.getHeight()+"==="+subsamplingRect.width()+"=="+subsamplingRect.height());
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }
@@ -353,6 +359,21 @@ class PhotoViewSuperBigImageHelper {
             return null;
         }
 
+
+        public static int calculateInSampleSize(Rect region, int viewWidth, int viewHeight) {
+            int regionWidth = region.width();
+            int regionHeight = region.height();
+
+            int inSampleSize = 1;
+
+            // 确保至少比 View 大一点，防止模糊
+            while ((regionWidth / (inSampleSize * 2)) >= viewWidth &&
+                    (regionHeight / (inSampleSize * 2)) >= viewHeight) {
+                inSampleSize *= 2;
+            }
+
+            return inSampleSize;  // 不能太大，防止模糊
+        }
 
 
         public static Bitmap rotateBitmap(Bitmap source, float angle, int pivotX, int pivotY) {
