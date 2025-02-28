@@ -11,7 +11,7 @@ plugins {
 ext {
     compileSdk = 34
     targetSdk = 31
-    minSdk = 21
+    minSdk = 22
 }
 
 def synchronized getVersionProperty(propName, defValue) {

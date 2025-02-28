@@ -684,7 +684,7 @@ Coil 混淆规则，遵循 [Coroutines](https://github.com/Kotlin/kotlinx.corout
 ```
 
 ### 版本限制
-最低SDK版本：minSdkVersion >= 21
+最低SDK版本：minSdkVersion >= 22
  
  
 ### 常见问题
