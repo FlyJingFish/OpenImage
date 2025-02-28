@@ -1,5 +1,11 @@
 # OpenImage 更新日志
 
+## 2.4.0
+
+1、fix [#45](https://github.com/FlyJingFish/OpenImage/issues/45)
+
+2、针对 [#46](https://github.com/FlyJingFish/OpenImage/issues/46)，提出的问题不进行修复，而是直接升级最低sdk版本
+
 ## 2.3.9
 
 1、优化超大图查看细节的加载大小保证不卡顿
