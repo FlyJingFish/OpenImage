@@ -7,7 +7,10 @@ import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 
 import androidx.annotation.ColorInt;
 import androidx.core.view.ViewCompat;
@@ -140,12 +143,33 @@ public class StatusBarHelper {
 
     @TargetApi(28)
     private static void realHandleDisplayCutoutMode(Window window, View decorView) {
-        if (decorView.getRootWindowInsets() != null &&
-                decorView.getRootWindowInsets().getDisplayCutout() != null) {
-            WindowManager.LayoutParams params = window.getAttributes();
-            params.layoutInDisplayCutoutMode = WindowManager.LayoutParams
-                    .LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            window.setAttributes(params);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            WindowInsetsController controller = window.getInsetsController();
+            if (controller != null) {
+                controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // Android 11+
+            WindowMetrics metrics = window.getWindowManager().getMaximumWindowMetrics();
+            if (metrics.getWindowInsets().getDisplayCutout() != null) {
+                WindowManager.LayoutParams params = window.getAttributes();
+                if (Build.VERSION.SDK_INT >= 35) {
+                    // Android 15+ 默认已启用 Edge-to-Edge，无需手动设置
+                    params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
+                } else {
+                    params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                }
+                window.setAttributes(params);
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) { // Android 9+
+            if (decorView.getRootWindowInsets() != null &&
+                    decorView.getRootWindowInsets().getDisplayCutout() != null) {
+                WindowManager.LayoutParams params = window.getAttributes();
+                params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                window.setAttributes(params);
+            }
         }
     }
 
