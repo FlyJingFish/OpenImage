@@ -8,24 +8,70 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
+import android.database.Cursor;
 import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
 
 public class ExifHelper {
     public static ExifInterface getExifInterface(Context context, String filePath) {
-        ExifInterface exifInterface = null;
         try {
-            if (filePath.startsWith("file:///android_asset/")){
+            if (filePath.startsWith("file:///android_asset/")) {
                 String fileName = filePath.replace("file:///android_asset/", "");
-                exifInterface = ExifHelper.getExifFromAssets(context,fileName);
-            }else {
-                exifInterface = new ExifInterface(filePath);
+                return ExifHelper.getExifFromAssets(context, fileName);
             }
+
+            if (filePath.startsWith("content://")) {
+                return getExifFromContentUri(context, Uri.parse(filePath));
+            }
+
+            return new ExifInterface(filePath);
 
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return exifInterface;
     }
+
+    /**
+     * 从 Content URI 获取 ExifInterface
+     */
+    private static ExifInterface getExifFromContentUri(Context context, Uri uri) throws IOException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            try (InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
+                if (inputStream != null) {
+                    return new ExifInterface(inputStream);
+                }
+            }
+        } else {
+            // Android 10 以下版本，尝试从 MediaStore 查询文件路径
+            String path = getFilePathFromUri(context, uri);
+            if (path != null) {
+                return new ExifInterface(path);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 从 Content URI 查询文件路径（仅适用于 Android 10 以下）
+     */
+    private static String getFilePathFromUri(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri,
+                new String[]{MediaStore.Images.Media.DATA}, null, null, null);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
     private static ExifInterface getExifFromAssets(Context context, String assetImageName) {
         try (InputStream inputStream = context.getAssets().open(assetImageName);){
 
