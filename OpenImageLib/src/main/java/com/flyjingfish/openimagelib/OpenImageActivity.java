@@ -121,10 +121,15 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         getWindow().setAllowEnterTransitionOverlap(true);
         initPhotosViewModel();
         initRootView();
-        parseIntent();
-        initStyleConfig();
+        boolean isFinish = parseIntent();
+        if (!isFinish){
+            initStyleConfig();
+        }
 
         super.onCreate(savedInstanceState);
+        if (isFinish){
+            return;
+        }
         setContentView(contentView);
 
         initMoreView();

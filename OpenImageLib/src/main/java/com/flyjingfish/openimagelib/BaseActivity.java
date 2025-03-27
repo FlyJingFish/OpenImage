@@ -299,14 +299,14 @@ class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void parseIntent() {
+    protected boolean parseIntent() {
         OpenActivityDataViewModel openActivityDataViewModel = new ViewModelProvider(this).get(OpenActivityDataViewModel.class);
         openActivityData = openActivityDataViewModel.openDataMutableLiveData.getValue();
         if (openActivityData == null){
             openActivityData = new OpenActivityData();
             openActivityData.setActivity(this);
             if (openActivityData.parseIntent()){
-                return;
+                return true;
             }
             openActivityData.setActivity(null);
             openActivityDataViewModel.openDataMutableLiveData.setValue(openActivityData);
@@ -339,6 +339,7 @@ class BaseActivity extends AppCompatActivity {
         preloadCount = openActivityData.preloadCount;
         lazyPreload = openActivityData.lazyPreload;
         bothLoadCover = openActivityData.bothLoadCover;
+        return false;
     }
 
     protected void addOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
