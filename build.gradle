@@ -77,6 +77,13 @@ task aaBumpVersion() {
         String text = exportText.replaceAll("Lib:"+oldVersionName,"Lib:"+newVersionName)
 
         configFile.write(text)
+
+        File gradleFile = new File("gradle.properties")
+        String gradleText = gradleFile.text
+        String text2 = gradleText.replace("TestVersion = "+oldVersionName,"TestVersion = "+newVersionName)
+
+
+        gradleFile.write(text2)
         println("升级版本号完成，versionName = "+newVersionName)
     }
 }
