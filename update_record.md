@@ -1,5 +1,9 @@
 # OpenImage 更新日志
 
+## 2.4.2
+
+1、修复一个报错日志的问题
+
 ## 2.4.1
 
 1、fix [#47](https://github.com/FlyJingFish/OpenImage/issues/47)
