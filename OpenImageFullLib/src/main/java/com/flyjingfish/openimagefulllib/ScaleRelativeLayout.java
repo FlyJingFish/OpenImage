@@ -71,7 +71,8 @@ public class ScaleRelativeLayout extends RelativeLayout {
             public void onGlobalLayout() {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 gsyVideoPlayer = Util.getVideoPlayer(ScaleRelativeLayout.this);
-                if (gsyVideoPlayer instanceof ScaleOpenImageVideoPlayer scaleOpenImageVideoPlayer){
+                if (gsyVideoPlayer instanceof ScaleOpenImageVideoPlayer){
+                    ScaleOpenImageVideoPlayer scaleOpenImageVideoPlayer = (ScaleOpenImageVideoPlayer) gsyVideoPlayer;
                     PhotoView coverImageView = scaleOpenImageVideoPlayer.getCoverImageView();
                     photoViewAttacher = coverImageView.getAttacher();
                     attacher.setOnChangedListener(() -> {

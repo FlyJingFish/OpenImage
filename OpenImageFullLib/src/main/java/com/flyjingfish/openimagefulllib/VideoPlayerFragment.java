@@ -229,7 +229,8 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
 
     @Override
     public View getExitImageView() {
-        if (videoPlayer instanceof ScaleOpenImageVideoPlayer scaleOpenImageVideoPlayer){
+        if (videoPlayer instanceof ScaleOpenImageVideoPlayer){
+            ScaleOpenImageVideoPlayer scaleOpenImageVideoPlayer = (ScaleOpenImageVideoPlayer) videoPlayer;
             scaleOpenImageVideoPlayer.getAttacher().setExitMode(true);
         }
         return super.getExitImageView();
