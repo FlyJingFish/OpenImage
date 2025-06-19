@@ -1,6 +1,6 @@
 # OpenImage 图片查看大图库
 
-[![Maven central](https://img.shields.io/maven-central/v/io.github.FlyJingFish.OpenImage/OpenImageLib)](https://central.sonatype.com/search?q=io.github.FlyJingFish.OpenImage)
+[![Maven central](https://img.shields.io/maven-central/v/io.github.flyjingfish/openimage-base)](https://central.sonatype.com/artifact/io.github.flyjingfish/openimage-base/)
 [![GitHub stars](https://img.shields.io/github/stars/FlyJingFish/OpenImage.svg)](https://github.com/FlyJingFish/OpenImage/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/FlyJingFish/OpenImage.svg)](https://github.com/FlyJingFish/OpenImage/network/members)
 [![GitHub issues](https://img.shields.io/github/issues/FlyJingFish/OpenImage.svg)](https://github.com/FlyJingFish/OpenImage/issues)
