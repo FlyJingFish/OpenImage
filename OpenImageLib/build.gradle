@@ -13,7 +13,7 @@ android {
 dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
-    api 'io.github.FlyJingFish:ShapeImageView:1.5.6'
+    api 'io.github.flyjingfish:shapeimageview:1.5.7'
 }
 
 

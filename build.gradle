@@ -74,7 +74,10 @@ task aaBumpVersion() {
 
         File configFile = new File("README.md")
         String exportText = configFile.text
-        String text = exportText.replaceAll("Lib:"+oldVersionName,"Lib:"+newVersionName)
+        String text = exportText.replaceAll("openimage-coil:"+oldVersionName,"openimage-coil:"+newVersionName)
+        text = text.replaceAll("openimage-glide:"+oldVersionName,"openimage-glide:"+newVersionName)
+        text = text.replaceAll("openimage-full:"+oldVersionName,"openimage-full:"+newVersionName)
+        text = text.replaceAll("openimage-base:"+oldVersionName,"openimage-base:"+newVersionName)
 
         configFile.write(text)
 
