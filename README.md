@@ -55,6 +55,8 @@ RecyclerView场景  | 聊天页面 | 打开视频
 
 13、支持自定义大图切换效果（PageTransformer）
 
+14、支持 Compose [示例](https://github.com/FlyJingFish/OpenImage/blob/master/app/src/main/java/com/flyjingfish/openimage/activity/ComposeActivity.kt)
+
 ## 前言
 
 1、建议使用Glide效果更好，另外建议开启原图缓存（有些版本是自动缓存原图的）Glide通过设置diskCacheStrategy 为DiskCacheStrategy.ALL或DiskCacheStrategy.DATA
@@ -89,18 +91,18 @@ allprojects {
 
 ```gradle
 //OpenImageFullLib 默认已经包含了OpenImageGlideLib
-implementation 'io.github.flyjingfish:openimage-full:2.4.4'
+implementation 'io.github.flyjingfish:openimage-full:2.4.5'
 ```
 
 - 使用 Coil 作为图片加载器，如果你的项目组存在[Coil](https://github.com/coil-kt/coil)请升级至 **2.4.0** 或者更高的版本，否则会冲突
 
 ```gradle
 //OpenImageFullLib 因为已经包含了 OpenImageGlideLib，所以需要排除掉 OpenImageGlideLib，否则会同时存在 Glide 和 Coil
-implementation ('io.github.flyjingfish:openimage-full:2.4.4'){
+implementation ('io.github.flyjingfish:openimage-full:2.4.5'){
     exclude module: 'OpenImageGlideLib'
 }
 //OpenImageCoilLib 引入Coil（2.4.0）图片引擎
-implementation 'io.github.flyjingfish:openimage-coil:2.4.4'
+implementation 'io.github.flyjingfish:openimage-coil:2.4.5'
 ```
 
 #### B、引入只带有图片引擎的版本（只支持查看图片）
@@ -111,14 +113,14 @@ implementation 'io.github.flyjingfish:openimage-coil:2.4.4'
 
 ```gradle
 //OpenImageGlideLib 引入Glide（4.12.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-implementation 'io.github.flyjingfish:openimage-glide:2.4.4'
+implementation 'io.github.flyjingfish:openimage-glide:2.4.5'
 ```
 
 - 使用 Coil 作为图片加载器，如果你的项目组存在[Coil](https://github.com/coil-kt/coil)请升级至 **2.4.0** 或者更高的版本，否则会冲突
 
 ```gradle
 //OpenImageCoilLib 引入Coil（2.4.0）图片引擎,没有引入视频播放器；如需定制视频播放功能，详细看Wiki文档，如果不想定制可直接使用上边的库
-implementation 'io.github.flyjingfish:openimage-coil:2.4.4'
+implementation 'io.github.flyjingfish:openimage-coil:2.4.5'
 ```
 
 #### C、引入基础版本（不可以直接查看图片和视频，完全需要自定义）
@@ -128,7 +130,7 @@ implementation 'io.github.flyjingfish:openimage-coil:2.4.4'
 ```gradle
 //OpenImageLib 是基础库，没有引入图片引擎和视频播放器
 //至少需要实现BigImageHelper来定制您的图片引擎，如需定制视频播放功能，详细看Wiki文档
-implementation 'io.github.flyjingfish:openimage-base:2.4.4'
+implementation 'io.github.flyjingfish:openimage-base:2.4.5'
 
 ```
 
