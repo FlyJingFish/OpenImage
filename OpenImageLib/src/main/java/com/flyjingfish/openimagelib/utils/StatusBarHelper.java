@@ -34,12 +34,12 @@ public class StatusBarHelper {
     private static StatusBarType mStatusBarType = StatusBarType.Default;
     private static Integer sTransparentValue;
 
-    public static void translucent(Activity activity) {
-        translucent(activity.getWindow());
+    public static void translucent(Activity activity, boolean fullScreen) {
+        translucent(activity.getWindow(),fullScreen);
     }
 
-    public static void translucent(Window window) {
-        translucent(window, 0x40000000);
+    public static void translucent(Window window, boolean fullScreen) {
+        translucent(window, 0x40000000,fullScreen);
     }
 
     private static boolean supportTranslucent() {
@@ -47,30 +47,30 @@ public class StatusBarHelper {
         return !(DeviceHelper.isEssentialPhone() && Build.VERSION.SDK_INT < 26);
     }
 
-    /**
-     * 沉浸式状态栏。
-     * 支持 4.4 以上版本的 MIUI 和 Flyme，以及 5.0 以上版本的其他 Android。
-     *
-     * @param activity 需要被设置沉浸式状态栏的 Activity。
-     */
-    public static void translucent(Activity activity, @ColorInt int colorOn5x) {
-        Window window = activity.getWindow();
-        translucent(window, colorOn5x);
-    }
+//    /**
+//     * 沉浸式状态栏。
+//     * 支持 4.4 以上版本的 MIUI 和 Flyme，以及 5.0 以上版本的其他 Android。
+//     *
+//     * @param activity 需要被设置沉浸式状态栏的 Activity。
+//     */
+//    public static void translucent(Activity activity, @ColorInt int colorOn5x) {
+//        Window window = activity.getWindow();
+//        translucent(window, colorOn5x);
+//    }
 
     public static boolean isNotchOfficialSupport(){
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
     }
 
     @TargetApi(19)
-    public static void translucent(Window window, @ColorInt int colorOn5x) {
+    public static void translucent(Window window, @ColorInt int colorOn5x, boolean fullScreen) {
         if (!supportTranslucent()) {
             // 版本小于4.4，绝对不考虑沉浸式
             return;
         }
 
         if (isNotchOfficialSupport()) {
-            handleDisplayCutoutMode(window);
+            handleDisplayCutoutMode(window,fullScreen);
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
@@ -119,17 +119,17 @@ public class StatusBarHelper {
     }
 
     @TargetApi(28)
-    private static void handleDisplayCutoutMode(final Window window) {
+    private static void handleDisplayCutoutMode(final Window window, boolean fullScreen) {
         View decorView = window.getDecorView();
         if (decorView != null) {
             if (ViewCompat.isAttachedToWindow(decorView)) {
-                realHandleDisplayCutoutMode(window, decorView);
+                realHandleDisplayCutoutMode(window, decorView,fullScreen);
             } else {
                 decorView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                     @Override
                     public void onViewAttachedToWindow(View v) {
                         v.removeOnAttachStateChangeListener(this);
-                        realHandleDisplayCutoutMode(window, v);
+                        realHandleDisplayCutoutMode(window, v,fullScreen);
                     }
 
                     @Override
@@ -142,11 +142,11 @@ public class StatusBarHelper {
     }
 
     @TargetApi(28)
-    private static void realHandleDisplayCutoutMode(Window window, View decorView) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+    private static void realHandleDisplayCutoutMode(Window window, View decorView, boolean fullScreen) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R && fullScreen) {
             WindowInsetsController controller = window.getInsetsController();
             if (controller != null) {
-                controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+                controller.hide(WindowInsets.Type.statusBars());
                 controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
             }
         }

@@ -512,7 +512,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         if (themeRes != 0) {
             setTheme(themeRes);
             fontStyle = FontStyle.getStyle(AttrsUtils.getTypeValueInt(this, themeRes, R.attr.openImage_statusBar_fontStyle));
-            StatusBarHelper.translucent(this);
+            StatusBarHelper.translucent(this,fontStyle == FontStyle.FULL_SCREEN);
             if (fontStyle == FontStyle.LIGHT) {
                 StatusBarHelper.setStatusBarLightMode(this);
             } else if (fontStyle == FontStyle.FULL_SCREEN) {
@@ -547,7 +547,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             requestWriteExternalStoragePermissionsFail = (String) AttrsUtils.getTypeValueText(this, themeRes, R.attr.openImage_requestWriteExternalStoragePermissionsFail);
         } else {
             fontStyle = FontStyle.DARK;
-            StatusBarHelper.translucent(this);
+            StatusBarHelper.translucent(this,false);
             StatusBarHelper.setStatusBarDarkMode(this);
             orientation = OpenImageOrientation.HORIZONTAL;
             compositePageTransformer.addTransformer(new MarginPageTransformer((int) ScreenUtils.dp2px(this, 10)));

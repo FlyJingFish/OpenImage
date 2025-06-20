@@ -17,8 +17,14 @@ android {
     }
     buildFeatures {
         viewBinding true
+        compose true
     }
-
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.13" // ✅ 最新支持 Kotlin 2.0 的版本
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 //    compileOptions {
 //        sourceCompatibility JavaVersion.VERSION_17
 //        targetCompatibility JavaVersion.VERSION_17
@@ -61,12 +67,12 @@ android {
 }
 configurations.all {
     resolutionStrategy {
-        force 'androidx.core:core-ktx:1.6.0'
-        force 'androidx.core:core:1.6.0'
+        force 'androidx.core:core:1.13.1'
+        force 'androidx.core:core-ktx:1.13.1'
 
-        force 'androidx.appcompat:appcompat:1.3.1'
-        force "androidx.activity:activity:1.3.1"
-        force "androidx.fragment:fragment:1.3.1"
+        force 'androidx.appcompat:appcompat:1.6.1'
+        force "androidx.activity:activity:1.6.1"
+        force "androidx.fragment:fragment:1.6.1"
         force "androidx.recyclerview:recyclerview:1.2.1"
     }
 }
@@ -142,4 +148,20 @@ dependencies {
     }
 
     implementation 'io.github.lucksiege:pictureselector:v3.11.2'
+
+    implementation 'androidx.core:core:1.13.1'
+
+    def composeBom = platform("androidx.compose:compose-bom:2024.05.00")
+    implementation(composeBom)
+
+    // 基础 UI
+    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.material3:material3") // 或 material2:material
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation "io.coil-kt:coil-compose:2.4.0"
+
+    // 调试预览支持
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }

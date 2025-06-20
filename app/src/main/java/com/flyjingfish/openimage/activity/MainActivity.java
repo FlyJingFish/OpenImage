@@ -149,6 +149,7 @@ public class MainActivity extends BaseActivity {
         binding.btnMemoryTest.setOnClickListener(v -> jump(v, MemoryTestActivity.class));
         binding.btnMemoryTest.setVisibility(ActivityCompatHelper.isApkInDebug(this)?View.VISIBLE:View.GONE);
         binding.btnPhotoView.setOnClickListener(v -> jump(v, PhotoViewActivity.class));
+        binding.btnCompose.setOnClickListener(v -> jump(v, ComposeActivity.class));
         binding.btnPhotoView.setVisibility(ActivityCompatHelper.isApkInDebug(this)?View.VISIBLE:View.GONE);
         binding.btnGetVideo.setOnClickListener(v -> {
             PictureSelector.create(this)
