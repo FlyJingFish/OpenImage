@@ -301,7 +301,8 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 支持在网页内点击图片，你需要和网页前端人员对接后才可获得对应的参数
+     * 支持在网页内点击图片，你需要和网页前端人员对接后才可获得对应的参数 <br>
+     * 同样适用于 Compose 的使用场景
      *
      * @param webView 网页浏览器
      * @param clickViewParam 点击图片或视频在网页内的参数
@@ -316,7 +317,8 @@ public final class OpenImage extends OpenImage4ParseData {
     }
 
     /**
-     * 支持在网页内点击图片，你需要和网页前端人员对接后才可获得对应的参数
+     * 支持在网页内点击图片，你需要和网页前端人员对接后才可获得对应的参数 <br>
+     * 同样适用于 Compose 的使用场景
      *
      * @param webView 网页浏览器
      * @param clickViewParams  点击图片或视频在网页内的参数
