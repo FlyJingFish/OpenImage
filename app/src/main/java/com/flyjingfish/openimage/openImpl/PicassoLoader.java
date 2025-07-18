@@ -16,6 +16,7 @@ import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
+import com.flyjingfish.openimagelib.utils.BitmapUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;

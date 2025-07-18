@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener;
+import com.flyjingfish.openimagelib.utils.BitmapUtils;
 import com.flyjingfish.openimagelib.utils.ExifHelper;
 
 import java.io.File;

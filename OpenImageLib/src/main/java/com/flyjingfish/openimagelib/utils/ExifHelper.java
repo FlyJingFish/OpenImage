@@ -17,17 +17,17 @@ import android.provider.MediaStore;
 public class ExifHelper {
     public static ExifInterface getExifInterface(Context context, String filePath) {
         try {
-            if (filePath.startsWith("file:///android_asset/")) {
+            if (BitmapUtils.isContent(filePath)) {
+                return getExifFromContentUri(context, Uri.parse(filePath));
+            } else if (BitmapUtils.isAsset(filePath)){
                 String fileName = filePath.replace("file:///android_asset/", "");
                 return ExifHelper.getExifFromAssets(context, fileName);
+            } else if (BitmapUtils.isLocalFile(filePath)) {
+                String path = filePath.substring("file://".length());
+                return new ExifInterface(path);
+            } else {
+                return new ExifInterface(filePath);
             }
-
-            if (filePath.startsWith("content://")) {
-                return getExifFromContentUri(context, Uri.parse(filePath));
-            }
-
-            return new ExifInterface(filePath);
-
         } catch (IOException e) {
             e.printStackTrace();
             return null;

@@ -25,7 +25,7 @@ public class BitmapUtils {
      * @return
      */
     public static int[] getMaxImageSize(int imageWidth, int imageHeight) {
-        int maxWidth = 0, maxHeight = 0;
+        int maxWidth = Integer.MIN_VALUE, maxHeight = Integer.MIN_VALUE;
         if (imageWidth == 0 && imageHeight == 0) {
             return new int[]{maxWidth, maxHeight};
         }
@@ -136,6 +136,14 @@ public class BitmapUtils {
         }
         return url.startsWith("file:///android_asset/");
     }
+
+    public static boolean isLocalFile(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return false;
+        }
+        return url.startsWith("file://");
+    }
+
     public static int[] getImageSize(Context context, String url) {
         int[] mediaExtraInfo = new int[2];
         InputStream inputStream = null;
@@ -147,6 +155,9 @@ public class BitmapUtils {
             } else if (isAsset(url)){
                 String fileName = url.substring(ASSET_SCHEME.length());
                 inputStream = context.getResources().getAssets().open(fileName);
+            } else if (isLocalFile(url)) {
+                String filePath = url.substring("file://".length());
+                inputStream = new FileInputStream(filePath);
             } else {
                 inputStream = new FileInputStream(url);
             }

@@ -22,6 +22,7 @@ import coil3.request.Options
 import coil3.request.SuccessResult
 import coil3.size.Size
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener
+import com.flyjingfish.openimagelib.utils.BitmapUtils
 import okhttp3.OkHttpClient
 import java.io.File
 import java.util.concurrent.Executors

@@ -17,6 +17,7 @@ import com.flyjingfish.openimage.openImpl.download.ProgressManager;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener;
+import com.flyjingfish.openimagelib.utils.BitmapUtils;
 import com.flyjingfish.openimagelib.utils.SaveImageUtils;
 import com.squareup.picasso.Picasso;
 
