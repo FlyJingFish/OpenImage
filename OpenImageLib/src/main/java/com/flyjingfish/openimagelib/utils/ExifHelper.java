@@ -23,7 +23,7 @@ public class ExifHelper {
                 String fileName = filePath.replace("file:///android_asset/", "");
                 return ExifHelper.getExifFromAssets(context, fileName);
             } else if (BitmapUtils.isLocalFile(filePath)) {
-                String path = filePath.substring("file://".length());
+                String path = Uri.parse(filePath).getPath();
                 return new ExifInterface(path);
             } else {
                 return new ExifInterface(filePath);

@@ -156,7 +156,7 @@ public class BitmapUtils {
                 String fileName = url.substring(ASSET_SCHEME.length());
                 inputStream = context.getResources().getAssets().open(fileName);
             } else if (isLocalFile(url)) {
-                String filePath = url.substring("file://".length());
+                String filePath = Uri.parse(url).getPath();
                 inputStream = new FileInputStream(filePath);
             } else {
                 inputStream = new FileInputStream(url);
@@ -183,12 +183,15 @@ public class BitmapUtils {
             } else if (isAsset(path)){
                 String fileName = path.substring(ASSET_SCHEME.length());
                 inputStream = context.getResources().getAssets().open(fileName);
+            } else if (isLocalFile(path)) {
+                String filePath = Uri.parse(path).getPath();
+                inputStream = new FileInputStream(filePath);
             } else {
                 inputStream = new FileInputStream(path);
             }
             BitmapFactory.decodeStream(inputStream, null, options);
             type = options.outMimeType;
-            Log.d("ImageUtil", "getImageTypeWithMime: path = " + path + ", type1 = " + type);
+            OpenImageLogUtils.logD("ImageUtil", "getImageTypeWithMime: path = " + path + ", type1 = " + type);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -202,7 +205,7 @@ public class BitmapUtils {
             var10000 = type.substring(var5);
         }
         type = var10000;
-        Log.d("ImageUtil", "getImageTypeWithMime: path = " + path + ", type2 = " + type);
+        OpenImageLogUtils.logD("ImageUtil", "getImageTypeWithMime: path = " + path + ", type2 = " + type);
         return type;
     }
 

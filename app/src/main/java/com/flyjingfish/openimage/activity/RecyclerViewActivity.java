@@ -1,7 +1,9 @@
 package com.flyjingfish.openimage.activity;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,8 @@ import com.tbruyelle.rxpermissions3.RxPermissions;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -122,6 +126,12 @@ public class RecyclerViewActivity extends BaseActivity {
                     itemData.testBean = new TestBean();
                     itemData.testBean.test="11";
                     String url = jsonArray.getString(i);
+//                    String path = "/storage/emulated/0/Pictures/u=2914137887,1032011415&fm=253&app=138&f=JPEG.jpg";
+//                    String encodedPath = Uri.encode(path, "/");
+//
+//                    String url = "file://" + encodedPath;
+//                    Log.e("loadData-1",url);
+//                    Log.e("loadData-2",Uri.parse(url).getPath());
                     itemData.url = url;
                     datas.add(itemData);
                 }
