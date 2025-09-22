@@ -1,5 +1,10 @@
 # OpenImage 更新日志
 
+
+## 2.4.8
+
+fix [#59](https://github.com/FlyJingFish/OpenImage/issues/59)
+
 ## 2.4.7
 
 1、完善本地图片地址适配问题

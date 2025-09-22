@@ -33,6 +33,7 @@ import com.flyjingfish.openimagelib.OpenImageActivity;
 import com.flyjingfish.openimagelib.OpenImageConfig;
 import com.flyjingfish.openimagelib.PhotosViewModel;
 import com.flyjingfish.openimagelib.R;
+import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 import com.flyjingfish.shapeimageviewlib.ShapeImageView;
 
 import java.lang.ref.WeakReference;
@@ -718,7 +719,13 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                          boolean animate) {
         // Check to see if the scale is within bounds
         if (scale < mMinScale || scale > mMaxScale) {
-            throw new IllegalArgumentException("Scale must be within the range of minScale and maxScale");
+            RuntimeException exception = new IllegalArgumentException("Scale must be within the range of minScale and maxScale");
+            if (OpenImageLogUtils.isApkInDebug()) {
+                throw exception;
+            }else {
+                exception.printStackTrace();
+                return;
+            }
         }
         if (animate) {
             mImageView.post(new AnimatedZoomRunnable(getScale(), scale,
