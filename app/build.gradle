@@ -140,10 +140,16 @@ dependencies {
 
 
     if (TestType == "0"){
-        implementation project(path: ':OpenImageFullLib')
+        implementation(project(path: ':OpenImageFullLib')) {
+            // 排除传入的 native rtmp 客户端模块,解决16kb问题
+            exclude group: "io.antmedia", module: "rtmp-client"
+        }
         implementation project(path: ':OpenImageCoilLib')
     }else {
-        implementation 'io.github.flyjingfish:openimage-full-lib:'+TestVersion
+        implementation('io.github.flyjingfish:openimage-full-lib:'+TestVersion){
+            // 排除传入的 native rtmp 客户端模块,解决16kb问题
+            exclude group: "io.antmedia", module: "rtmp-client"
+        }
         implementation 'io.github.flyjingfish:openimage-coil-lib:'+TestVersion
     }
 
