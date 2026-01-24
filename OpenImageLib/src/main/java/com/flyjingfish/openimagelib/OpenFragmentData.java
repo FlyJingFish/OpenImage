@@ -35,7 +35,10 @@ class OpenFragmentData {
     boolean bothLoadCover;
     List<OnItemClickListener> onItemClickListeners = new ArrayList<>();
     List<OnItemLongClickListener> onItemLongClickListeners = new ArrayList<>();
-
+    String openLive;
+    String closeLive;
+    String live;
+    String replay;
     boolean parseIntent() {
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -49,7 +52,7 @@ class OpenFragmentData {
             clickPosition = bundle.getInt(OpenParams.CLICK_POSITION);
             int srcScaleTypeInt = bundle.getInt(OpenParams.SRC_SCALE_TYPE, -1);
             srcScaleType = srcScaleTypeInt == -1 ? null : ShapeImageView.ShapeScaleType.values()[srcScaleTypeInt];
-            ;
+
             errorResId = bundle.getInt(OpenParams.ERROR_RES_ID, 0);
             disableClickClose = bundle.getBoolean(OpenParams.DISABLE_CLICK_CLOSE, false);
             String onItemCLickKey = bundle.getString(OpenParams.ON_ITEM_CLICK_KEY);
@@ -73,6 +76,10 @@ class OpenFragmentData {
             preloadCount = bundle.getInt(OpenParams.PRELOAD_COUNT, 1);
             lazyPreload = bundle.getBoolean(OpenParams.LAZY_PRELOAD, false);
             bothLoadCover = bundle.getBoolean(OpenParams.BOTH_LOAD_COVER, false);
+            openLive = bundle.getString(OpenParams.OPEN_LIVE, "");
+            closeLive = bundle.getString(OpenParams.CLOSE_LIVE, "");
+            live = bundle.getString(OpenParams.LIVE, "");
+            replay = bundle.getString(OpenParams.REPLAY, "");
             beanId = imageDetail.getId();
         }
 

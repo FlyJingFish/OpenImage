@@ -8,6 +8,7 @@ import com.flyjingfish.openimagelib.beans.CloseParams;
 import com.flyjingfish.openimagelib.beans.DownloadParams;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
+import com.flyjingfish.openimagelib.listener.LivePhotoFragmentCreate;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnPermissionsInterceptListener;
@@ -35,6 +36,7 @@ class ImageLoadUtils {
     private final HashMap<String, OnBackView> onBackViewHashMap = new HashMap<>();
     private final HashMap<String, ImageFragmentCreate> imageFragmentCreateHashMap = new HashMap<>();
     private final HashMap<String, VideoFragmentCreate> videoFragmentCreateHashMap = new HashMap<>();
+    private final HashMap<String, LivePhotoFragmentCreate> livePhotoFragmentCreateHashMap = new HashMap<>();
     private final HashMap<String, UpperLayerOption> upperLayerFragmentCreateHashMap = new HashMap<>();
     private final HashMap<String, Boolean> canOpenViewPageActivityHashMap = new HashMap<>();
     private final HashMap<String, List<OpenImageDetail>> openDataMap = new HashMap<>();
@@ -220,6 +222,18 @@ class ImageLoadUtils {
 
     public void clearVideoFragmentCreate(String key) {
         this.videoFragmentCreateHashMap.remove(key);
+    }
+
+    public LivePhotoFragmentCreate getLivePhotoFragmentCreate(String key) {
+        return livePhotoFragmentCreateHashMap.get(key);
+    }
+
+    public void setLivePhotoFragmentCreate(String key, LivePhotoFragmentCreate livePhotoFragmentCreate) {
+        this.livePhotoFragmentCreateHashMap.put(key, livePhotoFragmentCreate);
+    }
+
+    public void clearLivePhotoFragmentCreate(String key) {
+        this.livePhotoFragmentCreateHashMap.remove(key);
     }
 
     public List<MoreViewOption> getMoreViewOption(String key) {

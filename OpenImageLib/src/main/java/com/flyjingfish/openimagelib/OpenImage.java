@@ -36,6 +36,7 @@ import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
 import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.LayoutManagerFindVisiblePosition;
+import com.flyjingfish.openimagelib.listener.LivePhotoFragmentCreate;
 import com.flyjingfish.openimagelib.listener.OnExitListener;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
@@ -630,6 +631,18 @@ public final class OpenImage extends OpenImage4ParseData {
     public OpenImage setVideoFragmentCreate(VideoFragmentCreate videoFragmentCreate) {
         videoFragmentCreateKey = UUID.randomUUID().toString();
         ImageLoadUtils.getInstance().setVideoFragmentCreate(videoFragmentCreateKey, videoFragmentCreate);
+        return this;
+    }
+
+    /**
+     * 调用这个方法将覆盖 {@link OpenImageConfig#setLivePhotoFragmentCreate} 的配置，用于解决在app内多种不同需求的场景
+     *
+     * @param livePhotoFragmentCreate 用于自定义实况图展示页面
+     * @return {@link OpenImage}
+     */
+    public OpenImage setLivePhotoFragmentCreate(LivePhotoFragmentCreate livePhotoFragmentCreate) {
+        livePhotoFragmentCreateKey = UUID.randomUUID().toString();
+        ImageLoadUtils.getInstance().setLivePhotoFragmentCreate(livePhotoFragmentCreateKey, livePhotoFragmentCreate);
         return this;
     }
 

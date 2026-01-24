@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="live">实况</string>
+    <string name="close_live">关闭自动播放</string>
+    <string name="open_live">开启自动播放</string>
+    <string name="replay">重播</string>
     <string name="download_start_toast">开始下载</string>
     <string name="download_end_toast">成功保存到: %1$s</string>
     <string name="download_error_toast">下载失败</string>

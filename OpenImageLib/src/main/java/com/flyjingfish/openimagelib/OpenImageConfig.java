@@ -8,6 +8,7 @@ import androidx.annotation.IntRange;
 import com.flyjingfish.openimagelib.listener.BigImageHelper;
 import com.flyjingfish.openimagelib.listener.DownloadMediaHelper;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
+import com.flyjingfish.openimagelib.listener.LivePhotoFragmentCreate;
 import com.flyjingfish.openimagelib.listener.VideoFragmentCreate;
 
 /**
@@ -19,6 +20,7 @@ public class OpenImageConfig {
     private DownloadMediaHelper downloadMediaHelper;
     private ImageFragmentCreate imageFragmentCreate;
     private VideoFragmentCreate videoFragmentCreate;
+    private LivePhotoFragmentCreate livePhotoFragmentCreate;
 
     private static final float DEFAULT_READ_MODE_RULE = 2f;
     //阅读模式（长图的默认适宽显示）
@@ -87,6 +89,19 @@ public class OpenImageConfig {
      */
     public void setVideoFragmentCreate(VideoFragmentCreate videoFragmentCreate) {
         this.videoFragmentCreate = videoFragmentCreate;
+    }
+
+    public LivePhotoFragmentCreate getLivePhotoFragmentCreate() {
+        return livePhotoFragmentCreate;
+    }
+
+    /**
+     * 这里是设置用于创建公共实况图展示页面的类，设置后你可不必每次调用 {@link OpenImage#setLivePhotoFragmentCreate}
+     *
+     * @param livePhotoFragmentCreate 用于自定义视频展示页面
+     */
+    public void setLivePhotoFragmentCreate(LivePhotoFragmentCreate livePhotoFragmentCreate) {
+        this.livePhotoFragmentCreate = livePhotoFragmentCreate;
     }
 
     public boolean isReadMode() {

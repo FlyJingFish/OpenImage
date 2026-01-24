@@ -20,6 +20,9 @@ public class OpenImageFullInitProvider extends ContentProvider {
         if (OpenImageConfig.getInstance().getVideoFragmentCreate() == null){
             OpenImageConfig.getInstance().setVideoFragmentCreate(new VideoFragmentCreateImpl());
         }
+        if (OpenImageConfig.getInstance().getLivePhotoFragmentCreate() == null){
+            OpenImageConfig.getInstance().setLivePhotoFragmentCreate(new LivePhotoFragmentCreateImpl());
+        }
         FullGlideDownloadMediaHelper fullGlideDownloadMediaHelper = FullGlideDownloadMediaHelper.getInstance();
         //初始化下载原图或视频类
         if (OpenImageConfig.getInstance().getDownloadMediaHelper() == null || OpenImageConfig.getInstance().getDownloadMediaHelper() != fullGlideDownloadMediaHelper){

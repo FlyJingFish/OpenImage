@@ -43,6 +43,8 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_msg_image,parent,false);
         }else if (viewType == MessageBean.VIDEO){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_msg_video,parent,false);
+        }else if (viewType == MessageBean.LIVE_PHOTO){
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_msg_image,parent,false);
         }else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_msg_text,parent,false);
         }
@@ -74,7 +76,7 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                         public int getImageViewId(OpenImageUrl data, int position1) {
                             MessageBean msgBean = (MessageBean) data;
                             //图片和视频显示的 ImageView 的 id 不一样也可以，根据数据类型返回即可
-                            if (msgBean.type == MessageBean.IMAGE){
+                            if (msgBean.type == MessageBean.IMAGE||msgBean.type == MessageBean.LIVE_PHOTO){
                                 return R.id.iv_image;
                             }else {
                                 return R.id.iv_video;
@@ -140,6 +142,10 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
             ItemMsgVideoBinding binding = ItemMsgVideoBinding.bind(holder.itemView);
             binding.ivVideo.setOnClickListener(onClickListener);
             MyImageLoader.getInstance().loadRoundCorner(binding.ivVideo,messageBean.getCoverImageUrl(),10,R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        }else if (viewType == MessageBean.LIVE_PHOTO){
+            ItemMsgImageBinding binding = ItemMsgImageBinding.bind(holder.itemView);
+            binding.ivImage.setOnClickListener(onClickListener);
+            MyImageLoader.getInstance().loadRoundCorner(binding.ivImage,messageBean.getCoverImageUrl(),10,R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
         }else {
             ItemMsgTextBinding binding = ItemMsgTextBinding.bind(holder.itemView);
             binding.tvText.setText(messageBean.text);

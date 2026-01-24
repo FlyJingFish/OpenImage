@@ -70,6 +70,14 @@
     <attr name="openImage.download.successToast" format="reference|string" />
     <!--下载失败时 Toast 的文案，文案为空时不显示-->
     <attr name="openImage.download.errorToast" format="reference|string" />
+    <!--实况图按钮文本-->
+    <attr name="openImage.download.live" format="reference|string" />
+    <!--实况图，打开实况-->
+    <attr name="openImage.download.openLive" format="reference|string" />
+    <!--实况图，关闭实况-->
+    <attr name="openImage.download.closeLive" format="reference|string" />
+    <!--实况图，重播-->
+    <attr name="openImage.download.replay" format="reference|string" />
     <!--请求读取外部存储权限失败时的文案，文案为空时不显示-->
     <attr name="openImage.requestWriteExternalStoragePermissionsFail" format="reference|string" />
 </resources>

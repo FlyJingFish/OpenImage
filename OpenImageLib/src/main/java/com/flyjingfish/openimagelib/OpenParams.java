@@ -27,6 +27,7 @@ class OpenParams {
     public static final String AUTO_ASPECT_RATIO = "auto_aspect_ratio";
     public static final String VIDEO_FRAGMENT_KEY = "video_fragment";
     public static final String IMAGE_FRAGMENT_KEY = "image_fragment";
+    public static final String LIVE_PHOTO_FRAGMENT_KEY = "live_photo_fragment";
     public static final String UPPER_LAYER_FRAGMENT_KEY = "upper_layer_fragment";
     public static final String UPPER_LAYER_BUNDLE = "upperLayerBundle";
     public static final String CONTEXT_KEY = "contextKey";
@@ -42,4 +43,8 @@ class OpenParams {
     public static final String PRELOAD_COUNT = "preloadCount";
     public static final String LAZY_PRELOAD = "lazyPreload";
     public static final String BOTH_LOAD_COVER = "bothLoadCover";
+    public static final String OPEN_LIVE = "open_live";
+    public static final String CLOSE_LIVE = "close_live";
+    public static final String LIVE = "live";
+    public static final String REPLAY = "replay";
 }

@@ -24,7 +24,7 @@ abstract class BaseFragment extends BaseInnerFragment {
     protected OpenImageUrl openImageUrl;
     int showPosition,clickPosition;
     PhotosViewModel photosViewModel;
-    Handler mHandler = new Handler(Looper.getMainLooper());
+    protected Handler mHandler = new Handler(Looper.getMainLooper());
     boolean isLoadSuccess;
     boolean disableClickClose;
     int errorResId;
@@ -48,7 +48,10 @@ abstract class BaseFragment extends BaseInnerFragment {
     int preloadCount;
     protected boolean lazyPreload;
     boolean bothLoadCover;
-
+    protected String openLive;
+    protected String closeLive;
+    protected String live;
+    protected String replay;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +86,10 @@ abstract class BaseFragment extends BaseInnerFragment {
         lazyPreload = openFragmentData.lazyPreload;
         bothLoadCover = openFragmentData.bothLoadCover;
         beanId = openFragmentData.beanId;
+        openLive = openFragmentData.openLive;
+        closeLive = openFragmentData.closeLive;
+        live = openFragmentData.live;
+        replay = openFragmentData.replay;
     }
 
     protected int getShowPosition() {

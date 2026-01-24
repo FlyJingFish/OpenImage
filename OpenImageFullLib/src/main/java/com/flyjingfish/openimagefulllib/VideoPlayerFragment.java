@@ -13,8 +13,10 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.flyjingfish.openimagelib.BaseImageFragment;
 import com.flyjingfish.openimagelib.photoview.PhotoView;
+import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
 import com.flyjingfish.openimagelib.widget.LoadingView;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
+import com.shuyu.gsyvideoplayer.listener.GSYStateUiListener;
 
 public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
 
@@ -125,7 +127,7 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
         super.onTransitionEnd();
         play();
     }
-    private void play(){
+    protected void play(){
         if (isTransitionEnd && isLoadImageFinish && !isPlayed){
             if (!lazyPreload) {
                 startPlay();
@@ -181,7 +183,12 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
                     setBackListener();
                 }
             });
+            videoPlayer.setGSYStateUiListener(VideoPlayerFragment.this::onStateChanged);
         }
+    }
+
+    protected void onStateChanged(int state){
+
     }
 
     @Override
@@ -207,6 +214,7 @@ public class VideoPlayerFragment extends BaseImageFragment<LoadingView> {
         if (playerKey != null) {
             GSYVideoController.cancelByKeyAndDeleteKey(playerKey);
         }
+        videoPlayer.setGSYStateUiListener(null);
     }
 
     @Override

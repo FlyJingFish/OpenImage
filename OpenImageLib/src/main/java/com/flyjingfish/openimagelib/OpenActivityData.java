@@ -24,6 +24,7 @@ class OpenActivityData {
     String onBackViewKey;
     String videoFragmentCreateKey;
     String imageFragmentCreateKey;
+    String livePhotoFragmentCreateKey;
     String upperLayerFragmentCreateKey;
     OnSelectMediaListener onSelectMediaListener;
     ImageLoadUtils.OnBackView onBackView;
@@ -38,7 +39,6 @@ class OpenActivityData {
     boolean bothLoadCover;
     String clickContextKey;
     boolean isNoneClickView;
-
     protected boolean parseIntent() {
 
         int srcScaleTypeInt = getIntent().getIntExtra(OpenParams.SRC_SCALE_TYPE, -1);
@@ -69,6 +69,7 @@ class OpenActivityData {
         openCoverKey = getIntent().getStringExtra(OpenParams.OPEN_COVER_DRAWABLE);
         onSelectMediaListener = ImageLoadUtils.getInstance().getOnSelectMediaListener(onSelectKey);
         imageFragmentCreateKey = getIntent().getStringExtra(OpenParams.IMAGE_FRAGMENT_KEY);
+        livePhotoFragmentCreateKey = getIntent().getStringExtra(OpenParams.LIVE_PHOTO_FRAGMENT_KEY);
         videoFragmentCreateKey = getIntent().getStringExtra(OpenParams.VIDEO_FRAGMENT_KEY);
         upperLayerFragmentCreateKey = getIntent().getStringExtra(OpenParams.UPPER_LAYER_FRAGMENT_KEY);
         upperLayerOption = ImageLoadUtils.getInstance().getUpperLayerFragmentCreate(upperLayerFragmentCreateKey);

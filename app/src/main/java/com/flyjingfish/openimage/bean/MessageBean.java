@@ -9,6 +9,7 @@ public class MessageBean implements OpenImageUrl {
     public static final int TEXT = 0;
     public static final int IMAGE = 1;
     public static final int VIDEO = 2;
+    public static final int LIVE_PHOTO = 3;
     public int type;//0文本，1图片，2视频
     public String text;
     public String imageUrl;
@@ -46,6 +47,8 @@ public class MessageBean implements OpenImageUrl {
             return MediaType.IMAGE;
         }else if (type == VIDEO){
             return MediaType.VIDEO;
+        }else if (type == LIVE_PHOTO){
+            return MediaType.LIVE_PHOTO;
         }else {
             return MediaType.NONE;
         }

@@ -294,7 +294,7 @@ class OpenImage4ParseData extends OpenImage4Params {
         if (isNoneClickView){
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
-                if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
+                if (imageBean.getType() != MediaType.NONE) {
                     OpenImageDetail openImageDetail = OpenImageDetail.getNewOpenImageDetail();
                     openImageDetail.openImageUrl = imageBean;
                     openImageDetail.dataPosition = i;
@@ -312,7 +312,7 @@ class OpenImage4ParseData extends OpenImage4Params {
             int viewIndex = clickViewPosition - clickDataPosition;
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
-                if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
+                if (imageBean.getType() != MediaType.NONE) {
                     OpenImageDetail openImageDetail = OpenImageDetail.getNewOpenImageDetail();
                     openImageDetail.openImageUrl = imageBean;
                     openImageDetail.dataPosition = i;
@@ -332,14 +332,16 @@ class OpenImage4ParseData extends OpenImage4Params {
                             int shareViewHeight = shareView.getHeight();
                             openImageDetail.srcWidth = shareViewWidth;
                             openImageDetail.srcHeight = shareViewHeight;
-                            if (imageBean.getType() == MediaType.IMAGE) {
-                                srcImageWidthCache.add(shareViewWidth);
-                                srcImageHeightCache.add(shareViewHeight);
-                            }
-                            if (imageBean.getType() == MediaType.VIDEO) {
-                                srcVideoWidthCache.add(shareViewWidth);
-                                srcVideoHeightCache.add(shareViewHeight);
-                            }
+                            srcImageWidthCache.add(shareViewWidth);
+                            srcImageHeightCache.add(shareViewHeight);
+//                            if (imageBean.getType() == MediaType.IMAGE) {
+//                                srcImageWidthCache.add(shareViewWidth);
+//                                srcImageHeightCache.add(shareViewHeight);
+//                            }
+//                            if (imageBean.getType() == MediaType.VIDEO) {
+//                                srcVideoWidthCache.add(shareViewWidth);
+//                                srcVideoHeightCache.add(shareViewHeight);
+//                            }
                         }
                     }
                     openImageDetail.viewPosition = viewIndex;
@@ -351,7 +353,7 @@ class OpenImage4ParseData extends OpenImage4Params {
             int viewIndex = clickViewPosition - clickDataPosition;
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
-                if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
+                if (imageBean.getType() != MediaType.NONE) {
                     OpenImageDetail openImageDetail = OpenImageDetail.getNewOpenImageDetail();
                     openImageDetail.openImageUrl = imageBean;
                     openImageDetail.dataPosition = i;
@@ -371,14 +373,16 @@ class OpenImage4ParseData extends OpenImage4Params {
                             int shareViewHeight = shareView.getHeight();
                             openImageDetail.srcWidth = shareViewWidth;
                             openImageDetail.srcHeight = shareViewHeight;
-                            if (imageBean.getType() == MediaType.IMAGE) {
-                                srcImageWidthCache.add(shareViewWidth);
-                                srcImageHeightCache.add(shareViewHeight);
-                            }
-                            if (imageBean.getType() == MediaType.VIDEO) {
-                                srcVideoWidthCache.add(shareViewWidth);
-                                srcVideoHeightCache.add(shareViewHeight);
-                            }
+                            srcImageWidthCache.add(shareViewWidth);
+                            srcImageHeightCache.add(shareViewHeight);
+//                            if (imageBean.getType() == MediaType.IMAGE) {
+//                                srcImageWidthCache.add(shareViewWidth);
+//                                srcImageHeightCache.add(shareViewHeight);
+//                            }
+//                            if (imageBean.getType() == MediaType.VIDEO) {
+//                                srcVideoWidthCache.add(shareViewWidth);
+//                                srcVideoHeightCache.add(shareViewHeight);
+//                            }
                         }
                     }
                     openImageDetail.viewPosition = viewIndex;
@@ -430,7 +434,7 @@ class OpenImage4ParseData extends OpenImage4Params {
         }else {
             for (int i = 0; i < openImageUrls.size(); i++) {
                 OpenImageUrl imageBean = openImageUrls.get(i);
-                if (imageBean.getType() == MediaType.IMAGE || imageBean.getType() == MediaType.VIDEO) {
+                if (imageBean.getType() != MediaType.NONE) {
                     OpenImageDetail openImageDetail = OpenImageDetail.getNewOpenImageDetail();
                     openImageDetail.openImageUrl = imageBean;
                     openImageDetail.dataPosition = i;
@@ -565,6 +569,7 @@ class OpenImage4ParseData extends OpenImage4Params {
         ImageLoadUtils.getInstance().clearOnBackView(backViewKey);
         ImageLoadUtils.getInstance().clearImageFragmentCreate(imageFragmentCreateKey);
         ImageLoadUtils.getInstance().clearVideoFragmentCreate(videoFragmentCreateKey);
+        ImageLoadUtils.getInstance().clearLivePhotoFragmentCreate(livePhotoFragmentCreateKey);
         ImageLoadUtils.getInstance().clearUpperLayerFragmentCreate(upperLayerFragmentCreateKey);
         ImageLoadUtils.getInstance().setOnRemoveListener4FixBug(null);
         ImageLoadUtils.getInstance().clearOnUpdateViewListener(this.toString());
@@ -645,22 +650,22 @@ class OpenImage4ParseData extends OpenImage4Params {
             int srcWidth = srcImageWidthCache.iterator().next();
             int srcHeight = srcImageHeightCache.iterator().next();
             for (OpenImageDetail openImageDetail : openImageDetails) {
-                if (openImageDetail.getType() == MediaType.IMAGE && (openImageDetail.srcWidth == 0 || openImageDetail.srcHeight == 0)) {
+                if (openImageDetail.getType() != MediaType.NONE && (openImageDetail.srcWidth == 0 || openImageDetail.srcHeight == 0)) {
                     openImageDetail.srcWidth = srcWidth;
                     openImageDetail.srcHeight = srcHeight;
                 }
             }
         }
-        if (srcVideoWidthCache.size() == 1 || srcVideoHeightCache.size() == 1) {
-            int srcWidth = srcVideoWidthCache.iterator().next();
-            int srcHeight = srcVideoHeightCache.iterator().next();
-            for (OpenImageDetail openImageDetail : openImageDetails) {
-                if (openImageDetail.getType() == MediaType.VIDEO && (openImageDetail.srcWidth == 0 || openImageDetail.srcHeight == 0)) {
-                    openImageDetail.srcWidth = srcWidth;
-                    openImageDetail.srcHeight = srcHeight;
-                }
-            }
-        }
+//        if (srcVideoWidthCache.size() == 1 || srcVideoHeightCache.size() == 1) {
+//            int srcWidth = srcVideoWidthCache.iterator().next();
+//            int srcHeight = srcVideoHeightCache.iterator().next();
+//            for (OpenImageDetail openImageDetail : openImageDetails) {
+//                if (openImageDetail.getType() == MediaType.VIDEO && (openImageDetail.srcWidth == 0 || openImageDetail.srcHeight == 0)) {
+//                    openImageDetail.srcWidth = srcWidth;
+//                    openImageDetail.srcHeight = srcHeight;
+//                }
+//            }
+//        }
     }
 
     private void release() {

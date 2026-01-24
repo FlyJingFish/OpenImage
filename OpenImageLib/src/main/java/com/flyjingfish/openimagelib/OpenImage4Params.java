@@ -57,8 +57,8 @@ class OpenImage4Params {
     protected boolean autoSetScaleType;
     protected final HashSet<Integer> srcImageWidthCache = new HashSet<>();
     protected final HashSet<Integer> srcImageHeightCache = new HashSet<>();
-    protected final HashSet<Integer> srcVideoWidthCache = new HashSet<>();
-    protected final HashSet<Integer> srcVideoHeightCache = new HashSet<>();
+//    protected final HashSet<Integer> srcVideoWidthCache = new HashSet<>();
+//    protected final HashSet<Integer> srcVideoHeightCache = new HashSet<>();
     protected boolean isStartActivity;
     protected boolean isAutoScrollScanPosition = false;
     protected boolean wechatExitFillInEffect = false;
@@ -76,6 +76,7 @@ class OpenImage4Params {
     protected String backViewKey;
     protected String moreViewOptionKey;
     protected String videoFragmentCreateKey;
+    protected String livePhotoFragmentCreateKey;
     protected String imageFragmentCreateKey;
     protected String upperLayerFragmentCreateKey;
     protected Bundle upperLayerBundle;
@@ -136,6 +137,9 @@ class OpenImage4Params {
         }
         if (videoFragmentCreateKey != null) {
             intent.putExtra(OpenParams.VIDEO_FRAGMENT_KEY, videoFragmentCreateKey);
+        }
+        if (livePhotoFragmentCreateKey != null) {
+            intent.putExtra(OpenParams.LIVE_PHOTO_FRAGMENT_KEY, livePhotoFragmentCreateKey);
         }
         if (upperLayerFragmentCreateKey != null) {
             intent.putExtra(OpenParams.UPPER_LAYER_FRAGMENT_KEY, upperLayerFragmentCreateKey);

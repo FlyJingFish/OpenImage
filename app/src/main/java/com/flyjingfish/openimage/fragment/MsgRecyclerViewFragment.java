@@ -151,6 +151,9 @@ public class MsgRecyclerViewFragment extends BaseFragment {
                     }else if (type == MessageBean.VIDEO){
                         itemData.videoUrl = jsonObject.getString("videoUrl");
                         itemData.coverUrl = jsonObject.getString("coverUrl");
+                    }else if (type == MessageBean.LIVE_PHOTO){
+                        itemData.videoUrl = jsonObject.getString("videoUrl");
+                        itemData.coverUrl = jsonObject.getString("coverUrl");
                     }
                     datas.add(itemData);
                 }

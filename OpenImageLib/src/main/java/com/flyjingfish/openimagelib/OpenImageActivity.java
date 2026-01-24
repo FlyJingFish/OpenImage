@@ -45,6 +45,7 @@ import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.enums.OpenImageOrientation;
 import com.flyjingfish.openimagelib.listener.DownloadMediaHelper;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
+import com.flyjingfish.openimagelib.listener.LivePhotoFragmentCreate;
 import com.flyjingfish.openimagelib.listener.OnDownloadMediaListener;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.OnPermissionsInterceptListener;
@@ -247,14 +248,19 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         boolean disableClickClose = getIntent().getBooleanExtra(OpenParams.DISABLE_CLICK_CLOSE, false);
         VideoFragmentCreate videoCreate = ImageLoadUtils.getInstance().getVideoFragmentCreate(videoFragmentCreateKey);
         ImageFragmentCreate imageCreate = ImageLoadUtils.getInstance().getImageFragmentCreate(imageFragmentCreateKey);
+        LivePhotoFragmentCreate liveCreate = ImageLoadUtils.getInstance().getLivePhotoFragmentCreate(livePhotoFragmentCreateKey);
         if (videoCreate == null) {
             videoCreate = OpenImageConfig.getInstance().getVideoFragmentCreate();
         }
         if (imageCreate == null) {
             imageCreate = OpenImageConfig.getInstance().getImageFragmentCreate();
         }
+        if (liveCreate == null) {
+            liveCreate = OpenImageConfig.getInstance().getLivePhotoFragmentCreate();
+        }
         VideoFragmentCreate videoFragmentCreate = videoCreate;
         ImageFragmentCreate imageFragmentCreate = imageCreate;
+        LivePhotoFragmentCreate livePhotoFragmentCreate = liveCreate;
 
         openImageAdapter = new OpenImageFragmentStateAdapter(this, viewPager) {
             @NonNull
@@ -273,7 +279,17 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                         throw new IllegalArgumentException("请设置视频播放器fragment --> https://github.com/FlyJingFish/OpenImage/wiki");
                     }
 
-                } else {
+                }else if (mediaType == MediaType.LIVE_PHOTO) {
+                    if (livePhotoFragmentCreate != null) {
+                        fragment = livePhotoFragmentCreate.createLivePhotoFragment();
+                        if (fragment == null) {
+                            throw new IllegalArgumentException(livePhotoFragmentCreate.getClass().getName() + "请重写createLivePhotoFragment");
+                        }
+                    } else {
+                        throw new IllegalArgumentException("请设置实况图播放器fragment --> https://github.com/FlyJingFish/OpenImage/wiki");
+                    }
+
+                }else {
                     if (imageFragmentCreate != null) {
                         fragment = imageFragmentCreate.createImageFragment();
                     } else {
@@ -300,6 +316,10 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
                 bundle.putInt(OpenParams.PRELOAD_COUNT, preloadCount);
                 bundle.putBoolean(OpenParams.LAZY_PRELOAD, lazyPreload);
                 bundle.putBoolean(OpenParams.BOTH_LOAD_COVER, bothLoadCover);
+                bundle.putString(OpenParams.OPEN_LIVE, openLive);
+                bundle.putString(OpenParams.CLOSE_LIVE, closeLive);
+                bundle.putString(OpenParams.LIVE, live);
+                bundle.putString(OpenParams.REPLAY, replay);
                 fragment.setArguments(bundle);
                 return fragment;
             }
@@ -535,6 +555,10 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             startToast = (String) AttrsUtils.getTypeValueText(this, themeRes, R.attr.openImage_download_startToast);
             successToast = (String) AttrsUtils.getTypeValueText(this, themeRes, R.attr.openImage_download_successToast);
             errorToast = (String) AttrsUtils.getTypeValueText(this, themeRes, R.attr.openImage_download_errorToast);
+            openLive = (String) AttrsUtils.getTypeValueText(this, themeRes, R.attr.openImage_download_openLive);
+            closeLive = (String) AttrsUtils.getTypeValueText(this, themeRes, R.attr.openImage_download_closeLive);
+            live = (String) AttrsUtils.getTypeValueText(this, themeRes, R.attr.openImage_download_live);
+            replay = (String) AttrsUtils.getTypeValueText(this, themeRes, R.attr.openImage_download_replay);
             if (startToast == null) {
                 startToast = getResources().getString(R.string.download_start_toast);
             }
@@ -543,6 +567,18 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
             }
             if (errorToast == null) {
                 errorToast = getResources().getString(R.string.download_error_toast);
+            }
+            if (openLive == null) {
+                openLive = getResources().getString(R.string.open_live);
+            }
+            if (closeLive == null) {
+                closeLive = getResources().getString(R.string.close_live);
+            }
+            if (live == null) {
+                live = getResources().getString(R.string.live);
+            }
+            if (replay == null) {
+                replay = getResources().getString(R.string.replay);
             }
             requestWriteExternalStoragePermissionsFail = (String) AttrsUtils.getTypeValueText(this, themeRes, R.attr.openImage_requestWriteExternalStoragePermissionsFail);
         } else {
@@ -954,6 +990,7 @@ public abstract class OpenImageActivity extends BaseActivity implements TouchClo
         ImageLoadUtils.getInstance().clearOnBackView(onBackViewKey);
         ImageLoadUtils.getInstance().clearImageFragmentCreate(imageFragmentCreateKey);
         ImageLoadUtils.getInstance().clearVideoFragmentCreate(videoFragmentCreateKey);
+        ImageLoadUtils.getInstance().clearLivePhotoFragmentCreate(livePhotoFragmentCreateKey);
         ImageLoadUtils.getInstance().clearUpperLayerFragmentCreate(upperLayerFragmentCreateKey);
         if (wechatEffectAnim != null) {
             wechatEffectAnim.cancel();

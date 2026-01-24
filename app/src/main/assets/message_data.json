@@ -50,6 +50,11 @@
     "videoUrl": "https://video.shipin520.com/videos/40/94/96/b_UYkhsNEPI9Bv1584409496.mp4"
   },
   {
+    "type": 3,
+    "coverUrl": "file:///android_asset/IMG_9335.HEIC",
+    "videoUrl": "file:///android_asset/IMG_9335.mov"
+  },
+  {
     "type": 0,
     "text": "哈哈哈"
   },

@@ -61,6 +61,7 @@ class BaseActivity extends AppCompatActivity {
     String moreViewKey;
     String onBackViewKey;
     String videoFragmentCreateKey;
+    String livePhotoFragmentCreateKey;
     String imageFragmentCreateKey;
     String upperLayerFragmentCreateKey;
     final List<OnSelectMediaListener> onSelectMediaListeners = new ArrayList<>();
@@ -105,6 +106,10 @@ class BaseActivity extends AppCompatActivity {
     protected String startToast;
     protected String successToast;
     protected String errorToast;
+    protected String openLive;
+    protected String closeLive;
+    protected String live;
+    protected String replay;
     protected String requestWriteExternalStoragePermissionsFail;
 
     String downloadParamsKey;
@@ -323,6 +328,7 @@ class BaseActivity extends AppCompatActivity {
         onSelectMediaListener = openActivityData.onSelectMediaListener;
         imageFragmentCreateKey = openActivityData.imageFragmentCreateKey;
         videoFragmentCreateKey = openActivityData.videoFragmentCreateKey;
+        livePhotoFragmentCreateKey = openActivityData.livePhotoFragmentCreateKey;
         upperLayerFragmentCreateKey = openActivityData.upperLayerFragmentCreateKey;
         upperLayerOption = openActivityData.upperLayerOption;
 
