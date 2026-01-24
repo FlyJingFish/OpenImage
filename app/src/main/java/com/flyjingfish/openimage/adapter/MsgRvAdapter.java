@@ -16,6 +16,7 @@ import com.flyjingfish.openimage.databinding.ItemMsgTextBinding;
 import com.flyjingfish.openimage.databinding.ItemMsgVideoBinding;
 import com.flyjingfish.openimage.imageloader.MyImageLoader;
 import com.flyjingfish.openimage.openImpl.MessageVpActivity;
+import com.flyjingfish.openimage.openImpl.MyLivePhotoFragmentCreateImpl;
 import com.flyjingfish.openimagelib.BaseInnerFragment;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
@@ -83,6 +84,7 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                             }
                         }
                     })
+                    .setLivePhotoFragmentCreate(new MyLivePhotoFragmentCreateImpl())
                     .setAutoScrollScanPosition(((MessageActivity)v.getContext()).openAutoScroll)
                     .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
                     .setImageUrlList(messageBeans).setWechatExitFillInEffect(((MessageActivity)v.getContext()).openWechatEffect)
