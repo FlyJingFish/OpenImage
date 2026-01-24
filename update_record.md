@@ -1,6 +1,10 @@
 # OpenImage 更新日志
 
 
+## 2.4.9
+
+1、新增实况图功能，实况图时依然像使用视频一样设置数据，只不过类型设置为 `LIVE_PHOTO`
+
 ## 2.4.8
 
 fix [#59](https://github.com/FlyJingFish/OpenImage/issues/59)
