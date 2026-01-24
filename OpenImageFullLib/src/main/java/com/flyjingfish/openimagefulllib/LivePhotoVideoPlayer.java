@@ -2,20 +2,16 @@ package com.flyjingfish.openimagefulllib;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
-import com.flyjingfish.openimagelib.utils.OpenImageLogUtils;
-import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
+public class LivePhotoVideoPlayer extends ScaleOpenImageVideoPlayer {
 
-public class LivePhotoOpenImageVideoPlayer extends ScaleOpenImageVideoPlayer {
-
-    public LivePhotoOpenImageVideoPlayer(Context context) {
+    public LivePhotoVideoPlayer(Context context) {
         super(context);
     }
 
-    public LivePhotoOpenImageVideoPlayer(Context context, AttributeSet attrs) {
+    public LivePhotoVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

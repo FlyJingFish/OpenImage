@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
-    <com.flyjingfish.openimagefulllib.LivePhotoOpenImageVideoPlayer
+    <com.flyjingfish.openimagefulllib.LivePhotoVideoPlayer
         android:id="@+id/video_player"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </com.flyjingfish.openimagefulllib.LivePhotoOpenImageVideoPlayer>
+    </com.flyjingfish.openimagefulllib.LivePhotoVideoPlayer>
 
     <LinearLayout
         android:id="@+id/ll_live"

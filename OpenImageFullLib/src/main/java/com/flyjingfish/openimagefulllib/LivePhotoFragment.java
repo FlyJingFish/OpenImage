@@ -18,17 +18,17 @@ import com.flyjingfish.openimagelib.utils.ScreenUtils;
 import com.flyjingfish.openimagelib.utils.StatusBarHelper;
 import com.flyjingfish.openimagelib.widget.LoadingView;
 
-public class LivePhotoPlayerFragment extends VideoPlayerFragment {
+public class LivePhotoFragment extends VideoPlayerFragment {
 
-    private View live;
-    private boolean isOpenLive = true;
-    private TextView tvSwitch;
-    private ImageView ivSwitch;
-    private ImageView ivLive;
-    private View livePop;
-    private View ivLiveDown;
-    private View llSwitch;
-    private View replay;
+    protected View live;
+    protected boolean isOpenLive = true;
+    protected TextView tvSwitch;
+    protected ImageView ivSwitch;
+    protected ImageView ivLive;
+    protected View livePop;
+    protected View ivLiveDown;
+    protected View llSwitch;
+    protected View replay;
 
     @Nullable
     @Override
@@ -53,7 +53,7 @@ public class LivePhotoPlayerFragment extends VideoPlayerFragment {
         return rootView;
     }
 
-    void initLive(){
+    protected void initLive(){
         if (isOpenLive){
             tvSwitch.setText(closeLive);
             ivSwitch.setImageResource(R.drawable.open_image_live_close_black);
@@ -65,7 +65,7 @@ public class LivePhotoPlayerFragment extends VideoPlayerFragment {
         }
     }
 
-    private static final String OPEN_LIVE = "open_live";
+    protected static final String OPEN_LIVE = "open_live";
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -128,11 +128,11 @@ public class LivePhotoPlayerFragment extends VideoPlayerFragment {
 //        super.play();
     }
 
-    private void toPlayVideo(){
+    protected void toPlayVideo(){
         super.play();
     }
 
-    private void showLive(){
+    protected void showLive(){
         if (isTransitionEnd && isLoadImageFinish){
             rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
