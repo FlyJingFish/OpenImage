@@ -47,15 +47,17 @@ RecyclerView场景  | 聊天页面 | 打开视频
 
 9、支持Gif图
 
-10、支持长图和长图阅读模式
+10、支持实况图
 
-11、支持显示超大图及放大后的清晰细节图
+11、支持长图和长图阅读模式
 
-12、支持视频缩放拖动功能、图片缩放拖动功能
+12、支持显示超大图及放大后的清晰细节图
 
-13、支持自定义大图切换效果（PageTransformer）
+13、支持视频缩放拖动功能、图片缩放拖动功能
 
-14、支持 Compose [示例](https://github.com/FlyJingFish/OpenImage/blob/master/app/src/main/java/com/flyjingfish/openimage/activity/ComposeActivity.kt)
+14、支持自定义大图切换效果（PageTransformer）
+
+15、支持 Compose [示例](https://github.com/FlyJingFish/OpenImage/blob/master/app/src/main/java/com/flyjingfish/openimage/activity/ComposeActivity.kt)
 
 ## 前言
 

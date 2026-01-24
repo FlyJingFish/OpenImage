@@ -84,6 +84,7 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
                             }
                         }
                     })
+                    // 自定义实况页面
                     .setLivePhotoFragmentCreate(new MyLivePhotoFragmentCreateImpl())
                     .setAutoScrollScanPosition(((MessageActivity)v.getContext()).openAutoScroll)
                     .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
@@ -147,6 +148,7 @@ public class MsgRvAdapter extends RecyclerView.Adapter<MsgRvAdapter.MyHolder> {
         }else if (viewType == MessageBean.LIVE_PHOTO){
             ItemMsgImageBinding binding = ItemMsgImageBinding.bind(holder.itemView);
             binding.ivImage.setOnClickListener(onClickListener);
+            binding.ivLive.setVisibility(View.VISIBLE);
             MyImageLoader.getInstance().loadRoundCorner(binding.ivImage,messageBean.getCoverImageUrl(),10,R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
         }else {
             ItemMsgTextBinding binding = ItemMsgTextBinding.bind(holder.itemView);

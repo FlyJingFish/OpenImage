@@ -48,7 +48,7 @@ public class MsgLvAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -61,6 +61,7 @@ public class MsgLvAdapter extends BaseAdapter {
         MyHolder holder1 = null;
         MyHolder holder2 = null;
         MyHolder holder3 = null;
+        MyHolder holder4 = null;
         int type = getItemViewType(position);
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -85,6 +86,12 @@ public class MsgLvAdapter extends BaseAdapter {
                     holder3 = new MyHolder(convertView);
                     convertView.setTag(holder3);
                     break;
+                case MessageBean.LIVE_PHOTO:
+                    convertView = inflater.inflate(R.layout.item_msg_image,
+                            parent, false);
+                    holder4 = new MyHolder(convertView);
+                    convertView.setTag(holder4);
+                    break;
                 default:
                     break;
             }
@@ -99,6 +106,9 @@ public class MsgLvAdapter extends BaseAdapter {
                     break;
                 case MessageBean.VIDEO:
                     holder3 = (MyHolder) convertView.getTag();
+                    break;
+                case MessageBean.LIVE_PHOTO:
+                    holder4 = (MyHolder) convertView.getTag();
                     break;
             }
         }
@@ -144,7 +154,7 @@ public class MsgLvAdapter extends BaseAdapter {
                         @Override
                         public int getImageViewId(OpenImageUrl data, int position1) {
                             MessageBean msgBean = (MessageBean) data;
-                            if (msgBean.type == MessageBean.IMAGE){
+                            if (msgBean.type == MessageBean.IMAGE || msgBean.type == MessageBean.LIVE_PHOTO){
                                 return R.id.iv_image;
                             }else {
                                 return R.id.iv_video;
@@ -164,6 +174,11 @@ public class MsgLvAdapter extends BaseAdapter {
             ItemMsgImageBinding binding = ItemMsgImageBinding.bind(holder2.itemView);
             binding.ivImage.setOnClickListener(onClickListener);
             MyImageLoader.getInstance().loadRoundCorner(binding.ivImage,messageBean.getImageUrl(),10,R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
+        }else if (viewType == MessageBean.LIVE_PHOTO){
+            ItemMsgImageBinding binding = ItemMsgImageBinding.bind(holder4.itemView);
+            binding.ivImage.setOnClickListener(onClickListener);
+            binding.ivLive.setVisibility(View.VISIBLE);
+            MyImageLoader.getInstance().loadRoundCorner(binding.ivImage,messageBean.getCoverImageUrl(),10,R.mipmap.img_load_placeholder, R.mipmap.img_load_placeholder);
         }else if (viewType == MessageBean.VIDEO){
             ItemMsgVideoBinding binding = ItemMsgVideoBinding.bind(holder3.itemView);
             binding.ivVideo.setOnClickListener(onClickListener);
