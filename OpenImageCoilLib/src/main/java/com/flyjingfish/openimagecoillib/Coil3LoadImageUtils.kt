@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.ExifInterface
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
@@ -23,6 +24,7 @@ import coil3.request.SuccessResult
 import coil3.size.Size
 import com.flyjingfish.openimagelib.listener.OnLoadBigImageListener
 import com.flyjingfish.openimagelib.utils.BitmapUtils
+import com.flyjingfish.openimagelib.utils.ExifHelper
 import okhttp3.OkHttpClient
 import java.io.File
 import java.util.concurrent.Executors
@@ -64,16 +66,29 @@ object Coil3LoadImageUtils {
                         size[0],
                         size[1]
                     )
+                val exif = ExifHelper.getExifInterface(context, imageUrl)
+
+                val orientation = exif!!.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL
+                )
+                var rotate = 0
+                when (orientation) {
+                    ExifInterface.ORIENTATION_ROTATE_90 -> rotate = 90
+                    ExifInterface.ORIENTATION_ROTATE_180 -> rotate = 180
+                    ExifInterface.ORIENTATION_ROTATE_270 -> rotate = 270
+                }
+                val rotateFinal = rotate
                 handler.post {
                     if (context is LifecycleOwner) {
                         if (context.lifecycle
                                 .currentState != Lifecycle.State.DESTROYED
                         ) {
-                            finishListener.onGoLoad(imageUrl, maxImageSize, false)
+                            finishListener.onGoLoad(imageUrl, maxImageSize, false,rotateFinal)
                         }
                     } else if (context is Activity) {
                         if (!context.isFinishing && !context.isDestroyed) {
-                            finishListener.onGoLoad(imageUrl, maxImageSize, false)
+                            finishListener.onGoLoad(imageUrl, maxImageSize, false,rotateFinal)
                         }
                     }
                 }
@@ -83,7 +98,7 @@ object Coil3LoadImageUtils {
                 Int.MIN_VALUE,
                 Int.MIN_VALUE
             )
-            finishListener.onGoLoad(imageUrl, maxImageSize, true)
+            finishListener.onGoLoad(imageUrl, maxImageSize, true,0)
         }
     }
 

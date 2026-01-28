@@ -18,7 +18,7 @@ open class CoilBigImageHelper:BigImageHelper {
             context,
             imageUrl,
             object : OnLocalRealFinishListener {
-                override fun onGoLoad(filePath: String?, maxImageSize: IntArray, isWeb: Boolean) {
+                override fun onGoLoad(filePath: String?, maxImageSize: IntArray, isWeb: Boolean,rotate:Int) {
                     if (isWeb) {
                         CoilLoadImageUtils.loadWebImage(
                             context,
@@ -33,7 +33,13 @@ open class CoilBigImageHelper:BigImageHelper {
                         if (maxImageSize[0] == Int.MIN_VALUE || maxImageSize[1] == Int.MIN_VALUE){
                             requestBuilder.size(Size.ORIGINAL)
                         }else{
-                            requestBuilder.size(maxImageSize[0],maxImageSize[1])
+                            if (maxImageSize[0] > 0 && maxImageSize[1] > 0){
+                                if (rotate == 90 || rotate == 270) {
+                                    requestBuilder.size(maxImageSize[1], maxImageSize[0])
+                                } else {
+                                    requestBuilder.size(maxImageSize[0], maxImageSize[1])
+                                }
+                            }
                         }
                         val request = requestBuilder.listener(object : ImageRequest.Listener{
                                 override fun onError(request: ImageRequest, result: ErrorResult) {

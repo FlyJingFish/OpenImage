@@ -14,6 +14,7 @@ import androidx.core.graphics.applyCanvas
 import androidx.core.graphics.createBitmap
 import coil3.size.Size
 import coil3.transform.Transformation
+import com.flyjingfish.openimagelib.OpenImageConfig
 
 /**
  * A [Transformation] that applies a Gaussian blur to an image.
@@ -42,7 +43,7 @@ class BlurTransformation3 @JvmOverloads constructor(
 
         val scaledWidth = (input.width / sampling).toInt()
         val scaledHeight = (input.height / sampling).toInt()
-        val output = createBitmap(scaledWidth, scaledHeight, input.config)
+        val output = createBitmap(scaledWidth, scaledHeight, input.config?:OpenImageConfig.getInstance().bitmapConfig)
         output.applyCanvas {
             scale(1 / sampling, 1 / sampling)
             drawBitmap(input, 0f, 0f, paint)
@@ -79,9 +80,9 @@ class BlurTransformation3 @JvmOverloads constructor(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         return other is BlurTransformation3 &&
-            context == other.context &&
-            radius == other.radius &&
-            sampling == other.sampling
+                context == other.context &&
+                radius == other.radius &&
+                sampling == other.sampling
     }
 
     override fun hashCode(): Int {

@@ -17,6 +17,8 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.flyjingfish.openimagelib.OpenImageConfig;
+
 import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -52,7 +54,7 @@ class SkiaImageRegionDecoder implements ImageRegionDecoder {
         if (bitmapConfig != null) {
             this.bitmapConfig = bitmapConfig;
         } else {
-            this.bitmapConfig = Bitmap.Config.RGB_565;
+            this.bitmapConfig = OpenImageConfig.getInstance().getBitmapConfig();
         }
     }
 

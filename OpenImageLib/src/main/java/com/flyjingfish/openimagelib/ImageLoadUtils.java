@@ -7,7 +7,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.flyjingfish.openimagelib.beans.CloseParams;
 import com.flyjingfish.openimagelib.beans.DownloadParams;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
-import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.LivePhotoFragmentCreate;
 import com.flyjingfish.openimagelib.listener.OnItemClickListener;
 import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
@@ -24,7 +23,6 @@ import java.util.Map;
 class ImageLoadUtils {
     private static volatile ImageLoadUtils mInstance;
     private final HashMap<String, Boolean> imageLoadSuccessMap = new HashMap<>();
-    private final HashMap<String, ItemLoadHelper> itemLoadHelperHashMap = new HashMap<>();
     private final HashMap<String, Drawable> coverDrawableHashMap = new HashMap<>();
     private final HashMap<String, String> coverFilePathHashMap = new HashMap<>();
     private final HashMap<String, Drawable> smallCoverDrawableHashMap = new HashMap<>();
@@ -73,17 +71,6 @@ class ImageLoadUtils {
         return false;
     }
 
-    public ItemLoadHelper getItemLoadHelper(String key) {
-        return itemLoadHelperHashMap.get(key);
-    }
-
-    public void setItemLoadHelper(String key, ItemLoadHelper itemLoadHelper) {
-        itemLoadHelperHashMap.put(key, itemLoadHelper);
-    }
-
-    public void clearItemLoadHelper(String key) {
-        itemLoadHelperHashMap.remove(key);
-    }
 
     public void setCoverDrawable(String key, Drawable drawable) {
         coverDrawableHashMap.put(key, drawable);

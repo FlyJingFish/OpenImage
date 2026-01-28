@@ -89,33 +89,25 @@ public class GSYVideoPlayer extends StandardGSYVideoPlayer {
         }
     }
 
-    private static class MyOnAudioFocusChangeListener implements AudioManager.OnAudioFocusChangeListener{
-        @Override
-        public void onAudioFocusChange(int focusChange) {
-
-        }
+    @Override
+    protected void initAudioFocusManager() {
     }
 
-    private final AudioManager.OnAudioFocusChangeListener EMPTY = new MyOnAudioFocusChangeListener();
-    private final AudioManager.OnAudioFocusChangeListener onStandardAudioFocusChangeListener = onAudioFocusChangeListener;
-
-    @Override
-    protected void init(Context context) {
-        super.init(context);
-        onAudioFocusChangeListener = EMPTY;
+    protected void reInitAudioFocusManager() {
+        super.initAudioFocusManager();
     }
 
     public void requestAudioFocus(){
         abandonAudioFocus();
-        if (mAudioManager != null && !mReleaseWhenLossAudio) {
-            onAudioFocusChangeListener = onStandardAudioFocusChangeListener;
-            mAudioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        reInitAudioFocusManager();
+        if (mAudioFocusManager != null && !mReleaseWhenLossAudio) {
+            mAudioFocusManager.requestAudioFocus();
         }
     }
 
     public void abandonAudioFocus(){
-        if (mAudioManager != null) {
-            mAudioManager.abandonAudioFocus(onAudioFocusChangeListener);
+        if (mAudioFocusManager != null) {
+            mAudioFocusManager.abandonAudioFocus();
         }
     }
 

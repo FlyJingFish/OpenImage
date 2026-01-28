@@ -191,7 +191,6 @@ public class BitmapUtils {
             }
             BitmapFactory.decodeStream(inputStream, null, options);
             type = options.outMimeType;
-            OpenImageLogUtils.logD("ImageUtil", "getImageTypeWithMime: path = " + path + ", type1 = " + type);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -205,7 +204,6 @@ public class BitmapUtils {
             var10000 = type.substring(var5);
         }
         type = var10000;
-        OpenImageLogUtils.logD("ImageUtil", "getImageTypeWithMime: path = " + path + ", type2 = " + type);
         return type;
     }
 

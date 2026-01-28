@@ -29,12 +29,10 @@ import com.flyjingfish.openimagelib.beans.CloseParams;
 import com.flyjingfish.openimagelib.beans.DownloadParams;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.beans.RectangleConnerRadius;
-import com.flyjingfish.openimagelib.enums.ImageDiskMode;
 import com.flyjingfish.openimagelib.enums.ImageShapeType;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.enums.MoreViewShowType;
 import com.flyjingfish.openimagelib.listener.ImageFragmentCreate;
-import com.flyjingfish.openimagelib.listener.ItemLoadHelper;
 import com.flyjingfish.openimagelib.listener.LayoutManagerFindVisiblePosition;
 import com.flyjingfish.openimagelib.listener.LivePhotoFragmentCreate;
 import com.flyjingfish.openimagelib.listener.OnExitListener;
@@ -380,16 +378,6 @@ public final class OpenImage extends OpenImage4ParseData {
         return this;
     }
 
-    /**
-     * 这项已被废弃请不要调用
-     *
-     * @param imageDiskMode 这项已被废弃请不要调用
-     * @return {@link OpenImage}
-     */
-    @Deprecated
-    public OpenImage setImageDiskMode(ImageDiskMode imageDiskMode) {
-        return this;
-    }
 
     /**
      * <p>加载大图失败后:
@@ -413,16 +401,6 @@ public final class OpenImage extends OpenImage4ParseData {
         return this;
     }
 
-    /**
-     * 这项已被废弃请不要调用
-     *
-     * @param itemLoadHelper 这项已被废弃请不要调用
-     * @return {@link OpenImage}
-     */
-    @Deprecated
-    public OpenImage setItemLoadHelper(ItemLoadHelper itemLoadHelper) {
-        return this;
-    }
 
     /**
      * @param openImageStyle 查看图片显示设置StyleId

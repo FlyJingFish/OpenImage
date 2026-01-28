@@ -175,7 +175,7 @@ class PhotoViewSuperBigImageHelper {
                 float scale = Math.min(widthScale, heightScale);
 
 
-                skiaImageRegionDecoder = new SkiaImageRegionDecoder();
+                skiaImageRegionDecoder = new SkiaImageRegionDecoder(photoView.getBitmapConfig());
                 isSuperBigImage = true;
                 float maxScale = Math.max(originalImageSize[0], originalImageSize[1]) * 1f / Math.max(imageWidth, imageHeight) / scale;
 
@@ -380,7 +380,6 @@ class PhotoViewSuperBigImageHelper {
             Matrix matrix = new Matrix();
             matrix.postRotate(angle, pivotX, pivotY);
             Bitmap newBitmap = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-            OpenImageLogUtils.logE("rotateBitmap","source="+source.getWidth()+","+source.getHeight()+"newBitmap="+newBitmap.getWidth()+","+newBitmap.getHeight());
             return newBitmap;
         }
         @Override

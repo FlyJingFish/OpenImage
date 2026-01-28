@@ -55,7 +55,7 @@ public class PhotoView extends AppCompatImageView {
     private OnMatrixChangedListener onMatrixChangedListener;
     private Bitmap subsamplingScaleBitmap;
     private PhotoViewSuperBigImageHelper photoViewSuperBigImageHelper;
-
+    private Bitmap.Config bitmapConfig = OpenImageConfig.getInstance().getBitmapConfig();
     public PhotoView(Context context) {
         this(context, null);
     }
@@ -98,6 +98,17 @@ public class PhotoView extends AppCompatImageView {
         }
     }
 
+    /**
+     * 如需单独定制每个{@link PhotoView}的{@link Bitmap.Config},请在{@link PhotoView#setImageFilePath}被调用之前调用此项
+     * @param bitmapConfig 此{@link PhotoView}大图用到的{@link Bitmap.Config}
+     */
+    public void setBitmapConfig(Bitmap.Config bitmapConfig) {
+        this.bitmapConfig = bitmapConfig;
+    }
+
+    public Bitmap.Config getBitmapConfig() {
+        return bitmapConfig;
+    }
     /**
      * Get the current {@link PhotoViewAttacher} for this view. Be wary of holding on to references
      * to this attacher, as it has a reference to this view, which, if a reference is held in the

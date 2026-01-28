@@ -1,5 +1,6 @@
 package com.flyjingfish.openimagelib;
 
+import android.graphics.Bitmap;
 import android.view.ViewConfiguration;
 
 import androidx.annotation.FloatRange;
@@ -38,7 +39,7 @@ public class OpenImageConfig {
     private boolean lazyPreload = true;
     private boolean bothLoadCover = true;
     private int mTouchSlop = -1;
-
+    private Bitmap.Config bitmapConfig = Bitmap.Config.RGB_565;
     private OpenImageConfig() {
     }
 
@@ -267,5 +268,17 @@ public class OpenImageConfig {
      */
     public void getScaledTouchSlop(int slop){
         mTouchSlop = slop;
+    }
+
+    /**
+     * 目前只在大图那里有用到，之后都将采用此处配置
+     * @param bitmapConfig 加载图片的配置
+     */
+    public void setBitmapConfig(Bitmap.Config bitmapConfig) {
+        this.bitmapConfig = bitmapConfig;
+    }
+
+    public Bitmap.Config getBitmapConfig() {
+        return bitmapConfig;
     }
 }

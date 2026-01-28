@@ -142,7 +142,11 @@ public class LivePhotoFragment extends VideoPlayerFragment {
                         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) live.getLayoutParams();
                         int topMargin = (int) (StatusBarHelper.getStatusbarHeight(requireContext())+ ScreenUtils.dp2px(requireContext(),10));
                         RectF rectF = photoImageView.getDisplayRect();
-                        layoutParams.topMargin = (int) Math.max(rectF.top+ScreenUtils.dp2px(requireContext(),10),topMargin);
+                        if (rectF != null){
+                            layoutParams.topMargin = (int) Math.max(rectF.top+ScreenUtils.dp2px(requireContext(),10),topMargin);
+                        }else{
+                            layoutParams.topMargin = (int) Math.max(ScreenUtils.dp2px(requireContext(),10),topMargin);
+                        }
                         live.setLayoutParams(layoutParams);
                     });
                     mHandler.post(()->{
@@ -185,6 +189,5 @@ public class LivePhotoFragment extends VideoPlayerFragment {
                 live.setVisibility(View.GONE);
             }
         }
-        OpenImageLogUtils.logD("loadImageFinish2","onStateChanged===>"+state);
     }
 }

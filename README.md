@@ -70,18 +70,6 @@ RecyclerView场景  | 聊天页面 | 打开视频
 ### 第一步、选择适合你的库
 
 
-
-#### 首先、在项目根目录下的build.gradle添加
-
-```gradle
-allprojects {
-    repositories {
-        ...
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
-
 **你可以选择下面三种的其中一种，在module下的build.gradle添加。**
 
 
@@ -218,11 +206,11 @@ public class ImageEntity implements OpenImageUrl {
     public String coverUrl;//视频封面大图
     public String smallCoverUrl;//视频封面小图
     public String videoUrl;//视频链接
-    public int resouceType; //0图片1视频 
+    public int resouceType; //0图片1视频2实况图 
 
     @Override
     public String getImageUrl() {
-        return resouceType == 1 ? coverUrl : photoUrl;//大图链接（或视频的封面大图链接）
+        return resouceType == 0 ? photoUrl : coverUrl;//大图链接（或视频的封面大图链接）
     }
 
     @Override
@@ -232,12 +220,12 @@ public class ImageEntity implements OpenImageUrl {
 
     @Override
     public String getCoverImageUrl() {//这个代表前边列表展示的图片（即缩略图）
-        return resouceType == 1 ? smallCoverUrl : smallPhotoUrl;//封面小图链接（或视频的封面小图链接）
+        return resouceType == 0 ? smallPhotoUrl : smallCoverUrl;//封面小图链接（或视频的封面小图链接）
     }
 
     @Override
     public MediaType getType() {
-        return resouceType == 1 ? MediaType.VIDEO : MediaType.IMAGE;//数据是图片还是视频
+        return resouceType == 1 ? MediaType.VIDEO : (resouceType == 2 ? MediaType.LIVE_PHOTO : MediaType.IMAGE);//数据是图片还是视频
     }
 }
 
