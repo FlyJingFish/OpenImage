@@ -43,4 +43,9 @@ public class LivePhotoVideoPlayer extends ScaleOpenImageVideoPlayer {
             notShowLoading = true;
         }
     }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+    }
 }

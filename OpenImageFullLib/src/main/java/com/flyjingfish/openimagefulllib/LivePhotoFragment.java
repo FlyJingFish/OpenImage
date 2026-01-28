@@ -70,14 +70,14 @@ public class LivePhotoFragment extends VideoPlayerFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        isOpenLive = SPUtils.getBoolean(requireContext(),OPEN_LIVE,true);
+
         addOnItemClickListener((fragment, openImageUrl, position) -> {
             if (position == getShowPosition()){
                 livePop.setVisibility(View.GONE);
             }
         });
         replay.setOnClickListener(v -> {
-            startPlay();
+            videoPlayer.startPlayLogic();
             livePop.setVisibility(View.GONE);
             ivLiveDown.setRotation(0);
         });
@@ -100,7 +100,6 @@ public class LivePhotoFragment extends VideoPlayerFragment {
             livePop.setVisibility(View.GONE);
             ivLiveDown.setRotation(0);
         });
-        initLive();
     }
 
     @Override
@@ -161,6 +160,23 @@ public class LivePhotoFragment extends VideoPlayerFragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        isOpenLive = SPUtils.getBoolean(requireContext(),OPEN_LIVE,true);
+        initLive();
+        if (isPlayed && isOpenLive){
+            videoPlayer.startPlayLogic();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (playerKey != null) {
+            RecordPlayerPosition.INSTANCE.setPlayPosition(requireActivity(),beanId,0);
+        }
+    }
 
     @Override
     protected void onTouchScale(float scale) {
