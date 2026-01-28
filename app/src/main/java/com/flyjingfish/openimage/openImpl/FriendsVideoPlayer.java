@@ -5,8 +5,9 @@ import android.util.AttributeSet;
 
 import com.flyjingfish.openimage.R;
 import com.flyjingfish.openimagefulllib.OpenImageCoverVideoPlayer;
+import com.flyjingfish.openimagefulllib.ScaleOpenImageVideoPlayer;
 
-public class FriendsVideoPlayer extends OpenImageCoverVideoPlayer {
+public class FriendsVideoPlayer extends ScaleOpenImageVideoPlayer {
 
     public FriendsVideoPlayer(Context context) {
         super(context);
