@@ -170,4 +170,7 @@ dependencies {
     // 调试预览支持
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+//    implementation 'com.github.penfeizhou.android.animation:gif:3.0.5'
+//    implementation 'com.github.penfeizhou.android.animation:glide-plugin:3.0.5'
 }

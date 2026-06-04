@@ -27,7 +27,7 @@ public class GlideBigImageHelper implements BigImageHelper {
 //                    Glide.with(context).load(filePath).
 
                     RequestOptions requestOptions = new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL);
+                            .diskCacheStrategy(DiskCacheStrategy.DATA);
                     if (rotate == 90 || rotate == 270){
                         requestOptions.override(maxImageSize[1], maxImageSize[0]);
                     }else {

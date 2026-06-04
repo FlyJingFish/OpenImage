@@ -153,7 +153,7 @@ public class MyImageLoader {
             if (imageDiskMode == ImageDiskMode.RESULT){
                 requestBuilder.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
             }if (imageDiskMode == ImageDiskMode.CONTAIN_ORIGINAL){
-                requestBuilder.diskCacheStrategy(DiskCacheStrategy.ALL);
+                requestBuilder.diskCacheStrategy(DiskCacheStrategy.DATA);
             }else if (imageDiskMode == ImageDiskMode.NONE){
                 requestBuilder.diskCacheStrategy(DiskCacheStrategy.NONE);
             }
