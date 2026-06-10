@@ -352,7 +352,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             @Override
             public boolean onDoubleTap(MotionEvent ev) {
                 try {
-                    float scale = getScale();
+                    float scale = get2Float(getScale());
                     float x = ev.getX();
                     float y = ev.getY();
                     if (scale < getMediumScale()) {
@@ -372,6 +372,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         screenOrientationEvent = new ScreenOrientationEvent(mImageView.getContext());
         registerDisplayListener();
+    }
+
+    private float get2Float(float value){
+        return Math.round(value * 100f) / 100f;
     }
 
     static HashSet<String> onTransitionEndSet = new HashSet<>();
@@ -1067,18 +1071,18 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                             if (maxScale * drawableHeight > DEFAULT_MID_SCALE * viewHeight) {
                                 mMinScale = DEFAULT_MIN_SCALE;
                                 //设置中等缩放为适宽的缩放
-                                mMidScale = widthScale / heightScale;
+                                mMidScale = get2Float(widthScale / heightScale);
                                 if (!isSetMaxScale) {
-                                    mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+                                    mMaxScale = get2Float(DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale);
                                 }
                             }
                         } else {
                             if (maxScale * drawableWidth > DEFAULT_MID_SCALE * viewWidth) {
                                 mMinScale = DEFAULT_MIN_SCALE;
                                 //设置中等缩放为适宽的缩放
-                                mMidScale = heightScale / widthScale;
+                                mMidScale = get2Float(heightScale / widthScale);
                                 if (!isSetMaxScale) {
-                                    mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+                                    mMaxScale = get2Float(DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale);
                                 }
                             }
                         }
@@ -1167,18 +1171,18 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                                 if (maxScale * drawableHeight > DEFAULT_MID_SCALE * targetHeight) {
                                     mMinScale = DEFAULT_MIN_SCALE;
                                     //设置中等缩放为适宽的缩放
-                                    mMidScale = widthScale / heightScale;
+                                    mMidScale = get2Float(widthScale / heightScale);
                                     if (!isSetMaxScale) {
-                                        mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+                                        mMaxScale = get2Float(DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale);
                                     }
                                 }
                             } else {
                                 if (maxScale * drawableWidth > DEFAULT_MID_SCALE * targetWidth) {
                                     mMinScale = DEFAULT_MIN_SCALE;
                                     //设置中等缩放为适宽的缩放
-                                    mMidScale = heightScale / widthScale;
+                                    mMidScale = get2Float(heightScale / widthScale);
                                     if (!isSetMaxScale) {
-                                        mMaxScale = DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale;
+                                        mMaxScale = get2Float(DEFAULT_MAX_SCALE / DEFAULT_MID_SCALE * mMidScale);
                                     }
                                 }
                             }
